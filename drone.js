@@ -10,6 +10,8 @@ const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');//token
 var path = require("path");
 var ejs = require("ejs");
+var xmlreader = require("xmlreader");//xml
+var fs = require("fs");
 app.disable('etag');//解决304
 var Pay = require('cn-pay');
 var system = require('./drone-system');
@@ -49,13 +51,23 @@ const alipayVip_ = {
 // 微信
 const wechatConfig = {
     // app_id: 'wxa1a88f5371e0cc55', // 公众号appid
-    appid: 'wxa1a88f5371e0cc55', // app的appid
+    appid: 'wx4605aa5892e7b154', // app的appid
     mch_id: '1549453351', // 商户Id
     key: '437D1CCAA370A1FC86650AEF91195BF4', // 商户密钥
-    notify_url: 'http://39.108.10.188:8080/payBack', // 通知地址
-    return_url: 'http://39.108.10.188:8080/return', // 跳转地址
+    notify_url: 'http://39.108.10.188:8092/payBack', // 通知地址
+    return_url: 'http://39.108.10.188:8092/return', // 跳转地址
+}
+// 微信vip
+const wechatConfig_vip = {
+    // app_id: 'wxa1a88f5371e0cc55', // 公众号appid
+    appid: 'wx4605aa5892e7b154', // app的appid
+    mch_id: '1549453351', // 商户Id
+    key: '437D1CCAA370A1FC86650AEF91195BF4', // 商户密钥
+    notify_url: 'http://39.108.10.188:8092/vipPayBack', // 通知地址
+    return_url: 'http://39.108.10.188:8092/vipReturn', // 跳转地址
 }
 const wechat = Pay.wechat(wechatConfig)
+const wechat_vip = Pay.wechat(wechatConfig_vip)
 const alipay = Pay.alipay(payConfig);
 const alipayVip = Pay.alipay(alipayVip_);
 // 数据库配置
@@ -106,16 +118,50 @@ app.all('*', function (req, res, next) {
         next();
     }
 });
+
+
+
 app.post('*', function (req, res, next) {
     var postData = '';
     req.on('data', function (chunk) {
         postData += chunk;
     });
     req.on('end', function () {
+
         postData = decodeURI(postData);
         postData = postData.replace(/\s+/g, "");
         if (postData.substring(0, 1) === "{") {
             postData = JSON.parse(postData)
+        } else if (postData.substring(0, 1) === "<") {
+            xmlreader.read(postData, function (errors, response) {
+                if (null !== errors) {
+                    console.log(errors)
+                    return;
+                }
+                var newObj = {};
+                for (k in response) {
+                    let isObj = true;
+                    try {
+                        isObj = eval('(' + response[k] + ')');
+                    } catch (e) {
+                        isObj = response[k];
+                    }
+                    if (!response[k] || !isObj || typeof (isObj) != "object") {
+                        newObj[k] = response[k];
+                    } else {
+                        for (key in response[k]) {
+                            newObj[k] = response[k];
+                            if (response[k][key].text) {
+                                newObj[k][key] = response[k][key].text();
+                            } else {
+                                newObj[k][key] = response[k][key];
+                            }
+                        }
+                    }
+                }
+                console.log(newObj)
+                postData = newObj;
+            });
         } else {
             postData = querystring.parse(postData)
         }
@@ -2069,17 +2115,20 @@ app.post('/pay', function (req, res, next) {
             subject: '无人机支付宝支付'
 
         }
-        const wechatOrder = {
+        var wechatOrder = {
             out_trade_no: payObj.order_number,
             body: '无人机微信支付',
             total_fee: req.body.money, // 直接以元为单位
             // spbill_create_ip: 'spbill_create_ip' // 客户端ip
         }
-        const webPayResult = wechat.app(wechatOrder)
+
         if (!payObj.toUserId || payObj.viptype) {
-            order.subject = "无人机vip开通"
+            order.subject = "无人机vip开通";
+            wechatOrder.body = "无人机vip开通";
+            var webPayResult = wechat_vip.app(wechatOrder)
             var result = alipayVip.app(order) // 开通vip
         } else {
+            var webPayResult = wechat.app(wechatOrder)
             var result = alipay.app(order) // 打赏
         }
 
@@ -2139,6 +2188,9 @@ app.get('/product/select', (req, res) => {
 })
 // 支付回调
 app.post('/payBack', (req, res) => {
+    if (req.body.xml) {
+        req.body = req.body.xml;
+    }
     console.log(req.body)
     var sql = "select * from wrj_orderList where order_number = '" + req.body.out_trade_no + "'";
     //查
@@ -2200,13 +2252,13 @@ app.post('/payBack', (req, res) => {
                 } else {
                     userData[0].toMoney = Number(userData[0].toMoney);
                 }
-                var cash = userData[0].toMoney += Number(req.body.total_amount);
+                var cash = userData[0].toMoney += Number(orderData.money);
 
                 var modSql = 'UPDATE wrj_user set money = ?  WHERE id = ?';
                 var modSqlParams = [cash, orderData.toUserId];
                 connection.query(modSql, modSqlParams, function (err, hh) {
                     if (err) {
-                        console.log('[UPDATE ERROR] - ', err.message);
+                        console.log('[金额错误] - ', err.message);
                         return;
                     }
                     var modSql = 'UPDATE wrj_orderList SET order_status = ?  WHERE order_number = ?';
@@ -2214,11 +2266,11 @@ app.post('/payBack', (req, res) => {
                     //添加viporderlist
                     connection.query(modSql, modSqlParams, function (err, hh) {
                         if (err) {
-                            console.log('[UPDATE ERROR] - ', err.message);
+                            console.log('[订单错误] - ', err.message);
                             return;
                         }
                         var addSql = 'INSERT INTO wrj_payInOut(userId,toUserId,money,info,type,label,date) VALUES(?,?,?,?,?,?,?)';
-                        var addSqlParams = [orderData.userId, orderData.toUserId, req.body.total_amount, `${userData[0].name}在标签:${userData[0].label}中向${userData[0].toUserName}打赏了${req.body.total_amount}元`, 1, userData[0].label, timestampToTime((Date.parse(new Date())) / 1000, true)];
+                        var addSqlParams = [orderData.userId, orderData.toUserId, orderData.money, `${userData[0].name}在标签:${userData[0].label}中向${userData[0].toUserName}打赏了${orderData.money}元`, 1, userData[0].label, timestampToTime((Date.parse(new Date())) / 1000, true)];
                         //增
                         connection.query(addSql, addSqlParams, function (err, result2) {
                             if (err) {
@@ -2229,13 +2281,20 @@ app.post('/payBack', (req, res) => {
                                 })
                                 return;
                             }
-                            console.log("支付成功回调")
-                            if (alipay.verify(req.body)) { //验签
-                                console.log('支付宝异步验签成功：')
-                                res.send('SUCCESS')
+                            if (req.body.xml) {
+                                console.log('微信异步验签成功：')
+                                res.send(wechat.success()) // 可以调用success或fail方法 返回结果
+
+
                             } else {
-                                console.log('支付宝异步验签失败：')
-                                res.send('SUCCESS')
+
+                                if (alipay.verify(req.body)) {
+                                    console.log('支付宝异步验签成功：')
+                                    res.send('SUCCESS')
+                                } else {
+                                    console.log('支付宝异步验签失败：')
+                                    res.send('ERROR')
+                                }
                             }
                         })
 
@@ -2275,6 +2334,9 @@ app.get('/return', (req, res) => {
 })
 // 支付宝VIP回调
 app.post('/vipPayBack', function (req, res, next) {
+    if (req.body.xml) {
+        req.body = req.body.xml;
+    }
     var sql = "select * from wrj_orderList where order_number = '" + req.body.out_trade_no + "'";
     //查
     connection.query(sql, function (err, orderData) {
@@ -2367,12 +2429,20 @@ app.post('/vipPayBack', function (req, res, next) {
                         }
 
 
-                        if (alipay.verify(req.body)) {
-                            console.log('支付宝异步验签成功：')
-                            res.send('SUCCESS')
+                        if (req.body.xml) {
+                            console.log('微信异步验签成功：')
+                            res.send(wechat.success()) // 可以调用success或fail方法 返回结果
+
+
                         } else {
-                            console.log('支付宝异步验签失败：')
-                            res.send('ERROR')
+
+                            if (alipay.verify(req.body)) {
+                                console.log('支付宝异步验签成功：')
+                                res.send('SUCCESS')
+                            } else {
+                                console.log('支付宝异步验签失败：')
+                                res.send('ERROR')
+                            }
                         }
 
                     })
@@ -2381,6 +2451,237 @@ app.post('/vipPayBack', function (req, res, next) {
         }
     })
 
+})
+// ios打赏
+app.post('/ios/exceptional/notice', function (req, res, next) {
+    if (!req.body.toUserId || !req.body.labelId || !req.body.userId) {
+        res.json({
+            code: 0,
+            msg: "缺少必要参数"
+        })
+        return;
+    }
+    var sql = `select * from wrj_iosPaper WHERE content =  '${req.body["receipt-data"]}'`;
+    connection.query(sql, function (err, verifyReceipt) {
+        if (err) {
+            console.log(err)
+            res.json({
+                code: 0,
+                msg: err
+            })
+            return;
+        }
+        if (verifyReceipt[0]) {
+            res.json({
+                code: 3,
+                msg: "该票据已使用"
+            })
+        } else {
+            var sql = ` select T.* ,
+                        (SELECT name FROM wrj_user WHERE id = ${req.body.toUserId}) as toUserName,
+                        (SELECT money FROM wrj_user WHERE id = ${req.body.toUserId}) as toMoney,
+                        (SELECT address_name FROM wrj_label WHERE id = ${req.body.labelId}) as label
+                        from wrj_user T 
+                        where id = ${req.body.userId}`;
+            //查
+            connection.query(sql, function (err, userData) {
+                if (err) {
+                    console.log(err)
+                    res.json({
+                        code: 0,
+                        msg: err
+                    })
+                    return;
+                }
+                if (userData.length === 0) {
+                    res.json({
+                        code: 0,
+                        msg: "用户不存在"
+                    })
+                    return;
+                }
+                req.body.password = "0e2b4096077149bb9d2bb6e6b46c6bb0";
+                // 线上
+                var online = 'https://buy.itunes.apple.com/verifyReceipt';
+                // 沙盒
+                var sandbox = "https://sandbox.itunes.apple.com/verifyReceipt";
+                console.log(req.body)
+                request({
+                    url: online,
+                    method: "POST",
+                    json: true,
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                    body: req.body
+                }, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        if (body.status === 21007) {
+                            request({
+                                url: sandbox,
+                                method: "POST",
+                                json: true,
+                                headers: {
+                                    "content-type": "application/json",
+                                },
+                                body: req.body
+                            }, function (error, response, body) {
+                                // ios订阅票据验证
+                                if (body.status === 0) {
+                                    var sql = "select * from wrj_product WHERE product = '" + body.receipt.in_app[0].product_id + "'";
+                                    //查
+                                    connection.query(sql, function (err, product) {
+                                        console.log(sql)
+                                        if (product.length === 0) {
+                                            res.json({
+                                                code: 0,
+                                                data: body,
+                                                msg: "无法打赏"
+                                            })
+                                        } else {
+
+                                            if (!userData[0].toMoney || Number(userData[0].toMoney) == NaN) {
+                                                userData[0].toMoney = 0;
+                                            } else {
+                                                userData[0].toMoney = Number(userData[0].toMoney);
+                                            }
+                                            var cash = userData[0].toMoney += Number(product[0].money);
+
+                                            var modSql = 'UPDATE wrj_user set money = ?  WHERE id = ?';
+                                            var modSqlParams = [cash, req.body.toUserId];
+                                            connection.query(modSql, modSqlParams, function (err, hh) {
+                                                if (err) {
+                                                    console.log('[UPDATE ERROR] - ', err.message);
+                                                    return;
+                                                }
+
+                                                var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date) VALUES(?,?,?,?)';
+                                                var addSqlParams = [req.body["receipt-data"], null, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true)];
+                                                connection.query(addSql, addSqlParams, function (err, result2) {
+                                                    if (err) {
+                                                        console.log(err)
+                                                        res.json({
+                                                            code: 0,
+                                                            msg: "打赏失败"
+                                                        })
+                                                        return;
+                                                    }
+                                                    var addSql = 'INSERT INTO wrj_payInOut(userId,toUserId,money,info,type,label,date) VALUES(?,?,?,?,?,?,?)';
+                                                    var addSqlParams = [req.body.userId, req.body.toUserId, product[0].money, `${userData[0].name}在标签:${userData[0].label}中向${userData[0].toUserName}打赏了${product[0].money}元`, 1, userData[0].label, timestampToTime((Date.parse(new Date())) / 1000, true)];
+                                                    //增
+                                                    connection.query(addSql, addSqlParams, function (err, result2) {
+                                                        if (err) {
+                                                            console.log('[INSERT ERROR] - ', err.message);
+                                                            res.json({
+                                                                code: 0,
+                                                                msg: "打赏失败"
+                                                            })
+                                                            return;
+                                                        }
+                                                        res.json({
+                                                            code: 1,
+                                                            msg: "打赏成功"
+                                                        })
+                                                    })
+                                                });
+
+
+                                            })
+                                        }
+
+                                    })
+
+                                } else {
+                                    res.json({
+                                        code: 0,
+                                        data: body,
+                                        msg: "票据无效"
+                                    })
+                                }
+                            })
+                        } else {
+                            if (body.status === 0) {
+                                var sql = "select * from wrj_product WHERE product = '" + body.receipt.in_app[0].product_id + "'";
+                                //查
+                                connection.query(sql, function (err, product) {
+                                    console.log(sql)
+                                    if (product.length === 0) {
+                                        res.json({
+                                            code: 0,
+                                            data: body,
+                                            msg: "无法打赏"
+                                        })
+                                    } else {
+
+                                        if (!userData[0].toMoney || Number(userData[0].toMoney) == NaN) {
+                                            userData[0].toMoney = 0;
+                                        } else {
+                                            userData[0].toMoney = Number(userData[0].toMoney);
+                                        }
+                                        var cash = userData[0].toMoney += Number(product[0].money);
+
+                                        var modSql = 'UPDATE wrj_user set money = ?  WHERE id = ?';
+                                        var modSqlParams = [cash, req.body.toUserId];
+                                        connection.query(modSql, modSqlParams, function (err, hh) {
+                                            if (err) {
+                                                console.log('[UPDATE ERROR] - ', err.message);
+                                                return;
+                                            }
+
+                                            var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date) VALUES(?,?,?,?)';
+                                            var addSqlParams = [req.body["receipt-data"], null, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true)];
+                                            connection.query(addSql, addSqlParams, function (err, result2) {
+                                                if (err) {
+                                                    console.log(err)
+                                                    res.json({
+                                                        code: 0,
+                                                        msg: "打赏失败"
+                                                    })
+                                                    return;
+                                                }
+                                                var addSql = 'INSERT INTO wrj_payInOut(userId,toUserId,money,info,type,label,date) VALUES(?,?,?,?,?,?,?)';
+                                                var addSqlParams = [req.body.userId, req.body.toUserId, product[0].money, `${userData[0].name}在标签:${userData[0].label}中向${userData[0].toUserName}打赏了${product[0].money}元`, 1, userData[0].label, timestampToTime((Date.parse(new Date())) / 1000, true)];
+                                                //增
+                                                connection.query(addSql, addSqlParams, function (err, result2) {
+                                                    if (err) {
+                                                        console.log('[INSERT ERROR] - ', err.message);
+                                                        res.json({
+                                                            code: 0,
+                                                            msg: "打赏失败"
+                                                        })
+                                                        return;
+                                                    }
+                                                    res.json({
+                                                        code: 1,
+                                                        msg: "打赏成功"
+                                                    })
+                                                })
+                                            });
+
+
+                                        })
+                                    }
+
+                                })
+
+                            } else {
+                                res.json({
+                                    code: 0,
+                                    data: body,
+                                    msg: "票据无效"
+                                })
+                            }
+                        }
+                    } else {
+                        res.json({
+                            code: 0,
+                            msg: "请求不成功"
+                        })
+                    }
+                });
+            })
+        }
+    })
 })
 function getIPAdress() {
     var interfaces = require('os').networkInterfaces();

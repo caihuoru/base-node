@@ -1,0 +1,209 @@
+
+logo.png
+size: 1196,1196
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bubble_bg
+  rotate: false
+  xy: 569, 971
+  size: 527, 223
+  orig: 527, 223
+  offset: 0, 0
+  index: -1
+bubble_glow
+  rotate: true
+  xy: 1001, 681
+  size: 288, 144
+  orig: 288, 144
+  offset: 0, 0
+  index: -1
+bubble_logo
+  rotate: false
+  xy: 2, 95
+  size: 514, 197
+  orig: 514, 197
+  offset: 0, 0
+  index: -1
+burst_b
+  rotate: true
+  xy: 403, 27
+  size: 66, 100
+  orig: 66, 100
+  offset: 0, 0
+  index: -1
+burst_explosion
+  rotate: false
+  xy: 2, 543
+  size: 507, 329
+  orig: 507, 329
+  offset: 0, 0
+  index: -1
+burst_flare
+  rotate: false
+  xy: 2, 874
+  size: 565, 320
+  orig: 565, 320
+  offset: 0, 0
+  index: -1
+burst_r_01
+  rotate: false
+  xy: 1108, 631
+  size: 37, 48
+  orig: 37, 48
+  offset: 0, 0
+  index: -1
+burst_r_02
+  rotate: false
+  xy: 1098, 994
+  size: 62, 97
+  orig: 62, 97
+  offset: 0, 0
+  index: -1
+burst_r_03
+  rotate: false
+  xy: 940, 748
+  size: 28, 42
+  orig: 28, 42
+  offset: 0, 0
+  index: -1
+burst_r_particles_01
+  rotate: false
+  xy: 511, 857
+  size: 38, 15
+  orig: 38, 15
+  offset: 0, 0
+  index: -1
+burst_r_particles_02
+  rotate: false
+  xy: 1108, 601
+  size: 36, 28
+  orig: 36, 28
+  offset: 0, 0
+  index: -1
+burst_s_01
+  rotate: true
+  xy: 940, 792
+  size: 60, 51
+  orig: 60, 51
+  offset: 0, 0
+  index: -1
+burst_s_02
+  rotate: false
+  xy: 1041, 513
+  size: 65, 67
+  orig: 65, 67
+  offset: 0, 0
+  index: -1
+burst_s_particles
+  rotate: true
+  xy: 1161, 1095
+  size: 31, 27
+  orig: 31, 27
+  offset: 0, 0
+  index: -1
+burst_t
+  rotate: false
+  xy: 1098, 1093
+  size: 61, 101
+  orig: 61, 101
+  offset: 0, 0
+  index: -1
+burst_u_01
+  rotate: false
+  xy: 1041, 582
+  size: 65, 97
+  orig: 65, 97
+  offset: 0, 0
+  index: -1
+burst_u_02
+  rotate: false
+  xy: 1161, 1128
+  size: 28, 66
+  orig: 28, 66
+  offset: 0, 0
+  index: -1
+burst_u_particles
+  rotate: false
+  xy: 1041, 481
+  size: 41, 30
+  orig: 41, 30
+  offset: 0, 0
+  index: -1
+lightning_big_01
+  rotate: false
+  xy: 511, 475
+  size: 427, 117
+  orig: 427, 117
+  offset: 0, 0
+  index: -1
+lightning_big_02
+  rotate: false
+  xy: 511, 718
+  size: 427, 134
+  orig: 427, 134
+  offset: 0, 0
+  index: -1
+lightning_big_03
+  rotate: false
+  xy: 569, 854
+  size: 430, 115
+  orig: 430, 115
+  offset: 0, 0
+  index: -1
+lightning_big_04
+  rotate: false
+  xy: 511, 594
+  size: 428, 122
+  orig: 428, 122
+  offset: 0, 0
+  index: -1
+lightning_big_05
+  rotate: false
+  xy: 497, 348
+  size: 423, 125
+  orig: 423, 125
+  offset: 0, 0
+  index: -1
+lightning_big_06
+  rotate: false
+  xy: 518, 223
+  size: 375, 123
+  orig: 375, 123
+  offset: 0, 0
+  index: -1
+lightning_big_07
+  rotate: false
+  xy: 518, 101
+  size: 373, 120
+  orig: 373, 120
+  offset: 0, 0
+  index: -1
+lightning_small_01
+  rotate: true
+  xy: 941, 281
+  size: 398, 98
+  orig: 398, 98
+  offset: 0, 0
+  index: -1
+lightning_small_02
+  rotate: false
+  xy: 518, 4
+  size: 403, 95
+  orig: 403, 95
+  offset: 0, 0
+  index: -1
+lightning_small_03
+  rotate: false
+  xy: 2, 2
+  size: 399, 91
+  orig: 399, 91
+  offset: 0, 0
+  index: -1
+overlay_flare
+  rotate: false
+  xy: 2, 294
+  size: 493, 247
+  orig: 493, 247
+  offset: 0, 0
+  index: -1

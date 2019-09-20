@@ -1,0 +1,53 @@
+body{
+    width: 10rem;
+    background: #FFFFFF;
+}
+.wrap{
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.icon{
+    width: 1.253rem;
+    height: 1.253rem;
+    margin-top: 1.427rem;
+}
+.txt1{
+    font-size:0.427rem;
+    color:rgba(140,112,255,1);
+    margin-top: 0.2rem;
+}
+.nick{
+    font-size:0.4rem;
+    font-weight:bold;
+    color:rgba(24,24,32,1);
+    margin-top: 1.747rem;
+}
+.money{
+    height:0.72rem;
+    line-height:0.72rem;
+    margin-top: 1.373rem;
+    font-size:0.533rem;
+    font-weight:bold;
+    color:rgba(24,24,32,1);
+}
+.money span{
+    vertical-align: middle;
+}
+.btn{
+    width:4.013rem;
+    height:1.08rem;
+    line-height:1.08rem;
+    background:rgba(140,112,255,1);
+    border-radius:0.547rem;
+    font-size:0.48rem;
+    color:#fff;
+    margin-top:5.787rem ;
+    text-align: center;
+}
+.btn:active{
+    background: #6955BC;
+    color: #B8B7BC;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+
+
+    <title>Jewel Burst</title>
+
+    <link rel="stylesheet" href="assets/css/app.css" type="text/css" />
+
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileImage" content="assets/icons/icon-192x192.png">
+    <meta name="msapplication-TileColor" content="#2e082c">
+
+
+    <meta name="theme-color" content="#171430">
+
+
+
+
+</head>
+
+<body>
+
+
+    <div id="content"></div>
+    <div id="orientation"></div>
+    <div id="loader">Loading...</div>
+
+
+
+
+    <script type="text/javascript">
+        var gameName = "jewel-burst.min.js";
+
+
+
+
+
+
+        //This all here is for cache busting;
+        function addScript(src, buster, callback) {
+            var s = document.createElement("script");
+            s.setAttribute("src", src + "?v=" + buster);
+            if (typeof callback === "function") {
+                s.onload = callback;
+            }
+            document.body.appendChild(s);
+        }
+
+
+
+        addScript("version.js", Date.now(), function() {
+
+            addScript(gameName, version, function() {
+                var game = new JewelBurstGame();
+            });
+
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+{
+"TOTAL_MEMORY": 157286400,
+"dataUrl": "PokerWorld.data.unityweb",
+"asmCodeUrl": "PokerWorld.asm.code.unityweb",
+"asmMemoryUrl": "PokerWorld.asm.memory.unityweb",
+"asmFrameworkUrl": "PokerWorld.asm.framework.unityweb",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#000000"
+}

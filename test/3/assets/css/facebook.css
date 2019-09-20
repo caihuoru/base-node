@@ -1,0 +1,182 @@
+body {
+    display: block;
+    overflow: auto;
+    background: url("../facebook/kizi-bg.png") center;
+}
+
+.container {
+    width: 750px;
+    height: 100%;
+    margin: auto;
+    display: block;
+}
+
+/**
+ Images
+ */
+img.ad {
+    width: 728px;
+    height: auto;
+    margin: 10px 3px;
+}
+
+/**
+ Grid & columns
+ */
+.flex-grid {
+    margin: auto;
+    padding: auto;
+    display: flex;
+    height: 112px;
+}
+
+.col1, .col2, .col3, .col4, .col5 {
+    margin: auto;
+    padding: auto;
+}
+
+.col1 {
+    flex: 1.6;
+}
+
+.col2, .col5 {
+    flex: 0.4;
+}
+
+.col3 {
+    flex: 2.8;
+}
+
+.col4 {
+    flex: 2;
+}
+
+/**
+ Header with brand logo, title and Facebook buttons.
+ */
+.header-game {
+    height: 66px;
+    margin: 6px auto auto auto;
+    padding: auto;
+    text-align: center;
+    vertical-align: middle;
+    overflow: auto;
+    background: url("../facebook/title-bg.png") right center no-repeat;
+}
+
+.title {
+    margin: auto;
+    padding: auto;
+    color: #ffffff;
+    font-family: "Squada One";
+    line-height: 1;
+    font-weight: 100;
+}
+
+.brand-logo, .fb-button {
+    margin: auto;
+    padding: auto;
+    vertical-align: middle;
+}
+
+/**
+ Game
+ */
+.game-container {
+    width: 723px;
+    height: 499px;
+    margin: 10px 3px 10px 3px;
+}
+/**
+ Game icons
+ */
+.carousel-game-small-item, .carousel-game-jm2, .carousel-game-bob5 {
+    margin: 3px;
+}
+
+.carousel-game-slider {
+    width: 448px;
+    height: 132px;
+    margin: -10px -3px;
+    padding: 10px 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0;
+}
+
+.carousel-on-top {
+    z-index: 10;
+}
+
+.carousel-game-small {
+    position: relative;
+    display: inline-block;
+    transition: 0.5s ease-in-out;
+    width: 112px;
+    height: 112px;
+}
+
+.carousel-game-small-item {
+    background-image: url('../../assets/facebook/games/hover-icon.png');
+}
+
+.carousel-game-jm2, .carousel-game-bob5 {
+    width: 244px;
+    height: 102px;
+}
+
+.carousel-game-jm2 {
+    background-image: url('../../assets/facebook/games/jelly-2-wide-hover.png');
+}
+
+.carousel-game-bob5 {
+    background-image: url('../../assets/facebook/games/bob-5-wide-hover.png');
+}
+
+.carousel-btn {
+    width: 26px;
+    height: 105px;
+    background-image: url('../../assets/facebook/arrow-right-hover.png');
+    margin: 3px 3px 3px 3px;
+    cursor: pointer;
+}
+
+.carousel-game-img {
+    opacity: 1;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    -moz-transition: opacity 0.3s ease-in-out;
+    -ms-transition: opacity 0.3s ease-in-out;
+    -o-transition: opacity 0.3s ease-in-out;
+}
+
+.carousel-game-img:hover {
+    opacity: 0;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    -moz-transition: opacity 0.3s ease-in-out;
+    -ms-transition: opacity 0.3s ease-in-out;
+    -o-transition: opacity 0.3s ease-in-out;
+}
+
+/**
+ Glow
+ */
+.glow, .game-container {
+    border: 2px solid #ffffff;
+    -webkit-box-shadow: 0px 0px 16px 3px rgba(255,0,252,0.8);
+    -moz-box-shadow: 0px 0px 16px 3px rgba(255,0,252,0.8);
+    box-shadow: 0px 0px 16px 3px rgba(255,0,252,0.8);
+}
+
+.glow:hover {
+    border: 2px solid #fffd02;
+    -webkit-box-shadow: 0px 0px 16px 3px rgba(255,171,62,1);
+    -moz-box-shadow: 0px 0px 16px 3px rgba(255,171,62,1);
+    box-shadow: 0px 0px 16px 3px rgba(255,171,62,1);
+}
+
+.flipHorizontally {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}

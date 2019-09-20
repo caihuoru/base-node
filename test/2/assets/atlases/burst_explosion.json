@@ -1,0 +1,276 @@
+{"frames": [
+
+{
+	"filename": "burstmode_explosion-explosion_big_0.png",
+	"frame": {"x":1592,"y":276,"w":50,"h":50},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":201,"y":179,"w":50,"h":50},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_1.png",
+	"frame": {"x":1592,"y":117,"w":98,"h":92},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":177,"y":158,"w":98,"h":92},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_2.png",
+	"frame": {"x":1592,"y":1,"w":120,"h":114},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":166,"y":147,"w":120,"h":114},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_3.png",
+	"frame": {"x":1534,"y":817,"w":167,"h":165},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":143,"y":121,"w":167,"h":165},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_4.png",
+	"frame": {"x":623,"y":1236,"w":220,"h":218},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":118,"y":94,"w":220,"h":218},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_5.png",
+	"frame": {"x":369,"y":1207,"w":252,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":103,"y":79,"w":252,"h":249},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_6.png",
+	"frame": {"x":1213,"y":951,"w":269,"h":267},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":95,"y":71,"w":269,"h":267},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_7.png",
+	"frame": {"x":932,"y":953,"w":279,"h":278},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":90,"y":66,"w":279,"h":278},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_8.png",
+	"frame": {"x":1440,"y":339,"w":286,"h":287},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":86,"y":62,"w":286,"h":287},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_9.png",
+	"frame": {"x":750,"y":661,"w":287,"h":290},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":85,"y":61,"w":287,"h":290},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_10.png",
+	"frame": {"x":1248,"y":648,"w":284,"h":287},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":85,"y":63,"w":284,"h":287},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_11.png",
+	"frame": {"x":670,"y":971,"w":260,"h":263},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":96,"y":74,"w":260,"h":263},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_12.png",
+	"frame": {"x":845,"y":1236,"w":213,"h":216},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":119,"y":97,"w":213,"h":216},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_13.png",
+	"frame": {"x":1297,"y":1220,"w":233,"h":231},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":88,"w":233,"h":231},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_14.png",
+	"frame": {"x":1534,"y":628,"w":189,"h":187},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":141,"y":120,"w":189,"h":187},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_15.png",
+	"frame": {"x":1060,"y":1233,"w":235,"h":198},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":110,"y":104,"w":235,"h":198},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_16.png",
+	"frame": {"x":383,"y":971,"w":285,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":78,"y":110,"w":285,"h":234},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_17.png",
+	"frame": {"x":1101,"y":339,"w":337,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":64,"y":46,"w":337,"h":307},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_18.png",
+	"frame": {"x":449,"y":1,"w":407,"h":318},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":46,"w":407,"h":318},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_19.png",
+	"frame": {"x":1,"y":1,"w":446,"h":341},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":446,"h":341},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_20.png",
+	"frame": {"x":399,"y":344,"w":348,"h":339},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":51,"y":30,"w":348,"h":339},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_21.png",
+	"frame": {"x":1,"y":1074,"w":366,"h":339},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":43,"y":29,"w":366,"h":339},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_22.png",
+	"frame": {"x":1,"y":717,"w":380,"h":355},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":36,"y":21,"w":380,"h":355},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_23.png",
+	"frame": {"x":1,"y":344,"w":396,"h":371},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":13,"w":396,"h":371},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_24.png",
+	"frame": {"x":858,"y":1,"w":370,"h":324},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":42,"w":370,"h":324},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_25.png",
+	"frame": {"x":749,"y":327,"w":350,"h":332},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":53,"y":37,"w":350,"h":332},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_26.png",
+	"frame": {"x":1230,"y":1,"w":360,"h":336},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":46,"y":35,"w":360,"h":336},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_27.png",
+	"frame": {"x":399,"y":685,"w":349,"h":284},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":56,"y":49,"w":349,"h":284},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_28.png",
+	"frame": {"x":1039,"y":661,"w":207,"h":288},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":198,"y":49,"w":207,"h":288},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_29.png",
+	"frame": {"x":1484,"y":984,"w":210,"h":120},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":195,"y":207,"w":210,"h":120},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_30.png",
+	"frame": {"x":1484,"y":1106,"w":211,"h":111},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":194,"y":207,"w":211,"h":111},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_31.png",
+	"frame": {"x":1592,"y":211,"w":73,"h":63},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":194,"y":254,"w":73,"h":63},
+	"sourceSize": {"w":447,"h":406}
+},
+{
+	"filename": "burstmode_explosion-explosion_big_32.png",
+	"frame": {"x":449,"y":321,"w":3,"h":3},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":3},
+	"sourceSize": {"w":447,"h":406}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "burst_explosion.png",
+	"format": "RGBA5555",
+	"size": {"w":1727,"h":1457},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:327be706039f432bdde0b91e7f87149b:5b500276326d1e0227f886cb7d6ca209:fb22067f608349a842307cd226d16b53$"
+}
+}

@@ -1,0 +1,132 @@
+{"frames": [
+
+{
+	"filename": "bomb_explosion_01.png",
+	"frame": {"x":350,"y":1054,"w":169,"h":168},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":204,"y":204,"w":169,"h":168},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "bomb_explosion_02.png",
+	"frame": {"x":537,"y":541,"w":378,"h":355},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":99,"y":111,"w":378,"h":355},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "bomb_explosion_03.png",
+	"frame": {"x":534,"y":898,"w":459,"h":421},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":53,"y":81,"w":459,"h":421},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "bomb_explosion_04.png",
+	"frame": {"x":1,"y":561,"w":531,"h":491},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":50,"w":531,"h":491},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "bomb_explosion_05.png",
+	"frame": {"x":1,"y":1,"w":534,"h":558},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":39,"y":13,"w":534,"h":558},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "bomb_explosion_06.png",
+	"frame": {"x":537,"y":1,"w":456,"h":538},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":116,"y":15,"w":456,"h":538},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "bomb_explosion_07.png",
+	"frame": {"x":1,"y":1054,"w":347,"h":337},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":107,"y":116,"w":347,"h":337},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "bomb_explosion_08.png",
+	"frame": {"x":622,"y":1321,"w":271,"h":233},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":144,"y":172,"w":271,"h":233},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "bomb_explosion_09.png",
+	"frame": {"x":350,"y":1321,"w":270,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":153,"y":161,"w":270,"h":255},
+	"sourceSize": {"w":576,"h":576}
+},
+{
+	"filename": "chain_break_01.png",
+	"frame": {"x":917,"y":541,"w":61,"h":61},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":61},
+	"sourceSize": {"w":61,"h":61}
+},
+{
+	"filename": "chain_break_02.png",
+	"frame": {"x":917,"y":604,"w":61,"h":61},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":61},
+	"sourceSize": {"w":61,"h":61}
+},
+{
+	"filename": "chain_break_03.png",
+	"frame": {"x":917,"y":667,"w":61,"h":61},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":61,"h":61},
+	"sourceSize": {"w":61,"h":61}
+},
+{
+	"filename": "chain_break_04.png",
+	"frame": {"x":917,"y":730,"w":59,"h":57},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":2,"w":59,"h":57},
+	"sourceSize": {"w":61,"h":61}
+},
+{
+	"filename": "chain_break_05.png",
+	"frame": {"x":917,"y":789,"w":54,"h":59},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":1,"w":54,"h":59},
+	"sourceSize": {"w":61,"h":61}
+},
+{
+	"filename": "chain_break_lock.png",
+	"frame": {"x":973,"y":789,"w":16,"h":23},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":23},
+	"sourceSize": {"w":16,"h":23}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "jewelburst_sprites_02.png",
+	"format": "RGBA8888",
+	"size": {"w":994,"h":1577},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:336672cf53547bc2dd891f7aff8d86b7:19c2df9de8a55d9aa07abee9f88fa973:b351f6911f41b3987389f1280c121ab6$"
+}
+}

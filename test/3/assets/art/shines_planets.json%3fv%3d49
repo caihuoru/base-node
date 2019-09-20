@@ -1,0 +1,524 @@
+{"frames": {
+
+"bg_planet_01_overlay.png":
+{
+	"frame": {"x":495,"y":1160,"w":404,"h":404},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":404,"h":404},
+	"sourceSize": {"w":404,"h":404}
+},
+"bg_planet_01_texture.png":
+{
+	"frame": {"x":986,"y":1,"w":937,"h":425},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":937,"h":425},
+	"sourceSize": {"w":937,"h":425}
+},
+"bg_planet_02_overlay.png":
+{
+	"frame": {"x":901,"y":1160,"w":401,"h":402},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":401,"h":402},
+	"sourceSize": {"w":401,"h":402}
+},
+"bg_planet_02_texture.png":
+{
+	"frame": {"x":1,"y":356,"w":937,"h":425},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":937,"h":425},
+	"sourceSize": {"w":937,"h":425}
+},
+"bg_planet_03.png":
+{
+	"frame": {"x":1704,"y":846,"w":296,"h":312},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":296,"h":312},
+	"sourceSize": {"w":296,"h":312}
+},
+"bg_planet_04_overlay.png":
+{
+	"frame": {"x":973,"y":793,"w":729,"h":325},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":729,"h":325},
+	"sourceSize": {"w":729,"h":325}
+},
+"bg_planet_04_texture.png":
+{
+	"frame": {"x":1,"y":1,"w":983,"h":353},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":983,"h":353},
+	"sourceSize": {"w":983,"h":353}
+},
+"bg_planet_05_1_overlay.png":
+{
+	"frame": {"x":1653,"y":1160,"w":345,"h":345},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":345,"h":345},
+	"sourceSize": {"w":345,"h":345}
+},
+"bg_planet_05_1_texture.png":
+{
+	"frame": {"x":1,"y":783,"w":769,"h":360},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":769,"h":360},
+	"sourceSize": {"w":769,"h":360}
+},
+"bg_planet_05_2_overlay.png":
+{
+	"frame": {"x":1789,"y":656,"w":157,"h":157},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":157,"h":157},
+	"sourceSize": {"w":157,"h":157}
+},
+"bg_planet_05_2_shadow.png":
+{
+	"frame": {"x":1789,"y":428,"w":116,"h":198},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":116,"h":198},
+	"sourceSize": {"w":116,"h":198}
+},
+"bg_planet_05_2_texture.png":
+{
+	"frame": {"x":495,"y":1566,"w":443,"h":180},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":443,"h":180},
+	"sourceSize": {"w":443,"h":180}
+},
+"bg_planet_06.png":
+{
+	"frame": {"x":1304,"y":1470,"w":317,"h":306},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":317,"h":306},
+	"sourceSize": {"w":317,"h":306}
+},
+"bg_planet_07_overlay.png":
+{
+	"frame": {"x":1304,"y":1120,"w":347,"h":348},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":347,"h":348},
+	"sourceSize": {"w":347,"h":348}
+},
+"bg_planet_07_shine.png":
+{
+	"frame": {"x":1,"y":1160,"w":492,"h":492},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":492,"h":492},
+	"sourceSize": {"w":492,"h":492}
+},
+"bg_planet_07_texture.png":
+{
+	"frame": {"x":984,"y":428,"w":803,"h":363},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":803,"h":363},
+	"sourceSize": {"w":803,"h":363}
+},
+"GEM_BLUE/gem_blue_shine_0001.png":
+{
+	"frame": {"x":1985,"y":92,"w":28,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":2,"w":28,"h":46},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_BLUE/gem_blue_shine_0002.png":
+{
+	"frame": {"x":938,"y":821,"w":31,"h":53},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":2,"w":31,"h":53},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_BLUE/gem_blue_shine_0003.png":
+{
+	"frame": {"x":940,"y":494,"w":39,"h":55},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":2,"w":39,"h":55},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_BLUE/gem_blue_shine_0004.png":
+{
+	"frame": {"x":940,"y":726,"w":33,"h":57},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":2,"w":33,"h":57},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_BLUE/gem_blue_shine_0005.png":
+{
+	"frame": {"x":1981,"y":453,"w":31,"h":57},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":2,"w":31,"h":57},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_BLUE/gem_blue_shine_0006.png":
+{
+	"frame": {"x":940,"y":637,"w":35,"h":57},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":2,"w":35,"h":57},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_BLUE/gem_blue_shine_0007.png":
+{
+	"frame": {"x":868,"y":783,"w":33,"h":54},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":4,"w":33,"h":54},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_GREEN/gem_green_shine_0001.png":
+{
+	"frame": {"x":820,"y":829,"w":33,"h":33},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":1,"w":33,"h":33},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_GREEN/gem_green_shine_0002.png":
+{
+	"frame": {"x":1907,"y":529,"w":52,"h":52},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":52},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_GREEN/gem_green_shine_0003.png":
+{
+	"frame": {"x":1925,"y":418,"w":54,"h":57},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":3,"w":54,"h":57},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_GREEN/gem_green_shine_0004.png":
+{
+	"frame": {"x":1907,"y":477,"w":54,"h":50},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":9,"w":54,"h":50},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_GREEN/gem_green_shine_0005.png":
+{
+	"frame": {"x":820,"y":783,"w":46,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":15,"w":46,"h":44},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_GREEN/gem_green_shine_0006.png":
+{
+	"frame": {"x":938,"y":785,"w":33,"h":34},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":26,"y":25,"w":33,"h":34},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_GREEN/gem_green_shine_0007.png":
+{
+	"frame": {"x":1981,"y":418,"w":32,"h":33},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":26,"w":32,"h":33},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_GREEN/gem_green_shine_0008.png":
+{
+	"frame": {"x":1987,"y":21,"w":3,"h":3},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":3},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_MULTI/gem_multi_shine_0001.png":
+{
+	"frame": {"x":903,"y":783,"w":33,"h":45},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":33,"h":45},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_MULTI/gem_multi_shine_0002.png":
+{
+	"frame": {"x":772,"y":783,"w":46,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":46,"h":46},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_MULTI/gem_multi_shine_0003.png":
+{
+	"frame": {"x":1925,"y":328,"w":57,"h":47},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":57,"h":47},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_MULTI/gem_multi_shine_0004.png":
+{
+	"frame": {"x":1925,"y":92,"w":58,"h":50},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":3,"w":58,"h":50},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_MULTI/gem_multi_shine_0005.png":
+{
+	"frame": {"x":1925,"y":194,"w":58,"h":41},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":12,"w":58,"h":41},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_MULTI/gem_multi_shine_0006.png":
+{
+	"frame": {"x":1925,"y":144,"w":58,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":12,"w":58,"h":48},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_MULTI/gem_multi_shine_0007.png":
+{
+	"frame": {"x":1925,"y":278,"w":57,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":12,"w":57,"h":48},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_MULTI/gem_multi_shine_0008.png":
+{
+	"frame": {"x":940,"y":551,"w":39,"h":26},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":34,"w":39,"h":26},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_PURPLE/gem_purple_shine_0001.png":
+{
+	"frame": {"x":772,"y":831,"w":33,"h":33},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":1,"w":33,"h":33},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_PURPLE/gem_purple_shine_0002.png":
+{
+	"frame": {"x":940,"y":579,"w":37,"h":33},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":37,"h":33},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_PURPLE/gem_purple_shine_0003.png":
+{
+	"frame": {"x":1948,"y":811,"w":47,"h":33},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":47,"h":33},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_PURPLE/gem_purple_shine_0004.png":
+{
+	"frame": {"x":1907,"y":612,"w":49,"h":42},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":4,"w":49,"h":42},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_PURPLE/gem_purple_shine_0005.png":
+{
+	"frame": {"x":1925,"y":377,"w":57,"h":39},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":9,"w":57,"h":39},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_PURPLE/gem_purple_shine_0006.png":
+{
+	"frame": {"x":1958,"y":637,"w":49,"h":41},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":19,"w":49,"h":41},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_PURPLE/gem_purple_shine_0007.png":
+{
+	"frame": {"x":1948,"y":769,"w":48,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":20,"w":48,"h":40},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_PURPLE/gem_purple_shine_0008.png":
+{
+	"frame": {"x":940,"y":406,"w":42,"h":36},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":24,"w":42,"h":36},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_RED/gem_red_shine_0001.png":
+{
+	"frame": {"x":940,"y":696,"w":34,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":34,"h":28},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_RED/gem_red_shine_0002.png":
+{
+	"frame": {"x":1963,"y":512,"w":50,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":50,"h":31},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_RED/gem_red_shine_0003.png":
+{
+	"frame": {"x":1961,"y":545,"w":52,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":52,"h":44},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_RED/gem_red_shine_0004.png":
+{
+	"frame": {"x":1925,"y":1,"w":60,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":7,"w":60,"h":44},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_RED/gem_red_shine_0005.png":
+{
+	"frame": {"x":1925,"y":47,"w":60,"h":43},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":16,"w":60,"h":43},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_RED/gem_red_shine_0006.png":
+{
+	"frame": {"x":1925,"y":237,"w":58,"h":39},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":20,"w":58,"h":39},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_RED/gem_red_shine_0007.png":
+{
+	"frame": {"x":1907,"y":583,"w":52,"h":27},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":32,"w":52,"h":27},
+	"sourceSize": {"w":60,"h":60}
+},
+"GEM_RED/gem_red_shine_0008.png":
+{
+	"frame": {"x":1789,"y":628,"w":49,"h":21},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":38,"w":49,"h":21},
+	"sourceSize": {"w":60,"h":60}
+},
+"gem_shine_blank.png":
+{
+	"frame": {"x":1987,"y":21,"w":3,"h":3},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":3},
+	"sourceSize": {"w":60,"h":60}
+},
+"SHINE_YELLOW/gem_yellow_shine_0001.png":
+{
+	"frame": {"x":903,"y":830,"w":30,"h":46},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":30,"h":46},
+	"sourceSize": {"w":60,"h":60}
+},
+"SHINE_YELLOW/gem_yellow_shine_0002.png":
+{
+	"frame": {"x":940,"y":444,"w":41,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":0,"w":41,"h":48},
+	"sourceSize": {"w":60,"h":60}
+},
+"SHINE_YELLOW/gem_yellow_shine_0003.png":
+{
+	"frame": {"x":940,"y":356,"w":44,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":0,"w":44,"h":48},
+	"sourceSize": {"w":60,"h":60}
+},
+"SHINE_YELLOW/gem_yellow_shine_0004.png":
+{
+	"frame": {"x":1961,"y":591,"w":51,"h":44},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":6,"w":51,"h":44},
+	"sourceSize": {"w":60,"h":60}
+},
+"SHINE_YELLOW/gem_yellow_shine_0005.png":
+{
+	"frame": {"x":1948,"y":719,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":12,"w":48,"h":48},
+	"sourceSize": {"w":60,"h":60}
+},
+"SHINE_YELLOW/gem_yellow_shine_0006.png":
+{
+	"frame": {"x":1948,"y":680,"w":49,"h":37},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":23,"w":49,"h":37},
+	"sourceSize": {"w":60,"h":60}
+},
+"SHINE_YELLOW/gem_yellow_shine_0007.png":
+{
+	"frame": {"x":940,"y":614,"w":36,"h":21},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":39,"w":36,"h":21},
+	"sourceSize": {"w":60,"h":60}
+},
+"SHINE_YELLOW/gem_yellow_shine_0008.png":
+{
+	"frame": {"x":1987,"y":1,"w":26,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":42,"w":26,"h":18},
+	"sourceSize": {"w":60,"h":60}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "shines_planets.png",
+	"format": "RGBA8888",
+	"size": {"w":2014,"h":1777},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:434b117ede33b5f951bc21bf017d6a9a:30ad56cc75acf2ec3b427a5f4946048e:28607d257977a4dacf94081ca7e331ba$"
+}
+}

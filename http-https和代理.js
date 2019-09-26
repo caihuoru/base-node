@@ -58,7 +58,7 @@ router.all('*', function (req, res, next) {
     // 判断当前的请求头是 http的话
     if (req.protocol == 'http') {
         // 进行重定向。
-        res.redirect('https://foundjoy.ltd:8090' + req.originalUrl);
+        res.redirect('https://foundjoy.ltd:7000' + req.originalUrl);
     }
 })
 

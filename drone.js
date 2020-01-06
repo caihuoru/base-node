@@ -2,8 +2,7 @@ var express = require('express');
 var querystring = require("querystring");
 var app = express();
 var request = require('request');//解析,用req.body获取post参数
-var port = 8092;
-var ipaddress = getIPAdress();//ip地址
+var agent_port = 8092;
 var mysql = require('mysql');
 var schedule = require("node-schedule");
 const nodemailer = require("nodemailer");
@@ -15,8 +14,24 @@ var fs = require("fs");
 app.disable('etag');//解决304
 var Pay = require('cn-pay');
 var system = require('./drone-system');
+var configuration = require('./configuration.json');
 app.use(express.static(__dirname + '/views'));
 var day = 86400;
+
+// https
+const https = require('https')
+const http = require('http')
+const net = require('net')
+const privateKey = fs.readFileSync(path.join(__dirname, './pem/foundjoy.ltd.key'), 'utf8')
+const certificate = fs.readFileSync(path.join(__dirname, './pem/foundjoy.ltd.pem'), 'utf8')
+const credentials = {
+    key: privateKey,
+    cert: certificate,
+}
+// 设置https的访问端口号
+const SSLPORT = 8098
+// 设置http的访问端口号
+const PORT = 8099
 // ejs模板
 app.locals.appName = "WRJ";
 app.set("view engine", "jade");
@@ -26,81 +41,30 @@ app.use(function (req, res, next) {
     res.locals.userAgent = req.headers["user-agent"];
     next();
 });
-var app_id = '2019082666428761'; // appid
-var private_key = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCQb1/+m2adY1XH1j1msE8PGdTgCh/l01KdncO5uECXf6xVRf9EyCJ/hq5MwT0yHj0P1IXUgb94nRwJZClUgLZc5AcDBb4lRmqDUDtDOCat9TQXXqWnMbm1Yh9x7uvS3+4yxmdtdo0wR2wOFwzK7igM8hU7I0hA3cO/TkfWR84Or5vSR4joS3w50ulI78rCHvqV6cZdXVG8ekrLR4AZ68SiZ/zWhEazPTamKQEMU+E4FXIPtkSzH0Vl0OSsB/HdX/KncPHlZ87s+y0VAEMmXrSteUXDf/vPe+ScbeIZy0NntGybt81M7btmZrx3F2x55xs+wZwca8fC4gQzFV7w+aqzAgMBAAECggEANqfuy4pC6owMifKoiZNuV2iPBbjPGUk+miZ5Sm5PAwVtUVeLoZuacmekzabSYYTP1o21lxUCP8I0OdmNSkzqtXwUqzAhJDnhVI+n3WgCOxHvBGjshrhqbhkTjSm8U7Apk01BFksmYn6khTBzxtcYkM2K+zX+wY0p5drZlFzXvPZk5r59pBbSTQSBs8u2/4ritDwClcz3a+BfElVVvQQvG+Wsod4z7KR5L39ohV3leezpNZdKp7p/1xS1dm7Lc4FioFNfKMwFT8JoP3UFTcG7jf24TJkoGFYjs/KUGf2XkVfSvQxYdZOoTsZ3fNEIOgq6uK0WcJYq/U5n0036VISzAQKBgQDUBbb2wqudoDBZIWWHwPcgKT7a7z0GLU6D8tGwpBr/fUkVVk2fwZrDDdy+FhX+lGU8EBRxIe+72xGtebnO3SyXk6LHQiDJeiXPV4F+pjdPBJunWCircO4yKfPynLqstSpnypW5iyDEYFnWn1Q12VKZBO9hCZaDw/c2P2m1wj9a7QKBgQCuZM704wS3lRr6mQhVYulmKPb9FXBtU3ejTtXZ11LKwnhVa58jsaFmgZUD0iubCzhFf3Y4p+y75l1Phn5YKLKhv60jvZZ7v2N8xXN8yrvyNvlNDa35pO4xL9n57do8COy+PiYmPDmps/pVyc0SLW6jORR4NQ51A0eSeeMDqkdIHwKBgDzyc5jVdu21uZA1iHEQqDlHgfj/YoRfC73kVCC528Trp9GJYID271z4pCbERIhM8hjk6mtm/Pn8TEWYwy/S5lmgJ9+tg61G/o1usxvL/gQp5/Cf5/j4WpBy/NwV75dr8IerdYTDmKS6qbiHTna4RQUVpRY44lp4P50Jd4K3Fu01AoGAZuEljiYW9E5MGiYJWoX9dr0X5/mr13L0Ey1Az0BNoTvUTWAuA5qYwqYTSKvF+bNGwQkOryGxcK/XwEBxbISlzPIMrBb+HYaspEC/fpEDC0MPEzvMtIdt1SqLhvugUOZa82gqjUfeJJT+S3m/NsgCitvzjW6PVsxWfrzVBaaAYrUCgYEAlsx18ab+WZHY9lx62tSfG6daSHtRaH0h3a1WxnTPbqcPNg5yulBVwwRcyLBOR5xQdSWB+kE8CZuhtosNhx4aKHQ1ZmIA1xQxrrk/5OwiwvIbEqy+V9jU3RzeuKj7qAHGlloDYIpLy6Z4Ufw0T3a0JEDxlZ3UROhUEvEEKJJNnpg="; // 商户私钥 注意：此处不是文件路径，一定要是文件内容
-var public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkG9f/ptmnWNVx9Y9ZrBPDxnU4Aof5dNSnZ3DubhAl3+sVUX/RMgif4auTME9Mh49D9SF1IG/eJ0cCWQpVIC2XOQHAwW+JUZqg1A7QzgmrfU0F16lpzG5tWIfce7r0t/uMsZnbXaNMEdsDhcMyu4oDPIVOyNIQN3Dv05H1kfODq+b0keI6Et8OdLpSO/Kwh76lenGXV1RvHpKy0eAGevEomf81oRGsz02pikBDFPhOBVyD7ZEsx9FZdDkrAfx3V/yp3Dx5WfO7PstFQBDJl60rXlFw3/7z3vknG3iGctDZ7Rsm7fNTO27Zma8dxdseecbPsGcHGvHwuIEMxVe8PmqswIDAQAB"; // 支付宝公钥 注意：此处不是文件路径，一定要是文件内容
-
 // 支付配置
-const payConfig = {
-    app_id: app_id, // appid
-    private_key: private_key,
-    public_key: public_key,
-    notify_url: 'http://39.108.10.188:8092/payBack', // 通知地址
-    return_url: 'http://39.108.10.188:8092/return', // 跳转地址
-    dev: false // 设置为true 将启用开发环境的支付宝网关
-}
-// 支付宝开通vip
-const alipayVip_ = {
-    app_id: app_id, // appid
-    private_key: private_key,
-    public_key: public_key,
-    notify_url: 'http://39.108.10.188:8092/vipPayBack', // 通知地址
-    return_url: 'http://39.108.10.188:8092/vipReturn', // 跳转地址
-    dev: false // 设置为true 将启用开发环境的支付宝网关
-}
-// 微信
-const wechatConfig = {
-    // app_id: 'wxa1a88f5371e0cc55', // 公众号appid
-    appid: 'wx4605aa5892e7b154', // app的appid
-    mch_id: '1549453351', // 商户Id
-    key: '437D1CCAA370A1FC86650AEF91195BF4', // 商户密钥
-    notify_url: 'http://39.108.10.188:8092/payBack', // 通知地址
-    return_url: 'http://39.108.10.188:8092/return', // 跳转地址
-}
-// 微信vip
-const wechatConfig_vip = {
-    // app_id: 'wxa1a88f5371e0cc55', // 公众号appid
-    appid: 'wx4605aa5892e7b154', // app的appid
-    mch_id: '1549453351', // 商户Id
-    key: '437D1CCAA370A1FC86650AEF91195BF4', // 商户密钥
-    notify_url: 'http://39.108.10.188:8092/vipPayBack', // 通知地址
-    return_url: 'http://39.108.10.188:8092/vipReturn', // 跳转地址
-}
-const wechat = Pay.wechat(wechatConfig)
-const wechat_vip = Pay.wechat(wechatConfig_vip)
-const alipay = Pay.alipay(payConfig);
-const alipayVip = Pay.alipay(alipayVip_);
+const wechat = Pay.wechat(configuration.wechatConfig)
+const wechat_vip = Pay.wechat(configuration.wechatConfig_vip)
+const alipay = Pay.alipay(configuration.payConfig);
+const alipayVip = Pay.alipay(configuration.alipayVip_);
+
 // 数据库配置
-const config = {
-    host: '39.108.10.188',
-    user: 'root',
-    password: '123456',
-    port: '3306',
-    database: "drone",
-    useConnectionPooling: true
-}
 var connection = mysql.createPool({
-    host: config.host,
-    user: config.user,
-    password: config.password,
-    port: config.port,
-    database: config.database
+    host: configuration.database.host,
+    user: configuration.database.user,
+    password: configuration.database.password,
+    port: configuration.database.port,
+    database: configuration.database.database
 });
 
 //邮箱配置
-const emailConfig = {
-    service: "qq",
-    user: '3300729997@qq.com',
-    pass: 'qfjjgjwvrqswcjej'//注：此处为授权码，并非邮箱密码
-}
 const smtpTransport = nodemailer.createTransport({
     host: "smtp.163.com",
     secureConnection: true,
     port: 587,
-    service: emailConfig.service,
+    service: configuration.emailConfig.service,
     auth: {
-        user: emailConfig.user,
-        pass: emailConfig.pass
+        user: configuration.emailConfig.user,
+        pass: configuration.emailConfig.pass
     },
     tls: { ciphers: 'SSLv3' }
 });
@@ -148,18 +112,21 @@ app.post('*', function (req, res, next) {
                     }
                     if (!response[k] || !isObj || typeof (isObj) != "object") {
                         newObj[k] = response[k];
+                        // console.log(newObj[k])
                     } else {
-                        for (key in response[k]) {
-                            newObj[k] = response[k];
-                            if (response[k][key].text) {
-                                newObj[k][key] = response[k][key].text();
-                            } else {
-                                newObj[k][key] = response[k][key];
+                        function recurOBJ(obj) {
+                            for (key in obj) {
+                                if (obj[key].text) {
+                                    obj[key] = obj[key].text();
+                                } else {
+                                    recurOBJ(obj[key])
+                                }
+                                newObj[k] = obj;
                             }
                         }
+                        recurOBJ(response[k]);
                     }
                 }
-                console.log(newObj)
                 postData = newObj;
             });
         } else {
@@ -169,12 +136,26 @@ app.post('*', function (req, res, next) {
         next();
     })
 });
-var day = 86400;
 
+// http-https和代理
+// 1、引入express的路由模块
+var router = express.Router({
+    caseSensitive: true // 开启大小写
+});
+
+
+// 这个是所有的路由，必定会走这里。
+router.all('*', function (req, res, next) {
+    // 判断当前的请求头是 http的话
+    if (req.protocol == 'http') {
+        // 进行重定向。
+        // res.redirect('https://foundjoy.ltd:8092' + req.originalUrl);
+    }
+})
 
 
 // 管理系统新区
-system(app, connection);
+system(app, connection, fs, path, jwt);
 
 
 
@@ -206,7 +187,7 @@ app.post('/login', (req, res) => {
         userName: Identification
     }
     let token_ = jwt.sign(user, secret, {
-        'expiresIn': 60 * 60 * 12 // 设置过期时间, 12 小时
+        'expiresIn': 60 * 60 * 24 * 30 // 设置过期时间, 一个月
     })
     var sql = "select * from wrj_user where Identification = '" + Identification + "' and passWord = '" + req.body.passWord + "'";
     //查
@@ -306,7 +287,7 @@ app.post('/registered', function (req, res, next) {
                 userName: Identification
             }
             let token_ = jwt.sign(user, secret, {
-                'expiresIn': 60 * 60 * 12 // 设置过期时间, 12 小时
+                'expiresIn': 60 * 60 * 24 * 30 // 设置过期时间, 一个月
             })
             var addSql = 'INSERT INTO wrj_user(Identification,name,passWord,token) VALUES(?,?,?,?)';
             var addSqlParams = [Identification, Identification, req.body.passWord, token_];
@@ -458,7 +439,7 @@ app.post('/user/data', (req, res) => {
 
 // 发邮件
 app.get('/email', function (req, res, next) {
-    var code = parseInt(randomNum(4));
+    var code = randomNum(5);
     if (!req.query.email) {
         res.json({
             code: 0,
@@ -466,38 +447,48 @@ app.get('/email', function (req, res, next) {
         })
         return;
     }
-    smtpTransport.sendMail({
-        from: "无人机 <" + emailConfig.user + ">",//发件人邮箱
-        to: req.query.email || null,//收件人邮箱，多个邮箱地址间用','隔开
-        subject: req.query.subject || "无人机验证码",//邮件主题
-        // text: req.query.text || req.query.html//text和html两者只支持一种
-        html: "您的验证码是: " + code,
-        text: "您的验证码是: " + code
-    }, function (Eerr, back) {
-        console.log(Eerr)
-        if (Eerr) {
+    if (req.query.email == "95366168@qq.com") {
+        res.json({
+            code: 0,
+            msg: "黑名单用户!"
+        })
+        return;
+    }
+    var sql = "select * from wrj_register_code where user_name = '" + req.query.email + "'";
+    //查
+    connection.query(sql, function (err, userData) {
+        if (err) {
+            console.log('[SELECT ERROR] - ', err.message);
             res.json({
                 code: 0,
-                msg: "邮箱发送失败"
+                msg: "参数错误"
             })
-            console.log("发送失败")
             return;
         }
-        console.log(back)
-        var sql = "select * from wrj_register_code where user_name = '" + req.query.email + "'";
-        //查
-        connection.query(sql, function (err, userData) {
-            if (err) {
-                console.log('[SELECT ERROR] - ', err.message);
+        if (userData.length === 0) {
+            var addSql = 'INSERT INTO wrj_register_code(user_name,code) VALUES(?,?)';
+            var addSqlParams = [req.query.email, code];
+        } else {
+            var addSql = 'UPDATE wrj_register_code SET code = ? WHERE user_name = ?';
+            var addSqlParams = [code, req.query.email];
+        }
+        smtpTransport.sendMail({
+            from: "无人机 <" + configuration.emailConfig.user + ">",//发件人邮箱
+            to: req.query.email || null,//收件人邮箱，多个邮箱地址间用','隔开
+            subject: req.query.subject || "无人机验证码",//邮件主题
+            // text: req.query.text || req.query.html//text和html两者只支持一种
+            html: "您的验证码是: " + code,
+            text: "您的验证码是: " + code
+        }, function (Eerr, back) {
+            console.log(Eerr)
+            if (Eerr) {
                 res.json({
                     code: 0,
-                    msg: "参数错误"
+                    msg: "邮箱发送失败"
                 })
+                console.log("发送失败")
                 return;
-            }
-            if (userData.length === 0) {
-                var addSql = 'INSERT INTO wrj_register_code(user_name,code) VALUES(?,?)';
-                var addSqlParams = [req.query.email, code];
+            } else {
                 connection.query(addSql, addSqlParams, function (err, result2) {
                     if (err) {
                         res.json({
@@ -506,31 +497,16 @@ app.get('/email', function (req, res, next) {
                         })
                         return;
                     }
-                    console.log('--------------------------INSERT----------------------------');
-                    res.json({
-                        code: 1,
-                        msg: "成功"
-                    })
-
-                });
-            } else {
-                var modSql = 'UPDATE wrj_register_code SET code = ? WHERE user_name = ?';
-                var modSqlParams = [code, req.query.email];
-                connection.query(modSql, modSqlParams, function (err, result) {
-                    if (err) {
-                        console.log('[UPDATE ERROR] - ', err.message);
-                        return;
-                    }
                     res.json({
                         code: 1,
                         msg: "成功"
                     })
                 });
             }
+        });
 
-        })
-        // res.json(back) 
-    });
+    })
+
 });
 // 邮箱验证
 app.post('/email/confirm', function (req, res, next) {
@@ -722,7 +698,7 @@ app.post('/manage/login', (req, res) => {
         userName: Identification
     }
     let token_ = jwt.sign(user, secret, {
-        'expiresIn': 60 * 60 * 12 // 设置过期时间, 12 小时
+        'expiresIn': 60 * 60 * 24 * 30 // 设置过期时间, 一个月
     })
     var sql = "select * from wrj_manage where name = '" + Identification + "' and passWord = '" + req.body.passWord + "'";
     // console.log(sql)
@@ -1822,48 +1798,52 @@ app.post('/del/favorite/location', function (req, res, next) {
 })
 // ios订阅
 app.post('/ios/pay/notice', function (req, res, next) {
-    var sql = `select * from wrj_iosPaper WHERE content =  '${req.body["receipt-data"]}'`;
-    connection.query(sql, function (err, verifyReceipt) {
-        if (err) {
-            console.log(err)
-            res.json({
-                code: 0,
-                msg: err
-            })
-            return;
-        }
-        if (verifyReceipt[0]) {
-            res.json({
-                code: 3,
-                msg: "该票据已使用"
-            })
-        } else {
-            req.body.password = "0e2b4096077149bb9d2bb6e6b46c6bb0";
-            // 线上
-            var online = 'https://buy.itunes.apple.com/verifyReceipt';
-            // 沙盒
-            var sandbox = "https://sandbox.itunes.apple.com/verifyReceipt";
-            console.log(req.body)
-            request({
-                url: online,
-                method: "POST",
-                json: true,
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: req.body
-            }, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    if (body.status === 21007) {
-                        request({
-                            url: sandbox,
-                            method: "POST",
-                            json: true,
-                            headers: {
-                                "content-type": "application/json",
-                            },
-                            body: req.body
-                        }, function (error, response, body) {
+
+
+    req.body.password = "0e2b4096077149bb9d2bb6e6b46c6bb0";
+    req.body["exclude-old-transactions"] = true;
+    // 线上
+    var online = 'https://buy.itunes.apple.com/verifyReceipt';
+    // 沙盒
+    var sandbox = "https://sandbox.itunes.apple.com/verifyReceipt";
+    console.log(req.body)
+    request({
+        url: online,
+        method: "POST",
+        json: true,
+        headers: {
+            "content-type": "application/json",
+        },
+        body: req.body
+    }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            if (body.status === 21007) {
+                request({
+                    url: sandbox,
+                    method: "POST",
+                    json: true,
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                    body: req.body
+                }, function (error, response, body) {
+                    var sql = `select * from wrj_iosPaper WHERE content =  '${req.body["receipt-data"]}' or original_transaction_id = ${body.latest_receipt_info[0].transaction_id}`;
+                    connection.query(sql, function (err, verifyReceipt) {
+                        if (err) {
+                            console.log(err)
+                            res.json({
+                                code: 0,
+                                msg: err
+                            })
+                            return;
+                        }
+                        if (verifyReceipt.length > 0) {
+                            res.json({
+                                code: 2,
+                                msg: "该票据已使用"
+                            })
+                        } else {
+
                             // ios订阅票据验证
                             if (body.latest_receipt) {
                                 if (req.body.userId) {
@@ -1903,20 +1883,21 @@ app.post('/ios/pay/notice', function (req, res, next) {
                                         }
                                         var modSql = 'UPDATE wrj_user SET isvip = ? , expiretime = ?  WHERE id = ?';
                                         var modSqlParams = [1, timestamp, req.body.userId];
+
                                         //添加vip
                                         connection.query(modSql, modSqlParams, function (err, UPdata) {
                                             if (err) {
                                                 console.log('[UPDATE ERROR] - ', err.message);
                                                 return;
                                             }
-                                            var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date) VALUES(?,?,?,?)';
-                                            var addSqlParams = [req.body["receipt-data"], req.body.userId, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true)];
+                                            var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date,original_transaction_id) VALUES(?,?,?,?,?)';
+                                            var addSqlParams = [req.body["receipt-data"], req.body.userId, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true), body.latest_receipt_info[0].transaction_id];
                                             connection.query(addSql, addSqlParams, function (err, result2) {
                                                 if (err) {
                                                     console.log(err)
                                                     res.json({
                                                         code: 0,
-                                                        msg: "收藏失败"
+                                                        msg: "开通失败"
                                                     })
                                                     return;
                                                 }
@@ -1930,8 +1911,8 @@ app.post('/ios/pay/notice', function (req, res, next) {
                                         })
                                     })
                                 } else {
-                                    var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date) VALUES(?,?,?,?)';
-                                    var addSqlParams = [req.body["receipt-data"], null, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true)];
+                                    var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date,original_transaction_id) VALUES(?,?,?,?,?)';
+                                    var addSqlParams = [req.body["receipt-data"], null, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true), body.latest_receipt_info[0].transaction_id];
                                     connection.query(addSql, addSqlParams, function (err, result2) {
                                         if (err) {
                                             console.log(err)
@@ -1950,11 +1931,32 @@ app.post('/ios/pay/notice', function (req, res, next) {
                                 }
                             } else {
                                 res.json({
-                                    code: 1,
+                                    code: 5,
                                     data: body,
                                     msg: "isok"
                                 })
                             }
+                        }
+                    })
+                })
+            } else {
+                var sql = `select * from wrj_iosPaper WHERE content =  '${req.body["receipt-data"]}' or original_transaction_id = ${body.latest_receipt_info[0].transaction_id}`;
+                // console.log(sql)
+                connection.query(sql, function (err, verifyReceipt) {
+                    if (err) {
+                        console.log(err)
+                        res.json({
+                            code: 0,
+                            msg: err
+                        })
+                        return;
+                    }
+
+                    // console.log(23)
+                    if (verifyReceipt.length > 0) {
+                        res.json({
+                            code: 2,
+                            msg: "该票据已使用"
                         })
                     } else {
                         // ios订阅票据验证
@@ -2002,8 +2004,8 @@ app.post('/ios/pay/notice', function (req, res, next) {
                                             console.log('[UPDATE ERROR] - ', err.message);
                                             return;
                                         }
-                                        var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date) VALUES(?,?,?,?)';
-                                        var addSqlParams = [req.body["receipt-data"], req.body.userId, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true)];
+                                        var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date,original_transaction_id) VALUES(?,?,?,?,?)';
+                                        var addSqlParams = [req.body["receipt-data"], req.body.userId, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true), body.latest_receipt_info[0].transaction_id];
                                         connection.query(addSql, addSqlParams, function (err, result2) {
                                             if (err) {
                                                 console.log(err)
@@ -2023,14 +2025,14 @@ app.post('/ios/pay/notice', function (req, res, next) {
                                     })
                                 })
                             } else {
-                                var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date) VALUES(?,?,?,?)';
-                                var addSqlParams = [req.body["receipt-data"], null, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true)];
+                                var addSql = 'INSERT INTO wrj_iosPaper(content,userId,vipType,date,original_transaction_id) VALUES(?,?,?,?,?)';
+                                var addSqlParams = [req.body["receipt-data"], null, body.receipt.in_app[0].product_id, timestampToTime(Date.parse(new Date()) / 1000, true), body.latest_receipt_info[0].transaction_id];
                                 connection.query(addSql, addSqlParams, function (err, result2) {
                                     if (err) {
                                         console.log(err)
                                         res.json({
                                             code: 0,
-                                            msg: "游客开通失败"
+                                            msg: "收藏失败"
                                         })
                                         return;
                                     }
@@ -2043,22 +2045,24 @@ app.post('/ios/pay/notice', function (req, res, next) {
                             }
                         } else {
                             res.json({
-                                code: 1,
+                                code: 5,
                                 data: body,
                                 msg: "isok"
                             })
                         }
                     }
-                } else {
-                    res.json({
-                        code: 0,
-                        msg: "无法请求"
-                    })
-                }
-            });
+                })
+            }
+        } else {
+            res.json({
+                code: 0,
+                msg: "无法请求"
+            })
         }
-    })
+    });
 })
+
+
 // 支付
 app.post('/pay', function (req, res, next) {
     console.log(req.body)
@@ -2297,7 +2301,6 @@ app.post('/payBack', (req, res) => {
                                 }
                             }
                         })
-
                     })
                 })
             })
@@ -2306,7 +2309,7 @@ app.post('/payBack', (req, res) => {
 })
 // 查询资金记录
 app.get('/payinout', (req, res) => {
-    var sql = `select * from wrj_payInOut where userId = ${req.query.id} or toUserId = ${req.query.id}`;
+    var sql = `select * from wrj_payInOut where userId = ${req.query.id} or toUserId = ${req.query.id} order by id desc`;
     connection.query(sql, function (err, userData) {
         if (err) {
             res.json({
@@ -2316,8 +2319,31 @@ app.get('/payinout', (req, res) => {
             console.log(err.message);
             return;
         }
+        if (req.query.index) {
+            //总数
+            var length = userData.length;
+            //可分页数
+            var total = Math.ceil(userData.length / 10);
+
+            var backData = [];
+
+
+            //10==每页条数
+            var num = (req.query.index - 1) * 10;
+            for (var i = 0; i < 10; i++) {
+                if (userData[num + i]) {
+                    backData.push(userData[num + i])
+                } else {
+                    break;
+                }
+            }
+            userData = backData;
+        } else {
+            var total = 1;
+        }
         res.json({
             code: 1,
+            total: total,
             data: userData,
             msg: "成功"
         })
@@ -2473,7 +2499,7 @@ app.post('/ios/exceptional/notice', function (req, res, next) {
         }
         if (verifyReceipt[0]) {
             res.json({
-                code: 3,
+                code: 2,
                 msg: "该票据已使用"
             })
         } else {
@@ -2579,7 +2605,7 @@ app.post('/ios/exceptional/notice', function (req, res, next) {
                                                             return;
                                                         }
                                                         res.json({
-                                                            code: 1,
+                                                            code: 3,
                                                             msg: "打赏成功"
                                                         })
                                                     })
@@ -2652,7 +2678,7 @@ app.post('/ios/exceptional/notice', function (req, res, next) {
                                                         return;
                                                     }
                                                     res.json({
-                                                        code: 1,
+                                                        code: 3,
                                                         msg: "打赏成功"
                                                     })
                                                 })
@@ -2695,13 +2721,44 @@ function getIPAdress() {
         }
     }
 }
-let server = app.listen(port, function () {
-    if (ipaddress) {
-        console.log(ipaddress + ':' + port + '服务器运行成功');
-    } else {
-        console.log('no networking, please open ' + ipaddress + ':' + port + ' in browser');
-    }
-});
+//启动http-https和代理
+
+// 创建https服务器实例
+const httpsServer = https.createServer(credentials, app)
+const httpServer = http.createServer(app)
+
+
+
+// 启动服务器，监听对应的端口
+httpsServer.listen(SSLPORT, () => {
+    console.log(`HTTPS Server is running on: https://localhost:${SSLPORT}`)
+})
+httpServer.listen(PORT, () => {
+    console.log(`HTTP Server is running on: http://localhost:${PORT}`)
+})
+
+// 2、创建服务器进行代理
+net.createServer(function (socket) {
+    socket.once('data', function (buf) {
+        // console.log(buf[0]);
+        // https数据流的第一位是十六进制“16”，转换成十进制就是22
+        var address = buf[0] === 22 ? SSLPORT : PORT;
+        //创建一个指向https或http服务器的链接
+        var proxy = net.createConnection(address, function () {
+            proxy.write(buf);
+            //反向代理的过程，tcp接受的数据交给代理链接，代理链接服务器端返回数据交由socket返回给客户端
+            socket.pipe(proxy).pipe(socket);
+        });
+        proxy.on('error', function (err) {
+            console.log(err);
+        });
+    });
+    socket.on('error', function (err) {
+        console.log(err);
+    });
+}, app).listen(agent_port); // 此处是真正能够访问的端口，网站默认是80端口。
+
+
 
 // 时间戳
 function timestampToTime(timestampm, all) {
@@ -2720,15 +2777,13 @@ function timestampToTime(timestampm, all) {
 }
 
 //随机数
-function randomNum(len) {
-    len = len || 4;
-    var $chars = '0123456789';
-    var maxPos = $chars.length;
-    var pwd = '';
-    for (i = 0; i < len; i++) {
-        pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+function randomNum(n) {
+    n = n ? n : 5;
+    var randomNum = "";
+    for (var i = 0; i < n; i++) {
+        randomNum += Math.floor(Math.random() * 10);
     }
-    return pwd;
+    return randomNum;
 }
 
 // 每天凌晨执行任务(清空验证码)

@@ -1,0 +1,48 @@
+{
+    "app_id": 2019082666428761,
+    "private_key": "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCQb1/+m2adY1XH1j1msE8PGdTgCh/l01KdncO5uECXf6xVRf9EyCJ/hq5MwT0yHj0P1IXUgb94nRwJZClUgLZc5AcDBb4lRmqDUDtDOCat9TQXXqWnMbm1Yh9x7uvS3+4yxmdtdo0wR2wOFwzK7igM8hU7I0hA3cO/TkfWR84Or5vSR4joS3w50ulI78rCHvqV6cZdXVG8ekrLR4AZ68SiZ/zWhEazPTamKQEMU+E4FXIPtkSzH0Vl0OSsB/HdX/KncPHlZ87s+y0VAEMmXrSteUXDf/vPe+ScbeIZy0NntGybt81M7btmZrx3F2x55xs+wZwca8fC4gQzFV7w+aqzAgMBAAECggEANqfuy4pC6owMifKoiZNuV2iPBbjPGUk+miZ5Sm5PAwVtUVeLoZuacmekzabSYYTP1o21lxUCP8I0OdmNSkzqtXwUqzAhJDnhVI+n3WgCOxHvBGjshrhqbhkTjSm8U7Apk01BFksmYn6khTBzxtcYkM2K+zX+wY0p5drZlFzXvPZk5r59pBbSTQSBs8u2/4ritDwClcz3a+BfElVVvQQvG+Wsod4z7KR5L39ohV3leezpNZdKp7p/1xS1dm7Lc4FioFNfKMwFT8JoP3UFTcG7jf24TJkoGFYjs/KUGf2XkVfSvQxYdZOoTsZ3fNEIOgq6uK0WcJYq/U5n0036VISzAQKBgQDUBbb2wqudoDBZIWWHwPcgKT7a7z0GLU6D8tGwpBr/fUkVVk2fwZrDDdy+FhX+lGU8EBRxIe+72xGtebnO3SyXk6LHQiDJeiXPV4F+pjdPBJunWCircO4yKfPynLqstSpnypW5iyDEYFnWn1Q12VKZBO9hCZaDw/c2P2m1wj9a7QKBgQCuZM704wS3lRr6mQhVYulmKPb9FXBtU3ejTtXZ11LKwnhVa58jsaFmgZUD0iubCzhFf3Y4p+y75l1Phn5YKLKhv60jvZZ7v2N8xXN8yrvyNvlNDa35pO4xL9n57do8COy+PiYmPDmps/pVyc0SLW6jORR4NQ51A0eSeeMDqkdIHwKBgDzyc5jVdu21uZA1iHEQqDlHgfj/YoRfC73kVCC528Trp9GJYID271z4pCbERIhM8hjk6mtm/Pn8TEWYwy/S5lmgJ9+tg61G/o1usxvL/gQp5/Cf5/j4WpBy/NwV75dr8IerdYTDmKS6qbiHTna4RQUVpRY44lp4P50Jd4K3Fu01AoGAZuEljiYW9E5MGiYJWoX9dr0X5/mr13L0Ey1Az0BNoTvUTWAuA5qYwqYTSKvF+bNGwQkOryGxcK/XwEBxbISlzPIMrBb+HYaspEC/fpEDC0MPEzvMtIdt1SqLhvugUOZa82gqjUfeJJT+S3m/NsgCitvzjW6PVsxWfrzVBaaAYrUCgYEAlsx18ab+WZHY9lx62tSfG6daSHtRaH0h3a1WxnTPbqcPNg5yulBVwwRcyLBOR5xQdSWB+kE8CZuhtosNhx4aKHQ1ZmIA1xQxrrk/5OwiwvIbEqy+V9jU3RzeuKj7qAHGlloDYIpLy6Z4Ufw0T3a0JEDxlZ3UROhUEvEEKJJNnpg=",
+    "public_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkG9f/ptmnWNVx9Y9ZrBPDxnU4Aof5dNSnZ3DubhAl3+sVUX/RMgif4auTME9Mh49D9SF1IG/eJ0cCWQpVIC2XOQHAwW+JUZqg1A7QzgmrfU0F16lpzG5tWIfce7r0t/uMsZnbXaNMEdsDhcMyu4oDPIVOyNIQN3Dv05H1kfODq+b0keI6Et8OdLpSO/Kwh76lenGXV1RvHpKy0eAGevEomf81oRGsz02pikBDFPhOBVyD7ZEsx9FZdDkrAfx3V/yp3Dx5WfO7PstFQBDJl60rXlFw3/7z3vknG3iGctDZ7Rsm7fNTO27Zma8dxdseecbPsGcHGvHwuIEMxVe8PmqswIDAQAB",
+    "payConfig": {
+        "app_id": 2019082666428761,
+        "private_key": "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCQb1/+m2adY1XH1j1msE8PGdTgCh/l01KdncO5uECXf6xVRf9EyCJ/hq5MwT0yHj0P1IXUgb94nRwJZClUgLZc5AcDBb4lRmqDUDtDOCat9TQXXqWnMbm1Yh9x7uvS3+4yxmdtdo0wR2wOFwzK7igM8hU7I0hA3cO/TkfWR84Or5vSR4joS3w50ulI78rCHvqV6cZdXVG8ekrLR4AZ68SiZ/zWhEazPTamKQEMU+E4FXIPtkSzH0Vl0OSsB/HdX/KncPHlZ87s+y0VAEMmXrSteUXDf/vPe+ScbeIZy0NntGybt81M7btmZrx3F2x55xs+wZwca8fC4gQzFV7w+aqzAgMBAAECggEANqfuy4pC6owMifKoiZNuV2iPBbjPGUk+miZ5Sm5PAwVtUVeLoZuacmekzabSYYTP1o21lxUCP8I0OdmNSkzqtXwUqzAhJDnhVI+n3WgCOxHvBGjshrhqbhkTjSm8U7Apk01BFksmYn6khTBzxtcYkM2K+zX+wY0p5drZlFzXvPZk5r59pBbSTQSBs8u2/4ritDwClcz3a+BfElVVvQQvG+Wsod4z7KR5L39ohV3leezpNZdKp7p/1xS1dm7Lc4FioFNfKMwFT8JoP3UFTcG7jf24TJkoGFYjs/KUGf2XkVfSvQxYdZOoTsZ3fNEIOgq6uK0WcJYq/U5n0036VISzAQKBgQDUBbb2wqudoDBZIWWHwPcgKT7a7z0GLU6D8tGwpBr/fUkVVk2fwZrDDdy+FhX+lGU8EBRxIe+72xGtebnO3SyXk6LHQiDJeiXPV4F+pjdPBJunWCircO4yKfPynLqstSpnypW5iyDEYFnWn1Q12VKZBO9hCZaDw/c2P2m1wj9a7QKBgQCuZM704wS3lRr6mQhVYulmKPb9FXBtU3ejTtXZ11LKwnhVa58jsaFmgZUD0iubCzhFf3Y4p+y75l1Phn5YKLKhv60jvZZ7v2N8xXN8yrvyNvlNDa35pO4xL9n57do8COy+PiYmPDmps/pVyc0SLW6jORR4NQ51A0eSeeMDqkdIHwKBgDzyc5jVdu21uZA1iHEQqDlHgfj/YoRfC73kVCC528Trp9GJYID271z4pCbERIhM8hjk6mtm/Pn8TEWYwy/S5lmgJ9+tg61G/o1usxvL/gQp5/Cf5/j4WpBy/NwV75dr8IerdYTDmKS6qbiHTna4RQUVpRY44lp4P50Jd4K3Fu01AoGAZuEljiYW9E5MGiYJWoX9dr0X5/mr13L0Ey1Az0BNoTvUTWAuA5qYwqYTSKvF+bNGwQkOryGxcK/XwEBxbISlzPIMrBb+HYaspEC/fpEDC0MPEzvMtIdt1SqLhvugUOZa82gqjUfeJJT+S3m/NsgCitvzjW6PVsxWfrzVBaaAYrUCgYEAlsx18ab+WZHY9lx62tSfG6daSHtRaH0h3a1WxnTPbqcPNg5yulBVwwRcyLBOR5xQdSWB+kE8CZuhtosNhx4aKHQ1ZmIA1xQxrrk/5OwiwvIbEqy+V9jU3RzeuKj7qAHGlloDYIpLy6Z4Ufw0T3a0JEDxlZ3UROhUEvEEKJJNnpg=",
+        "public_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkG9f/ptmnWNVx9Y9ZrBPDxnU4Aof5dNSnZ3DubhAl3+sVUX/RMgif4auTME9Mh49D9SF1IG/eJ0cCWQpVIC2XOQHAwW+JUZqg1A7QzgmrfU0F16lpzG5tWIfce7r0t/uMsZnbXaNMEdsDhcMyu4oDPIVOyNIQN3Dv05H1kfODq+b0keI6Et8OdLpSO/Kwh76lenGXV1RvHpKy0eAGevEomf81oRGsz02pikBDFPhOBVyD7ZEsx9FZdDkrAfx3V/yp3Dx5WfO7PstFQBDJl60rXlFw3/7z3vknG3iGctDZ7Rsm7fNTO27Zma8dxdseecbPsGcHGvHwuIEMxVe8PmqswIDAQAB",
+        "notify_url": "http://39.108.10.188:8092/payBack",
+        "return_url": "http://39.108.10.188:8092/return",
+        "dev": false
+    },
+    "alipayVip_": {
+        "app_id": 2019082666428761,
+        "private_key": "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCQb1/+m2adY1XH1j1msE8PGdTgCh/l01KdncO5uECXf6xVRf9EyCJ/hq5MwT0yHj0P1IXUgb94nRwJZClUgLZc5AcDBb4lRmqDUDtDOCat9TQXXqWnMbm1Yh9x7uvS3+4yxmdtdo0wR2wOFwzK7igM8hU7I0hA3cO/TkfWR84Or5vSR4joS3w50ulI78rCHvqV6cZdXVG8ekrLR4AZ68SiZ/zWhEazPTamKQEMU+E4FXIPtkSzH0Vl0OSsB/HdX/KncPHlZ87s+y0VAEMmXrSteUXDf/vPe+ScbeIZy0NntGybt81M7btmZrx3F2x55xs+wZwca8fC4gQzFV7w+aqzAgMBAAECggEANqfuy4pC6owMifKoiZNuV2iPBbjPGUk+miZ5Sm5PAwVtUVeLoZuacmekzabSYYTP1o21lxUCP8I0OdmNSkzqtXwUqzAhJDnhVI+n3WgCOxHvBGjshrhqbhkTjSm8U7Apk01BFksmYn6khTBzxtcYkM2K+zX+wY0p5drZlFzXvPZk5r59pBbSTQSBs8u2/4ritDwClcz3a+BfElVVvQQvG+Wsod4z7KR5L39ohV3leezpNZdKp7p/1xS1dm7Lc4FioFNfKMwFT8JoP3UFTcG7jf24TJkoGFYjs/KUGf2XkVfSvQxYdZOoTsZ3fNEIOgq6uK0WcJYq/U5n0036VISzAQKBgQDUBbb2wqudoDBZIWWHwPcgKT7a7z0GLU6D8tGwpBr/fUkVVk2fwZrDDdy+FhX+lGU8EBRxIe+72xGtebnO3SyXk6LHQiDJeiXPV4F+pjdPBJunWCircO4yKfPynLqstSpnypW5iyDEYFnWn1Q12VKZBO9hCZaDw/c2P2m1wj9a7QKBgQCuZM704wS3lRr6mQhVYulmKPb9FXBtU3ejTtXZ11LKwnhVa58jsaFmgZUD0iubCzhFf3Y4p+y75l1Phn5YKLKhv60jvZZ7v2N8xXN8yrvyNvlNDa35pO4xL9n57do8COy+PiYmPDmps/pVyc0SLW6jORR4NQ51A0eSeeMDqkdIHwKBgDzyc5jVdu21uZA1iHEQqDlHgfj/YoRfC73kVCC528Trp9GJYID271z4pCbERIhM8hjk6mtm/Pn8TEWYwy/S5lmgJ9+tg61G/o1usxvL/gQp5/Cf5/j4WpBy/NwV75dr8IerdYTDmKS6qbiHTna4RQUVpRY44lp4P50Jd4K3Fu01AoGAZuEljiYW9E5MGiYJWoX9dr0X5/mr13L0Ey1Az0BNoTvUTWAuA5qYwqYTSKvF+bNGwQkOryGxcK/XwEBxbISlzPIMrBb+HYaspEC/fpEDC0MPEzvMtIdt1SqLhvugUOZa82gqjUfeJJT+S3m/NsgCitvzjW6PVsxWfrzVBaaAYrUCgYEAlsx18ab+WZHY9lx62tSfG6daSHtRaH0h3a1WxnTPbqcPNg5yulBVwwRcyLBOR5xQdSWB+kE8CZuhtosNhx4aKHQ1ZmIA1xQxrrk/5OwiwvIbEqy+V9jU3RzeuKj7qAHGlloDYIpLy6Z4Ufw0T3a0JEDxlZ3UROhUEvEEKJJNnpg=",
+        "public_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkG9f/ptmnWNVx9Y9ZrBPDxnU4Aof5dNSnZ3DubhAl3+sVUX/RMgif4auTME9Mh49D9SF1IG/eJ0cCWQpVIC2XOQHAwW+JUZqg1A7QzgmrfU0F16lpzG5tWIfce7r0t/uMsZnbXaNMEdsDhcMyu4oDPIVOyNIQN3Dv05H1kfODq+b0keI6Et8OdLpSO/Kwh76lenGXV1RvHpKy0eAGevEomf81oRGsz02pikBDFPhOBVyD7ZEsx9FZdDkrAfx3V/yp3Dx5WfO7PstFQBDJl60rXlFw3/7z3vknG3iGctDZ7Rsm7fNTO27Zma8dxdseecbPsGcHGvHwuIEMxVe8PmqswIDAQAB",
+        "notify_url": "http://39.108.10.188:8092/vipPayBack",
+        "return_url": "http://39.108.10.188:8092/vipReturn",
+        "dev": false
+    },
+    "wechatConfig": {
+        "appid": "wx4605aa5892e7b154",
+        "mch_id": "1549453351",
+        "key": "437D1CCAA370A1FC86650AEF91195BF4",
+        "notify_url": "http://39.108.10.188:8092/payBack",
+        "return_url": "http://39.108.10.188:8092/return"
+    },
+    "wechatConfig_vip": {
+        "appid": "wx4605aa5892e7b154",
+        "mch_id": "1549453351",
+        "key": "437D1CCAA370A1FC86650AEF91195BF4",
+        "notify_url": "http://39.108.10.188:8092/vipPayBack",
+        "return_url": "http://39.108.10.188:8092/vipReturn"
+    },
+    "database": {
+        "host": "39.108.10.188",
+        "user": "root",
+        "password": "123456",
+        "port": "3306",
+        "database": "drone",
+        "useConnectionPooling": true
+    },
+    "emailConfig": {
+        "service": "qq",
+        "user": "3300729997@qq.com",
+        "pass": "gnpksfqhiqjvcjid"
+    }
+}

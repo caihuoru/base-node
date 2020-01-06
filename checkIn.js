@@ -149,7 +149,6 @@ app.get('/checkIn/sign', function (req, res, next) {
                     })
                     return;
                 }
-                console.log("是是是")
                 var sql = "SELECT * FROM user_manage where id = " + req.query.user_id;
                 console.log(sql)
                 connection.query(sql, function (err, ss) {

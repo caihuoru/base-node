@@ -6,7 +6,12 @@ const http = require('http')
 const net = require('net')
 var xmlreader = require("xmlreader");//xml
 var querystring = require("querystring");
+var mysql = require("mysql");
+var request = require("request");
+var schedule = require("node-schedule");
 
+
+var ejs = require("ejs");
 // 根据项目的路径导入生成的证书文件
 const privateKey = fs.readFileSync(path.join(__dirname, './pem/foundjoy.ltd.key'), 'utf8')
 const certificate = fs.readFileSync(path.join(__dirname, './pem/foundjoy.ltd.pem'), 'utf8')
@@ -20,6 +25,32 @@ const SSLPORT = 7100
 const PORT = 7200
 // 创建express实例
 const app = express()
+
+// 数据库配置
+const config = {
+    host: '39.108.10.188',
+    user: 'root',
+    password: '123456',
+    port: '3306',
+    database: "wall",
+    useConnectionPooling: true
+}
+var connection = mysql.createPool({
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    port: config.port,
+    database: config.database
+});
+app.use(express.static(__dirname + '/views'));
+app.locals.appName = "WRJ";
+app.set("view engine", "jade");
+app.set("views", path.resolve(__dirname, "views"));
+app.engine("html", ejs.renderFile);
+app.use(function (req, res, next) {
+    res.locals.userAgent = req.headers["user-agent"];
+    next();
+});
 
 app.all('*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -94,7 +125,8 @@ router.all('*', function (req, res, next) {
     // 判断当前的请求头是 http的话
     if (req.protocol == 'http') {
         // 进行重定向。
-        res.redirect('https://foundjoy.ltd:7000' + req.originalUrl);
+
+        // res.redirect(req.host + req.originalUrl);
     }
 })
 
@@ -104,11 +136,79 @@ router.all('*', function (req, res, next) {
 // })
 
 app.get('/', function (req, res, next) {
-    res.status(200).send('Hello World!')
+    res.status(200).send('你好!')
 });
 
 app.get('/data', function (req, res, next) {
     res.send('isok')
+});
+
+app.get("/news/data", (req, res) => {
+
+    fs.readFile(path.join(__dirname, `data/${req.query.type}.json`), 'utf8', function (err, data) {
+        if (err) {
+            return {
+                code: 1,
+                msg: "失败"
+            }
+        }
+        res.json({
+            code: 1,
+            data: JSON.parse(JSON.parse(data)),
+            msg: "成功"
+        })
+    })
+})
+app.get('/select/gold', function (req, res, next) {
+    var sql = "select gold from user_manage where id = " + req.query.userId;
+    connection.query(sql, function (err, result) {
+        if (err) {
+            console.log('[SELECT ERROR] - ', err.message);
+            res.json({
+                code: 0,
+                msg: "失败！"
+            })
+            return;
+        } else {
+            res.json({
+                code: 1,
+                data: result[0],
+                msg: "成功"
+            })
+        }
+    })
+});
+app.post('/gold/news', function (req, res, next) {
+    var sql = "select * from user_manage where id = " + req.body.userId;
+    //查
+    connection.query(sql, function (err, result) {
+        if (err) {
+            console.log('[SELECT ERROR] - ', err.message);
+            res.json({
+                code: 0,
+                msg: "失败！"
+            })
+            return;
+        } else {
+            var modSql = 'UPDATE user_manage SET gold = ? WHERE id = ?';
+            var modSqlParams = [result[0].gold += Number(req.body.gold), req.body.userId];
+            //添加vip
+            connection.query(modSql, modSqlParams, function (err, UPdata) {
+                if (err) {
+                    console.log('[UPDATE ERROR] - ', err.message);
+                    res.json({
+                        code: 0,
+                        msg: "领取金币失败"
+                    })
+                    return;
+                }
+                res.json({
+                    code: 1,
+                    msg: "领取金币成功"
+                })
+            })
+        }
+    })
 });
 
 // 创建https服务器实例
@@ -119,10 +219,10 @@ const httpServer = http.createServer(app)
 
 // 启动服务器，监听对应的端口
 httpsServer.listen(SSLPORT, () => {
-    console.log(`HTTPS Server is running on: https://localhost:${SSLPORT}`)
+    console.log(`HTTPS已启动`)
 })
 httpServer.listen(PORT, () => {
-    console.log(`HTTP Server is running on: https://localhost:${PORT}`)
+    console.log(`HTTP已启动`)
 })
 
 // 2、创建服务器进行代理
@@ -144,4 +244,44 @@ net.createServer(function (socket) {
     socket.on('error', function (err) {
         console.log(err);
     });
-}, app).listen(7000); // 此处是真正能够访问的端口，网站默认是80端口。
+}, app).listen(8093, () => {
+    console.log("服务器启动成功：8093")
+}); // 此处是真正能够访问的端口，网站默认是80端口。
+
+
+// 每天凌晨执行任务(刷新json)
+var rule = new schedule.RecurrenceRule();
+
+rule.dayOfWeek = [0, new schedule.Range(1, 6)];
+
+rule.hour = 10;
+
+rule.minute = 17;
+
+var j = schedule.scheduleJob(rule, function () {
+    //  代码捎候
+    var jsonArr = ["top", "shehui", "guonei", "yule", "tiyu", "junshi", "keji", "caijing"]
+
+    for (var i = 0; i < jsonArr.length; i++) {
+
+        (function (i) {
+            request({
+                url: `http://v.juhe.cn/toutiao/index?type=${jsonArr[i]}&key=5d8e56169c03c28faca50a266b3b4188`,
+                timeout: 30000
+
+            }, function (error, response, idbody) {
+                var file = path.join(__dirname, `data/${jsonArr[i]}.json`);
+
+                //写入文件
+                fs.writeFile(file, JSON.stringify(idbody), function (err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log('文件创建成功，地址：' + file);
+                });
+
+            })
+        }(i))
+    }
+
+})

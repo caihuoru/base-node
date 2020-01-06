@@ -1,111 +1,71 @@
-// 2019-8-1
-// 用户管理
-app.get('/UserManagerwall', (req, res) => {
-    var sql=`SELECT 
-    T.*,
-    (SELECT count(teacher_id) FROM user_manage WHERE teacher_id = T.id) as student_number,
-    (SELECT account_number FROM user_manage WHERE id = T.teacher_id) as teacher_name,
-    (SELECT sum(money) FROM pay_in_out WHERE user_id = T.id and (money_type="收入" or money_type="任务收入" or money_type="师傅收入")) as accumulated
-  FROM 
-    user_manage T
-    ORDER BY T.id DESC`;
+var express = require('express');
+var app = express();
+var port = 8097;
+var querystring = require("querystring");
+var ipaddress = getIPAdress();//ip地址
+var ejs = require("ejs");
+var path = require("path");
+// 允许访问静态目录
+app.use(express.static(__dirname + '/views'));
+// ejs模板
+app.locals.appName = "JFQ";
+app.set("view engine", "jade");
+app.set("views", path.resolve(__dirname, "views"));
+app.engine("html", ejs.renderFile);
+app.use(function (req, res, next) {
+    res.locals.userAgent = req.headers["user-agent"];
+    next();
+});
 
-    connection.query(sql,function (err, Data) {
-        if(err){
-            res.json({
-                code: 0,
-                msg:"数据错误"
-            }) 
-            console.log(err)
-            return;
-        }
-        Data=JSON.parse(JSON.stringify(Data).replace(/account_number/g,"account"));
-        
-        Data=JSON.parse(JSON.stringify(Data).replace(/teacher_name'/g,"accumulated'"));
+app.all('*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By", ' 3.2.1')
+    res.header("Content-Type", "application/json;charset=utf-8");
+    next();
+});
 
-        res.json({
-            code: 1,
-            list:Data,
-            msg:"成功"
-        }) 
-
-    })
-
-})
-
-// 徒弟详情
-app.get('/students_wall', (req, res) => {
-    var sql="SELECT a.*,b.all_money FROM `user_manage` as a ";
-        sql+=`
-        LEFT JOIN (SELECT sum(back_teacher_money) as all_money,user_id FROM task_audit group by user_id) as b
-        on a.id=b.user_id
-        where teacher_id = `+req.query.id+`
-        ORDER BY a.id DESC`;
-    connection.query(sql,function (err, Data) {
-        if(err){
-            res.json({
-                code: 0,
-                msg:"数据错误"
-            }) 
-            console.log(err)
-            return;
-        }
-        res.json({
-            code: 1,
-            list:Data,
-            msg:"成功"
-        }) 
-    })
-})
-
-// 删除和编辑
-app.post('/Userpagewall', (req, res) => {
+// post请求需要
+app.post('*', function (req, res, next) {
     var postData = '';
-        req.on('data', function (chunk) {
-            postData += chunk;
-        });
-        req.on('end', function () {
-            postData = decodeURI(postData);
-            if(postData.indexOf('}') > -1){
-                postData = JSON.parse(postData)
-            }else{
-                postData = querystring.parse(postData)
-            }
-            // 删除
-            if(postData.doing=="Delete"){
-                var sql="delete from user_manage where id = "+postData.id;
-                connection.query(sql,function (err, Data) {
-                    if(err){
-                        res.json({
-                            code: 0,
-                            msg:"数据错误"
-                        }) 
-                        console.log(err)
-                        return;
-                    }
-                    res.json({
-                        code: 1,
-                        msg:"删除成功"
-                    }) 
-                })
-            }else if(postData.doing=="Edit"){
-                var modSql = 'UPDATE user_manage SET user_nickName = ?, pass_word = ?, alipay = ?, wechat = ? WHERE id = ?';
-                var modSqlParams = [postData.user_nickName,postData.password,postData.alipay,postData.wechat,postData.id];       
-                    connection.query(modSql,modSqlParams,function (err, backData) {
-                        if(err){
-                            console.log(err)
-                            res.json({
-                                status: 0,
-                                msg:"修改失败"
-                            })
-                            return;
-                        }
-                        res.json({
-                            code: 1,
-                            msg:"编辑成功"
-                        }) 
+    req.on('data', function (chunk) {
+        postData += chunk;
+    });
+    req.on('end', function () {
+        postData = decodeURI(postData);
+        postData = postData.replace(/\s+/g, "");
+        if (postData.substring(0, 1) === "{") {
+            postData = JSON.parse(postData)
+        } else {
+            postData = querystring.parse(postData)
+        }
+        req.body = postData;
+        next();
+    })
+});
+app.get('/', function (req, res, next) {
+    res.send("isok")
+});
 
-                    })
+
+function getIPAdress() {
+    var interfaces = require('os').networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
             }
-        })
-})
+        }
+    }
+}
+let server = app.listen(port, function () {
+    if (ipaddress) {
+        console.log(ipaddress + ':' + port + '服务器运行成功');
+    } else {
+        console.log('no networking, please open ' + ipaddress + ':' + port + ' in browser');
+    }
+});
+

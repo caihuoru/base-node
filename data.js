@@ -324,58 +324,83 @@ var parser = new xml2js.Parser();   //xml -> json
 
 // }
 
-request({
-    url: `http://news-at.zhihu.com/api/4/news/latest`,
-    timeout: 30000
+var jsonArr = ["top", "shehui", "guonei", "yule", "tiyu", "junshi", "keji", "caijing"]
 
-}, function (error, response, body) {
+for (var i = 0; i < jsonArr.length; i++) {
 
-    // http://news-at.zhihu.com/api/4/news/{id}
+    (function (i) {
+        request({
+            url: `http://v.juhe.cn/toutiao/index?type=${jsonArr[i]}&key=5d8e56169c03c28faca50a266b3b4188`,
+            timeout: 30000
+
+        }, function (error, response, idbody) {
+            var file = path.join(__dirname, `data/${jsonArr[i]}.json`);
+
+            //写入文件
+            fs.writeFile(file, JSON.stringify(idbody), function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log('文件创建成功，地址：' + file);
+            });
+
+        })
+    }(i))
+}
 
 
-    // var json = parser.parseString(body);
+// request({
+//     url: `http://v.juhe.cn/toutiao/index?type=${req.query.type}&key=5d8e56169c03c28faca50a266b3b4188`,
+//     timeout: 30000
 
-    body = JSON.parse(body)
-    console.log(body)
-    for (var i = 0; i < body.stories.length; i++) {
-        // console.log(body.top_stories[i].id)
-        (function (i) {
-            request({
-                url: `http://news-at.zhihu.com/api/4/news/${body.stories[i].id}`,
-                timeout: 30000
+// }, function (error, response, body) {
 
-            }, function (error, response, idbody) {
-                var file = path.join(__dirname, `data/${body.stories[i].id}.json`);
+//     // http://news-at.zhihu.com/api/4/news/{id}
 
-                //写入文件
-                fs.writeFile(file, JSON.stringify(idbody), function (err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    console.log('文件创建成功，地址：' + file);
-                });
 
-            })
-        }(i))
+//     // var json = parser.parseString(body);
 
-    }
-    // console.log(json)
+//     body = JSON.parse(body)
+//     console.log(body)
+//     for (var i = 0; i < body.stories.length; i++) {
+//         // console.log(body.top_stories[i].id)
+//         (function (i) {
+//             request({
+//                 url: `http://news-at.zhihu.com/api/4/news/${body.stories[i].id}`,
+//                 timeout: 30000
 
-    // var tObj = parser.getTraversalObj(body, options);
-    // var jsonObj = parser.convertToJson(tObj, options);
-    // jsonObj = JSON.stringify(jsonObj)
-    //指定创建目录及文件名称，__dirname为执行当前js文件的目录
-    var file = path.join(__dirname, `data / news.json`);
+//             }, function (error, response, idbody) {
+//                 var file = path.join(__dirname, `data/${body.stories[i].id}.json`);
 
-    //写入文件
-    fs.writeFile(file, JSON.stringify(body), function (err) {
-        if (err) {
-            return console.log(err);
-        }
-        console.log('文件创建成功，地址：' + file);
-    });
+//                 //写入文件
+//                 fs.writeFile(file, JSON.stringify(idbody), function (err) {
+//                     if (err) {
+//                         return console.log(err);
+//                     }
+//                     console.log('文件创建成功，地址：' + file);
+//                 });
 
-})
+//             })
+//         }(i))
+
+//     }
+//     // console.log(json)
+
+//     // var tObj = parser.getTraversalObj(body, options);
+//     // var jsonObj = parser.convertToJson(tObj, options);
+//     // jsonObj = JSON.stringify(jsonObj)
+//     //指定创建目录及文件名称，__dirname为执行当前js文件的目录
+//     var file = path.join(__dirname, `data / news.json`);
+
+//     //写入文件
+//     fs.writeFile(file, JSON.stringify(body), function (err) {
+//         if (err) {
+//             return console.log(err);
+//         }
+//         console.log('文件创建成功，地址：' + file);
+//     });
+
+// })
 
 let server = app.listen(port, function () {
 

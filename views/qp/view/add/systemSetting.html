@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台管理-新增会员</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：后台管理-系统设置</h2>
+            </div>
+            <div class="tab-content">
+                <div class="container tab-pane active">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">客服地址：</label>
+                            <div class="pull-left">
+                                <input id="txtAccount" class="form-control"
+                                       type="text" maxlength="31"
+                                       v-model="customURL">
+                            </div>
+<!--                            <span class="pull-left control-label"><i>*&nbsp;</i>请输入帐号,由字母、数字、下划线和汉字组成！</span>-->
+                        </div>
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">充值地址：</label>
+                            <div class="pull-left">
+                                <input id="txtNickName" class="form-control"
+                                       type="text" maxlength="31"
+                                       v-model="rechargeURL">
+                            </div>
+<!--                            <span class="pull-left control-label">不填则与帐号相同 由字母、数字、下划线和汉字组成！</span>-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-absolute">
+                <ul class="cursor-style clearfix new-add-btn">
+                    <li class="pull-left margin-r10">
+                        <button class="btn btn-outline-success search btn-md" @click="Add"><i
+                                class="glyphicon glyphicon-send"></i>保存
+                        </button>
+                    </li>
+                    <li class="pull-left">
+                        <button class="btn btn-danger search btn-md" @click="window.close();"><i
+                                class="glyphicon glyphicon-off"></i>关闭
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script>
+    var myVue = new Vue({
+        el:'#content',
+        data:{
+            customURL:'',
+            rechargeURL:''
+        },
+        methods:{
+            Add:function () {
+
+            }
+        }
+    })
+</script>
+</body>
+</html>

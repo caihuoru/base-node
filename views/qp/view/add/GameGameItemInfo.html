@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" charset="utf-8"/>
+    <title>游戏系统 - 游戏管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <script src="../../Content/laydate/laydate.js"></script>
+    <style type="text/css">
+        .panel-body .row div:first-child {
+            max-width: 145px;
+            text-align: right;
+        }
+
+        .panel-body .row input[type='text'] {
+            max-width: 350px;
+            display: inline;;
+        }
+
+        .wrap,
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：游戏系统 - 游戏管理</h2>
+            </div>
+            <ul class="media nav nav-tabs margin-b-10">
+                <li class="active"><a href="../gameManage.html">模块</a></li>
+                <li><a href="../App/GameKindItemList.html?tag=c&title=游戏管理" title="游戏">游戏</a></li>
+                <li><a href="../App/GameTypeItemList.html?tag=c&title=游戏类型管理" title="类型">类型</a></li>
+                <li><a href="../App/MobileKindList.html?tag=c&title=手游管理" title="手游">手游</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">新增模块信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">模块标识：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtGameID" class="form-control input-sm"
+                                                                  type="text" maxlength="9"
+                                                                  onkeyup="if(isNaN(value))execCommand('undo')"
+                                                                  value="10000"></div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">模块名称：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtGameName" class="form-control input-sm"
+                                                                  type="text" maxlength="31" value=""></div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">数据库名：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtDataBaseName" class="form-control input-sm"
+                                                                  type="text" maxlength="31" value=""></div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">数据库地址：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select class="form-control input-sm input-width-200" id="ddlDataBaseAddr">
+                                    <option value="127.0.0.1">mm</option>
+                                    <option value="127.0.0.1">mm</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">服务端版本：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtServerVersion"
+                                                                  class="form-control input-sm" type="text"
+                                                                  value="0.0.0.0"></div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">客户端版本：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtClientVersion"
+                                                                  class="form-control input-sm" type="text"
+                                                                  value="0.0.0.0"></div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">服务端名称：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtServerDLLName"
+                                                                  class="form-control input-sm" type="text"
+                                                                  maxlength="32" value=""></div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">客户端名称：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtClientExeName"
+                                                                  class="form-control input-sm" type="text"
+                                                                  maxlength="32" value=""></div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2">支持类型：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <p class="checkbox-radio"><span class="break-word"><input id="ckbSupporType1"
+                                                                                          type="checkbox"
+                                                                                          name="ckbSupporType"
+                                                                                          value="1"/> <label
+                                        for="ckbSupporType1">金币类型</label></span><span class="break-word"><input
+                                        id="ckbSupporType2" type="checkbox" name="ckbSupporType" value="2"/>
+                                            <label for="ckbSupporType2">点值类型</label></span><span
+                                        class="break-word"><input id="ckbSupporType4" type="checkbox"
+                                                                  name="ckbSupporType" value="4"/> <label
+                                        for="ckbSupporType4">定时比赛</label></span><span class="break-word"><input
+                                        id="ckbSupporType8" type="checkbox" name="ckbSupporType" value="8"/>
+                                            <label for="ckbSupporType8">训练类型</label></span><span
+                                        class="break-word"><input id="ckbSupporType16" type="checkbox"
+                                                                  name="ckbSupporType" value="16"/> <label
+                                        for="ckbSupporType16">即时比赛</label></span></p>
+                            </div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-outline-primary search btn-md" href="../gameManage.html"><i
+                                        class="glyphicon glyphicon-circle-arrow-left"></i>返回</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="#" onclick="add();"><i
+                                        class="glyphicon glyphicon-send"></i>保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var dataObj = {};
+    var array = [];
+
+    //获取数据库地址列表
+    $.post(qp_url + 'admin/App/GetDataBaseInfoList', {
+        token: getStorage('token')
+    }, function (res) {
+        var str = "";
+        if (res.status == 1) {
+            for (var i = 0, len = res.data.data.length; i < len; i++) {
+                str += '<option value="' + res.data.data[i].DBAddr + '">' + res.data.data[i].Information + '</option>'
+            }
+            $('#ddlDataBaseAddr').html(str)
+        }
+    }, 'json');
+
+    var ID = getUrlParams("id");
+    if (ID == null || ID == "null" || !ID) {
+
+    } else {
+        $.ajax({
+            url: qp_url + '/admin/App/GetGameGameItemInfo?token=' + getStorage('token'),
+            type: "get",
+            dataType: "json",
+            data: {
+                GameID: ID
+            },
+            success: function (data) {
+                // console.log(data)
+                dataObj = data.data;
+                $("[name=ckbSupporType]").each(function (i, d) {
+                    array.push(Number($(d).val()));
+                })
+
+                console.log(array)
+
+                function getRights(num, ary) {
+                    console.log(num)
+                    if (num == 0) {
+                        return []
+                    }
+                    var temp = [];
+                    for (var i = ary.length - 1; i >= 0; i--) {
+                        if (num - ary[i] < 0) {
+                            continue;
+                        } else {
+                            num -= ary[i]
+                            temp.push(ary[i])
+                            $(`[value='${ary[i]}'`).attr("checked", "checked");
+
+                        }
+                    }
+                    return temp
+                }
+
+                getRights(dataObj.SuportType, array)
+                $("#txtGameID").val(dataObj.GameID);
+                $("#txtGameName").val(dataObj.GameName);
+                $("#txtDataBaseName").val(dataObj.DataBaseName);
+                $("#ddlDataBaseAddr").val(dataObj.DataBaseAddr);
+                $("#txtServerVersion").val(dataObj.ServerVersion);
+                $("#txtClientVersion").val(dataObj.ClientVersion);
+                $("#txtServerDLLName").val(dataObj.ServerDLLName);
+                $("#txtClientExeName").val(dataObj.ClientExeName);
+                $("#txtMachineID").val(dataObj.MachineID);
+            }
+
+        })
+    }
+
+    function add() {
+
+        var GameID = $("#txtGameID").val();
+        if (GameID == "") {
+            alert("模块标识不能为空");
+            return false;
+        }
+        if (isNaN(GameID)) {
+            alert("模块标识为整数");
+            return false;
+        }
+        var GameName = $("#txtGameName").val();
+        if (GameName == "") {
+            alert("模块名称不能为空");
+            return false;
+        }
+        var DataBaseName = $("#txtDataBaseName").val();
+        if (DataBaseName == "") {
+            alert("数据库名不能为空");
+            return false;
+        }
+        var DataBaseAddr = $("#ddlDataBaseAddr").val();
+        if (DataBaseAddr == "") {
+            alert("请选择数据库");
+            return false;
+        }
+        var ServerVersion = $("#txtServerVersion").val();
+        if (ServerVersion == "") {
+            alert("服务器版本不能为空");
+            return false;
+        }
+        var ClientVersion = $("#txtClientVersion").val();
+        if (ClientVersion == "") {
+            alert("客服端版本不能为空");
+            return false;
+        }
+        var ServerDLLName = $("#txtServerDLLName").val();
+        if (ServerDLLName == "") {
+            alert("服务端名称不能为空");
+            return false;
+        }
+        var ClientExeName = $("#txtClientExeName").val();
+        if (ClientExeName == "") {
+            alert("客户端名称不能为空");
+            return false;
+        }
+        var SuportType = GetCheckListCheckedSum("ckbSupporType");
+        if (SuportType < 1) {
+            alert("请选择支持类型");
+            return false;
+        }
+        var data = {
+            GameID: GameID,
+            GameName: GameName,
+            DataBaseName: DataBaseName,
+            DataBaseAddr: DataBaseAddr,
+            ServerVersion: ServerVersion,
+            ClientVersion: ClientVersion,
+            ServerDLLName: ServerDLLName,
+            ClientExeName: ClientExeName,
+            SuportType: SuportType,
+            IntParam: parseInt('0')
+        };
+        if (ID == null || ID == "null" || !ID) {
+
+            console.log(data)
+        } else {
+            data.IntParam = data.GameID;
+
+        }
+        $.ajax({
+            url: qp_url + "admin/App/AddGameGameItemInfo?token=" + getStorage('token'),
+            type: "post",
+            data: data,
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                alert(data.msg);
+            }
+        })
+    }
+
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "add":
+                alert(jsonData.Msg);
+                window.location.href = "/App/GameGameItemList"
+                break;
+        }
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>后台管理-渠道管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <!--    <link href="../../Content/layui-v2.5.4/layui/css/layui.css" rel="stylesheet"/>-->
+    <link href="../../Content/common.css" rel="stylesheet"/>
+
+    <style type="text/css">
+        .panel-body .row {
+            margin: 15px 0;
+        }
+
+        .col-xs-2.col-md-1 {
+            padding-top: 3px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content margin-t-10">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i> 目前操作功能：渠道管理 - 渠道列表</h2>
+            </div>
+            <div class="tab-content">
+                <div class="panel panel-primary" style="border: none;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">渠道ID：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.channel_num" name="admin_id"
+                                       v-validate="'required|numeric'"
+                                       class="form-control input-sm" type="text" value="">
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('admin_id')">渠道ID只能输入数字</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">渠道账号：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.username" class="form-control input-sm" type="text"
+                                       name="qdname"
+                                       v-validate="'required'"
+                                       value="">
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('qdname')">请输入渠道账号</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">密码：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.show_pwd" class="form-control input-sm"
+                                       name="show_pwd"
+                                       v-validate="'required|min:6'"
+                                       type="password" value="">
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('show_pwd')">密码长度不能低于6位</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">渠道地址：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.channel_addr"
+                                       name="channel_addr"
+                                       v-validate="'required'"
+                                       class="form-control input-sm"
+                                       type="text" value="">
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('channel_addr')">请输入渠道地址</div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-danger search btn-md" href="#" onclick="closed()"><i
+                                        class="glyphicon glyphicon-off"></i> 关闭</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="javascript:void(0)"
+                                       @click="EditInfo"><i
+                                        class="glyphicon glyphicon-send"></i> 保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../../Content/veevalidate/vee-validate.js"></script>
+<script src="../../Content/veevalidate/zh_CN.js"></script>
+<script src="../../Content/veevalidate/config.js"></script>
+<script type="text/javascript">
+    let app;
+    $(function () {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+        });
+        app = new Vue({
+            el: '#content',
+            data: {
+                add: {
+                    admin_id: getUrlParams('admin_id'),
+                    channel_num: '',
+                    username: "",
+                    channel_addr: "",
+                    show_pwd: ""
+                }
+            },
+            mounted() {
+                let that = this;
+                if (getUrlParams('admin_id') != 0) {//如果不是新增的，就查询指定的渠道信息
+                    $.get(qp_url + 'admin/web/channelInfo', {
+                        token: getStorage('token'),
+                        admin_id: getUrlParams('admin_id')
+                    }, function (res) {
+                        if (res.status == 1) {
+                            that.add = res.data
+                        }
+                    }, 'json')
+                }
+            }
+            , methods: {
+                EditInfo: function () {
+                    var that = this;
+                    console.log(that.add.admin_id);
+                    if(getUrlParams('admin_id')!=0){//编辑
+                        if(getStorage('admin_id')!=1){
+                            return layer.msg('您不是超级管理员，没有操作权限',{time:1000,icon:2})
+                        }
+                    }
+                    this.$validator.validate().then(valid => {
+                        if (valid) {
+                            $.post(qp_url + 'admin/web/editChannel', {
+                                token: getStorage('token'),
+                                admin_id: that.add.admin_id ? that.add.admin_id : 0,
+                                username: that.add.username,
+                                channel_addr: that.add.channel_addr,
+                                channel_num: that.add.channel_num,
+                                pwd: that.add.show_pwd
+                            }, function (res) {
+                                if (res.status == 1) {
+                                    layer.msg(res.msg, {time: 1000, icon: 1})
+                                    setTimeout(function () {
+                                        closed()
+                                    }, 1000)
+                                } else {
+                                    layer.msg(res.msg, {time: 1000, icon: 2})
+                                }
+                            }, 'json')
+                        } else {
+                            layer.msg('输入信息有误', {time: 1000, icon: 2})
+                        }
+                    })
+                }
+            }
+        })
+    })
+
+    function closed(msg) {
+        window.close()
+        window.opener.reloadTable()
+    }
+</script>
+</body>
+</html>

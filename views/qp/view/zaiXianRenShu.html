@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>游戏用户 - 在线人数设置</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link href="../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content" style="display: none;"v-show="gameList">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i>你当前位置：游戏用户 - 在线人数设置 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>游戏：</li>
+                                    <li>
+                                        <select class="form-control" name="select" id="ddlGame" v-model="KindID">
+                                            <option :value="item.KindID" v-for="item in gameList">{{item.KindName}}</option>
+                                        </select>
+                                    </li>
+                                    <li>房间：</li>
+                                    <li>
+                                        <select class="form-control" name="select" id="ddlRoom" v-model="ServerID">
+                                            <option :value="item.ServerID" v-for="item in roomList">{{item.ServerName}}</option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                                <div class="dataTables_info" id="totalData"  style="padding-bottom:10px; padding-top:10px;">共 0 条</div>
+                            </div>
+                        </div>
+                        <div class="col-md-10" style="padding-bottom:10px; padding-top:10px; text-align:right;">
+                            <div style="color:red;">百人游戏不能编辑虚拟人数</div>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                        <table style="display: none;"
+                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                            <tr role="row">
+                                <th><input name="ckall" type="checkbox" value="" onclick="SelectAll(this,'cid')"/></th>
+                                <th>游戏名称</th>
+                                <th>房间名称</th>
+                                <th>真实人数</th>
+                                <th>机器人数</th>
+                                <th>当前虚拟人数</th>
+                                <th>总人数</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                        </table>
+
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var pageObj = {};
+    var postData = {};//搜索条件
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [],table;
+    var myVue = new Vue({
+        el:'#content',
+        data:{
+            gameList:[],
+            roomList:[],
+            KindID: 0,
+            ServerID: 0
+        },mounted:function () {
+            var that = this
+            //获取游戏列表
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Gamecommon/GetGameList?token=' + getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    let otherType = [{
+                        KindID: 0,
+                        KindName: '全部游戏'
+                    }];
+                    if (res.status == 1) {
+                        that.gameList = otherType.concat(res.data)
+                    } else {
+                        that.gameList = otherType
+                    }
+                }
+            })
+            //获取游戏房间列表
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Gamecommon/RoomList?token=' + getStorage('token')+'&kid=0',
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    let otherType = [{
+                        ServerID: 0,
+                        ServerName: '全部房间'
+                    }];
+                    if (res.status == 1) {
+                        that.roomList = otherType.concat(res.data)
+                    } else {
+                        that.roomList = otherType
+                    }
+                }
+            })
+        }
+    })
+
+    var roomList = new Array(), gameList = new Array(), gameTypeList = new Array(), roomJson = [];
+    var serverId = 0, kindId = 0;
+    // $(document).ready(function () {
+    //     loadRoom()
+    //     docReady();
+    // });
+
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , url: qp_url + 'admin/Android/GetOnlineCountList' //数据接口
+            ,where:{
+                token:getStorage('token'),
+                ServerID:0,
+                KindID:0
+            }
+            // , request: {
+            //     pageName: 'pageIndex' //页码的参数名称，默认：page
+            //     , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            // }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                $('#totalData').text('共 '+(res.data.total || 0)+' 条')
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    // "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , page:false
+            , cols: [[ //表头
+                {type: 'checkbox'}
+                , {field: 'GameKindName', title: '游戏名称'}
+                , {field: 'GameRoomName', title: '房间名称',minWidth:200}
+                , {field: 'UserCount', title: '真实人数'}
+                , {field: 'AndroidCount', title: '机器人数'}
+                , {field: 'AddCounts', title: '当前虚拟人数'}
+                , {field: '', title: '总人数',templet:function (d) {
+                        return  parseInt(d.UserCount) + parseInt(d.AndroidCount) + parseInt(d.AddCounts)
+                    }}
+                , {
+                    field: '', title: '操作', templet: function (d) {
+                        for(var i=0;i<myVue.gameList.length;i++){
+                            if(myVue.gameList[i].KindID == d.KindID ){
+                                if (myVue.gameList[i].WebTypeID != 2) {//可编辑
+                                    return `<span class='layui-btn layui-btn-xs' onclick="openWindowOwn('Android/OnlineCountTimeList.html?kindId=${d.KindID}&serverId=${d.ServerID}&serverName=${d.GameRoomName}','虚拟人数',1200,800);" >编辑</span>`
+                                } else {
+                                    return ``;
+                                }
+                            }
+                        }
+                    }
+                }
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+
+        });
+        //监听复选框选择事件
+        table.on('checkbox(test)', function (obj) {
+            var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+            selectRows = checkStatus.data
+        });
+
+    });
+    //普通搜索事件
+    $(document).on('click','#btnQuery',function () {
+        postData.KindID = $("#ddlGame").val();
+        postData.ServerID = $("#ddlRoom").val();
+        table.reload('layTable', {
+            url: qp_url + 'admin/Android/GetOnlineCountList?token='+getStorage('token') //数据接口
+            , where: postData
+            , page: false
+        });
+    })
+
+    // function loadRoom() {
+    //     $.ajaxSetup({
+    //         async: false
+    //     });
+    //     $.post("/Account/GetGameList", {}, function (data) {
+    //         data = $.parseJSON(data);
+    //         var optHTML = "";
+    //         $.each(data, function () {
+    //             optHTML += "<option value='" + this.KindID + "'>" + this.KindName + "</option>";
+    //             gameList[this.KindID] = this.KindName;
+    //             gameTypeList[this.KindID] = this.WebTypeID;
+    //         });
+    //         $('#ddlGame').append(optHTML);
+    //     })
+    //     $.post("/Android/RoomList", {kid: 0}, function (data) {
+    //         roomJson = $.parseJSON(data);
+    //         var optHTML = "";
+    //         $.each(roomJson, function () {
+    //             optHTML += "<option value='" + this.ServerID + "'>" + this.ServerName + "</option>";
+    //             roomList[this.ServerID] = this.ServerName
+    //         });
+    //         $('#ddlRoom').append(optHTML);
+    //     })
+    //     $('#ddlGame').change(function () {
+    //         var kid = $(this).val();
+    //         var optHTML = "";
+    //         $.each(roomJson, function () {
+    //             if (this.KindID == kid) {
+    //                 optHTML += "<option value='" + this.ServerID + "'>" + this.ServerName + "</option>";
+    //             }
+    //         });
+    //         $('#ddlRoom').append(optHTML);
+    //     })
+    //
+    // }
+    //
+    // function docReady() {
+    //     //加载数据
+    //     postData.pageIndex = 1;
+    //     AjaxSearch(postData);
+    //
+    //     //收放事件
+    //     $('.btn-minimize').click(function (e) {
+    //         e.preventDefault();
+    //         var $target = $(this).parent().parent().next('.box-content');
+    //         if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    //         else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+    //         $target.slideToggle();
+    //     });
+    //     //刷新
+    //     $("#btnRefresh").click(function (e) {
+    //         postData.KindID = 0;
+    //         postData.ServerID = 0;
+    //         AjaxSearch(postData);
+    //     });
+    //     // //普通搜索事件
+    //     // $("#btnQuery").click(function (e) {
+    //     //     postData.KindID = $("#ddlGame").val();
+    //     //     postData.ServerID = $("#ddlRoom").val();
+    //     //     AjaxSearch(postData);
+    //     // });
+    // }
+    //
+    // //搜索事件
+    // function AjaxSearch(postData) {
+    //     $('#pagin').paging("/Android/GetOnlineCountList", postData, CreatTableBody, postData.pageIndex);
+    // }
+
+    //回调函数
+    //function callBack(jsonData, fname) {
+    //    switch (fname) {
+
+    //        case "do":
+    //            alert("修改成功");
+    //            UpAnroidWindow.Close();
+    //            AjaxSearch(postData);
+    //            break;
+    //    }
+    //}
+    // //绑定数据
+    // function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex) {
+    //     var html = "";
+    //     if (jsondata != null && jsondata.length > 0) {
+    //         $.each(jsondata, function (i, item) {
+    //             html += stringFormat("<tr>");
+    //             html += stringFormat("<td style=\"width: 30px;\"><input name='cid' type='checkbox' value='{0}'/></td>", item.ServerID);
+    //             html += stringFormat("<td>{0}</td>", gameList[item.KindID]);
+    //             html += stringFormat("<td>{0}</td>", roomList[item.ServerID]);
+    //             html += stringFormat("<td>{0}</td>", item.UserCount);
+    //             html += stringFormat("<td>{0}</td>", item.AndroidCount);
+    //             html += stringFormat("<td>{0}</td>", item.AddCounts);
+    //             html += stringFormat("<td>{0}</td>", parseInt(item.UserCount) + parseInt(item.AndroidCount) + parseInt(item.AddCounts));
+    //             html += stringFormat("<td>{0}</td>", gameTypeList[item.KindID] == 2 ? "" : "<a href='javascript:void(0);' onclick='ShowUpdateCount(" + item.KindID + "," + item.ServerID + ",\"" + roomList[item.ServerID] + "\");' >编辑</a>");
+    //             html += "</tr>";
+    //         });
+    //     }
+    //     $("#DataTables_Table_0_wrapper tbody").html(html);
+    //     $("#DataTables_Table_0_info").html(stringFormat("共 {0} 条", pageTotal));
+    // }
+    //
+    // //字符串格式化
+    // function stringFormat() {
+    //     if (arguments.length == 0)
+    //         return null;
+    //     var str = arguments[0];
+    //     for (var i = 1; i < arguments.length; i++) {
+    //         var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+    //         str = str.replace(re, arguments[i]);
+    //     }
+    //     return str;
+    // }
+
+
+    //var UpdateOnLineCount = function () {
+    //    if (serverId == 0 || kindId == 0) {
+    //        alert("请选择要修改人数的游戏");
+    //        return;
+    //    }
+    //    var count = $("#pcount_text").val();
+    //    var reg = /^[0-9]+$/;
+    //    if (!reg.test(count)) {
+    //        alert("只能为数字");
+    //        return
+    //    }
+    //    else {
+    //        var data = {};
+    //        data.ServerID = serverId;
+    //        data.KindID = kindId;
+    //        data.AddCounts = count;
+    //        AjaxSubmit("/Android/UpdateCount", data, callBack, "do");
+    //    }
+    //}
+
+    // var ShowUpdateCount = function (kid, sid, sName) {
+    //     //kindId = kid;
+    //     //serverId = sid;
+    //     //$("#pcount_text").val(count)
+    //     UpAnroidWindow = new openWindowOwn("Android/OnlineCountTimeList.html?kindId=" + kid + "&serverId=" + sid + "&serverName=" + sName, "虚拟人数", {
+    //         autoOpen: true,
+    //         modal: true,
+    //         height: 500,
+    //         width: 800
+    //     }, false);
+    // }
+</script>
+</body>
+</html>

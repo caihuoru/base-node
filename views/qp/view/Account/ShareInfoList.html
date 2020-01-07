@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>充值系统 - 充值记录</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body class="">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：充值系统 - 充值记录 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <ul class="media nav nav-tabs" v-show="userID">
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=0'" title="">基本信息</a>
+                    </li>
+                    <li style="display: none;">
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=1'" title="">详细信息</a>
+                    </li>
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=2'" title="">财富信息</a>
+                    </li>
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=3'" title="">记录信息</a>
+                    </li>
+                    <li>
+                        <a :href="'RecordDrawInfoList.html?param='+userID+'&account='+ account" title="">游戏记录</a>
+                    </li>
+                    <li class="active">
+                        <a :href="'ShareInfoList.html?param='+userID+'&account='+ account" title="">充值记录</a>
+                    </li>
+                    <li>
+                        <a :href="'RecordGlodList.html?param='+userID+'&account='+ account" title="">金币流水</a>
+                    </li>
+                    <li>
+                        <a :href="'RecordUserInoutList.html?param='+userID+'&account='+ account" title="">进出记录</a>
+                    </li>
+                    <li>
+                        <a :href="'tuiGuang.html?param='+userID+'&account='+ account" title="">推广</a>
+                    </li>
+                    <li>
+                        <a :href="'shuiShouJiLu.html?param='+userID+'&account='+ account" title="">税收记录</a>
+                    </li>
+                </ul>
+                <div class="box-content" style="overflow: hidden; display: block;">
+
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item mb5">
+                                <ul class="list-inline cursor-style">
+                                    <li>日期查询：</li>
+                                    <li>
+                                        <input id="txtStartDate" class="input-width-150"
+                                               type="text" readonly="readonly"
+                                               placeholder="请输入开始时间"
+                                               value=""/>至
+                                        <input id="txtEndDate" class="input-width-150"
+                                               type="text" readonly="readonly"
+                                               placeholder="请输入结束时间"
+                                               value=""/>
+                                    </li>
+                                    <li><select class="form-control input-sm" id="ddlGlobalShareInfo">
+                                        <option value="0">全部服务</option>
+                                        <option :value="key" v-for="(value,key) in payTypeList">{{value}}</option>
+                                    </select></li>
+
+                                    <li>
+                                        用户查询：
+                                    </li>
+                                    <li>
+                                        <input type="text" id="txtSearch" class="form-control input-sm input-width-150"
+                                               placeholder="请输入用户/推广人/代理人查询" value=""/>
+                                    </li>
+                                    <li>
+                                        <select id="ddlSearchType" class="form-control input-sm">
+                                            <option value="1">按用户帐号</option>
+                                            <option value="2">按游戏ID</option>
+                                            <option value="3">按订单号</option>
+                                            <option value="4">按推广人</option>
+                                            <option value="5">按代理人</option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <button id="btnQuery" class="btn btn-outline-success search"
+                                                @click="conditionSearch(0)"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-12" style="padding-bottom:5px; padding-top:5px; text-align:right;">
+                            <div class="btn-group btn-group">
+                                <button type="button" id="btnQueryTD" class="btn btn-outline-primary"
+                                        @click="conditionSearch(2)"><i
+                                        class="glyphicon glyphicon-align-left icon-white"></i>今天
+                                </button>
+                                <button type="button" id="btnQueryYD" class="btn btn-outline-primary"
+                                        @click="conditionSearch(3)"><i
+                                        class="glyphicon glyphicon-align-center icon-white"></i>昨天
+                                </button>
+                                <button type="button" id="btnQueryTW" class="btn btn-outline-primary"
+                                        @click="conditionSearch(4)"><i
+                                        class="glyphicon glyphicon-align-right icon-white"></i>本周
+                                </button>
+                                <button type="button" id="btnQueryYW" class="btn btn-outline-primary"
+                                        @click="conditionSearch(5)"><i
+                                        class="glyphicon glyphicon-align-justify icon-white"></i>上周
+                                </button>
+                                <button type="button" id="btnQueryTM" class="btn btn-outline-primary"
+                                        @click="conditionSearch(6)"><i
+                                        class="glyphicon glyphicon-indent-left icon-white"></i>本月
+                                </button>
+                                <button type="button" id="btnQueryYM" class="btn btn-outline-primary"
+                                        @click="conditionSearch(7)"><i
+                                        class="glyphicon glyphicon-indent-right icon-white"></i>上月
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    查看明细
+                </h4>
+            </div>
+            <div class="modal-body">
+                <iframe id="iframedetail" style="border:0px;"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    var param = getUrlParams('param')
+
+    var pageObj = {};
+    var postData = {};//搜索条件
+    // 使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [], table;
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            userID: param,
+            account:getUrlParams('account') || '',
+            payTypeList:{}
+        },
+        mounted:function(){
+            var that = this;
+            if(getUrlParams('account')){
+                $('#txtSearch').val(getUrlParams('account'));
+            }
+            $.get(qp_url + 'admin/Gamecommon/payType',function (res) {
+                if(res.status == 1){
+                    that.payTypeList = res.data
+                }
+                console.log(that.payTypeList);
+            },'json')
+        },
+        methods: {
+            conditionSearch: function (num) {
+                var type;
+                if (num == 0) {//普通查询
+                    type = 1
+                } else {//今天昨天本周上周
+                    type = num
+                }
+                var txtStartDate = $("#txtStartDate").val();
+                var txtEndDate = $("#txtEndDate").val();
+                if (txtStartDate != "" && txtEndDate != "") {
+                    if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                        alert("开始日期不能大于结束时间");
+                        return false;
+                    }
+                }
+                table.reload('layTable', {
+                        where: {
+                            SearchType: $("#ddlSearchType").val(),//第二个下拉框的
+                            KeyWord: $("#txtSearch").val(),
+                            Type: type,//按钮组
+                            StartDate: txtStartDate,
+                            EndDate: txtEndDate,
+                            ShareID: parseInt($("#ddlGlobalShareInfo").val())
+                        }
+                    }
+                )
+            }
+        }
+    })
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            , url: qp_url + 'admin/Filled/GetShareInfoList' //数据接口
+            , where: {
+                token: getStorage('token'),
+                SearchType: 0,//第二个下拉框的
+                KeyWord: 0,
+                Type: 0,//按钮组
+                StartDate: '',
+                EndDate: '',
+                ShareID: '',
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , cellMinWidth: 120
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cols: [[ //表头
+                {field: '', title: '充值编号'}
+                , {
+                    field: '', title: '下注记录', templet: function (d) {
+                        return `<a href="javascript:void(0);" onclick="view(0,1)">查看</a>`
+                    }
+                }
+                // , {field: 'ApplyDate', title: '充值时间'}//换成创建时间和支付时间
+                , {field: '', title: '创建时间'}
+                , {field: '', title: '支付时间'}
+                , {field: 'ShareName', title: '服务类型'}
+                , {
+                    field: 'Accounts', title: '用户帐号',minWidth:180, templet: function (d) {
+                        return `<a  href='javascript:void(0);' onclick="openWindowOwn('../Account/AccountsInfo.html?param='+${d.UserID},'账号信息',850,600);">` + d.Accounts + `</a>`
+
+                    }
+                }
+                , {field: 'rechargeaccount', title: '充值代理账号'}
+                , {field: 'AgentAcc', title: '代理人'}
+                , {field: 'Spreader', title: '推广人'}
+                , {field: 'GameID', title: '游戏ID'}
+                , {field: 'OrderID', title: '订单编号',minWidth:200}
+                // , {field: 'announcer', title: '订单号码'}
+                , {field: 'OrderAmount', title: '订单金额'}
+                , {field: '', title: '订单状态'}
+                , {field: 'PayAmount', title: '实付金额'}
+                , {field: '', title: '充值渠道类型'}//微信，支付宝
+                , {field: '', title: '充值渠道'}
+                , {field: 'Gold', title: '充值金币'}
+                , {field: 'BeforeGold', title: '充值前金币'}
+                , {field: 'IPAddress', title: '充值地址'}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+
+        });
+        //监听复选框选择事件
+        table.on('checkbox(test)', function (obj) {
+            var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+            selectRows = checkStatus.data
+        });
+    });
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'datetime'
+            ,theme:'#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtEndDate'
+            , type: 'datetime'
+            ,theme:'#00B4E5'
+        });
+        //
+        // var agent = '';
+        // if (agent != "") {
+        //     $("#txtSearch").val(agent);
+        //     $("#ddlSearchType").val(5);
+        // }
+        // docReady();
+    });
+    $(document).on('click','.btn-minimize',function (e) {
+        e.preventDefault();
+        var $target = $(this).parents('.box-inner').find('.box-content');
+        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        $target.slideToggle();
+    })
+
+    function docReady() {
+        // //加载数据
+        // postData.pageSize = parseInt($("#pagecount").val());
+        // postData.Sort = "";
+        // postData.Type = 1;
+        // postData.pageIndex = 1;
+        // postData.KeyWord = $("#txtSearch").val();
+        // postData.SearchType = $("#ddlSearchType").val();
+        // var txtStartDate = $("#txtStartDate").val();
+        // var txtEndDate = $("#txtEndDate").val();
+        // postData.StartDate = txtStartDate;
+        // postData.EndDate = txtEndDate;
+        // AjaxSearch(postData);
+        //收放事件
+        $('.btn-minimize').click(function (e) {
+            e.preventDefault();
+            var $target = $(this).parent('.box-inner').find('.box-content');
+            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $target.slideToggle();
+        });
+        // //选择页码
+        // $("#pagecount").change(function (e) {
+        //     postData.pageSize = parseInt($(this).val());
+        //     postData.pageIndex = 1;
+        //     AjaxSearch(postData);
+        // });
+
+        // //普通搜索事件
+        // $("#btnQuery").click(function (e) {
+        //
+        //     postData.pageSize = parseInt($("#pagecount").val());
+        //     postData.Type = 1;
+        //     var txtStartDate = $("#txtStartDate").val();
+        //     var txtEndDate = $("#txtEndDate").val();
+        //     if (txtStartDate != "" && txtEndDate != "") {
+        //         if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+        //             alert("开始日期不能大于结束时间");
+        //             return false;
+        //         }
+        //     }
+        //     postData.StartDate = txtStartDate;
+        //     postData.EndDate = txtEndDate;
+        //     //postData.CardTypeID = parseInt($("#ddlCardType").val());
+        //     postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+        //     postData.KeyWord = $("#txtSearch").val();
+        //     postData.SearchType = $("#ddlSearchType").val();
+        //     postData.pageIndex = 1;
+        //     AjaxSearch(postData);
+        // });
+        // //今天查询
+        // $("#btnQueryTD").click(function (e) {
+        //     postData.Type = 2;
+        //     //postData.CardTypeID = parseInt($("#ddlCardType").val());
+        //     postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+        //     AjaxSearch(postData);
+        // });
+        // //昨天查询
+        // $("#btnQueryYD").click(function (e) {
+        //     postData.Type = 3;
+        //     //postData.CardTypeID = parseInt($("#ddlCardType").val());
+        //     postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+        //     AjaxSearch(postData);
+        // });
+        // //本周查询
+        // $("#btnQueryTW").click(function (e) {
+        //     postData.Type = 4;
+        //     //postData.CardTypeID = parseInt($("#ddlCardType").val());
+        //     postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+        //     AjaxSearch(postData);
+        // });
+        // //上周查询
+        // $("#btnQueryYW").click(function (e) {
+        //     postData.Type = 5;
+        //     //postData.CardTypeID = parseInt($("#ddlCardType").val());
+        //     postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+        //     AjaxSearch(postData);
+        // });
+        // //本月查询
+        // $("#btnQueryTM").click(function (e) {
+        //     postData.Type = 6;
+        //     //postData.CardTypeID = parseInt($("#ddlCardType").val());
+        //     postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+        //     AjaxSearch(postData);
+        // });
+        // //上月查询
+        // $("#btnQueryYM").click(function (e) {
+        //     postData.Type = 7;
+        //     //postData.CardTypeID = parseInt($("#ddlCardType").val());
+        //     postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+        //     AjaxSearch(postData);
+        // });
+    }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+        $('#pagin').paging("/Filled/GetShareInfoList", postData, CreatTableBody, postData.pageIndex);
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    function view(gameid, applydate) {
+        $('#myModal').modal('show');
+        if (gameid) {
+            var applydate = applydate.replace("T", " ");
+            var applydate = applydate.substring(0, applydate.indexOf("."));
+
+            $("#iframedetail").attr("src", "/Trade/LotteryBetDraw?gameid=" + gameid + "&StartDate=" + applydate);
+            // alert($(window).width());
+            $("#iframedetail").width($(window).width() - 80);
+            $("#iframedetail").height($(window).height() - 240);
+            $(".modal-dialog").width($(window).width() - 50);
+            $(".modal-dialog").height($(window).height() - 220);
+            $('#myModal').modal('show');
+        }
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, msg) {
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr class=\"odd\">");
+                html += stringFormat("<td onclick='view({0},\"{1}\")'>查看</td>", item.GameID, item.ApplyDate);
+                html += stringFormat("<td>{0}</td>", item.ApplyDate);
+                html += stringFormat("<td>{0}</td>", item.ShareName);
+                html += stringFormat("<td>{0}</td>", G_AddUserNameLink(item.Accounts, item.UserID, item.UserType));
+                html += stringFormat("<td>{0}</td>", item.rechargeaccount);
+                html += stringFormat("<td>{0}</td>", item.AgentAcc);
+                html += stringFormat("<td>{0}</td>", item.Spreader);
+                html += stringFormat("<td>{0}</td>", item.GameID);
+                //html += stringFormat("<td>{0}</td>", item.SerialID);
+                html += stringFormat("<td>{0}</td>", item.OrderID);
+                html += stringFormat("<td>{0}</td>", item.OrderAmount);
+                html += stringFormat("<td>{0}</td>", item.PayAmount);
+                //html += stringFormat("<td>{0}</td>", item.CardTypeName);
+                html += stringFormat("<td>{0}</td>", item.Gold);
+                html += stringFormat("<td>{0}</td>", item.BeforeGold);
+                html += stringFormat("<td title=\"{0}\">{1}</td>", item.IPAddress, item.IPAddress);
+                //html += stringFormat("<td>{0}</td>", item.Account);
+                html += "</tr>";
+            });
+        }
+        if (msg != null) {
+            html += stringFormat("<tr><td colspan=\"8\">合计：</td><td><lable id=\"ltOrderAmounts\">{0}</lable></td><td><lable id=\"ltPayAmounts\">{1}</lable></td><td><lable id=\"ltGrantCurrency\">{2}</lable></td><td colspan=\"3\"></td></tr>", typeof (msg.OrderAmount) == "undefined" ? "0.00" : msg.OrderAmount, typeof (msg.PayAmount) == "undefined" ? "0.00" : msg.PayAmount, typeof (msg.Currency) == "undefined" ? "0.00" : msg.Currency);
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+</script>
+
+</body>
+</html>

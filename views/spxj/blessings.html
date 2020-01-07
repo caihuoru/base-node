@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/favicon.ico">
+    <!-- <link rel="stylesheet" href="static/css/shouYe.css"> -->
+    <title>编辑祝福语</title>
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="static/css/bootstrap.css">
+
+    <!-- Data Table-->
+    <link rel="stylesheet" type="text/css" href="static/css/datatables.min.css" />
+
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="static/css/bootstrap-extend.css">
+
+    <!-- theme style -->
+    <link rel="stylesheet" href="static/css/master_style.css">
+
+    <!-- Fab Admin skins -->
+    <link rel="stylesheet" href="static/css/_all-skins.css">
+
+    <!-- Morris charts -->
+    <link rel="stylesheet" href="static/css/morris.css">
+
+    <!-- blueimp Gallery styles -->
+    <link rel="stylesheet" href="static/css/blueimp-gallery.min.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="static/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="static/css/jquery.fileupload-ui.css">
+    <!-- CSS adjustments for browsers with JavaScript disabled -->
+    <noscript>
+        <link rel="stylesheet" href="static/css/jquery.fileupload-noscript.css">
+    </noscript>
+    <noscript>
+        <link rel="stylesheet" href="static/css/jquery.fileupload-ui-noscript.css">
+    </noscript>
+
+    <link rel="stylesheet" href="static/css/style.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+    <script src="static/js/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .name {
+            width: 40px;
+            overflow: hidden;
+        }
+
+        .add_flie {
+            width: 100px;
+            height: 40px;
+            position: relative;
+            z-index: 9999999;
+            cursor: pointer;
+        }
+
+        .up_text {
+            position: absolute;
+            width: 100px;
+            height: 40px;
+            /* left: 0; */
+            top: 0;
+            text-align: center;
+            line-height: 40px;
+            background: dodgerblue;
+            color: #fff;
+
+        }
+    </style>
+</head>
+
+<body class="hold-transition skin-blue-light sidebar-mini">
+    <div class="wrapper">
+
+        <header class="main-header">
+            <my-logo></my-logo>
+            <my-nav></my-nav>
+        </header>
+
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <div id="left-section">
+                <left-section first="ptsz" second="banner"></left-section>
+            </div>
+        </aside>
+        <!-- 右边显示区域 -->
+        <div class="content-wrapper">
+            <!-- 右边白条区域 -->
+            <section class="content-header">
+                <h1>
+                    编辑祝福语
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#"><i class="fa fa-fw fa-files-o"></i> 平台设置</a></li>
+                    <li class="breadcrumb-item active">编辑祝福语</li>
+                </ol>
+            </section>
+
+            <!-- 内容区域 -->
+            <section class="content con_abc">
+                <div class="row" id="table">
+                    <div class="col-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="popup-gmaps btn btn-info" data-toggle="modal" data-target="#modal-add"><span
+                                        class="glyphicon glyphicon-plus"></span> 新增</h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="table-responsive">
+                                    <table id="example5" class="table table-bordered table-striped" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>祝福语内容</th>
+                                                <th>祝福语作者</th>
+                                                <th>祝福语日期</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>祝福语内容</th>
+                                                <th>祝福语作者</th>
+                                                <th>祝福语日期</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!--新增-->
+    <div class="modal fade" id="modal-add">
+        <div class="modal-dialog" role="document">
+            <div id="addGame">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">{{todo}}</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- type_id: null,
+                    video_link: null,
+                    cover_link: null,
+                    publisher: null,
+                    weight: null,
+                    try_time: null -->
+                        <div class="form-group row">
+                            <label for="" class="col-sm-3 col-form-label">祝福语内容</label>
+                            <div class="col-sm-9">
+                                <textarea v-model="add.content" class="form-control">
+
+                                </textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-3 col-form-label">祝福语作者</label>
+                            <div class="col-sm-9">
+                                <input id="" v-model="add.author" class="form-control" type="text" value=""
+                                    placeholder="输入名称">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary float-right" @click="gameSub">保存</button>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+    </div>
+
+    <!-- jQuery 3 -->
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/vue.min.js"></script>
+    <script src="static/js/com.js"></script>
+    <script src="static/js/axios.js"></script>
+    <script>
+        var myHead = new Vue({
+            el: '.main-header'
+        });
+        var leftSection = new Vue({
+            el: '#left-section'
+        });
+    </script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="static/js/jquery-ui.js"></script>
+
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <!-- popper -->
+    <script src="static/js/popper.min.js"></script>
+    <!-- Bootstrap 4.0-->
+    <script src="static/js/bootstrap.js"></script>
+
+    <!-- Slimscroll -->
+    <script src="static/js/jquery.slimscroll.js"></script>
+
+    <!-- FastClick -->
+    <script src="static/js/fastclick.js"></script>
+
+    <!-- Morris.js charts -->
+    <script src="static/js/raphael.min.js"></script>
+    <!--<script src="static/js/morris.min.js"></script>-->
+
+    <!-- echarts -->
+    <script src="static/js/echarts-en.min.js"></script>
+    <script src="static/js/echarts-liquidfill.min.js"></script>
+
+    <!-- This is data table -->
+    <script src="static/js/datatables.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="static/js/jquery.sparkline.js"></script>
+
+    <!-- Fab Admin App -->
+    <script src="static/js/template.js"></script>
+
+    <!-- Fab Admin dashboard demo (This is only for demo purposes) -->
+    <!--<script src="static/js/dashboard.js"></script>-->
+
+    <!-- 弹窗插件  -->
+    <link href="static/assets/sweetalert2/sweetalert.css" rel="stylesheet" type="text/css">
+    <script src="static/assets/sweetalert2/sweetalert.min.js"></script>
+    <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+    <!--[if (gte IE 8)&(lt IE 10)]>
+<script src="static/js/cors/jquery.xdr-transport.js"></script>
+<![endif]-->
+
+    <script src="static/js/inputVarify.js"></script>
+    <script>
+        $(function () {
+            var table;
+            var app = new Vue({
+                el: '#table',
+                data: {
+                    listIndex: 0,
+                    bannerList: []
+                },
+                mounted: function () {
+                    // 列表
+                    axios({
+                        method: 'get',
+                        url: request_url + "select/blessings",
+                    }).then(function (res) {
+                        console.log(res)
+                        var data = res.data;
+                        if (data.code == 1) {
+                            app.bannerList = data.data;
+                        }
+                        tableSearchInit();
+                    })
+                    $('#example5 tfoot th').each(function () {
+                        var title = $(this).text();
+                        if (title) {
+                            $(this).html('<input type="text" placeholder="' + title + '" />');
+                            $.widget.bridge('uibutton', $.ui.button);
+                        }
+                    });
+                },
+            });
+
+            // 表格初始化
+            function tableSearchInit() {
+                table = $('#example5').DataTable({
+                    data: app.bannerList,
+                    columns: [
+                        {
+                            data: function (row, type, set, meta) {
+                                return meta.row + 1
+                            },
+                        },
+                        {
+                            data: 'content'
+                        },
+                        {
+                            data: 'author'
+                        },
+                        {
+                            data: 'date'
+                        },
+                        {
+                            data: null,
+                            defaultContent: '<span class="label label-success curP">编辑</span><span class="label label-danger curP ml-5">删除</span>',
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).addClass('table-edit').attr('data-id', row);
+                                //                            console.log(td, cellData, rowData, row, col)
+                            },
+                        }
+                    ],
+                    language: _language
+                });
+                // 以第几列排序 可设置多条件排序 1条件相同的情况以2条件排序 计数从0开始
+                // table.order( [ 1, 'asc' ], [ 2, 'asc' ] ).draw();
+                // table.order([2, 'asc']).draw();
+                table.columns().every(function () {
+                    var that = this;
+                    $('input', this.footer()).on('keyup change', function () {
+                        if (that.search() !== this.value) {
+                            that
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+                });
+            }
+
+            // 添加类型
+            var addGame = new Vue({
+                el: '#addGame',
+                data: {
+                    listIndex: '',
+                    todo: '添加祝福语',
+                    isSub: false,
+                    classList: [],
+                    bannerList: [],
+                    add: {
+                        content: null,
+                        author: null
+                    },
+                },
+                created: function () {
+                },
+                mounted: function () {
+                },
+                methods: {
+                    gameSub: function () {
+                        console.log(this.add);
+                        var _that = this;
+                        if (this.todo == '添加祝福语') {
+                            let add_data = {
+                                content: this.add.content,
+                                author: this.add.author
+                            }
+                            $.ajax({
+                                url: request_url + "add/blessings",
+                                type: "post",
+                                dataType: "json",
+                                data: add_data,
+                                success: function (data) {
+                                    if (data.status == 1) {//新增
+                                        axios({
+                                            method: 'get',
+                                            url: request_url + "select/blessings",
+                                        }).then(function (res) {
+                                            if (res.data.code == 1) {//新增
+                                                app.bannerList = res.data.data;
+                                                table.clear();
+                                                table.rows.add(app.bannerList)
+                                                table.draw();
+                                                swal("提示", "添加成功", 'success');
+                                            }
+                                        })
+
+                                    } else {
+                                        swal(data.msg);
+                                    }
+                                    $('#modal-add').modal('hide');
+                                }
+                            })
+                        } else {
+                            let edit_data = {
+                                id: this.add.id,
+                                content: this.add.content,
+                                author: this.add.author,
+                                date: this.add.date
+                            }
+
+                            $.ajax({
+                                url: request_url + "edit/blessings",
+                                type: "post",
+                                dataType: "json",
+                                data: edit_data,
+                                success: function (data) {
+                                    if (data.status == 1) {//编辑
+                                        swal("提示", "编辑成功", 'success');
+                                        app.bannerList[app.listIndex] = edit_data;
+                                        console.log(app.bannerList)
+                                        table.clear();
+                                        table.rows.add(app.bannerList)
+                                        table.draw();
+                                    } else {
+                                        swal(data.msg);
+                                    }
+                                    $('#modal-add').modal('hide');
+                                }
+                            })
+
+                        }
+                    },
+                    getImgUrl: function (type, keys) {
+                        var urls = [];
+                        $('.' + keys + ' .files tr').each(function () {
+                            urls.push($(this).find('p.name a').attr('href'))
+                        })
+                        return urls.join(',');
+                    }
+                }
+            })
+
+            // 新增
+            $(document).on('click', '.popup-gmaps.btn.btn-info', function () {
+                $('.table .files').html('');
+                $(".up_cover").html("");
+                addGame.todo = '添加祝福语';
+                addGame.add = {
+                    content: null,
+                    author: null
+                }
+            })
+
+            // 删除
+            $(document).on('click', '.table-edit .label-danger', function () {
+                let id = $(this).parent().data('id')
+                let item = app.bannerList[id]
+                console.log(id, item)
+
+                swal({
+                    title: "警告",
+                    text: "确定要删除【" + item.content + "】？",
+                    icon: "warning",
+                    buttons: ['取消', '删除'],
+                }).then(function (isConfirm) {
+                    if (isConfirm) {
+
+                        $.ajax({
+                            url: request_url + "del/blessings",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                id: item.id
+                            },
+                            success: function (data) {
+                                if (data.status == 1) {//编辑
+                                    app.bannerList.splice(id, 1)
+                                    table.clear();
+                                    table.rows.add(app.bannerList);
+                                    table.draw();
+                                    swal("删除成功", "你已删除【" + item.content + "】", "success");
+                                } else {
+                                    swal(data.msg);
+                                }
+                                $('#modal-add').modal('hide');
+                            }
+                        })
+                    }
+                });
+
+            })
+
+            // 编辑
+            $(document).on('click', '.table-edit .label-success', function () {
+                var id = $(this).parent().data('id')
+                var _result = app.bannerList[id];
+                app.listIndex = id;
+                addGame.todo = '编辑祝福语';
+                addGame.add = _result;
+                addGame.add.id = parseInt(_result.id);
+                $('.table .files').html('')
+                $('#modal-add').modal('show');
+                $(".up_cover").html("");
+            })
+
+
+
+            // 封面上传
+            up_file("up_cover");
+            // 视频上传
+            up_file("up_video")
+
+            // 权重验证
+            check("weight");
+            // 试看时间验证
+            check("try_time");
+
+            // 上传文件
+            function up_file(dom) {
+                $(document).on("change", `#${dom}`, function () {
+                    var file_dom = $(`#${dom}`)[0];
+                    var formData = new FormData();
+                    formData.append('file', file_dom.files[0]);
+                    console.log(file_dom.files[0])
+                    if (dom == "up_cover") {
+
+                        if (!(file_dom.files[0].type.indexOf("image") != -1)) {
+                            return swal("只能上传图片")
+                        }
+                    } else if (dom == "up_video") {
+                        if (!(file_dom.files[0].type.indexOf("video") != -1)) {
+                            return swal("只能上传视频")
+                        }
+                    }
+
+                    $.ajax({
+                        url: request_url + "Upload/uploadFile",
+                        type: 'post',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        xhr: function () {
+                            var xhr = $.ajaxSettings.xhr();
+                            if (onprogress && xhr.upload) {
+                                xhr.upload.addEventListener("progress", onprogress, false);
+                                return xhr;
+                            }
+                        },
+                        success: function (data) {
+                            if (dom == "up_cover") {
+                                addGame.add.cover_photo = data.data.url;
+                                // $(".load_img").attr("src", data.data.url)
+                            } else if (dom == "up_video") {
+                                addGame.add.video_link = data.data.url;
+                            }
+
+                        }
+                    })
+                    function onprogress(evt) {
+                        var loaded = evt.loaded;     //已经上传大小情况
+                        var tot = evt.total;      //附件总大小
+                        var per = Math.floor(100 * loaded / tot);  //已经上传的百分比
+                        $(`.${dom}`).html("");
+                        $(`.${dom}`).html("上传进度" + per + "%");
+                    }
+                })
+            }
+            // 正则验证
+            function check(dom) {
+                $(document).on("blur", `.${dom}`, function () {
+
+                    if (dom == "weight") {
+                        // 输入0-200的正整数开头
+                        let re = /^[0-9]\d*$/;
+                        if (!re.test(addGame.add.weight) || addGame.add.weight > 200) {
+                            addGame.add.weight = null;
+                        }
+                    } else if (dom == "try_time") {
+                        // 输入正整数开头
+                        let re = /^[0-9]\d*$/;
+                        if (!re.test(addGame.add.try_time)) {
+                            addGame.add.try_time = null;
+                        }
+                    }
+
+                })
+            }
+
+        })
+
+
+
+
+    </script>
+</body>
+
+</html>

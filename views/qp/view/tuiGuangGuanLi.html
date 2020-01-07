@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>推广系统-推广管理</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <style type="text/css">
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：推广系统 - 推广管理 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <ul class="media nav nav-tabs">
+                    <li class="active"><a href="javascript:void(0)" title="推广管理">推广管理</a></li>
+                    <li><a href="add/Commision.html" title="分销管理">分销管理</a></li>
+                </ul>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>用户查询：</li>
+                                    <li><input type="text" placeholder="" id="txtSearch"
+                                               class="form-control input-sm input-width-200"></li>
+                                    <li>
+                                        <select class="form-control input-sm" name="select" id="ddlSearchType">
+                                            <option value="0" selected="selected">所有</option>
+                                            <option value="1">用户ID</option>
+                                            <option value="2">玩家账号</option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <a class="btn btn-outline-success search" href="#" id="btnQuery"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn btn-blue" onclick="history.go(0);"><i
+                                                class="glyphicon glyphicon-repeat"></i>刷新</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-2" style="display: none">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                                <label>
+                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                                            id="pagecount">
+                                        <option value="10" selected="selected">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> 条/页
+                                </label>
+                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center">
+                        <table id="layTable" lay-filter="test"></table>
+
+                        <table style="display: none" class="table table-striped table-bordered">
+                            <thead>
+                            <tr role="row">
+                                <th class="sorting">玩家标识</th>
+                                <th class="sorting">玩家ID</th>
+                                <th class="sorting">玩家账号</th>
+                                <th class="sorting">真实姓名</th>
+                                <th class="sorting">金币</th>
+                                <th class="sorting">银行金币</th>
+                                <th class="sorting">总业绩</th>
+                                <th class="sorting">本周业绩</th>
+                                <th class="sorting">代理级别</th>
+                                <th class="sorting">保底佣金</th>
+                                <th class="sorting">佣金等级</th>
+                                <th class="sorting">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <!--分页控件-->
+                        <div class="row">
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                    <ul class="pagination" id="pagin"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    设置保底
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    业绩：<input type="text" id="txtbaseYJ" class="form-control" maxlength="10"/>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" id="btnSaveBaseYJ" class="btn btn-outline-success">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    设置佣金等级
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    佣金等级：<input type="text" id="txtRtnFee" class="form-control" maxlength="10"/>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" id="btnSaveRtnFee" class="btn btn-outline-success">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var pageObj = {};
+    var postData = {};//搜索条件
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var table;
+    layui.use('table', function () {
+        table = layui.table;
+
+
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url:  qp_url + 'admin/Promoter/GetNewSpreadInfoes?token='+getStorage('token')//数据接口
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.list //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 100
+            , cols: [[ //表头
+                {field: 'UserID', title: '玩家标识'}
+                , {field: 'GameID', title: '玩家ID'}
+                , {
+                    field: 'Accounts', title: '玩家账号',minWidth:130, templet: function (d) {
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                    }
+                }
+                , {field: 'NickName', title: '玩家昵称',minWidth:130}
+                , {field: 'Compellation', title: '真实姓名'}
+                , {field: 'userTotalScore', title: '总金币',minWidth:130}
+                , {field: 'userScore', title: '携带金币',minWidth:130}
+                , {field: 'userInsureScore', title: '银行金币',minWidth:130}
+                , {field: 'userRevenue', title: '总返回税收',minWidth:130}
+                , {field: 'zRevenue', title: '本周返回税收',minWidth:130}
+                , {field: 'zTotal', title: '直属推广员'}
+                , {field: 'zRevenueTotal', title: '直属推广员返回税收',minWidth:150}
+                , {field: 'cTotal', title: '次级推广员'}
+                , {field: 'cRevenueTotal', title: '次级推广员返回税收',minWidth:150}
+                , {field: 'sTotal', title: '三级推广员'}
+                , {field: 'sRevenueTotal', title: '三级推广员返回税收',minWidth:150}
+                , {field: 'sUserID', title: '所属上级ID',minWidth:120,templet:function (d) {
+                        if(d.sUserID == 0){
+                            return ''
+                        }
+                        return d.sUserID
+                    }}
+                , {field: 'sAccounts', title: '所属上级账号',minWidth:120}
+                , {field: 'sNickName', title: '所属上级昵称',minWidth:120}
+                , {
+                    field: '', title: '操作', minWidth: 200, fixed: 'right', templet: function (d) {
+                        return `
+<!--                            <a href='javascript:void(0)' onclick="updateRtnFeerate(${d.UserID},${d.rtnfeerate})">保底设置</a>-->
+                            <a href='javascript:void(0)' onclick="openWindowOwn('Promoter/NewSpreadManager.html?param={0}&uname=${d.Accounts}&uid=${d.UserID}', '', 1200, 800)">管理</a>
+<!--                            <a href='javascript:void(0)' onclick="openWindowOwn('Promoter/Insurances.html?param={0}&uname={1}&gameid={2}', '{0}', 1000, 800)">直属推广员</a>-->
+<!--                            <a href='javascript:void(0)' onclick="openWindowOwn('Promoter/Understrappers.html?param={0}&uname={1}&gameid={2}', '{0}', 1000, 800)">直属玩家</a>-->
+                            <a href='javascript:void(0)' onclick="openWindowOwn('Promoter/Withdraw.html?uname=${d.Accounts}&gameid=${d.UserID}', '{0}', 900, 800)">返回税收记录</a>
+                           `
+                    }
+                }
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+
+    });
+    //普通搜索事件
+    $("#btnQuery").click(function () {
+        postData.wValue = $('#txtSearch').val();
+        postData.wType = parseInt($('#ddlSearchType').val());
+        table.reload('layTable', {
+            where: postData,
+            page: {
+                curr: 1
+            }
+        })
+    });
+    //设置佣金等级
+    $('#btnSaveRtnFee').click(function () {
+        SaveRtnFee();
+    })
+
+
+    // $(document).ready(function () {
+    //     docReady();
+    //
+    //     $('.sort').click(function () {
+    //         postData.sort = $(this).attr("data-sort");
+    //         postData.order = $(this).attr("data-order");
+    //         if (postData.sort == "desc") {
+    //             $(this).attr("data-sort", "asc")
+    //             $(this).attr("src", "../../Content/images/up.gif")
+    //         } else {
+    //             $(this).attr("data-sort", "desc")
+    //             $(this).attr("src", "../../Content/images/down.gif")
+    //         }
+    //         AjaxSearch(postData);
+    //     });
+    //     $('#btnSaveBaseYJ').click(function () {
+    //         SaveBaseYJ();
+    //     })
+    //     $('#btnSaveRtnFee').click(function () {
+    //         SaveRtnFee();
+    //     })
+    // });
+
+    function SaveBaseYJ() {
+        var baseyj = $("#txtbaseYJ").val();
+        if (baseyj == "") {
+            alert("请输入保底业绩");
+            return false;
+        }
+        if (isNaN(baseyj)) {
+            alert("保底业绩格式错误");
+            return false;
+        }
+        var data = {userid: userid, baseyj: baseyj};
+
+        AjaxSubmit("/Promoter/UpdateBaseYJ", data, callBack, "savebaseyj");
+    }
+
+    function SaveRtnFee() {
+        var RtnFee = $("#txtRtnFee").val();
+        if (RtnFee == "") {
+            layer.alert("请输入佣金等级");
+            return false;
+        }
+        if (isNaN(RtnFee)) {
+            layer.alert("佣金等级格式错误");
+            return false;
+        }
+        var data = {userid: userid, rtnfeerate: RtnFee};
+        $.ajax({
+            type: 'POST',
+            url: qp_url + 'admin/Promoter/updateRtnFeerate?token='+getStorage('token'),
+            dataType: 'json',
+            data:data,
+            success: function (res) {
+                layer.msg(res.msg)
+                if (res.status == 1) {
+                    $('#myModal1').modal('hide');
+                    var curPage = $(".layui-laypage-em").next().html(); //当前页码值
+                    console.log("当前页码", curPage);
+                    table.reload('layTable', {
+                        pageIndex: curPage,
+                    })
+                }
+            }
+        })
+        // AjaxSubmit("/Promoter/updateRtnFeerate", data, callBack, "saveRtnFee");
+    }
+
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "savebaseyj":
+                $('#myModal').modal('hide');
+                docReady();
+                break;
+            case "saveRtnFee":
+                $('#myModal1').modal('hide');
+                docReady();
+                break;
+            default:
+                docReady();
+                break;
+        }
+    }
+
+    function updateBaseYJ(uid, baseyj) {
+        userid = uid;
+        $("#txtbaseYJ").val(baseyj || 0);
+        $('#myModal').modal('show');
+    }
+
+    function updateRtnFeerate(uid, rtnfeerate) {
+        userid = uid;
+        $("#txtRtnFee").val(rtnfeerate || 0);
+        $('#myModal1').modal('show');
+    }
+
+    function docReady() {
+        //加载数据
+        postData.pageSize = parseInt($("#pagecount").val());
+        postData.pageIndex = 1;
+        AjaxSearch(postData);
+
+        //收放事件
+        $('.btn-minimize').click(function (e) {
+            e.preventDefault();
+            var $target = $(this).parent().parent().next('.box-content');
+            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $target.slideToggle();
+        });
+        //选择页码
+        $("#pagecount").change(function (e) {
+            postData.pageSize = parseInt($(this).val());
+            postData.pageIndex = 1;
+            AjaxSearch(postData);
+        });
+        //刷新
+        $("#btnRefresh").click(function (e) {
+            AjaxSearch(postData);
+        });
+        //普通搜索事件
+        $("#btnQuery").click(function () {
+            postData.wValue = $('#txtSearch').val();
+            postData.wType = parseInt($('#ddlSearchType').val());
+            postData.pageSize = parseInt($("#pagecount").val());
+            AjaxSearch(postData);
+        });
+    }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+        $('#pagin').paging("/Promoter/GetNewSpreadInfoes", postData, CreatTableBody, postData.pageIndex);
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, msg) {
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr>");
+                html += stringFormat("<td>{0}</td>", item.UserID);
+                html += stringFormat("<td>{0}</td>", item.GameID);
+                html += stringFormat("<td>{0}</td>", G_AddUserNameLink(item.Accounts, item.UserID, item.UserType));
+                html += stringFormat("<td>{0}</td>", item.Compellation);
+                html += stringFormat("<td>{0}</td>", item.Score);
+                html += stringFormat("<td>{0}</td>", item.InsureScore);
+                html += stringFormat("<td>{0}</td>", item.TotalYj);
+                html += stringFormat("<td>{0}</td>", item.NowYj);
+                html += stringFormat("<td>{0}</td>", item.Lev);
+                html += stringFormat("<td>{0}</td>", item.rtnfeerate);
+                html += stringFormat("<td>{0}</td>", item.rtnamt);
+                html += stringFormat("<td> <a href='javascript:void(0)' onclick=\"updateRtnFeerate({0},{4})\">保底设置</a>&nbsp;&nbsp; " +
+                    "<a href='javascript:void(0)' onclick=\"openWindowOwn('/Promoter/NewSpreadManager?param={0}&uname={1}&lev={2}', '{0}', 800, 800)\">管理</a>&nbsp;&nbsp;" +
+                    "<a href='javascript:void(0)' onclick=\"openWindowOwn('/Promoter/Insurances?param={0}&uname={1}&gameid={2}', '{0}', 1000, 800)\">直属推广员</a>&nbsp;&nbsp;" +
+                    "<a href='javascript:void(0)' onclick=\"openWindowOwn('/Promoter/Understrappers?param={0}&uname={1}&gameid={2}', '{0}', 1000, 800)\">直属玩家</a>&nbsp;&nbsp;" +
+                    "<a href='javascript:void(0)' onclick=\"openWindowOwn('/Promoter/Withdraw?param={0}&uname={1}&gameid={2}', '{0}', 900, 800)\">佣金记录</a></td>", item.UserID, item.Accounts, item.Lev, item.baseyj, item.rtnfeerate);
+                html += "</tr>";
+            });
+        }
+
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+</script>
+</body>
+</html>

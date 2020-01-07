@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>客服中心 - 问题管理</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：客服中心 - 问题管理 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <div class="row">
+                        <div class="col-md-2" style="display: none">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                                <label>
+                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                                            id="pagecount">
+                                        <option value="10" selected="selected">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> 条/页
+                                </label>
+                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="padding-bottom:5px; padding-top:5px; text-align:right;">
+                            <a href="add/QuestionInfo.html?param=add" class="btn btn-outline-success"> <i
+                                    class="glyphicon glyphicon-plus icon-white"></i>新增 </a>
+                            <button type="button" class="btn btn-danger" onclick="Del(0);"><i
+                                    class="glyphicon glyphicon-trash icon-white"></i>删除
+                            </button>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="bar">
+    <span class="layui-btn layui-btn-normal layui-btn-xs"
+          onclick="openWindowOwn('add/zhiFuPingTai.html?type=edit&id={{d.id}}', '', 800, 550)">编辑</span>&nbsp;&nbsp;
+    <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del">删除</span>&nbsp;&nbsp;
+</script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script type="text/javascript">
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [];
+    layui.use(['table', 'form'], function () {
+        var table = layui.table, form = layui.form;
+        // 获取平台列表
+        tableIn = table.render({
+            elem: '#layTable',
+            url: request_url2 + 'CustomerProblem',
+            response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            },
+            title: '管理员列表',
+            cellMinWidth: 100,
+            cols: [[
+                {field: 'id', title: '编号', width: 60, fixed: true}
+                , {field: 'problem_title', title: '问题标题',}
+                , {field: 'problem_content', title: '问题内容'}
+                , {field: 'currentDate',width: 180, title: '添加日期'}
+                , {
+                    title: '操作',width: 150, toolbar: '#bar'
+                }
+            ]]
+        });
+        $('body').on('blur', '.list_order', function () {
+            loading = layer.load(1, {shade: [0.1, '#fff']});
+            var id = $(this).attr('data-id');
+            var sort = $(this).val();
+            $.post(qp_url + 'admin/Filled/editPlatformSort?token=' + getStorage('token'), {
+                id: id,
+                sort: sort
+            }, function (res) {
+                console.log(res)
+                layer.close(loading);
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1}, function () {
+                        reloadTable()
+                    });
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2});
+                    table.render();
+                }
+            }, 'json')
+        })
+        form.on('switch(open)', function (obj) {
+            loading = layer.load(1, {shade: [0.1, '#fff']});
+            var id = this.value;
+            var is_open = obj.elem.checked === true ? 1 : 0;
+            $.post(qp_url + 'admin/Filled/editPlatformStatus?token=' + getStorage('token'), {
+                'id': id,
+                'status': is_open
+            }, function (res) {
+                layer.close(loading);
+                console.log(res)
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1}, function () {
+                        reloadTable()
+                    });
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2});
+                    return false;
+                }
+            }, 'json')
+        });
+        table.on('tool(list)', function (obj) {
+            console.log(obj)
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('你确定要删除吗？', function (index) {
+                    $.ajax({
+                        type: 'POST',
+                        url: qp_url + 'admin/Filled/delPlatform?token='+getStorage('token'),
+                        dataType: "json",
+                        data: {
+                            ids: data.id
+                        },
+                        success: function (res) {
+                            if (res.status == 1) {
+                                obj.del();
+                                layer.msg(res.msg)
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        }
+                    })
+                });
+            }
+        });
+        // 查询
+        $('#btnQuery').click(function () {
+            tableIn.reload({
+                where: {
+                    payment_type: $('#ddlServerID option:checked').val(),
+                    keyword: $('#txtSearch').val(),
+                },
+                page: {
+                    curr: 1
+                }
+            })
+        })
+    })
+    // layui.use('table', function () {
+    //     var table = layui.table;
+    //     //第一个实例
+    //     tableOptions.url = qp_url + 'admin/Customer/GetQuestionList' //数据接口
+    //     tableOptions.parseData = function (res) {
+    //         console.log(res)
+    //         return {
+    //             "status": res.status, //解析接口状态
+    //             "msg": res.msg, //解析提示文本
+    //             "count": res.data.total, //解析数据长度 ,需要数据库返回
+    //             "data": res.data.list //解析数据列表
+    //         };
+    //     }
+    //     tableOptions.cols = [[ //表头
+    //         {type: 'checkbox'}
+    //         , {
+    //             field: 'announcer', title: '管理', templet: function (d) {
+    //                 return `<span onclick="window.open('add/QuestionInfo.html?param=edit&cid=${d.IssueID}','_self')"><button class="layui-btn layui-btn-xs">更新</button></span>`
+    //             }
+    //         }
+    //         , {field: 'IssueTitle', title: '问题标题'}
+    //         , {field: 'TypeName', title: '问题类型'}
+    //         , {field: 'CollectDate', title: '新增日期'}
+    //         , {field: 'ModifyDate', title: '修改日期'}
+    //         , {
+    //             field: 'Nullity', title: '禁用状态', templet: function (d) {
+    //                 if (d.Nullity == 0) {
+    //                     return '<span>启动</span>'
+    //                 } else {
+    //                     return '<span class="wrong">禁用</span>'
+    //                 }
+    //             }
+    //         }
+    //         , {
+    //             field: 'Hot', title: '是否置顶', templet: function (d) {
+    //                 if (d.Hot == 0) {
+    //                     return '<span class="wrong">否</span>'
+    //                 } else {
+    //                     return '<span>是</span>'
+    //                 }
+    //             }
+    //         }
+    //     ]]
+    //     table.init('test', tableOptions)
+    //     //监听复选框选择事件
+    //     table.on('checkbox(test)', function (obj) {
+    //         var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+    //         selectRows = checkStatus.data
+    //     });
+    // });
+    $(document).ready(function () {
+        docReady();
+    });
+
+    function docReady() {
+        // //加载数据
+        // postData.pageSize = parseInt($("#pagecount").val());
+        // postData.Sort = "";
+        // postData.pageIndex = 1;
+        // AjaxSearch(postData);
+        //收放事件
+        $('.btn-minimize').click(function (e) {
+            e.preventDefault();
+            var $target = $(this).parent().parent().next('.box-content');
+            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $target.slideToggle();
+        });
+        // //选择页码
+        // $("#pagecount").change(function (e) {
+        //     postData.pageSize = parseInt($(this).val());
+        //     postData.pageIndex = 1;
+        //     AjaxSearch(postData);
+        // });
+    }
+
+    function Del(o) {
+        var data = {};
+        if (o == 0) {
+            // var cid = GetSelectValues();
+            var cid = GetSelectedDatas(selectRows, 'IssueID');
+            console.log(cid);
+            if (cid == "") {
+                layer.alert('未选中任何数据', {
+                    icon: 7,
+                    skin: 'layer-ext-moon'
+                })
+                return;
+            }
+            data.cid = cid;
+        } else {
+            data.cid = o;
+        }
+        if (confirm("你确定要删除吗？")) {
+            AjaxSubmit("/Customer/DelQuestion", data, callBack, "tj");
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "tj":
+                alert(jsonData.Msg);
+                window.location.reload();
+                //window.opener.location.reload();
+                break;
+        }
+    }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+
+        $('#pagin').paging("/Customer/GetQuestionList", postData, CreatTableBody, postData.pageIndex);
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, msg) {
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr>");
+                html += stringFormat("<td><input name='cid' type='checkbox' value='{0}'/></td>", item.IssueID);
+                html += stringFormat("<td><a class=\"l\" href=\"/Customer/QuestionInfo?cmd=edit&param={0}\">更新</a></td>", item.IssueID);
+                html += stringFormat("<td>{0}</td>", item.IssueTitle);
+                html += stringFormat("<td>{0}</td>", item.TypeName);
+                html += stringFormat("<td>{0}</td>", item.CollectDate);
+                html += stringFormat("<td>{0}</td>", item.ModifyDate);
+                html += stringFormat("<td>{0}</td>", item.Nullity == 0 ? "启动" : "<font color=red>禁用</font>");
+                html += stringFormat("<td>{0}</td>", item.Hot == 0 ? "否" : "<font color=red>是</font>");
+                html += "</tr>";
+            });
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+</script>
+</body>
+</html>

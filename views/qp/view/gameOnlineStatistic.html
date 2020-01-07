@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>数据分析 - 游戏在线数据统计</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link href="../Content/common.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content" class="main-content">
+        <div class="row">
+            <div class="box-inner">
+                <div class="col-md-12">
+                    <div class="box-inner">
+                        <div class="box-header well" data-original-title="">
+                            <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：数据分析 - 游戏在线数据统计 </h2>
+                            <div class="box-icon">
+                                <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                                    <i class="glyphicon glyphicon-repeat"></i>
+                                </a>
+                                <a href="#" class="btn btn-minimize btn-round btn-default">
+                                    <i class="glyphicon glyphicon-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="box-content tab-content" style="overflow: hidden; display: block;padding: 10px">
+                            <!--查询栏开始-->
+                            <div class="alert alert-info">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <ul class="list-inline cursor-style">
+                                            <li>
+                                                <select class="form-control input-sm" id="ddlServerID">
+                                                    <option value="">正在请求...</option>
+                                                </select>
+                                            </li>
+                                            <li>日期查询：</li>
+                                            <li>
+                                                <input id="txtStartDate" class="input-width-150" type="text"
+                                                    readonly="readonly" value="" />&nbsp;&nbsp;至&nbsp;&nbsp;
+                                                <input id="txtEndDate" class="input-width-150" type="text"
+                                                    readonly="readonly" value="" />
+                                            </li>
+                                            <li>
+                                                <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
+                                                        class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--查询栏结束-->
+                            <!--table开始-->
+                            <div class="dataTables_wrapper table-center">
+                                <div id="mychart" style="width: 100%;height: 270px"></div>
+                                <table id="layTable" lay-filter="test"></table>
+                            </div>
+                            <!--table结束-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Content/laydate/laydate.js"></script>
+    <script src="../Scripts/pagination.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <script src="../Scripts/echarts-all-3.js"></script>
+    <script type="text/javascript">
+        option();
+        $.ajax({
+            url: qp_url + 'admin/Gamecommon/GetGameList?token='+getStorage('token'),
+            dataType: "json",
+            type: "get",
+            data: {
+                KindID: 0
+            },
+            success: function (data) {
+                data = data.data;
+                let html = `<option value="0">所有</option>`;
+                for (var i = 0; i < data.length; i++) {
+                    html += `<option value="${data[i].KindID}">${data[i].KindName}</option>`
+                }
+                $("#ddlServerID").html(html);
+            }
+        })
+        var pageObj = {};
+        var postData = {};//搜索条件
+        //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+        var selectRows = [];
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#layTable'
+                // , height: 512
+                , url: qp_url + 'admin/Analysis/getGameOnline?token='+getStorage('token') //数据接口
+                , request: {
+                    pageName: 'pageIndex' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+                , response: { //res 即为原始返回的数据
+                    statusName: 'status',
+                    statusCode: 1,
+                    // msgName: 'msg',
+                    // dataName: 'data',
+                },
+                parseData: function (res) {
+                    option(res.data.list);
+                    return {
+                        "status": res.status, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.data.total, //解析数据长度 ,需要数据库返回
+                        "data": res.data.table //解析数据列表
+                    };
+                }
+                , page: {
+                    'theme': '#2D2D3C'
+                } //开启分页
+                , limits: [10, 20, 30, 50, 80, 100]
+                , limit: 10
+                , cellMinWidth: 130
+                , cols: [[ //表头
+                    { field: 'dated', title: '日期' }
+                    , { field: 'GameKindName', title: '游戏' }
+                    , { field: 'GameRoomName', title: '房间' }
+                    , { field: 'total', title: '在线用户数' }
+                ]]
+                , done: function (res, curr, count) {
+                    $('th').css({ 'text-align': 'center' });
+                }
+
+            });
+            // //监听复选框选择事件
+            // table.on('checkbox(test)', function (obj) {
+            //     var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+            //     selectRows = checkStatus.data
+            // });
+            //监听工具条点击事件
+            table.on('tool(test)', function (obj) {
+                var isopen = $(this).context.dataset.isopen//看看是否已经展开，如果展开的，就将其关闭
+                var tableId = 'child' + obj.data.id
+                var current_tr = obj.tr[obj.tr.length - 1]
+                if (isopen == 1) {
+                    $('.' + tableId).toggle()
+                    return;
+                }
+                $(this).context.dataset.isopen = 1
+                if (obj.event == 'showinfo' + obj.data.id) {
+                    var _html = '<tr><td class="' + tableId + '" colspan="' + obj.tr.find('td').length + '"><table id="' + tableId + '" lay-filter="' + tableId + '"></table></td></tr>'
+                    $(current_tr).after(_html);
+                    table.render({
+                        elem: '#' + tableId
+                        , url: qp_url + 'admin/Analysis/getGameOnline?token='+getStorage('token') //数据接口
+                        , request: {
+                            pageName: 'pageIndex' //页码的参数名称，默认：page
+                            , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                        }
+                        , response: { //res 即为原始返回的数据
+                            statusName: 'status',
+                            statusCode: 1,
+                            // msgName: 'msg',
+                            // dataName: 'data',
+                        },
+                        parseData: function (res) {
+                            return {
+                                "status": res.status, //解析接口状态
+                                "msg": res.msg, //解析提示文本
+                                "count": res.data.total, //解析数据长度 ,需要数据库返回
+                                "data": res.data.data //解析数据列表
+                            };
+                        }
+                        , cols: [[ //表头
+                            { field: 'announcer', title: '账号' }
+                            , { field: 'announcer', title: '是否机器人' }
+                            , { field: 'announcer', title: '椅子编号' }
+                            , { field: 'announcer', title: '输赢积分' }
+                            , { field: 'announcer', title: '税收/服务费' }
+                            , { field: 'announcer', title: '游戏时长' }
+                            , { field: 'announcer', title: '插入时间' }
+                        ]]
+                        , done: function (res, curr, count) {
+                            $('th').css({ 'text-align': 'center' });
+                        }
+                    })
+                }
+            });
+            //日期查询
+            $("#btnQuery").click(function (e) {
+                var istrue = true;
+                var txtStartDate = $("#txtStartDate").val();
+                var txtEndDate = $("#txtEndDate").val();
+                if (txtStartDate != "" && txtEndDate != "") {
+                    if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                        istrue = false;
+                        alert("开始日期不能大于结束时间");
+                        return false;
+                    }
+                }
+                if (istrue) {
+                    if (txtStartDate != "" && txtEndDate != "") {
+                        postData.StartDate = txtStartDate;
+                        postData.EndDate = txtEndDate;
+                    }
+                    postData.pageSize = 10;
+                    postData.KindID = parseInt($("#ddlServerID").val());
+                    postData.DateType = 5;
+                    AjaxSearch(postData, table);
+                }
+                AjaxSearch(postData, table);
+            });
+        });
+        $(document).ready(function () {
+            //时间选择器
+            laydate.render({
+                elem: '#txtStartDate'
+                , type: 'date'
+                , theme: '#00B4E5'
+            });
+            laydate.render({
+                elem: '#txtEndDate'
+                , type: 'date'
+                , theme: '#00B4E5'
+                , done: function (e) {
+                    console.log(e)
+                }
+            });
+        });
+
+        //搜索事件
+        function AjaxSearch(postData, table) {
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+        }
+        function StrToDateTime(timestr) {
+            var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+            return dt;
+        }
+        //字符串格式化
+        function stringFormat() {
+            if (arguments.length == 0)
+                return null;
+            var str = arguments[0];
+            for (var i = 1; i < arguments.length; i++) {
+                var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+                str = str.replace(re, arguments[i]);
+            }
+            return str;
+        }
+        function option(data) {
+            console.log(data)
+            if(data){
+                data.sort(function (a,b) {
+                    var dateA = a.dated.substring(0,4)+'-'+a.dated.substring(4,6)+'-'+a.dated.substring(6,8);
+                    var dateB = b.dated.substring(0,4)+'-'+b.dated.substring(4,6)+'-'+b.dated.substring(6,8);
+
+                    return new Date(dateA) - new Date(dateB)
+                })
+            }
+
+            var chart = echarts.init(document.getElementById('mychart'));
+            var option = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    name: '日期',
+                    data: function () {
+                        if (data) {
+                            let arr = [];
+                            for (var i = 0; i < data.length; i++) {
+                                arr.push(data[i].dated);
+                            }
+                            return arr;
+                        } else {
+                            return ["正在加载"]
+                        }
+                    }()
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '人数'
+                },
+                series: [{
+                    data: function () {
+                        if (data) {
+                            let arr = [];
+                            for (var i = 0; i < data.length; i++) {
+                                arr.push(data[i].total);
+                            }
+                            return arr;
+                        } else {
+                            return ["正在加载"]
+                        }
+                    }(),
+                    type: 'line'
+                }]
+            };
+            chart.setOption(option);
+        }
+
+    </script>
+</body>
+
+</html>

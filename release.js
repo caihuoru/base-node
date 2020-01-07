@@ -55,6 +55,8 @@ var connection = mysql.createPool({
 
 // 允许访问静态目录
 app.use(express.static(__dirname + '/views'));
+// 设置缓存
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 1000 * 60 * 60 }))
 // ejs模板
 app.locals.appName = "JFQ";
 app.set("view engine", "jade");
@@ -452,38 +454,6 @@ app.post('/payBack', (req, res) => {
 const httpsServer = https.createServer(credentials, app)
 const httpServer = http.createServer(app)
 
-// 启动服务器，监听对应的端口
-httpsServer.listen(SSLPORT, () => {
-    console.log(`HTTPS已启动`)
-})
-httpServer.listen(PORT, () => {
-    console.log(`HTTP已启动`)
-})
-
-// 2、创建服务器进行代理
-net.createServer(function (socket) {
-    socket.once('data', function (buf) {
-        // console.log(buf[0]);
-        // https数据流的第一位是十六进制“16”，转换成十进制就是22
-        var address = buf[0] === 22 ? SSLPORT : PORT;
-        //创建一个指向https或http服务器的链接
-        var proxy = net.createConnection(address, function () {
-            proxy.write(buf);
-            //反向代理的过程，tcp接受的数据交给代理链接，代理链接服务器端返回数据交由socket返回给客户端
-            socket.pipe(proxy).pipe(socket);
-        });
-        proxy.on('error', function (err) {
-            console.log(err);
-        });
-    });
-    socket.on('error', function (err) {
-        console.log(err);
-    });
-}, app).listen(server_port, () => {
-    console.log("服务器启动成功：" + server_port)
-}); // 此处是真正能够访问的端口，网站默认是80端口。
-
-
 
 
 // 数据库连接(包含断开重连)
@@ -552,155 +522,82 @@ var urlEncode = function (param, key, encode) {
     return paramStr;
 };
 
-// 提现审核
-app.post('/withdrawllReviewwall', (req, res) => {
-    var postData = '';
-    req.on('data', function (chunk) {
-        postData += chunk;
-    });
-    req.on('end', function () {
-        postData = decodeURI(postData);
-        if (postData.indexOf('}') > -1) {
-            postData = JSON.parse(postData)
-        } else {
-            postData = querystring.parse(postData)
-        }
-        if (!postData.audit_status || !postData.id || !postData.user_id) {
-            console.log("审核状态与id与用户id不能为空")
-            res.json({
-                status: 0,
-                msg: "审核状态与id与用户id不能为空"
-            })
-        }
-        postData.reason_rejection = postData.reason_rejection || null;
-        if (postData.audit_status == "审核通过") {
-            var modSql = 'UPDATE withdraw SET audit_status = ?, reason_rejection = ?, s_date = ?, with_status = ? WHERE id = ?';
-            var modSqlParams = [postData.audit_status, postData.reason_rejection, timestampToTime(new Date() / 1000, true), "已提现", postData.id];
-        } else if (postData.audit_status == "审核驳回") {
-            var modSql = 'UPDATE withdraw SET audit_status = ?, reason_rejection = ?, s_date = ?, with_status = ? WHERE id = ?';
-            var modSqlParams = [postData.audit_status, postData.reason_rejection, timestampToTime(new Date() / 1000, true), "未提现", postData.id];
-        } else {
-            // var modSql = 'UPDATE withdraw SET audit_status = ?, reason_rejection = ? WHERE id = ?';
-            // var modSqlParams = [postData.audit_status,postData.reason_rejection,postData.id];
-            res.json({
-                status: 0,
-                msg: "无更改"
-            })
-            return;
-        }
 
 
-        //更新
-        connection.query(modSql, modSqlParams, function (err, UPdata) {
-            if (err) {
+
+app.get('/select/blessings', (req, res) => {
+    var sql = "select * from order_list where order_number = '" + req.query.order_number + "'";
+    connection.query(sql, function (err, orderData) {
+        if (err) {
+            res.json({
+                code: 0,
+                msg: "数据错误"
+            })
+            return false;
+        }
+        if (orderData[0].order_status) {
+            if (orderData[0].order_status == "1") {
                 res.json({
-                    status: 0,
-                    msg: "数据错误"
+                    code: 1,
+                    msg: "支付成功"
+                })
+                return;
+            } else {
+                res.json({
+                    code: 0,
+                    msg: "未支付"
                 })
                 return;
             }
-            var sql = "select * FROM user_manage where id = " + postData.user_id;
-            connection.query(sql, function (err, Data) {
-                if (err) {
-                    res.json({
-                        status: 0,
-                        msg: "查询数据错误"
-                    })
-                    return;
-                }
-                // console.log(Data)
-                if (Data.length === 0) {
-                    res.json({
-                        status: 0,
-                        msg: "无数据"
-                    })
-                    return false;
-                } else {
-                    var withdraw_money = Data[0].withdraw_money -= postData.money
-                    if (withdraw_money < 0) {
-                        res.json({
-                            status: 0,
-                            msg: "提现金额不足"
-                        })
-                        return false;
-                    }
-                    if (postData.audit_status == "审核通过") {
-                        var modSql = 'UPDATE user_manage SET withdraw_money = ? WHERE id = ?';
-                        var modSqlParams = [withdraw_money, postData.user_id];
-                    } else if (postData.audit_status == "审核驳回") {
-                        if (postData.money_type == '充值余额') {
-                            var modSql = 'UPDATE user_manage SET withdraw_money = ?, pay_remain = ? WHERE id = ?';
-                            var modSqlParams = [withdraw_money, Data[0].pay_remain + postData.money + postData.service_charge, postData.user_id];
-                        } else {
-                            var modSql = 'UPDATE user_manage SET withdraw_money = ?, cash_remain = ? WHERE id = ?';
-                            var modSqlParams = [withdraw_money, Data[0].cash_remain += postData.money + postData.service_charge, postData.user_id];
-                        }
-                        var addSql = 'INSERT INTO pay_in_out(user_id,s_date,money,money_type,info) VALUES(?,?,?,?,?)';
-                        var addSqlParams = [postData.user_id, timestampToTime(new Date() / 1000, true), postData.money, "提现驳回", postData.money_type + "收入" + postData.money + "元"];
-
-                        connection.query(addSql, addSqlParams, function (err, backData) {
-                            if (err) {
-                                res.json({
-                                    status: 0,
-                                    msg: "生成资金记录失败"
-                                })
-                                return;
-                            }
-
-                        })
-
-                    }
-                    connection.query(modSql, modSqlParams, function (err, UPdata) {
-                        if (err) {
-                            res.json({
-                                status: 0,
-                                msg: "数据错误"
-                            })
-                            return;
-                        }
-                        var sql = "select withdraw.*,user_manage.accounts_receivable,user_manage.payment_account,user_manage.account_number from withdraw inner join user_manage on withdraw.user_id=user_manage.id and withdraw.audit_status!='不通过' and withdraw.audit_status!='审核驳回' and withdraw.with_status!='已提现'";
-                        connection.query(sql, function (err, Data) {
-                            res.json({
-                                status: 1,
-                                list: Data,
-                                msg: "成功"
-                            })
-                        })
 
 
-                    })
-                }
-            })
-
-        })
-    })
-})
-// 提现审核查询
-app.get('/withdrawllReviewwall', (req, res) => {
-    var sql = "select withdraw.*,user_manage.accounts_receivable,user_manage.payment_account,user_manage.account_number from withdraw inner join user_manage on withdraw.user_id=user_manage.id and withdraw.audit_status!='不通过' and withdraw.audit_status!='审核驳回' and withdraw.with_status!='已提现' order by id desc";
-    connection.query(sql, function (err, Data) {
-        if (err) {
-            console.log('[SELECT ERROR] - ', err.message);
+        } else {
             res.json({
-                status: 0,
-                msg: "查询数据错误"
+                code: 0,
+                msg: "支付失败"
             })
             return;
         }
-        // console.log(Data)
-        if (Data.length === 0) {
-            res.json({
-                status: 0,
-                list: [],
-                msg: "无数据"
-            })
-            return false;
-        } else {
-            res.json({
-                status: 1,
-                list: Data,
-                msg: "成功"
-            })
-        }
+
     })
 })
+
+
+
+
+
+
+
+
+// 启动服务器，监听对应的端口
+httpsServer.listen(SSLPORT, () => {
+    console.log(`HTTPS已启动`)
+})
+httpServer.listen(PORT, () => {
+    console.log(`HTTP已启动`)
+})
+
+// 2、创建服务器进行代理
+net.createServer(function (socket) {
+    socket.once('data', function (buf) {
+        // console.log(buf[0]);
+        // https数据流的第一位是十六进制“16”，转换成十进制就是22
+        var address = buf[0] === 22 ? SSLPORT : PORT;
+        //创建一个指向https或http服务器的链接
+        var proxy = net.createConnection(address, function () {
+            proxy.write(buf);
+            //反向代理的过程，tcp接受的数据交给代理链接，代理链接服务器端返回数据交由socket返回给客户端
+            socket.pipe(proxy).pipe(socket);
+        });
+        proxy.on('error', function (err) {
+            console.log(err);
+        });
+    });
+    socket.on('error', function (err) {
+        console.log(err);
+    });
+}, app).listen(server_port, () => {
+    console.log("服务器启动成功：" + server_port)
+}); // 此处是真正能够访问的端口，网站默认是80端口。
+
+

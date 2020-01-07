@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>渠道管理 - 支付平台</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style>
+        body .form-control {
+            display: inline-block;
+        }
+
+        .layui-table-cell {
+            text-align: center;
+        }
+
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner ">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：渠道管理 - 支付平台 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <form class="layui-form" method="post" action="#" lay-filter="component-form-element">
+
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline cursor-style">
+                                        <li>关键字：</li>
+                                        <li><input type="text" placeholder="" id="txtSearch"
+                                                   class="form-control input-sm input-width-200"></li>
+                                        <li style="width: 150px;">
+                                            <select name="select" id="ddlServerID">
+                                                <option value="0" selected="selected">所有</option>
+                                                <option value="1">用户ID</option>
+                                                <option value="2">玩家账号</option>
+                                            </select>
+                                        </li>
+                                        <li>
+                                            <a class="btn btn-outline-success search" href="#" id="btnQuery"><i
+                                                    class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-12 margin-t-10">
+                            <a class="btn btn-outline-success search" href="#"
+                               onclick="openWindowOwn('add/zhiFuPingTai.html?type=add', '', 800, 800)">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                新增支付平台
+                            </a>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table class="layui-table" id="list" lay-filter="list"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="open">
+    <input type="checkbox" name="is_open" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" {{
+           d.status== 1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="order">
+    <input name="{{d.id}}" data-id="{{d.id}}" class="list_order layui-input" style="height: 28px;" value=" {{d.sort}}"
+           size="10"/>
+</script>
+<script type="text/html" id="bar">
+    <span class="layui-btn layui-btn-normal layui-btn-xs"
+          onclick="openWindowOwn('add/zhiFuPingTai.html?type=edit&id={{d.id}}', '', 800, 550)">编辑</span>&nbsp;&nbsp;
+    <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del">删除</span>&nbsp;&nbsp;
+</script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    let loading;
+    var tableIn;
+    layui.use(['table', 'form'], function () {
+        var table = layui.table, form = layui.form, $ = layui.jquery;
+        // 获取平台列表
+        $.get(qp_url + 'admin/Gamecommon/paymentType?token='+getStorage('token'), function (res) {
+            console.log(res.data)
+            if (res.status == 1) {
+                $('#ddlServerID').html('<option value="">全部所属支付</option>')
+                for (var i in res.data) {
+                    $('#ddlServerID').append('<option value="' + i + '">' + res.data[i] + '</option>')
+                }
+                form.render()
+            }
+        }, 'json')
+        tableIn = table.render({
+            elem: '#list',
+            url: qp_url + 'admin/Filled/platformList?token=' + getStorage('token'),
+            method: 'post',
+            response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            },
+            title: '管理员列表',
+            cellMinWidth: 100,
+            cols: [[
+                {field: 'id', title: '编号', width: 60, fixed: true}
+                , {field: 'name', title: '支付平台',}
+                , {field: 'payment_type', title: '所属支付'}
+                , {field: 'sort', title: '排序', toolbar: '#order'}
+                , {field: 'min_money', title: '最小支付值'}
+                , {field: 'max_money', title: '最大支付值'}
+                , {field: 'money', title: '可充值金额', width: 250}
+                , {
+                    field: 'gift_percent', title: '赠送比例', templet: function (d) {
+                        if (d.gift_percent) {
+                            return d.gift_percent + '%'
+                        }
+                        return ''
+                    }
+                }
+                , {field: 'status', title: '状态', width: 150, toolbar: '#open'}
+                , {field: 'addtime', title: '添加时间', width: 150}
+                , {
+                    title: '操作', minWidth: 200, fixed: 'right', toolbar: '#bar'
+                }
+            ]]
+        });
+        $('body').on('blur', '.list_order', function () {
+            loading = layer.load(1, {shade: [0.1, '#fff']});
+            var id = $(this).attr('data-id');
+            var sort = $(this).val();
+            $.post(qp_url + 'admin/Filled/editPlatformSort?token=' + getStorage('token'), {
+                id: id,
+                sort: sort
+            }, function (res) {
+                console.log(res)
+                layer.close(loading);
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1}, function () {
+                        reloadTable()
+                    });
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2});
+                    table.render();
+                }
+            }, 'json')
+        })
+        form.on('switch(open)', function (obj) {
+            loading = layer.load(1, {shade: [0.1, '#fff']});
+            var id = this.value;
+            var is_open = obj.elem.checked === true ? 1 : 0;
+            $.post(qp_url + 'admin/Filled/editPlatformStatus?token=' + getStorage('token'), {
+                'id': id,
+                'status': is_open
+            }, function (res) {
+                layer.close(loading);
+                console.log(res)
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1}, function () {
+                        reloadTable()
+                    });
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2});
+                    return false;
+                }
+            }, 'json')
+        });
+        table.on('tool(list)', function (obj) {
+            console.log(obj)
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('你确定要删除吗？', function (index) {
+                    $.ajax({
+                        type: 'POST',
+                        url: qp_url + 'admin/Filled/delPlatform?token=' + getStorage('token'),
+                        dataType: "json",
+                        data: {
+                            ids: data.id
+                        },
+                        success: function (res) {
+                            if (res.status == 1) {
+                                obj.del();
+                                layer.msg(res.msg)
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        }
+                    })
+                });
+            }
+        });
+        // 查询
+        $('#btnQuery').click(function () {
+            tableIn.reload({
+                where: {
+                    payment_type: $('#ddlServerID option:checked').val(),
+                    keyword: $('#txtSearch').val(),
+                },
+                page: {
+                    curr: 1
+                }
+            })
+        })
+    });
+
+    //添加和编辑完管理员信息后，重新加载表格
+    function reloadTable() {
+        tableIn.reload()
+    }
+
+    function windowClose(msg) {
+        if (msg) {
+            reloadTable()
+        }
+    }
+
+    //收放事件
+    $('.btn-minimize').click(function (e) {
+        e.preventDefault();
+        var $target = $(this).parent().parent().next('.box-content');
+        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        $target.slideToggle();
+    });
+</script>
+</body>
+
+</html>

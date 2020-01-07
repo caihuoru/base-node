@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>管理后台-修改归属地</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：管理后台-修改归属地</h2>
+            </div>
+
+            <div class="tab-content">
+                <div class="container tab-pane active" style="padding-top:10px;padding-bottom:10px;">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group new-input-style margin-b-0 clearfix">
+                            <label class="pull-left control-label" style="text-align:right;"> 归属地：</label>
+                            <div class="pull-left">
+                                <input id="txtIpAddress" class="form-control" type="text" value="" maxlength="11"
+                                       placeholder="请输入归属地">
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style margin-b-0 clearfix" style="text-align:center">
+                            修改后重新登录游戏生效。为空将改回真实地址
+                        </div>
+                    </form>
+                    <ul class="cursor-style clearfix new-add-btn" style="width:346px;margin-top: 20px">
+                        <li class="pull-left" style="margin-right: 10px;">
+                            <button class="btn btn-outline-success search btn-md" onclick="Add();"><i
+                                    class="glyphicon glyphicon-send"></i>保存
+                            </button>
+                        </li>
+                        <!--                    <li class="pull-left" style="margin-right: 10px;">-->
+                        <!--                        <button class="btn btn-outline-success search btn-md" onclick="HuanYuan();"><i class="glyphicon glyphicon-send"></i>还原归属地</button>-->
+                        <!--                    </li>-->
+                        <li class="pull-left">
+                            <button class="btn btn-danger search btn-md" onclick="window.close();"><i
+                                    class="glyphicon glyphicon-off"></i>关闭
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+
+<script type="text/javascript">
+    var id = getUrlParams('param')
+    layui.use('layer', function () {
+        var layer = layui.layer
+    })
+
+    function Add() {
+        var IpAddress = $("#txtIpAddress").val();
+        // var data = { IpAddress: IpAddress, Param: '121082', };
+        // AjaxSubmit("/Account/UpdateIpAddress", data, callBack, "add");
+        $.ajax({
+            type: 'POST',
+            url: qp_url + 'admin/Account/UpdateIpAddress',
+            dataType: 'json',
+            data: {
+                token: getStorage('token'),
+                UserID: id,
+                IpAddress: IpAddress
+            }, success: function (res) {
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1})
+                    setTimeout(function () {
+                        window.close()
+                    }, 1000)
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2})
+                }
+            }
+        })
+    }
+
+    function HuanYuan() {
+        var data = {IpAddress: "", Param: '121082',};
+        AjaxSubmit("/Account/UpdateIpAddress", data, callBack, "huanyuan");
+    }
+
+    //回调函数
+    function callBack(IpAddress, fname) {
+        if (fname == "add") {
+            alert(jsonData.Msg);
+            window.close();
+        }
+        if (fname == "huanyuan") {
+            alert("还原成功，重新登录游戏生效");
+            window.close();
+        }
+    }
+</script>
+
+</body>
+</html>

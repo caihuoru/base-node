@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>客服中心 - 收款方式管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/layui-v2.5.4/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+
+
+    <style type="text/css">
+        body{
+            overflow-y: scroll!important;
+        }
+        .panel-body .row {
+            margin: 15px 0;
+        }
+
+        .col-sm-2{
+            padding: 9px 15px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right;
+        }
+        .col-xs-4.col-md-2{
+            text-align: left;}
+        [type=radio]:checked+label, [type=radio]:not(:checked)+label{
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content margin-t-10" style="padding-bottom: 20px;">
+    <div class="">
+        <div class="carousel box-inner" id="addGame">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i> 目前操作功能：客服中心 - {{type == 'add' ? '添加' : '编辑'}}收款方式</h2>
+            </div>
+            <div class="tab-content">
+                <div class="panel panel-primary" style="border: none;">
+                    <div class="panel-body">
+
+
+                        <div class="modal-body">
+                            <div class="form-group row" v-if="todo == '新增'">
+                                <label for="problem_title" class="col-sm-2 col-form-label">收款类型</label>
+                                <div class="col-sm-6">
+                                    <div style="display: inline-block;" v-for="(item,index) in payments">
+                                        <input name="type" v-model="add.type" type="radio" :id="'radio_'+index" :value="item"/>
+                                        <label :for="'radio_'+index" class="mr-20" v-if="item == '二维码收款'" @click="add.nickname = 1">{{item}}</label>
+                                        <label :for="'radio_'+index" class="mr-20" v-else @click="add.nickname == 1 ? add.nickname = '' : ''">{{item}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="problem_title" class="col-sm-2 col-form-label">收款标题</label>
+                                <div class="col-sm-6">
+                                    <input id="problem_title" v-model="add.title" placeholder="请填写收款标题" class="form-control" type="text" value="">
+                                </div>
+                            </div>
+                            <!--支付宝-->
+                            <div v-if="add.type == '支付宝收款'">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">支付宝账号</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.account" placeholder="输入支付宝账号" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">支付宝昵称</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.nickname" placeholder="输入支付宝昵称" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">支付宝提示语</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.bank" placeholder="输入支付宝提示语" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">收款二维码</label>
+                                    <div class="col-sm-6">
+                                        <img v-if="add.qrcode" :src="add.qrcode" style="width: 100%;max-width: 150px;margin-bottom: 10px;" />
+                                        <input type="file" class="upFile">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">温馨提示</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" v-model="add.tips" placeholder="输入温馨提示" type="text" value="" rows="4" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--微信-->
+                            <div v-if="add.type == '微信收款'">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">微信账号</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.account" placeholder="输入微信账号" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">微信昵称</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.nickname" placeholder="输入微信昵称" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">微信提示语</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.bank" placeholder="输入微信提示语" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">收款二维码</label>
+                                    <div class="col-sm-6">
+                                        <img v-if="add.qrcode" :src="add.qrcode" style="width: 100%;max-width: 150px;margin-bottom: 10px;" />
+                                        <input type="file" class="upFile">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">温馨提示</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" v-model="add.tips" placeholder="输入温馨提示" type="text" value="" rows="4" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--银行卡-->
+                            <div v-if="add.type == '银行卡收款'">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">账户名</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.nickname" placeholder="输入银行卡账户名" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">开户行</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.bank" placeholder="输入银行卡开户行" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">银行账号</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.account" placeholder="输入银行卡账号" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">收款二维码</label>
+                                    <div class="col-sm-6">
+                                        <img v-if="add.qrcode" :src="add.qrcode" style="width: 100%;max-width: 150px;margin-bottom: 10px;" />
+                                        <input type="file" class="upFile">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">温馨提示</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" v-model="add.tips" placeholder="输入温馨提示" type="text" value="" rows="4" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--二维码收款-->
+                            <div v-if="add.type == '二维码收款'">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">二维码生成方式</label>
+                                    <div class="col-sm-6">
+                                        <input name="nickname" v-model="add.nickname" type="radio" id="qrcodeType_1" value="1"/>
+                                        <label for="qrcodeType_1" class="mr-20">链接自动生成</label>
+                                        <input name="nickname" v-model="add.nickname" type="radio" id="qrcodeType_2" value="0"/>
+                                        <label for="qrcodeType_2" class="mr-20">直接上传图片</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-if="add.nickname == 1">
+                                    <label class="col-sm-2 col-form-label">收款链接地址</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="add.account" placeholder="输入收款链接地址" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row" v-else>
+                                    <label class="col-sm-2 col-form-label">收款二维码</label>
+                                    <div class="col-sm-6">
+                                        <img v-if="add.qrcode" :src="add.qrcode" style="width: 100%;max-width: 150px;margin-bottom: 10px;" />
+                                        <input type="file" class="upFile">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">温馨提示</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" v-model="add.tips" placeholder="输入温馨提示" type="text" value="" rows="4" ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!---->
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">注意事项</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" v-model="add.precautions" placeholder="输入注意事项" type="text" value="" rows="4" ></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">排序设置</label>
+                                <div class="col-sm-6">
+                                    <input
+                                            class="form-control"
+                                            placeholder="填写1-50的数字"
+                                            type="number"
+                                            value=""
+                                            v-model.number="add.sort"
+                                    >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">是否显示</label>
+                                <div class="col-sm-6">
+                                    <input name="status" v-model="add.status" type="radio" id="status_1" value="1"/>
+                                    <label for="status_1" class="mr-20">显示</label>
+                                    <input name="status" v-model="add.status" type="radio" id="status_2" value="0"/>
+                                    <label for="status_2" class="mr-20">隐藏</label>
+                                </div>
+                            </div>
+
+                            <template v-for="(item,index) in add.cards" v-if="add.type != '银行卡收款'">
+                                <div class="form-group row">
+                                    <h4 class="col-sm-3 modal-title">银行卡{{index+1}} <span class="close" :data-index="index" @click="delCards"></span></h4>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">银行卡名称</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="item.title" placeholder="输入银行卡名称" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">账户名</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="item.nickname" placeholder="输入银行卡账户名" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">开户行</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="item.bank" placeholder="输入银行卡开户行" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">银行账号</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" v-model="item.account" placeholder="输入银行卡账号" type="text" value="" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">收款二维码</label>
+                                    <div class="col-sm-6">
+                                        <img v-if="item.qrcode" :src="item.qrcode" style="width: 100%;max-width: 150px;margin-bottom: 10px;" />
+                                        <input type="file" :data-index="index" class="upFile">
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="form-group row" v-if="add.type != '银行卡收款'">
+                                <label class="col-sm-2 col-form-label">添加银行卡</label>
+                                <div class="col-sm-6">
+                                    <div class="input-group">
+                                        <button type="button" class="btn btn-success" @click="addCards"
+                                                aria-expanded="false"><i class="fa fa-plus-circle mr-5"></i>添加银行卡
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+                                    <li><a class="btn btn-danger search btn-md" href="#" onclick="closed()"><i
+                                            class="glyphicon glyphicon-off"></i> 关闭</a></li>
+                                    <li><a class="btn btn-outline-success search btn-md" href="#" @click="gameSub"><i
+                                            class="glyphicon glyphicon-send"></i> 保存</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <!-- /.modal-content -->
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Scripts/axios.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<!--验证插件-->
+<script src="../../Content/veevalidate/vee-validate.js"></script>
+<script src="../../Content/veevalidate/zh_CN.js"></script>
+<script src="../../Content/veevalidate/config.js"></script>
+<!--弹窗插件-->
+<!-- 弹窗插件  -->
+<link href="../../Scripts/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+<script src="../../Scripts/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript">
+    let addGame;
+    $(function () {
+        var table
+        // 获取平台列表
+
+        addGame = new Vue({
+            el: '#addGame',
+            data: {
+                todo: '新增',
+                type: getUrlParams('type'),
+                qrcodeType: '1',
+                payments:[ '支付宝收款' ,'微信收款', '银行卡收款', '二维码收款'],
+                isSub:false,
+                listInedx: '',
+                add: {
+                    type: '支付宝收款',
+                    title: '',
+                    account: '',
+                    nickname: '',
+                    precautions: '',
+                    tips: '',
+                    bank: '',
+                    qrcode: '',
+                    status: 1,
+                    sort: 50,
+                    cards: []
+                }
+            },
+            created: function () {
+
+            },
+            mounted: function () {
+                var _that = this;
+                if(this.type == 'add'){
+
+                }else{
+                    axios({
+                        method: 'post',
+                        url: request_url2 + 'systemSet',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: {
+                            id: getUrlParams('id'),
+                            doing: 'selectPayment'
+                        },
+                    }).then(function (res) {
+                        let resData = res.data;
+                        console.log(resData)
+                        if(resData.status == 1){
+                            _that.add = resData.data.data[0]
+                        }
+                    })
+                }
+            },
+            methods: {
+                // 提交
+                gameSub: function () {
+                    var _this = this;
+                    var clone = deepClone(this.add);
+                    if(clone.cards && clone.cards.length > 0){
+                        clone.cards = JSON.stringify(clone.cards)
+                    }else{
+                        clone.cards = ''
+                    }
+                    var postData = {
+                        doing: '',
+                        body: clone
+                    };
+
+                    if (_this.type == 'add') {
+                        postData['doing'] = 'addPayment';
+                    }else{
+                        postData['doing'] = 'editPayment';
+                    }
+                    axios({
+                        method: 'post',
+                        url: request_url2 + 'systemSet',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: postData,
+                    }).then(function (res) {
+                        var resData = res.data;
+                        console.log(resData)
+                        if (resData.code == '0') {
+                            var text = '新增成功';
+                            if(_this.type == 'edit'){
+                                text = '编辑成功'
+                            }
+                            swal(text, "", "success").then((value) => {
+                                if(value){
+                                    closed(text)
+                                }
+                            });
+                            addGame.isSub=true;
+                        }
+//                        app.recommendList = data;
+//                        tableSearchInit(data);
+                    })
+                },
+                // 获取图片url
+                getImgUrl: function (type, keys) {
+                    var urls = [];
+                    $('.' + keys + ' .files tr').each(function () {
+                        urls.push($(this).find('p.name a').attr('href'))
+                    })
+                    return urls.join(',');
+                },
+                delCards(e){
+                    let index = e.target.dataset.index
+                    this.add.cards.splice(index,1)
+                },
+                addCards(){
+                    this.add.cards.push({
+                        account: '',
+                        nickname: '',
+                        bank: '',
+                        title: '',
+                        qrcode: ''
+                    })
+                }
+            }
+        })
+
+    })
+    $(document).on('change', '.upFile', function (e) {
+        var maxWidth = 300;
+        //判断上传文件格式
+        console.log(this.files[0])
+        if (!this.files[0].type.match(/image\/*/)) {
+            return swal('上传的图片格式不正确')
+        }
+        var file = this.files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+            // 实例一个图片获取图片宽高
+            var img = new Image();
+            img.src = this.result;
+            img.onload = function () {
+                var _height = img.height, _width = img.width;
+                if (_width > maxWidth) {
+                    var scale = maxWidth / _width;
+                    _width = toFixed2(_width * scale);
+                    _height = toFixed2(_height * scale);
+                }
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                canvas.width = _width;
+                canvas.height = _height;
+                ctx.drawImage(img, 0, 0, _width, _height);
+                var imgToBase64 = canvas.toDataURL();
+                // $('body').append('<img src="' + imgToBase64 + '" style="width:100%;margin: 0">');
+                $.ajax({
+                    type: 'POST',
+                    url: serverPath + 'saveImg.php',
+                    dataType: 'json',
+                    data: {
+                        name: getDateString('', 'number') + '.' + getRandomNumber(8),
+                        image: imgToBase64
+                    },
+                    success: function (data) {
+                        var resData = data;
+                        console.log(resData)
+                        app.add.avatar = resData.imgPath                        // console.log(code);
+                    },
+                    error: function () {
+                        console.log('出错了！');//原有的提示，建议改善
+                    }
+                });
+            }
+        }
+    })
+
+
+    function closed(msg) {
+        window.close()
+        window.opener.windowClose(msg)
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+</script>
+</body>
+</html>

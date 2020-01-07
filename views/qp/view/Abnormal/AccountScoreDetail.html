@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台管理-总输赢详情</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .row {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：后台管理-总输赢详情</h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content">
+                    <div class="row">
+                        <div class="col-md-12" style="padding:10px 10px 0; text-align:right;">
+                            <div>
+                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                    <a class="btn btn-danger search" href="#" onclick="window.close();">
+                                        <i class="glyphicon glyphicon-off"></i>
+                                        关闭
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="DataTables_Table_0_wrapper" style="padding: 10px;" class="dataTables_wrapper table-center"
+                         role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    layui.use('table', function () {
+        var table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            , url: qp_url + 'admin/abnormal/AccountScoreDetail' //数据接口
+            , where: {
+                UserID: getUrlParams('userid'),
+                account: getUrlParams('account'),
+                nick: getUrlParams('nick'),
+                stTime: getUrlParams('stTime'),
+                endTime: getUrlParams('endTime'),
+                token:getStorage('token')
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    // "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data //解析数据列表
+                };
+            }
+            , cellMinWidth: 100
+            // ,totalRow: true
+            , cols: [[ //表头
+                {field: 'account', title: '玩家账号'}
+                , {field: 'nick', title: '玩家昵称'}
+                , {field: 'KindName', title: '游戏'}
+                , {
+                    field: 'Score', title: '总输赢', templet: function (d) {
+                        return parseFloat(d.Score).formatMoney()
+                    }
+                }
+                , {
+                    field: 'stat_time', title: '统计时间', minWidth: 200, templet: function (d) {
+                        var StartTime = getUrlParams('stTime').substring(0, 10)
+                        var EndTime = getUrlParams('endTime').substring(0, 10)
+                        if (StartTime == '' && EndTime == '') {
+                            return ''
+                        }
+                        return `<div>${StartTime}至${EndTime}</div>`
+                    }
+                }
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+    });
+</script>
+</body>
+</html>

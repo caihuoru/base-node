@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>数据分析 - 游戏记录</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Content/laydate/laydate.js"></script>
+    <script src="../Scripts/pagination.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <style>
+        .wrap,
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll !important;
+        }
+
+        .action {
+            background: #6d8dfd;
+            border-color: #6d8dfd;
+            color: #ffffff !important;
+        }
+        .layui-table tbody tr .layui-table-cell {
+            height: auto !important;
+            padding: 10px;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+
+    </style>
+</head>
+
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="box-inner">
+            <div class="col-md-12">
+                <div class="box-inner">
+                    <div class="box-header well" data-original-title="">
+                        <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：数据分析 - 游戏记录 </h2>
+                        <div class="box-icon">
+                            <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                                <i class="glyphicon glyphicon-repeat"></i>
+                            </a>
+                            <a href="#" class="btn btn-minimize btn-round btn-default">
+                                <i class="glyphicon glyphicon-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="box-content tab-content" style="overflow: hidden; display: block;padding: 10px">
+                        <!--查询栏开始-->
+                        <div class="alert alert-info">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline cursor-style">
+                                        <li>日期查询：</li>
+                                        <li>
+
+                                            <input id="txtStartDate" class="input-width-150" type="text"
+                                                   readonly="readonly"/>至<input
+                                                type="text" id="txtEndDate" class="input-width-150"
+                                                readonly="readonly"/>
+                                        </li>
+                                        <li>
+                                            <select class="form-control input-sm" id="ddlServerID">
+                                                <option value="0">全部房间</option>
+                                            </select>
+                                        </li>
+                                        <li>
+                                            <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
+                                                    class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--查询栏结束-->
+                        <div class="row" style="margin-right: 0;">
+                            <div class="col-md-6 col-lg-6 top-tip" style="padding-bottom:5px; padding-top:5px;">
+                                <div class="btn-group btn-group">
+                                    损耗总数：<span id="WasteTotal">0</span>
+                                    税收总数：<span id="RevenueTotal">0</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-6"
+                                 style="padding-bottom:5px; padding-top:5px; text-align:right;">
+
+                                <div class="btn-group btn-group">
+
+                                    <button type="button" id="btntaday" class="btn btn-outline-primary"><i
+                                            class="glyphicon glyphicon-align-left icon-white"></i>今天
+                                    </button>
+                                    <button type="button" id="btnyesterday" class="btn btn-outline-primary"><i
+                                            class="glyphicon glyphicon-align-center icon-white"></i>昨天
+                                    </button>
+                                    <button type="button" id="btnweeked" class="btn btn-outline-primary"><i
+                                            class="glyphicon glyphicon-align-right icon-white"></i>本周
+                                    </button>
+                                    <button type="button" id="btnlastweeked" class="btn btn-outline-primary"><i
+                                            class="glyphicon glyphicon-align-justify icon-white"></i>上周
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--table开始-->
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                            <table id="layTable" lay-filter="test"></table>
+
+                            <table style="display:none;"
+                                   class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                                   id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                                <thead>
+                                <tr role="row">
+                                    <th>插入时间</th>
+                                    <th>游戏</th>
+                                    <th>房间</th>
+                                    <th>桌子</th>
+                                    <th>用户数</th>
+                                    <th>机器人数</th>
+                                    <th>损耗</th>
+                                    <th>税收/服务费</th>
+
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                </tr>
+                                </thead>
+                                <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                            </table>
+                            <!--分页控件-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="dataTables_paginate paging_bootstrap pagination"
+                                         style="float:right;">
+                                        <ul class="pagination" id="pagin"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--table结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="operate">
+    <div>
+        <span>{{d.InsertTime}}</span>
+        <img src="../Content/images/down.gif" lay-event="showinfo{{d.DrawID}}" data-isopen="0" style="cursor: pointer;">
+    </div>
+</script>
+<script type="text/javascript">
+    $("#txtStartDate").val(Time.monthFirstDay().firstDay);
+    $("#txtEndDate").val(Time.today().EndDate);
+    var pageObj = {};
+    var postData = {};//搜索条件
+    var table;
+    //获取游戏房间列表
+    $.ajax({
+        type: 'GET',
+        url: qp_url + 'admin/Gamecommon/RoomList?token=' + getStorage('token') + '&kid=0',
+        dataType: 'json',
+        success: function (res) {
+            console.log(res)
+            if (res.status == 1) {
+                var str = "";
+                for (var i = 0, len = res.data.length; i < len; i++) {
+                    str += "<option value='" + res.data[i].ServerID + "'>" + res.data[i].ServerName + "</option>"
+                }
+                $('#ddlServerID').append(str)
+            }
+        }
+    })
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'datetime'
+            ,theme:'#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtEndDate'
+            , type: 'datetime'
+            ,theme:'#00B4E5'
+        });
+        docReady()
+    });
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            , url: qp_url + "admin/Analysis/GetGameRecord?token="+getStorage('token') //数据接口
+            , where: postData
+            , method: "post"
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                $("#WasteTotal").html(parseFloat(res.data.WasteTotal).formatMoney());
+                $("#RevenueTotal").html(parseFloat(res.data.RevenueTotal).formatMoney());
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.list //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 100
+            , cols: [[ //表头
+                {field: 'InsertTime', title: '插入时间', minWidth: 200, toolbar: '#operate'}
+                , {field: 'GameKindName', title: '游戏',width:130}
+                , {field: 'GameRoomName', title: '房间',minWidth:130}
+                , {field: 'TableID', title: '桌子',width:80}
+                , {field: 'UserCount', title: '用户数',width:80}
+                , {field: 'AndroidCount', title: '机器人数',width:100}
+                , {field: 'Waste', title: '损耗',width:120}
+                , {field: 'Revenue', title: '税收/服务费',width:120}
+                , {field: 'StartTime', title: '开始时间', minWidth: 170}
+                , {field: 'ConcludeTime', title: '结束时间', minWidth: 170}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+        //监听工具条点击事件
+        table.on('tool(test)', function (obj) {
+            var objData = obj.data;
+            var isopen = $(this).context.dataset.isopen//看看是否已经展开，如果展开的，就将其关闭  0未展开，1展开
+            if ($(this).attr('src') == '../Content/images/up.gif') {
+                $(this).attr('src', '../Content/images/down.gif')
+            } else {
+                $(this).attr('src', '../Content/images/up.gif')
+            }
+            var tableId = 'child' + obj.data.DrawID
+            var current_tr = obj.tr[obj.tr.length - 1]
+            if (isopen == 1) {
+                $('.' + tableId).toggle()
+                return;
+            }
+            $(this).context.dataset.isopen = 1
+            if (obj.event == 'showinfo' + obj.data.DrawID) {
+                var _html = '<tr><td class="' + tableId + '" colspan="' + obj.tr.find('td').length + '"><table id="' + tableId + '" lay-filter="' + tableId + '"></table></td></tr>'
+                $(current_tr).after(_html);
+                table.render({
+                    elem: '#' + tableId
+                    , url: qp_url + "admin/Analysis/GetUserGameRecord?token="+getStorage('token')//数据接口
+                    , where: {
+                        drawID: obj.data.DrawID
+                    }
+                    , request: {
+                        pageName: 'pageIndex' //页码的参数名称，默认：page
+                        , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    }
+                    , response: { //res 即为原始返回的数据
+                        statusName: 'status',
+                        statusCode: 1,
+                        // msgName: 'msg',
+                        // dataName: 'data',
+                    },
+                    parseData: function (res) {
+                        var data = res.data
+                        console.log(res)
+                        if(objData.GameKindName == '斗地主'){
+                            if(data.length < 3){
+                                for(var i = data.length; i < 3; i++){
+                                    let obj = {};
+                                    let ChairID = data[0].ChairID + i
+                                    console.log(ChairID)
+                                    ChairID > 2 ? ChairID = 0 : ''
+                                    obj.NickName = '机器人'
+                                    obj.ChairID = ChairID
+                                    data.push(obj)
+                                }
+                            }
+                        }
+                        return {
+                            "status": res.status, //解析接口状态
+                            "msg": res.msg, //解析提示文本
+                            "count": 1, //解析数据长度 ,需要数据库返回
+                            // "count": res.data.total, //解析数据长度 ,需要数据库返回
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    , cols: [[ //表头
+                        {field: 'Accounts', title: '账号',width:120}
+                        , {field: 'NickName', title: '昵称',width:120}
+                        , {field: 'GameID', title: '游戏ID',width:120}
+                        , {field: 'IsAndroid', title: '是否机器人',width:120}
+                        , {field: 'ChairID', title: '椅子编号',width:120}
+                        , {
+                            field: 'TableCardInfo',height: 50, title: '牌型', minWidth:450, templet: function (d) {
+                                if(objData.GameKindName == '斗地主') {
+                                    var res = getUserCards(objData.TableCardInfo)
+                                    let card = res[d.ChairID+1];
+                                    let html = '<div class="cards">'
+                                    card.sort(function (a, b) {
+                                        return b.value - a.value
+                                    })
+                                    for(let i in card){
+                                        let item = card[i];
+                                        html += '<img src="../Content/images/pk/'+item.name+'.jpg" data-value="'+item.value+'">'
+                                    }
+                                    html += '</div>'
+                                    return html
+                                }else{
+                                    return ``
+                                }
+                            }
+                        }
+                        , {field: 'Score', title: '输赢积分',width:120}
+                        , {field: 'Revenue', title: '税收/服务费',width:120}
+                        , {
+                            field: 'PlayTimeCount', title: '游戏时长', templet: function (d) {
+                                return ConverTimeToDHMS(d.PlayTimeCount)
+                            },width:120
+                        }
+                        , {field: 'InsertTime', title: '插入时间',width:120}
+                        , {field: '', title: ''}
+                    ]]
+                    , done: function (res, curr, count) {
+                        $('th').css({'text-align': 'center'});
+                    }
+                })
+            }
+        });
+    });
+    //获取牌局信息和当前用户的牌
+    //参数totalStr：从服务端得到的字符串
+    function getUserCards(totalStr) {
+        //牌局信息
+        var info = totalStr;
+        let cards = [[],[],[],[]];
+        let value = 14;
+        for (var i = 0; i < 54; i++) {
+            let char = parseInt(info.charAt(i));
+            value > 15 ? value -= 13 : ''
+            i == 52 ? value = 16 : i == 53 ? value = 17 : ''
+            let obj = {
+                name: i,
+                value: value,
+            };
+            if(char)cards[char].push(obj)
+            value++
+        }
+        return cards
+    }
+
+    function docReady() {
+        //加载数据
+        postData.DateType = 5;
+        postData.StartDate = Time.monthFirstDay().firstDay;
+        postData.EndDate = Time.today().EndDate;
+        postData.Type = 0;
+        //时间今天查询
+        $("#btntaday").click(function (e) {
+            postData.Type = parseInt($("#ddlServerID").val());
+            postData.DateType = 1;
+            table.reload('layTable', {
+                where: postData
+                , page: {
+                    curr: 1
+                }
+            })
+            // postData.StartDate = $("#txtStartDate").val();
+            // postData.EndDate = $("#txtEndDate").val();
+            // AjaxSearch(postData, table);
+        });
+        //时间昨天查询
+        $("#btnyesterday").click(function (e) {
+            // postData.pageIndex = 1;
+            postData.Type = parseInt($("#ddlServerID").val());
+            postData.DateType = 2;
+            table.reload('layTable', {
+                where: postData
+                , page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData, table);
+        });
+        //时间本周查询
+        $("#btnweeked").click(function (e) {
+            // postData.pageIndex = 1;
+            postData.Type = parseInt($("#ddlServerID").val());
+            postData.DateType = 3;
+            table.reload('layTable', {
+                where: postData
+                , page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData, table);
+        });
+        //时间上周查询
+        $("#btnlastweeked").click(function (e) {
+            // postData.pageIndex = 1;
+            postData.Type = parseInt($("#ddlServerID").val());
+            postData.DateType = 4;
+            table.reload('layTable', {
+                where: postData
+                , page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData, table);
+        });
+        //日期查询
+        $("#btnQuery").click(function (e) {
+            // postData.pageIndex = 1;
+            // $(".btn-group.btn-group button").removeClass("action");
+            // var istrue = true;
+            var txtStartDate = $("#txtStartDate").val();
+            var txtEndDate = $("#txtEndDate").val();
+            if (txtStartDate != "" && txtEndDate != "") {
+                if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                    layer.alert("开始日期不能大于结束时间");
+                    return false;
+                }
+            }
+            if (txtStartDate != "" && txtEndDate != "") {
+                postData.StartDate = txtStartDate;
+                postData.EndDate = txtEndDate;
+            }
+            postData.Type = parseInt($("#ddlServerID").val());
+            postData.DateType = 5;
+            table.reload('layTable', {
+                where: postData
+                , page: {
+                    curr: 1
+                }
+            })
+        });
+
+        //搜索事件
+        function AjaxSearch(postData, table) {
+            // $('#pagin').paging(qp_url +"admin/Analysis/GetGameRecord", postData, CreatTableBody, postData.pageIndex);
+            console.log(table)
+            table.reload('layTable', {
+                where: postData
+            })
+        }
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics, extObj) {
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr id=\"tr{0}\">", item.DrawID);
+                html += stringFormat("<td>{1}&nbsp;<img id=\"img{0}\" src=\"/Content/images/down.gif\" style=\"cursor: pointer\" alt=\"查看同桌玩家\" title=\"查看同桌玩家\" onclick=\"ShowInfo({0})\" /></td>", item.DrawID, item.InsertTime);
+                html += stringFormat("<td>{0}</td>", item.GameKindName);
+                html += stringFormat("<td>{0}</td>", item.GameRoomName);
+                html += stringFormat("<td>{0}</td>", item.TableID);
+                html += stringFormat("<td>{0}</td>", item.UserCount);
+                html += stringFormat("<td>{0}</td>", item.AndroidCount);
+                html += stringFormat("<td>{0}</td>", item.Waste);
+                html += stringFormat("<td>{0}</td>", item.Revenue);
+                //html += stringFormat("<td>{0}</td>", item.UserMedal);
+                html += stringFormat("<td>{0}</td>", item.StartTime);
+                html += stringFormat("<td>{0}</td>", item.ConcludeTime);
+                html += "</tr>";
+            });
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+        $("#WasteTotal").text(extObj.WasteTotal);
+        $("#RevenueTotal").text(extObj.RevenueTotal);
+    }
+
+    function ShowInfo(Id) {
+        pageObj.drawID = Id;
+        var url = $("#img" + Id).attr("src").trim();
+        if (url == "/Content/images/down.gif") {
+            $("#img" + Id).attr("src", "/Content/images/up.gif");
+            AjaxSubmit("/DataAnalysis/GetUserGameRecord", pageObj, callBack, "del");
+        } else {
+            $("#img" + Id).attr("src", "/Content/images/down.gif");
+            $("#tr" + pageObj.drawID).next().remove();
+        }
+
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "del":
+                var html = "<tr><td colspan=\"11\"><table class=\"table table-striped table-bordered bootstrap-datatable datatable responsive dataTable\">";
+                html += "<thead><tr role=\"row\">";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">帐号</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">昵称</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">游戏ID</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">是否机器人</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">椅子编号</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">输赢积分</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">税收/服务费</th>";
+                //html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">元宝数目</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">游戏时长</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">插入时间</th>";
+                html += "</tr></thead>";
+                html += "<tbody role=\"alert\">";
+                $.each(jsonData, function (i, item) {
+                    html += "<tr><td>" + item.Accounts + "</td><td>" + item.NickName + "</td><td>" + item.GameID + "</td><td>" + item.IsAndroid + "</td><td>" + item.ChairID + "</td><td>" + item.Score + "</td><td>" + item.Revenue + "</td><td>" + item.PlayTimeCount + "</td><td>" + item.InsertTime + "</td></tr>";
+                });
+                html += "</tbody>";
+                html += "</table></td></tr>";
+                $("#tr" + pageObj.drawID).after(html);
+                break;
+        }
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+
+    function timestampToTime(timestamp, all) {
+        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = date.getDate() + ' ';
+        if (all) {
+            var h = date.getHours() + ':';
+            var m = date.getMinutes() + ':';
+            var s = date.getSeconds();
+        } else {
+            var h = 0 + ':';
+            var m = 0 + ':';
+            var s = 0;
+        }
+
+        return Y + M + D + h + m + s;
+    }
+
+</script>
+</body>
+
+</html>

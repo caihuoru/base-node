@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>代理系统 - 添加代理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .panel-body .row div:first-child {
+            min-width: 140px;
+            text-align: right;
+        }
+
+        .btn-outline-primary {
+            border-right: 1px solid rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="info">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：代理系统 - 添加代理</h2>
+            </div>
+            <div class="tab-content padding-margin-0">
+
+                <div class="panel panel-info no-bord">
+
+                    <div class="panel-heading no-bord-radio">
+                        <h3 class="panel-title">添加代理</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">代理账号：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150"
+                                       id="txtAcc"
+                                       type="text"
+                                       name="txtAcc"
+                                       v-model="info.Acc"
+                                       :class="{'form-error-tip':errors.has('txtAcc')}"
+                                       v-validate="'required'"/>
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('txtAcc')">
+                                {{ errors.first('txtAcc') }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">代理密码：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150" type="text" id="txtPwd"
+                                       v-model="info.Pwd"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">抽水比例：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150" style="display:inline;" type="text"
+                                       id="txtRate"
+                                       v-model="info.Rate"
+                                       name="txtRate"
+                                       :class="{'form-error-tip':errors.has('txtRate')}"
+                                       v-validate="'required'"
+                                />%
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('txtRate')">
+                                {{ errors.first('txtRate') }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">真实姓名：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150" type="text" id="txtRealName"
+                                       v-model="info.RealName"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">QQ号码：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150" type="text" id="txtQQ"
+                                       v-model="info.QQ"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">名称：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150"
+                                       type="text"
+                                       id="txtShowName"
+                                       name="txtShowName"
+                                       v-model="info.ShowName"
+                                       :class="{'form-error-tip':errors.has('txtShowName')}"
+                                       v-validate="'required'"
+                                />
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('txtShowName')">
+                                {{ errors.first('txtShowName') }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">微信号：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150"
+                                       type="text"
+                                       id="txtWeChat"
+                                       name="txtWeChat"
+                                       v-model="info.WeChat"
+                                       :class="{'form-error-tip':errors.has('txtWeChat')}"
+                                       v-validate="'required'"
+                                />
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('txtWeChat')">
+                                {{ errors.first('txtWeChat') }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">代理类别：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="radio-inline input-width-150" style="padding: 0">
+                                    <select id="dailiType" class="form-control" style="width: 100%">
+                                        <option value="-1">请选择</option>
+                                        <option value="0">抽水提成</option>
+                                        <option value="2">银商</option>
+                                        <option value="3">充值提成</option>
+                                        <option value="4">无限代理</option>
+                                    </select>
+                                </div>
+                                <div class="radio-inline">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">查看权限：</div>
+                            <div class="col-md-6" id="queryrightdiv">
+                                <input id="query1" name="queryRight" type="checkbox" value="1"/>玩家充值记录
+                                <input id="query2" name="queryRight" type="checkbox" value="2"/>玩家游戏记录
+                                <input id="query3" name="queryRight" type="checkbox" value="4"/>玩家提现记录
+                                <input id="query4" name="queryRight" type="checkbox" value="8"/>查看总输赢
+                                <input id="query5" name="queryRight" type="checkbox" value="16"/>代理公告
+                                <input id="query6" name="queryRight" type="checkbox" value="32"/>资料修改
+                                <input id="query7" name="queryRight" type="checkbox" value="64"/>玩家管理
+                                <input id="query8" name="queryRight" type="checkbox" value="128"/>代理管理
+                                <input id="query9" name="queryRight" type="checkbox" value="256"/>我的报表
+                                <input id="query10" name="queryRight" type="checkbox" value="512"/>我的抽水记录
+                                <input id="query11" name="queryRight" type="checkbox" value="1024"/>金币变化记录
+                                <!--                                <input id="query12" name="queryRight" type="checkbox" value="2048" style="display: none;" />代理输赢情况-->
+                                <!--                                <input id="query13" name="queryRight" type="checkbox" value="4096" style="display: none;" />玩家输赢情况-->
+                                <input id="query14" name="queryRight" type="checkbox" value="8192"/>提款
+                                <input id="query15" name="queryRight" type="checkbox" value="16384"/>提款记录
+                                <input id="query16" name="queryRight" type="checkbox" value="32768"/>充值提成报表
+                                <input id="query17" name="queryRight" type="checkbox" value="65536"/>在线玩家
+                                <input id="query18" name="queryRight" type="checkbox" value="131072"/>代理总输赢
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">备注：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <textarea id="txtRemarks" class="form-control "
+                                          style="width:350px; display:inline;" rows="3"
+                                          v-model="info.Remarks"
+                                          name="txtRemarks"
+                                          :class="{'form-error-tip':errors.has('txtRemarks')}"
+                                          v-validate="'required'"
+                                ></textarea>
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('txtRemarks')">
+                                {{ errors.first('txtRemarks') }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">绑定域名：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150" type="text" id="txtDomain"
+                                       v-model="info.Domain"
+                                       name="txtDomain"
+                                       :class="{'form-error-tip':errors.has('txtDomain')}"
+                                       v-validate="'required'"
+                                />
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('txtDomain')">
+                                {{ errors.first('txtDomain') }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">排序号：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input class="form-control input-sm input-width-150" type="text" id="txtSort"
+                                       value="0" v-model="info.Sort"/>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-outline-primary search btn-md" href="../daiLiGuanLi.html"><i
+                                        class="glyphicon glyphicon-arrow-left"></i>返回</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="javascript:void(0)"
+                                       @click="add"><i
+                                        class="glyphicon glyphicon-save"></i>保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../../Content/veevalidate/vee-validate.js"></script>
+<script src="../../Content/veevalidate/zh_CN.js"></script>
+<script type="text/javascript">
+    layui.use(['layer'], function () {
+        var layer = layui.layer
+    })
+    const config = {
+        errorBagName: 'errors', // change if property conflicts.
+        fieldsBagName: 'fieldBags',  // 报冲突时 可自定义修改字段名称
+        delay: 0, // 错误提示的延迟时间
+        strict: true, // 没有设置规则的表单不进行校验，
+        enableAutoClasses: false,
+        locale: 'zh_CN', // 对语言（中文）的配置
+        classNames: {
+            touched: 'touched', // the control has been blurred
+            untouched: 'untouched', // the control hasn't been blurred
+            valid: 'valid', // model is valid
+            invalid: 'invalid', // model is invalid
+            pristine: 'pristine', // control has not been interacted with
+            dirty: 'dirty' // control has been interacted with
+        },
+        events: 'input', //* *input|blur** 在用户输入和表单失去焦点时都进行校验 可单独写  blur或input
+        inject: true
+    }
+    //js使用方式，指定语言、修改默认提示，添加自定义验证
+    VeeValidate.Validator.localize({
+        zh_CN: {
+            messages: {
+                required: function (name) {
+                    console.log(name);
+                    switch (name) {
+                        case 'txtAcc':
+                            name = '代理账号'
+                            break;
+                        case 'txtShowName':
+                            name = '名称'
+                            break;
+                        case 'txtWeChat':
+                            name = '微信号'
+                            break;
+                        case 'txtRemarks':
+                            name = '备注'
+                            break;
+                        case 'txtDomain':
+                            name = '绑定域名'
+                            break;
+                        case 'txtRate':
+                            name = '抽水比例'
+                            break;
+                    }
+                    return name + "不能为空！";
+                },
+            }//定义成我们需要的文字提示
+        }
+
+    });
+    // 自定义验证规则
+    // 11位手机号验证
+    // VeeValidate.Validator.extend('mobile', {
+    //     messages: {
+    //         en: field => field + '必须是11位手机号码',
+    //     },
+    //     validate: value => {
+    //         return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+    //     }
+    // });
+
+    Vue.use(VeeValidate, config);
+
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            info: {
+                Acc: '',
+                Pwd: '',
+                RealName: '',
+                Remarks: '',
+                Rate: '',
+                QQ: '',
+                Domain: '',
+                ShowName: '',
+                WeChat: '',
+                IsClient: '',
+                Sort: '',
+                QueryRight: '',
+            }
+        },
+        mounted: function () {
+
+        },
+        methods: {
+            add: function () {
+                var that = this
+                if (that.info.Acc.length < 4) {
+                    layer.alert("代理账号必须为长度大于4位的数字，字母和下划线组成")
+                    return;
+                }
+                if (!/^[A-Za-z0-9_]+$/.test(that.info.Acc)) {
+                    layer.alert("代理账号必须为长度大于4位的数字，字母和下划线组成");
+                    return;
+                }
+                if (that.info.Pwd.length < 6) {
+                    layer.alert("代理密码必须大于6位");
+                    return;
+                }
+                //if (/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,16}$/.test(pwd) == false) {
+                //    layer.layer.alert("密码必须是6-16位的英文数字组合!");
+                //    return;
+                //}
+
+                if (that.info.Pwd.indexOf('-') > 0 || that.info.Pwd.indexOf('\'') > 0) {
+                    layer.alert("密码不能包含特殊字符 - 和 ' ");
+                    return;
+                }
+
+                if (!isNaN(that.info.Rate)) {
+                    if (that.info.Rate.indexOf('.') > 0) {
+                        layer.alert("抽水比例必须在0-100之间的整数");
+                        return;
+                    }
+                    if (parseInt(that.info.Rate) > 100 || parseInt(that.info.Rate) < 0) {
+                        layer.alert("抽水比例必须在0-100之间的整数")
+                        return;
+                    }
+                } else {
+                    layer.alert("抽水比例必须在0-100之间的数字")
+                    return;
+                }
+
+                if (that.info.RealName.trim().length == 0 || that.info.RealName.trim() === "") {
+                    layer.alert("真实姓名不能为空");
+                    return
+                }
+                //if (!/[u4e00-u9fa5]+/.test(realName)) {
+                //    if (realName.length > 5) {
+                //        layer.alert("真实姓名最多5位");
+                //        return;
+                //    }
+                //}
+                //else {
+                //    layer.alert("真实姓名只能为中文");
+                //    return
+                //}
+                if (that.info.QQ === "") {
+                    layer.alert("代理QQ不能为空")
+                    return
+                }
+                if (isNaN(that.info.QQ) || that.info.QQ.length > 17) {
+                    layer.alert("代理QQ为小于17位的数字")
+                    return
+                }
+                if (that.info.Remarks.length > 500) {
+                    layer.alert("备注不要多于500字")
+                    return
+
+                }
+                var dailiType = $('#dailiType').val();
+                if (dailiType < 0) {
+                    layer.alert("请选择代理类型");
+                    return;
+                }
+                if (that.info.Domain.length > 0) {
+
+                    var domains = that.info.Domain.split(",");
+                    for (var i = 0; i < domains.length; i++) {
+                        if (!/^[a-zA-Z0-9\-]{2,67}\.(([a-zA-z0-9]{1,15})|(com\.cn)|(com\.net))$/.test(domains[i])) {
+                            layer.alert(domains[i] + "请输入合法的域名格式,例如baidu.com,baidu.com.cn,baidu.com.net");
+                            return;
+                        }
+                    }
+                    if (that.info.Domain.length > 900) {
+                        layer.alert("域名长度不要超过900");
+                        return;
+                    }
+                }
+                var Sort = $('#txtSort').val();
+                if (Sort == "") {
+                    layer.alert("排序号不能为空")
+                    return
+                }
+                if (!/^[0-9]*$/.test(Sort)) {
+                    layer.alert("排序号只能为数字")
+                    return
+                }
+                var queryDate = 0;
+                $("#queryrightdiv").children().each(function (i) {
+                    var _this = $(this);
+                    if (_this.prop("checked")) {
+                        queryDate |= _this.val()
+                    }
+                });
+                this.info.QueryRight = queryDate
+                this.info.IsClient = $('#dailiType').val()
+                console.log(that.info)
+                var postData = JSON.stringify(this.info)
+                postData = JSON.parse(postData)
+                postData.Rate = (this.info.Rate/100).toFixed(2)
+                this.$validator.validate().then(valid => {
+                    console.log(valid)
+                    if (valid) {
+                        $.ajax({
+                            type: 'POST',
+                            url: qp_url + 'admin/Daili/AddAgent?token='+getStorage('token'),
+                            data: postData,
+                            dataType: 'json',
+                            success: function (res) {
+                                layer.alert(res.msg)
+                            }
+                        })
+                    }
+                })
+
+            }
+        }
+    })
+
+
+    function add() {
+        var acc = $("#txtAcc").val()
+        var pwd = $("#txtPwd").val()
+        var rate = $("#txtRate").val()
+        var realName = $("#txtRealName").val()
+        var remarks = $("#txtRemarks").val();
+        var qq = $("#txtQQ").val();
+        var domain = $("#txtDomain").val();
+        var ShowName = $("#txtShowName").val();
+        var WeChat = $("#txtWeChat").val();
+        var dailiType = $('#dailiType').val();
+
+        if (acc.length < 4) {
+            layer.alert("代理账号必须为长度大于4位的数字，字母和下划线组成")
+            return;
+        }
+        if (!/^[A-Za-z0-9_]+$/.test(acc)) {
+            layer.alert("代理账号必须为长度大于4位的数字，字母和下划线组成");
+            return;
+        }
+        if (pwd.length < 6) {
+            layer.alert("代理密码必须大于6位");
+            return;
+        }
+        //if (/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,16}$/.test(pwd) == false) {
+        //    layer.alert("密码必须是6-16位的英文数字组合!");
+        //    return;
+        //}
+
+        if (pwd.indexOf('-') > 0 || pwd.indexOf('\'') > 0) {
+            layer.alert("密码不能包含特殊字符 - 和 ' ");
+            return;
+        }
+
+        if (!isNaN(rate)) {
+            if (rate.indexOf('.') > 0) {
+                layer.alert("抽水比例必须在0-100之间的整数");
+                return;
+            }
+            if (parseInt(rate) > 100 || parseInt(rate) < 0) {
+                layer.alert("抽水比例必须在0-100之间的整数")
+                return;
+            }
+        } else {
+            layer.alert("抽水比例必须在0-100之间的数字")
+            return;
+        }
+
+        if (realName === "") {
+            layer.alert("真实姓名不能为空");
+            return
+        }
+        //if (!/[u4e00-u9fa5]+/.test(realName)) {
+        //    if (realName.length > 5) {
+        //        layer.alert("真实姓名最多5位");
+        //        return;
+        //    }
+        //}
+        //else {
+        //    layer.alert("真实姓名只能为中文");
+        //    return
+        //}
+        if (qq === "") {
+            layer.alert("代理QQ不能为空")
+            return
+        }
+        if (isNaN(qq) || qq.length > 17) {
+            layer.alert("代理QQ为小于17位的数字")
+            return
+        }
+        if (remarks.length > 500) {
+            layer.alert("备注不要多于500字")
+            return
+
+        }
+
+        if (dailiType < 0) {
+            layer.alert("请选择代理类型");
+            return;
+        }
+        if (domain.length > 0) {
+
+            var domains = domain.split(",");
+            for (var i = 0; i < domains.length; i++) {
+                if (!/^[a-zA-Z0-9\-]{2,67}\.(([a-zA-z0-9]{1,15})|(com\.cn)|(com\.net))$/.test(domains[i])) {
+                    layer.alert(domains[i] + "请输入合法的域名格式,例如baidu.com,baidu.com.cn,baidu.com.net");
+                    return;
+                }
+            }
+            if (domain.length > 900) {
+
+                layer.alert("域名长度不要超过900");
+                return;
+            }
+        }
+        var Sort = $('#txtSort').val();
+        if (Sort == "") {
+            layer.alert("排序号不能为空")
+            return
+        }
+        if (!/^[0-9]*$/.test(Sort)) {
+            layer.alert("排序号只能为数字")
+            return
+        }
+        var postData = {};
+        postData.Acc = acc;
+        postData.Pwd = pwd;
+        postData.RealName = realName;
+        postData.Remarks = remarks;
+        postData.Rate = rate;
+        postData.QQ = qq;
+        postData.Domain = domain;
+        postData.ShowName = ShowName;
+        postData.WeChat = WeChat;
+        postData.IsClient = dailiType;
+        postData.Sort = Sort;
+        postData.QueryRight = 0;
+        $("input[name='queryRight']:checked").each(function (index, item) {
+            postData.QueryRight += parseInt($(this).val());
+        });
+        AjaxSubmit("/Daili/Add", postData, callBack, "add");
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "add":
+                layer.alert(jsonData.Msg);
+                location.href = "../daiLiGuanLi.html"
+                break;
+        }
+    }
+</script>
+
+</body>
+</html>

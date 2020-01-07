@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <meta name="viewport" content="width=device-width"/>
+    <title>异常管理 - 增长最多玩家</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        /*body{*/
+        /*    overflow-y: scroll!important;*/
+        /*}*/
+    </style>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div id="echarts1" style="height: 500px;border-radius: 10px;"></div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/echarts-all-3.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    var chart1 = echarts.init(document.getElementById('echarts1'));
+    var yData = [], xData = [];
+    var layer,loading;
+    layui.use('layer',function () {
+        layer = layui.layer;
+        loading = layer.load(1, {shade: [0.1, '#fff']});
+    })
+    $.ajax({
+        type: 'get',
+        url: qp_url + 'admin/abnormal/ScoreTimeList?uid=' + getUrlParams('uid')+'&token='+getStorage('token'),
+        dataType: 'json',
+        success: function (res) {
+            console.log(res)
+            if (res.status == 1) {
+                for (var i = 0; i < res.data.data.length; i++) {
+                    yData.push(res.data.data[i].SwapScore)
+                    xData.push(res.data.data[i].CollectTime)
+                }
+                var option = {
+                    backgroundColor: '#5C5C5C',
+                    title:{
+                        text: '详细变化统计',
+                        top:10,
+                        left:'center',
+                        textStyle:{
+                            color:'#fff',
+                            fontWeight:'normal',
+                            fontSize:16
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    color: '#9999FF',
+                    xAxis: {
+                        type: 'category',
+                        data: xData,
+                        axisLine: {
+                            lineStyle: {
+                                // 使用深浅的间隔色
+                                color: '#999'
+                            }
+
+                        },
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '金币',
+                        nameLocation:'middle',
+                        nameGap:60,
+                        nameTextStyle:{
+                            color:'#999',
+                            fontWeight:'bold',
+                            fontSize:14
+                        },
+                        color: '#fff',
+                        axisLabel: {
+                            textStyle: {
+                                fontSize: 14,
+                                color: '#999999',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        splitLine: {
+
+                            //  改变轴线颜色
+                            lineStyle: {
+                                // 使用深浅的间隔色
+                                color: '#999'
+                            }
+                        },
+                        axisLine: {
+                            show: false,
+
+                        },
+                        axisTick: {
+                            show: false, //隐藏坐标轴的刻度
+                        }
+
+                    },
+                    series: [{
+                        data: yData,
+                        type: 'line',
+                        itemStyle: {
+                            normal: {
+                                color: '#9999FF', //改变折线点的颜色
+                                lineStyle: {
+                                    color: '#9999FF' //改变折线颜色
+
+                                }
+                            }
+                        },
+                    }]
+                };
+                chart1.setOption(option);
+            }
+        },complete:function () {
+            layer.close(loading)
+        }
+    })
+</script>
+</body>
+</html>
+

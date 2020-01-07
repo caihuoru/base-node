@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>客服中心 - 问题管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+
+</head>
+<body>
+<div id="content" class="main-content" style="display: none" v-show="todo">
+    <div class="carousel box-inner">
+        <div class="box-header well clearfix" data-original-title="">
+            <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：客服中心 - 问题管理</h2>
+        </div>
+        <div class="tab-content padding-margin-0">
+            <div class="panel panel-info no-bord">
+                <div class="panel-heading no-bord-radio">
+                    <h3 class="panel-title"><span id="info">{{todo}}</span>问题</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-1">标题：</div>
+                        <div class="col-xs-6 col-md-3">
+                            <input id="txtSubject" class="form-control input-sm"
+                                   style="display:inline;max-width: 350px" type="text" v-model="issueInfo.IssueTitle">
+                        </div>
+                        <div class="col-xs-3 col-md-3" style="text-align:left;display: none;">
+                            <label style="color:red;">请输入标题内容</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-1">问题类型：</div>
+                        <div class="col-xs-6 col-md-3">
+                            <select id="ddlTypeID" class="form-control input-sm input-width-150"
+                                    v-model="issueInfo.TypeID">
+                                <option v-for="item in issueInfogp" :value="item.ID">{{item.TypeName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-1">是否置顶：</div>
+                        <div class="col-xs-6 col-md-3">
+                            <input id="hot1" type="radio" name="rbtnHot" value="1" v-model="issueInfo.Hot">
+                            <label for="hot1">是</label>
+                            <input id="hot2" type="radio" name="rbtnHot" value="0" v-model="issueInfo.Hot">
+                            <label for="hot2">否</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-1">禁用状态：</div>
+                        <div class="col-xs-6 col-md-3">
+                            <input id="dis1" type="radio" name="rbtnNullity" value="0" v-model="issueInfo.Nullity">
+                            <label for="dis1">正常</label>
+                            <input id="dis2" type="radio" name="rbtnNullity" value="1" v-model="issueInfo.Nullity">
+                            <label for="dis2">禁用</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-2 col-md-1">内容：</div>
+                        <div class="col-xs-8 col-md-7">
+                            <textarea id="txtBody" class="form-control" style="display:inline;"
+                                      rows="20" v-model="issueInfo.IssueContent"></textarea>
+                        </div>
+                        <div class="col-xs-5 col-md-3" style="text-align:left">
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <ul class="list-inline">
+                            <li><a class="btn btn-danger search btn-md" href="../wenTiGuanLi.html"><i
+                                    class="glyphicon glyphicon-arrow-left"></i>返回</a></li>
+                            <li><a class="btn btn-outline-success search btn-md" href="#" @click="save" id="btn"><i
+                                    class="glyphicon glyphicon-save"></i>保存</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+
+    //编辑器
+    //KindEditor.ready(function (K) {
+    //    window.editor = K.create('#txtBody', { uploadJson: '/Common/UploadFileToLocal?op=6' });
+    //});
+    layui.use(['layer'], function () {
+        var layer = layui.layer
+    })
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            todo: '',
+            issueInfo: {
+                IssueID: 0,
+                IssueTitle: '',
+                TypeID: '',
+                Nullity: 0,
+                Hot: 1,
+                IssueContent: ''
+            },
+            issueInfogp: {}
+        },
+        mounted: function () {
+            var that = this;
+            //获取问题类型
+            $.ajax({
+                type: 'get',
+                url: qp_url + 'admin/Customer/GetQuestionType?token='+getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 1) {
+                        that.issueInfogp = res.data
+                    }
+                }
+            })
+            var cmd = getUrlParams('param')
+            if (cmd == 'add') {
+                this.todo = "添加";
+            } else {
+                this.todo = "编辑";
+                $.ajax({
+                    type: 'post',
+                    url: qp_url + 'admin/Customer/GetQuestionInfo',
+                    data: {
+                        cid: getUrlParams('cid'),
+                        token:getStorage('token')
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.status == 1) {
+                            that.issueInfo = {
+                                IssueID: res.data.issueInfo.IssueID,
+                                IssueTitle: res.data.issueInfo.IssueTitle,
+                                TypeID: res.data.issueInfo.TypeID,
+                                Nullity: res.data.issueInfo.Nullity,
+                                Hot: res.data.issueInfo.Hot,
+                                IssueContent: res.data.issueInfo.content,
+                            }
+                        }
+                    }
+                })
+            }
+        },
+        methods: {
+            save: function () {
+                console.log(this.issueInfo)
+                if (!this.issueInfo.IssueTitle) {
+                    layer.msg('标题不能为空')
+                    return;
+                }
+                if (!this.issueInfo.TypeID) {
+                    layer.msg('请选择问题类型')
+                    return;
+                }
+                if (!this.issueInfo.IssueContent) {
+                    layer.msg('请添加问题描述内容')
+                    return;
+                }
+                var that = this;
+                that.issueInfo['token']=getStorage('token')
+                $.ajax({
+                    type: 'post',
+                    url: qp_url + 'admin/Customer/DoQuestionInfo?token='+getStorage('token'),
+                    data: that.issueInfo,
+                    dataType: 'json',
+                    success: function (res) {
+                        layer.msg(res.msg)
+                    }
+                })
+            }
+        }
+    })
+    // $(document).ready(function () {
+    //     // var cmd = GetQueryString("cmd")
+    //     // if (cmd == "add") {
+    //     // }
+    //     // loadType();
+    //     // var type = '0';
+    //     // if (type != null)
+    //     //     $('#ddlTypeID').val(type);
+    //     // docReady();
+    // });
+
+    // function loadType() {
+    //     $.ajaxSetup({
+    //         async: false
+    //     });
+    //     $.get("/Customer/GetQuestionType", {}, function (json) {
+    //         if (json != "") {
+    //             var json = $.parseJSON(json)
+    //             var html = "";
+    //             $.each(json, function () {
+    //                 html += "<option value=\"" + this.ID + "\">" + this.TypeName + "</option>";
+    //             })
+    //             $('#ddlTypeID').html(html);
+    //         }
+    //
+    //     })
+    // }
+
+    function docReady() {
+        $("#btn").click(function (e) {
+            add();
+        });
+    }
+
+    function add() {
+        var data = {};
+        var param = GetQueryString("param");
+        data.IssueID = param == null ? 0 : param;
+        var Subject = $("#txtSubject").val().trim();
+        if (Subject == "") {
+            alert("标题不能为空");
+            return false;
+        }
+        data.IssueTitle = Subject;
+        data.TypeID = parseInt($("#ddlTypeID").val());
+
+        var nullity = $('input:radio[name="rbtnNullity"]:checked').val();
+        if (nullity == null) {
+            alert("请选择禁用状态");
+            return false;
+        }
+        data.Nullity = nullity;
+        var hot = $('input:radio[name="rbtnHot"]:checked').val();
+        if (hot == null) {
+            alert("请选择是否置顶");
+            return false;
+        }
+        data.Hot = hot;
+        var body = $('#txtBody').val();  //editor.html();
+        if (body == "") {
+            alert("内容不能为空");
+            return false;
+        }
+        data.IssueContent = body;
+
+        AjaxSubmit("/Customer/DoQuestionInfo", data, callBack, "ae");
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "ae":
+                alert(jsonData.Msg);
+                window.location.href = "/Customer/QuestionList";
+                break;
+        }
+    }
+</script>
+
+</body>
+</html>

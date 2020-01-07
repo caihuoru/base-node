@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>网站系统 - 新闻编辑</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link href="../../Content/common.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <script charset="utf-8" src="../../Scripts/kindeditor-4.1.10/kindeditor-min.js"></script>
+    <script charset="utf-8" src="../../Scripts/kindeditor-4.1.10/lang/zh_CN.js"></script>
+    <style type="text/css">
+        input {
+            color: black;
+        }
+
+        .tab2 {
+            width: auto;
+        }
+
+        .panel-body .row input[type='text'] {
+            max-width: 350px;
+            display: inline;
+        }
+
+        .picture_ .ke-outline,
+        .picture_ .ke-inline-block.ke-separator {
+            display: none !important;
+        }
+
+        .picture_ [data-name="image"] {
+            width: 100% !important;
+            display: block !important;
+        }
+
+        .picture_ [data-name="image"] span::before {
+            display: block;
+            content: "图片";
+            color: black;
+        }
+
+        .picture_ [data-name="image"] span {
+            width: 100% !important;
+            display: block !important;
+            height: 88px;
+            background: none;
+
+        }
+
+        #addpicture {
+            display: none;
+        }
+
+        .inner_txt_ {
+            height: 0;
+            font-size: 40px;
+            width: 650px;
+            text-align: center;
+            line-height: 100px;
+        }
+
+        .inner_txt {
+            height: 0;
+            opacity: 0;
+            position: relative;
+            z-index: 999999;
+        }
+
+        .up_file {
+            cursor: pointer;
+            height: 100px;
+            width: 650px;
+        }
+
+        .wrap,
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="a"></div>
+    <div id="content" class="main-content">
+
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：网站系统 - 新闻编辑</h2>
+            </div>
+            <div class="tab-content">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">新增新闻</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2" style="text-align:right">标题：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtSubject" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <div class="col-xs-3 col-md-2" style="text-align:left">
+                                <label style="color:red;">请输入标题内容</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2" style="text-align:right">排序：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtSort" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <div class="col-xs-3 col-md-2" style="text-align:left">
+                                <label style="color:red;">请输入排序</label>
+                            </div>
+                        </div>
+                        <!-- <div class="row">
+                            <div class="col-xs-2 col-md-2" style="text-align:right">类别：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select id="ddlClassID" class="form-control input-sm input-width-150">
+                                    <option value="1">新闻公告</option>
+                                    <option value="3">移动版公告</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3 col-md-2" style="text-align:left">
+
+                            </div>
+                        </div> -->
+
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2" style="text-align:right">禁用或启用：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select id="ddlStatus" class="form-control input-sm input-width-150">
+                                    <option value="0">禁用</option>
+                                    <option value="1">启用</option>
+                                </select>
+                            </div>
+
+                            <div class="col-xs-3 col-md-2" style="text-align:left">
+
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;display:none">
+                            <div class="col-xs-2 col-md-2" style="text-align:right">引用：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtLinkUrl" class="form-control input-sm" type="text" value="">
+                                <p class="checkbox-radio">
+                                    <span class="break-word"><input id="chkIsLinks" type="checkbox" name="chkIsLinks" />
+                                        <label for="chkIsLinks">链接地址</label></span>
+                                </p>
+                            </div>
+                            <div class="col-xs-3 col-md-2" style="text-align:left">
+
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 5px; margin-bottom: 5px; display: none">
+                            <div class="col-xs-2 col-md-2" style="text-align:right">属性：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <p class="checkbox-radio">
+                                    <span class="break-word"><input id="chkOnTop" type="checkbox" name="chkOnTop" />
+                                        <label for="chkOnTop">置顶</label></span>
+                                    <span class="break-word"><input id="chkOnTopAll" type="checkbox"
+                                            name="chkOnTopAll" /> <label for="chkOnTopAll">总置顶</label></span>
+                                    <span class="break-word"><input id="chkIsElite" type="checkbox" name="chkIsElite" />
+                                        <label for="chkIsElite">推荐</label></span>
+                                    <span class="break-word"><input id="chkIsHot" type="checkbox" name="chkIsHot" />
+                                        <label for="chkIsHot">热门</label></span>
+                                    <span class="break-word"><input id="chkIsLock" type="checkbox" name="chkIsLock" />
+                                        <label for="chkIsLock">立即发布</label></span>
+                                </p>
+                            </div>
+                            <div class="col-xs-3 col-md-2" style="text-align:left">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2" style="text-align:right">文本选择：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select id="text_pick" class="form-control input-sm input-width-150">
+                                    <option value="0">文字</option>
+                                    <option value="1">图片</option>
+                                </select>
+                            </div>
+
+                            <div class="col-xs-3 col-md-2" style="text-align:left">
+
+                            </div>
+                        </div>
+                        <div class="row text_pick">
+
+                            <div class="col-xs-2 col-md-2" style="text-align:right">内容：
+                            </div>
+
+                            <div class="col-xs-6 col-md-3">
+                                <div id="addpicture">
+                                    <div class="inner_txt_">
+                                        点击上传图片
+                                    </div>
+                                    <div class="inner_txt">
+                                        <input type="file" class="up_file" />
+                                        <img src="#" id="loadImg" style="display: none;">
+                                    </div>
+                                </div>
+
+                                <textarea id="txtBody" class="form-control input-sm" rows="30"></textarea>
+                            </div>
+                            <div class="col-xs-3 col-md-2" style="text-align:left">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-outline-primary search btn-md" href="../xinWenGuanLi.html"><i
+                                            class="glyphicon glyphicon-arrow-left"></i>返回</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="#" id="btn"><i
+                                            class="glyphicon glyphicon-save"></i>保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        var ID = getUrlParams("id");
+        var dataObj = {};
+        if (ID == null || ID == "null" || !ID) {
+
+        } else {
+            $.ajax({
+                url: qp_url + 'admin/Web/NoticeInfo?token=' + getStorage('token'),
+                type: "get",
+                dataType: "json",
+                async: false,
+                data: {
+                    id: ID
+                },
+                success: function (data) {
+                    // console.log(data)
+                    dataObj = data.data;
+
+                    $("#txtSubject").val(dataObj.title);
+                    // $("#ddlClassID").val(dataObj.type);
+                    $("#ddlStatus").val(dataObj.status)
+                    $("#txtSort").val(dataObj.sort)
+
+                }
+
+            })
+        }
+        //编辑器
+        KindEditor.ready(function (K) {
+            console.log(dataObj)
+            editor = K.create('#txtBody', {
+                minHeight: '350px',
+                allowFileManager: true,
+                uploadJson: qp_url + 'admin/web/uploadJson?token='+getStorage('token'),
+                afterUpload: function () { this.sync(); }, //图片上传后，将上传内容同步到textarea中
+                afterBlur: function () { this.sync(); },   ////失去焦点时，将上传内容同步到textarea中
+            })
+
+
+            // 图片上传
+            $(".up_file").change(function () {
+                var fileList = $('.up_file')[0];
+                var formData = new FormData();
+                formData.append('dir', fileList.files[0]);
+                if (fileList.files[0].type.indexOf("image") != -1) {
+                    // 获取base64读取宽度
+                    var oFReader2 = new FileReader();
+                    oFReader2.readAsDataURL(fileList.files[0]);
+                    oFReader2.onloadend = function (oFRevent) {
+                        $('#loadImg').attr('src', oFRevent.target.result);
+                        $("#loadImg")[0].onload = function () {
+                            // 限宽760
+                            if ($('#loadImg').width() == 760) {
+                                $.ajax({
+                                    url: qp_url + "admin/web/upload?token="+getStorage('token'),
+                                    type: "POST",
+                                    data: formData,
+                                    dataType: "json",
+                                    processData: false,  // 不处理数据
+                                    contentType: false,   // 不设置内容类型
+                                    success: function (data) {
+                                        // console.log(data)
+                                        editor.html(`${K('#txtBody').val()}<img src='${data.url}' style="width:100%;"/>`)
+                                    }
+                                });
+                            } else {
+                                alert("图片宽度只能为760像素!")
+                            }
+
+                        };
+
+                    }
+                } else {
+                    alert("只能选择图片!")
+                }
+
+            })
+            editor.html(dataObj.content)
+        });
+        $(document).ready(function () {
+            docReady();
+        });
+        function docReady() {
+            $("#btn").click(function (e) {
+                e.preventDefault();
+                add();
+            });
+        }
+        function add() {
+            var data = {};
+            var body = editor.html();
+            if (!$("#txtSubject").val() || !$("#txtSort").val() || !body) {
+                alert("内容不留空!")
+                return false;
+            }
+
+            data.title = $("#txtSubject").val();
+            data.type = $("#ddlClassID").val();
+            data.status = Number($("#ddlStatus").val());
+            data.sort = $("#txtSort").val();
+            data.content = body;
+
+            if (ID == null || ID == "null" || !ID) {
+
+            } else {
+                data.id = Number(ID);
+            }
+            $.ajax({
+                url: function () {
+                    if (getUrlParams("type") == "2") {
+                        return qp_url + "admin/Web/AddMobileNoticeInfo?token=" + getStorage('token');
+                    } else {
+                        return qp_url + "admin/Web/AddNoticeInfo?token=" + getStorage('token');
+                    }
+
+                }(),
+                type: "post",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data)
+                    alert(data.msg)
+                }
+            })
+        }
+        //回调函数
+        function callBack(jsonData, fname) {
+            switch (fname) {
+                case "del":
+                    alert(jsonData.Msg);
+                    window.location.href = "/Web/Index";
+                    //window.opener.location.reload();
+                    break;
+            }
+        }
+        $("#text_pick").change(function () {
+            var index = Number($(this).val());
+            if (index == 1) {
+                $(".text_pick").addClass("picture_");
+                $("#addpicture").show();
+            } else {
+                $(".text_pick").removeClass("picture_");
+                $("#addpicture").hide();
+            }
+        })
+
+
+        function add_tp() {
+
+
+        }
+    </script>
+
+</body>
+
+</html>

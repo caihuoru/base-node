@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>渠道管理 - 渠道列表</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+  <style type="text/css">
+      body{
+          overflow-y: scroll!important;
+      }
+  </style>
+
+</head>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="box-inner">
+            <div class="col-md-12">
+                <div class="box-inner">
+                    <div class="box-header well" data-original-title="">
+                        <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：渠道管理 - 渠道列表 </h2>
+                        <div class="box-icon">
+                            <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                                <i class="glyphicon glyphicon-repeat"></i>
+                            </a>
+                            <a href="#" class="btn btn-minimize btn-round btn-default">
+                                <i class="glyphicon glyphicon-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="box-content" style="overflow: hidden; display: block;">
+                        <!--查询栏开始-->
+                        <div class="alert alert-info" style="display:none;">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline cursor-style">
+                                        <li>日期查询：</li>
+                                        <li>
+
+                                            <input id="txtStartDate" class="input-width-150" type="text"
+                                                   readonly="readonly" value=""/>至
+                                            <input type="text" id="txtEndDate" class="input-width-150"
+                                                   readonly="readonly" value=""/>
+                                        </li>
+                                        <li>
+                                            <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
+                                                    class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--查询栏结束-->
+                        <div class="row">
+                            <div class="col-md-12 margin-t-10">
+                                <a class="btn btn-outline-success search" href="#"
+                                   onclick="openWindowOwn('add/tianJiaQuDao.html?admin_id=0','PlayerControlInfo',800, 500)">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    添加渠道
+                                </a>
+                            </div>
+                        </div>
+                        <!--table开始-->
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                            <table id="layTable" lay-filter="test"></table>
+
+                            <table style="display:none;"
+                                   class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                                   id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                                <thead>
+
+                                </thead>
+                                <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                            </table>
+                            <!--分页控件-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                        <ul class="pagination" id="pagin"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--table结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<span class="layui-btn layui-btn-xs" onclick="openWindowOwn('add/userGroupPermission.html?group_id={{d.group_id}}', '', 800, 800)">数据展示</span>-->
+
+<script type="text/html" id="operateMenu">
+    <span class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</span>
+    <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del">删除</span>
+</script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    var pageObj = {};
+    var postData = {};//搜索条件
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [], table;
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtEndDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        docReady();
+    });
+    layui.use(['table', 'layer'], function () {
+        table = layui.table;
+        var layer = layui.layer
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url: qp_url + 'admin/web/channelList?token='+getStorage('token') //数据接口
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 130
+            , cols: [[ //表头
+                {type:'numbers',title:'序号'}
+                ,{field: 'channel_num', title: '渠道ID'}
+                , {field: 'username', title: '帐号'}
+                , {field: 'channel_addr', title: '渠道地址'}
+                , {field: null, title: '操作', minWidth: 200, fixed: 'right', toolbar: '#operateMenu'}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+        //监听工具条点击事件
+        table.on('tool(test)', function (obj) {
+            if (obj.event == 'del') {
+                if(getStorage('admin_id')!=1){
+                    return layer.msg('您不是超级管理员，没有操作权限',{time:1000,icon:2})
+                }
+                layer.confirm('确定要删除渠道'+obj.data.username+'吗？,删除会影响绑定用户的归属，请慎用！', {
+                    btn: ['确定', '取消']
+                }, function () {
+                    $.post(qp_url + 'admin/web/delChannel',{
+                        token:getStorage('token'),
+                        admin_id:obj.data.admin_id
+                    },function (res) {
+                        if(res.status == 1){
+                            layer.msg(res.msg,{time:1000,icon:1})
+                            obj.del();
+                        }else{
+                            layer.msg(res.msg,{time:1000,icon:2})
+                        }
+                    },'json')
+                })
+            }
+            if(obj.event == 'edit'){
+                if(getStorage('admin_id')!=1){
+                    return layer.msg('您不是超级管理员，没有操作权限',{time:1000,icon:2})
+                }
+                openWindowOwn('add/tianJiaQuDao.html?admin_id='+obj.data.admin_id,'',800,500)
+            }
+        });
+    });
+
+    function reloadTable() {
+        var curPage = $(".layui-laypage-em").next().html(); //当前页码值
+        console.log("当前页码", curPage);
+        table.reload('layTable', {
+            pageIndex: curPage,
+        })
+    }
+
+    function docReady() {
+        //加载数据
+        postData.StartDate = $("#txtStartDate").val();
+        postData.EndDate = $("#txtEndDate").val();
+        //日期查询
+        $("#btnQuery").click(function (e) {
+            var txtStartDate = $("#txtStartDate").val();
+            var txtEndDate = $("#txtEndDate").val();
+            if (txtStartDate != "" && txtEndDate != "") {
+                if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                    layer.alert("开始日期不能大于结束时间");
+                    return false;
+                }
+            }
+            postData.StartDate = txtStartDate;
+            postData.EndDate = txtEndDate;
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+        });
+    }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+        $('#pagin').paging("/DataAnalysis/GetGameRecord", postData, CreatTableBody, postData.pageIndex);
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics, extObj) {
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr id=\"tr{0}\">", item.DrawID);
+                html += stringFormat("<td>{1}&nbsp;<img id=\"img{0}\" src=\"/Content/images/down.gif\" style=\"cursor: pointer\" alt=\"查看同桌玩家\" title=\"查看同桌玩家\" onclick=\"ShowInfo({0})\" /></td>", item.DrawID, item.InsertTime);
+                html += stringFormat("<td>{0}</td>", item.GameKindName);
+                html += stringFormat("<td>{0}</td>", item.GameRoomName);
+                html += stringFormat("<td>{0}</td>", item.TableID);
+                html += stringFormat("<td>{0}</td>", item.UserCount);
+                html += stringFormat("<td>{0}</td>", item.AndroidCount);
+                html += stringFormat("<td>{0}</td>", item.Waste);
+                html += stringFormat("<td>{0}</td>", item.Revenue);
+                //html += stringFormat("<td>{0}</td>", item.UserMedal);
+                html += stringFormat("<td>{0}</td>", item.StartTime);
+                html += stringFormat("<td>{0}</td>", item.ConcludeTime);
+                html += "</tr>";
+            });
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+        $("#WasteTotal").text(extObj.WasteTotal);
+        $("#RevenueTotal").text(extObj.RevenueTotal);
+    }
+
+    function ShowInfo(Id) {
+        pageObj.drawID = Id;
+        var url = $("#img" + Id).attr("src").trim();
+        if (url == "/Content/images/down.gif") {
+            $("#img" + Id).attr("src", "/Content/images/up.gif");
+            AjaxSubmit("/DataAnalysis/GetUserGameRecord", pageObj, callBack, "del");
+        } else {
+            $("#img" + Id).attr("src", "/Content/images/down.gif");
+            $("#tr" + pageObj.drawID).next().remove();
+        }
+
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "del":
+                var html = "<tr><td colspan=\"11\"><table class=\"table table-striped table-bordered bootstrap-datatable datatable responsive dataTable\">";
+                html += "<thead><tr role=\"row\">";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">帐号</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">昵称</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">游戏ID</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">是否机器人</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">椅子编号</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">输赢积分</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">税收/服务费</th>";
+                //html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">元宝数目</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">游戏时长</th>";
+                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">插入时间</th>";
+                html += "</tr></thead>";
+                html += "<tbody role=\"alert\">";
+                $.each(jsonData, function (i, item) {
+                    html += "<tr><td>" + item.Accounts + "</td><td>" + item.NickName + "</td><td>" + item.GameID + "</td><td>" + item.IsAndroid + "</td><td>" + item.ChairID + "</td><td>" + item.Score + "</td><td>" + item.Revenue + "</td><td>" + item.PlayTimeCount + "</td><td>" + item.InsertTime + "</td></tr>";
+                });
+                html += "</tbody>";
+                html += "</table></td></tr>";
+                $("#tr" + pageObj.drawID).after(html);
+                break;
+        }
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+</script>
+</body>
+</html>

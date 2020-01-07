@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>后台管理-限制字符</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <!--    <link href="../../Content/layui-v2.5.4/layui/css/layui.css" rel="stylesheet"/>-->
+    <link href="../../Content/common.css" rel="stylesheet"/>
+
+
+    <style type="text/css">
+        .panel-body .row {
+            margin: 15px 0;
+        }
+
+        .col-xs-2.col-md-1 {
+            padding-top: 3px;
+            text-align: right;
+        }
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content margin-t-10">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i> 目前操作功能：权限管理-{{type == 'add' ? '新增权限' : '编辑权限'}}</h2>
+            </div>
+            <div class="tab-content">
+                <div class="panel panel-primary" style="border: none;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">父级：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select id="pid" class="form-control input-sm" v-model="add.pid" @change="getSelectedPid">
+                                    <option :value="item.id" v-for="item in oneMenu">{{item.ltitle}}</option>
+                                </select>
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">权限名称：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.title" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">控制器：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">图标：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row layui-form">
+                            <div class="col-xs-2 col-md-1">菜单状态：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input name="addHide" v-model.number="add.menustatus" type="radio" class="with-gap"
+                                       id="radio_3"
+                                       value="1"/>
+                                <label for="radio_3">显示</label>
+                                <input name="addHide" v-model.number="add.menustatus" type="radio" id="radio_4"
+                                       class="with-gap"
+                                       value="0"/>
+                                <label for="radio_4" class="ml-30">隐藏</label>
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">排序：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model.number="add.sort" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">页面模板：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.front_href" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-danger search btn-md" href="#" onclick="closed()"><i
+                                        class="glyphicon glyphicon-off"></i> 关闭</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="#" onclick="add();"><i
+                                        class="glyphicon glyphicon-send"></i> 保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    let app;
+    $(function () {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+        });
+        app = new Vue({
+            el: '#content',
+            data: {
+                type: getUrlParams('type'),
+                oneMenu:[],
+                add: {
+                    front_href: '',
+                    href: "",
+                    icon: "",
+                    menustatus: 1,
+                    sort: 50,
+                    title: "",
+                    pid:0,
+
+                }
+            },
+            mounted() {
+                let that = this;
+
+                //获取一级菜单
+                $.ajax({
+                    method: 'get',
+                    url: qp_url + 'admin/auth/ruleList?token='+getStorage('token'),
+                    dataType: 'json',
+                    success: function (res) {
+                        let resData = res.data
+                        console.log(resData)
+                        // let tempList=[];
+                        // for(var i=0;i<resData.length;i++){
+                        //     if(resData[i].pid == 0){
+                        //         tempList.push(resData[i])
+                        //     }
+                        // }
+                        that.oneMenu = resData
+                        console.log( that.oneMenu )
+                    }
+                })
+                if (getUrlParams('type') == 'add') {
+
+                } else {
+                    $.ajax({
+                        method: 'get',
+                        url: qp_url + 'admin/auth/ruleInfo',
+                        dataType: 'json',
+                        data: {
+                            token: getStorage('token'),
+                            id: getUrlParams('id')
+                        },
+                        success: function (res) {
+                            let resData = res.data
+                            console.log(resData)
+                            that.add = resData
+                        }
+                    })
+                }
+
+            }
+            ,methods:{
+                getSelectedPid:function (e) {
+                  console.log(e)
+                }
+            }
+        })
+    })
+
+    function add() {
+        let postData = app.add;
+        console.log(postData)
+        if (app.type == 'add') {
+            $.ajax({
+                method: 'post',
+                url: qp_url + 'admin/auth/ruleAdd?token=' + getStorage('token'),
+                dataType: 'json',
+                data: postData,
+                success: function (res) {
+                    let resData = res
+                    if (resData.status == 1) {
+                        layer.msg(resData.msg, {time: 1000, icon: 1});
+                        setTimeout(function () {
+                            closed(resData.msg)
+                        }, 1000)
+                    } else {
+                        layer.msg(resData.msg, {time: 1000, icon: 2});
+                    }
+                }
+            })
+        } else {
+            $.ajax({
+                method: 'post',
+                url: qp_url + 'admin/auth/ruleEdit?token=' + getStorage('token'),
+                dataType: 'json',
+                data: postData,
+                success: function (res) {
+                    let resData = res
+                    if (resData.status == 1) {
+                        layer.msg(resData.msg, {time: 1000, icon: 1});
+                        setTimeout(function () {
+                            closed(resData.msg)
+                        }, 1000)
+                    } else {
+                        layer.msg(resData.msg, {time: 1000, icon: 2});
+                    }
+                }
+            })
+        }
+
+    }
+
+    function closed(msg) {
+        window.close()
+        window.opener.windowClose(msg)
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+</script>
+</body>
+</html>

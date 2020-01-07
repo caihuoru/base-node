@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/favicon.ico">
+    <!-- <link rel="stylesheet" href="static/css/shouYe.css"> -->
+    <title>平台设置-平台设置</title>
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="static/css/bootstrap.css">
+
+    <!-- Data Table-->
+    <link rel="stylesheet" type="text/css" href="static/css/datatables.min.css" />
+
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="static/css/bootstrap-extend.css">
+
+    <!-- theme style -->
+    <link rel="stylesheet" href="static/css/master_style.css">
+
+    <!-- Fab Admin skins -->
+    <link rel="stylesheet" href="static/css/_all-skins.css">
+
+    <!-- Morris charts -->
+    <link rel="stylesheet" href="static/css/morris.css">
+
+    <!-- blueimp Gallery styles -->
+    <link rel="stylesheet" href="static/css/blueimp-gallery.min.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="static/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="static/css/jquery.fileupload-ui.css">
+    <!-- CSS adjustments for browsers with JavaScript disabled -->
+    <noscript>
+        <link rel="stylesheet" href="static/css/jquery.fileupload-noscript.css">
+    </noscript>
+    <noscript>
+        <link rel="stylesheet" href="static/css/jquery.fileupload-ui-noscript.css">
+    </noscript>
+
+    <link rel="stylesheet" href="static/css/style.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+    <script src="static/js/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        ._all-skins_ {
+            margin-left: 20px;
+            line-height: 44px;
+        }
+    </style>
+
+</head>
+
+<body class="hold-transition skin-blue-light sidebar-mini">
+    <div class="wrapper">
+
+        <header class="main-header">
+            <my-logo></my-logo>
+            <my-nav></my-nav>
+        </header>
+
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <div id="left-section">
+                <left-section first="ptsz" second="ptsz"></left-section>
+            </div>
+        </aside>
+        <!-- 右边显示区域 -->
+        <div class="content-wrapper">
+            <!-- 右边白条区域 -->
+            <section class="content-header">
+                <h1>
+                    url编辑(注:链接需要填写http或https)
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#"><i class="fa fa-fw fa-files-o"></i> 平台设置</a></li>
+                    <li class="breadcrumb-item active">平台设置</li>
+                </ol>
+            </section>
+
+            <!-- 内容区域 -->
+            <section class="content con_abc">
+
+                <div class="row" id="table">
+                    <div class="col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <h1 class="h1">链接编辑</h1>
+                                <button type="button" class="btn btn-success" id="add">新增链接</button>
+                                <button type="button" class="btn btn-success" id="queren">确认</button>
+                                <p>
+                                    <label id="backUrl">
+                                        <span>请求链接返回：</span>
+                                        <select id="type">
+                                            <option value="0">随机</option>
+                                            <option value="1">顺序</option>
+                                            <option value="2">指定</option>
+                                        </select>
+                                        <span class="zhiding">指定连接：</span>
+
+                                        <label class="zhiding">
+                                            <input class="form-control" type="text" placeholder="此处输入链接">
+                                        </label>
+                                        <span style="display: inline-block;" class="zhiding">
+                                            <span class="_all-skins_">历史复制链接次数
+                                                <span class="lscz" style="color: red;"></span>
+                                            </span>
+                                            <span class="_all-skins_">历史打开链接次数
+                                                <span class="lsdk" style="color: red;"></span>
+                                            </span>
+                                            <span class="_all-skins_">今日复制链接次数
+                                                <span class="jrcz" style="color: red;"></span>
+                                            </span>
+                                            <span class="_all-skins_">今日打开链接次数
+                                                <span class="jrdk" style="color: red;">
+                                                </span>
+                                            </span>
+                                        </span>
+
+
+
+
+                                    </label>
+                                </p><a href="url_test.js" target="view_window">点击此处复制或下载js文件</a>
+
+                                <div class="form-group row" id="editLink">
+                                    <!-- <div class="col-sm-12 editLink"
+                                        style="display: flex;flex-direction: row;align-items: center;">
+                                        <label class="col-form-label lab-tit">链接</label>
+
+                                        <div class="input-group">
+                                            <input class="link" class="form-control" type="text"
+                                                placeholder="此处输入链接"><button type="button"
+                                                class="btn btn-danger">删除</button>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+        </div>
+        </section>
+    </div>
+    </div>
+
+
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/vue.min.js"></script>
+    <script src="static/js/component.js"></script>
+    <script src="static/js/axios.js"></script>
+    <script src="static/js/datatables.min.js"></script>
+    <script>
+        var myHead = new Vue({
+            el: '.main-header'
+        });
+        var leftSection = new Vue({
+            el: '#left-section'
+        });
+    </script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="static/js/jquery-ui.js"></script>
+    <!-- popper -->
+    <script src="static/js/popper.min.js"></script>
+    <!-- Bootstrap 4.0-->
+    <script src="static/js/bootstrap.js"></script>
+
+    <!-- Slimscroll -->
+    <script src="static/js/jquery.slimscroll.js"></script>
+
+    <!-- FastClick -->
+    <script src="static/js/fastclick.js"></script>
+
+    <!-- Fab Admin App -->
+    <script src="static/js/template.js"></script>
+
+    <!-- 弹窗插件  -->
+    <link href="static/assets/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+    <script src="static/assets/sweetalert/sweetalert.min.js"></script>
+    <script src="static/js/inputVarify.js"></script>
+    <!--日期时间插件-->
+    <script src="static/assets/laydate/laydate.js"></script>
+    <!-- <script src="url_test.js"></script> -->
+    <script>
+
+        // token
+        $.ajax({
+            url: "//foundjoy.ltd:8021/verifytoken",
+            type: 'post',
+            headers: { "auth": localStorage.getItem("manageToken") },
+            data: {
+                manage: true
+            },
+            success: function (res) {
+                if (res.code === 1) {
+
+                } else {
+                    swal("token无效");
+                    window.location.href = "login.html";
+                }
+            }
+        })
+        // 数据渲染
+        $.ajax({
+            url: "//foundjoy.ltd:8021/select/data",
+            type: 'get',
+            success: function (res) {
+                let html = '';
+                for (var i = 0; i < res.data.length; i++) {
+                    html += `
+                        <div class="col-sm-12 editLink" style="display: flex;flex-direction: row;align-items: center;">
+                                <label class="col-form-label lab-tit">链接</label>
+                                <div class="input-group">
+                                    <input class="link" class="form-control" type="text" placeholder="此处输入链接" value='${res.data[i].link}' data-id="${res.data[i].id}">
+                                    <button type="button" class="btn btn-danger">删除</button>
+                                     <span class="_all-skins_">历史复制链接次数<span style='color:red;'>${res.data[i].copy_num ? res.data[i].copy_num : 0}</span></span>
+                                     <span class="_all-skins_">历史打开链接次数<span style='color:red;'>${res.data[i].open_num ? res.data[i].open_num : 0}</span></span>
+                                     <span class="_all-skins_">今日复制链接次数<span style='color:red;'>${res.data[i].todyCopy_num ? res.data[i].todyCopy_num : 0}</span></span>
+                                     <span class="_all-skins_">今日打开链接次数<span style='color:red;'>${res.data[i].todayOpen_num ? res.data[i].todayOpen_num : 0}</span></span>
+                                </div>
+                        </div>
+                    `
+                }
+                $("#editLink").html(html);
+                $("#type").val(res.status);
+                $(".zhiding input").val(res.appoint_url.link)
+                $(".lscz").html(res.appoint_url.copy_num ? res.appoint_url.copy_num : 0)
+                $(".lsdk").html(res.appoint_url.open_num ? res.appoint_url.open_num : 0)
+                $(".jrcz").html(res.appoint_url.appoint_url_todyCopy_num ? res.appoint_url.appoint_url_todyCopy_num : 0)
+                $(".jrdk").html(res.appoint_url.appoint_url_todayOpen_num ? res.appoint_url.appoint_url_todayOpen_num : 0)
+                if (res.status == 2) {
+                    $(".zhiding").show()
+                } else {
+                    $(".zhiding").hide()
+                }
+            }
+        })
+        // 添加
+        $("#add").click(function () {
+            $.ajax({
+                url: `//foundjoy.ltd:8021/add/data`,
+                type: 'post',
+                dataType: "json",
+                success: function (res) {
+                    $("#editLink").append(`
+                        <div class="col-sm-12 editLink" style="display: flex;flex-direction: row;align-items: center;">
+                                <label class="col-form-label lab-tit">链接</label>
+                                <div class="input-group">
+                                    <input class="link" class="form-control" type="text" placeholder="此处输入链接" data-id="${res.data.insertId}">
+                                    <button type="button" class="btn btn-danger">删除</button>
+                                </div>
+                        </div>
+                        `)
+                }
+            })
+
+        })
+        $("#type").change(function () {
+            if ($(this).val() == 2) {
+                $(".zhiding").show()
+            } else {
+                $(".zhiding").hide()
+            }
+        })
+        // 保存
+        $("#queren").click(function () {
+            Link_res("save");
+
+        })
+
+        $(document).on("click", ".btn-danger", function () {
+            let $this = $(this);
+            swal({
+                title: "是否删除",
+                text: "",
+                type: "warning",
+                showCancelButton: true,//是否显示取消按钮
+                cancelButtonText: '取 消',//按钮内容
+                cancelButtonColor: '#b9b9b9',
+
+                showConfirmButton: true,
+                confirmButtonText: '确 认',
+                confirmButtonColor: "#dd6b55",
+
+                closeOnConfirm: false,//点击返回上一步操作
+                closeOnCancel: true
+            }, function () {//正确按钮进行的操作点
+
+                $.ajax({
+                    url: `//foundjoy.ltd:8021/del/data`,
+                    type: 'post',
+                    data: {
+                        id: $this.parent().find(".link").data("id")
+                    },
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code == 1) {
+                            $this.parent().parent().remove();
+                            swal('删除成功', 'success');
+                            return;
+                        }
+                    }
+                })
+
+            });
+        })
+
+        // 获取url数据
+        function data() {
+            let arr = [];
+            $(".link").each(function () {
+                arr.push(
+                    {
+                        id: $(this).data("id"),
+                        value: this.value,
+                    })
+                console.log(this.value);
+
+            })
+            return arr;
+        }
+
+        function Link_res(doing) {
+            $.ajax({
+                url: `//foundjoy.ltd:8021/${doing}/data`,
+                type: 'post',
+                dataType: "json",
+                data: {
+                    type: $("#type").val(),
+                    value: JSON.stringify(data()),
+                    appoint: JSON.stringify({
+                        value: $(".zhiding input").val()
+                    })
+                },
+                success: function (res) {
+                    swal("成功");
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

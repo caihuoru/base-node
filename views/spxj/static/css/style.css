@@ -1,0 +1,80 @@
+.curP {
+    cursor: pointer;
+}
+
+.table-edit {
+    min-width: 100px;
+}
+
+.text-red {
+    color: red;
+}
+
+.fade.in {
+    opacity: 1;
+}
+
+.fileupload-progress.fade {
+    display: none;
+}
+
+.dateChoice {
+    position: absolute;
+    right: 125px;
+    top: 30px;
+    opacity: 0;
+}
+
+.yhgl-xz-box {
+    padding: 1.25rem;
+}
+
+.yhgl-xz-box div {
+    display: inline-block;
+    height: 50px;
+    line-height: 50px;
+    margin-left: 20px;
+    color: #1e88e5;
+    font-size: 18px;
+}
+
+.selector {
+    padding: 0 15px;
+    margin: 1.25rem;
+}
+
+.selector .sx-item {
+    display: inline-block;
+}
+
+.selector .sx-item input {
+    padding: 0 5px;
+}
+
+.languagebox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #fff;
+}
+.languagebox a{
+    cursor: pointer;
+    padding-right:5px;
+}
+.languagebox a:last-child{
+    padding-left:5px;
+}
+.step{
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border: 2px solid #eeeeee;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 10px;
+    font-size: 16px;
+}
+.toView .fileupload-buttonbar,.toView .template-download td:last-child{
+    display: none;}

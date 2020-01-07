@@ -1,0 +1,47 @@
+.circle {
+    width: 100%;
+    padding: calc(100% - 6px) 0 0;
+    border-radius: 100%;
+    border: 3px solid #4AA3FF;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.circle p {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.num {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.zstj .row {
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.zstj .row:last-child {
+    border-bottom: none;
+}
+
+.zstj .row div p {
+    text-align: center;
+    margin: 5px 0;
+}
+
+.zstj .row div p label {
+    color: #60AEFF;
+    font-weight: bold;
+}

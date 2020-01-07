@@ -1,0 +1,171 @@
+﻿﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../images/favicon.ico">
+    <!-- <link rel="stylesheet" href="static/css/shouYe.css"> -->
+    <title>login - 后台管理系统</title>
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="static/css/bootstrap.css">
+
+    <!-- Data Table-->
+    <link rel="stylesheet" type="text/css" href="static/css/datatables.min.css" />
+
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="static/css/bootstrap-extend.css">
+
+    <!-- theme style -->
+    <link rel="stylesheet" href="static/css/master_style.css">
+
+    <!-- Fab Admin skins -->
+    <link rel="stylesheet" href="static/css/_all-skins.css">
+
+    <!-- Morris charts -->
+    <link rel="stylesheet" href="static/css/morris.css">
+
+
+    <link rel="stylesheet" href="static/css/style.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+    <script src="static/js/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+
+<body class="login-page">
+    <div class="container h-p100">
+        <div class="row align-items-center justify-content-md-center h-p100">
+            <div class="col-lg-4 col-md-8 col-12">
+                <div class="login-box">
+                    <div class="login-box-body">
+                        <h3 class="text-center">qp管理系统</h3>
+                        <p class="login-box-msg"></p>
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control rounded" placeholder="账号" id="account">
+                            <!--<span class="ion ion-person form-control-feedback"></span>-->
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="password" class="form-control rounded" placeholder="密码" id="psd">
+                            <!--<span class="ion ion-locked form-control-feedback"></span>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="basic_checkbox_1">
+                                    <label for="basic_checkbox_1">记住登陆状态</label>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-6">
+                                <!--<div class="fog-pwd text-right">-->
+                                <!--<a href="javascript:void(0)" class="text-danger"><i class="ion ion-locked"></i> Forgot pwd?</a><br>-->
+                                <!--</div>-->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-12 text-center">
+                                <button class="btn btn-info btn-block margin-top-10" id="tijiao">登陆</button>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.social-auth-links -->
+                    </div>
+                    <!-- /.login-box-body -->
+                </div>
+                <!-- /.login-box -->
+
+            </div>
+        </div>
+    </div>
+
+    <!-- /.modal -->
+    <!-- /.modal -->
+
+
+    <!-- jQuery 3 -->
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/vue.min.js"></script>
+    <!--<script src="static/js/component.js"></script>-->
+    <script src="static/js/axios.js"></script>
+    <script>
+        var myHead = new Vue({
+            el: '.main-header'
+        });
+        var leftSection = new Vue({
+            el: '#left-section'
+        });
+
+    </script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="static/js/jquery-ui.js"></script>
+
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <!-- popper -->
+    <script src="static/js/popper.min.js"></script>
+    <!-- Bootstrap 4.0-->
+    <script src="static/js/bootstrap.js"></script>
+
+    <!-- Slimscroll -->
+    <script src="static/js/jquery.slimscroll.js"></script>
+
+    <!-- FastClick -->
+    <script src="static/js/fastclick.js"></script>
+
+    <!-- Morris.js charts -->
+    <script src="static/js/raphael.min.js"></script>
+    <!--<script src="static/js/morris.min.js"></script>-->
+
+    <!-- echarts -->
+    <script src="static/js/echarts.js"></script>
+
+    <!-- This is data table -->
+    <script src="static/js/datatables.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="static/js/jquery.sparkline.js"></script>
+
+    <!-- Fab Admin App -->
+    <!--<script src="static/js/template.js"></script>-->
+
+    <!-- Fab Admin dashboard demo (This is only for demo purposes) -->
+    <!--<script src="static/js/dashboard.js"></script>-->
+
+    <!-- 弹窗插件  -->
+    <link href="static/assets/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+    <script src="static/assets/sweetalert/sweetalert.min.js"></script>
+
+
+</body>
+<script>
+
+    $('#tijiao').click(function () {
+        $.ajax({
+            type: 'post',
+            url: "//foundjoy.ltd:8021/manage/login",
+            data: {
+                name: $('#account').val(),
+                passWord: $('#psd').val()
+            },
+            success: function (data) {
+                data = data.data;
+                localStorage.setItem("manageToken", data.token);
+                window.location.href = "edit.html";
+            }
+        })
+    })
+
+</script>
+
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/favicon.ico">
+    <!-- <link rel="stylesheet" href="static/css/shouYe.css"> -->
+    <title>渠道统计</title>
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="static/css/bootstrap.css">
+
+    <!-- Data Table-->
+    <link rel="stylesheet" type="text/css" href="static/css/datatables.min.css" />
+
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="static/css/bootstrap-extend.css">
+
+    <!-- theme style -->
+    <link rel="stylesheet" href="static/css/master_style.css">
+
+    <!-- Fab Admin skins -->
+    <link rel="stylesheet" href="static/css/_all-skins.css">
+
+    <!-- Morris charts -->
+    <link rel="stylesheet" href="static/css/morris.css">
+
+    <!-- blueimp Gallery styles -->
+    <link rel="stylesheet" href="static/css/blueimp-gallery.min.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="static/css/jquery.fileupload.css">
+    <link rel="stylesheet" href="static/css/jquery.fileupload-ui.css">
+    <!-- CSS adjustments for browsers with JavaScript disabled -->
+    <noscript>
+        <link rel="stylesheet" href="static/css/jquery.fileupload-noscript.css">
+    </noscript>
+    <noscript>
+        <link rel="stylesheet" href="static/css/jquery.fileupload-ui-noscript.css">
+    </noscript>
+
+    <link rel="stylesheet" href="static/css/style.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+    <script src="static/js/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+
+<body class="hold-transition skin-blue-light sidebar-mini">
+    <div class="wrapper">
+
+        <header class="main-header">
+            <my-logo></my-logo>
+            <my-nav></my-nav>
+        </header>
+
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <div id="left-section">
+                <left-section first="tsgl" second="yhjb"></left-section>
+            </div>
+        </aside>
+        <!-- 右边显示区域 -->
+        <div class="content-wrapper">
+            <!-- 右边白条区域 -->
+            <section class="content-header">
+                <h1>
+                    渠道统计
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#"><i class="fa fa-fw fa-bell"></i> 渠道统计</a></li>
+                    <li class="breadcrumb-item active">渠道统计</li>
+                </ol>
+            </section>
+
+            <!-- 内容区域 -->
+            <section class="content con_abc">
+                <div class="row" id="table">
+                    <div class="col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="table-responsive">
+                                    <table id="example5" class="table table-bordered table-striped" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>链接编号</th>
+                                                <th>链接</th>
+                                                <th>链接所属渠道</th>
+                                                <th>指定链接/其它链接</th>
+                                                <th>链接打开次数</th>
+                                                <th>今日链接打开次数</th>
+                                                <th>链接复制次数</th>
+                                                <th>今日链接复制次数</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>链接编号</th>
+                                                <th>链接</th>
+                                                <th>链接所属渠道</th>
+                                                <th>指定链接/其它链接</th>
+                                                <th>链接打开次数</th>
+                                                <th>今日链接打开次数</th>
+                                                <th>链接复制次数</th>
+                                                <th>今日链接复制次数</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- jQuery 3 -->
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/vue.min.js"></script>
+    <script src="static/js/component.js"></script>
+    <script src="static/js/axios.js"></script>
+    <script>
+        var myHead = new Vue({
+            el: '.main-header'
+        });
+        var leftSection = new Vue({
+            el: '#left-section'
+        });
+    </script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="static/js/jquery-ui.js"></script>
+
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button);
+    </script>
+    <!-- popper -->
+    <script src="static/js/popper.min.js"></script>
+    <!-- Bootstrap 4.0-->
+    <script src="static/js/bootstrap.js"></script>
+
+    <!-- Slimscroll -->
+    <script src="static/js/jquery.slimscroll.js"></script>
+
+    <!-- FastClick -->
+    <script src="static/js/fastclick.js"></script>
+
+    <!-- Morris.js charts -->
+    <script src="static/js/raphael.min.js"></script>
+    <!--<script src="static/js/morris.min.js"></script>-->
+
+    <!-- echarts -->
+    <script src="static/js/echarts-en.min.js"></script>
+    <script src="static/js/echarts-liquidfill.min.js"></script>
+
+    <!-- This is data table -->
+    <script src="static/js/datatables.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="static/js/jquery.sparkline.js"></script>
+
+    <!-- Fab Admin App -->
+    <script src="static/js/template.js"></script>
+
+    <!-- Fab Admin dashboard demo (This is only for demo purposes) -->
+    <!--<script src="static/js/dashboard.js"></script>-->
+
+    <!-- 弹窗插件  -->
+    <link href="static/assets/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+    <script src="static/assets/sweetalert/sweetalert.min.js"></script>
+
+    <!--日历插件-->
+    <!--<script src="static/assets/laydate/laydate.js"></script>-->
+
+    <!--悬浮窗-->
+    <!--<script src="static/js/backToPlatform.js"></script>-->
+</body>
+<script>
+    $(function () {
+        let table;
+        let app = new Vue({
+            el: '#table',
+            data: {
+                list: [],
+            },
+            created: function () {
+                // 查询举报信息列表
+                $.ajax({
+                    url: "//foundjoy.ltd:8021/channel/data",
+                    type: 'get',
+                    success: function (res) {
+                        console.log(res)
+                        if (res.code == 1) {
+                            app.list = res.data
+                            tableSearchInit();
+                        }
+                    }, error: function () {
+
+                    }
+                })
+                $('#example5 tfoot th').each(function () {
+                    var title = $(this).text();
+                    if (title) {
+                        $(this).html('<input type="text" placeholder="搜索 ' + title + '" />');
+                    }
+                });
+            },
+            mounted: function () {
+            }
+        });
+
+        function tableSearchInit() {
+            table = $('#example5').DataTable({
+                data: app.list,
+                // order: [0, 'desc'],
+                columns: [
+                    {
+                        data: function (row, type, set, meta) {
+                            return meta.row + 1
+                        }
+                    },
+                    { data: 'link' },
+                    { data: 'channel' },
+                    {
+                        data: 'is_apponit',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            rowData.is_apponit == 1 ? $(td).html('指定链接') : $(td).html('其他链接')
+                        },
+                    },
+                    {
+                        data: 'open_num',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            rowData.open_num ? $(td).html(`${rowData.open_num}`) : $(td).html('0')
+                        },
+                    },
+                    {
+                        data: 'todayOpen_num',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            rowData.todayOpen_num ? $(td).html(`${rowData.todayOpen_num}`) : $(td).html('0')
+                        },
+                    },
+                    {
+                        data: 'copy_num',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            rowData.copy_num ? $(td).html(`${rowData.copy_num}`) : $(td).html('0')
+                        },
+                    },
+
+                    {
+                        data: 'todyCopy_num',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            rowData.todyCopy_num ? $(td).html(`${rowData.todyCopy_num}`) : $(td).html('0')
+                        },
+                    }
+
+                ],
+                language: _language
+            });
+            table.columns().every(function () {
+                let that = this;
+                $('input', this.footer()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+        }
+
+
+
+
+    })
+
+</script>
+
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台系统 - 权限管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <link href="../../Content/layui-v2.5.4/layui/css/layui.css" rel="stylesheet"/>
+    <style type="text/css">
+        .panel-body .row div:first-child {
+            text-align: right;
+        }
+
+        .layui-upload-list {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+        }
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<div class="row" id="myVue" style="display: none;" v-show="add">
+    <div class="col-md-12">
+        <div class="box-inner margin-t-10">
+            <div class="box-header well" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：后台系统 - 权限管理 - 管理员列表 </h2>
+                <div class="box-icon">
+                    <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                        <i class="glyphicon glyphicon-repeat"></i>
+                    </a>
+                    <a href="#" class="btn btn-minimize btn-round btn-default">
+                        <i class="glyphicon glyphicon-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="box-content" style="overflow: hidden; display: block;">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">所属用户组：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select id="pid" class="form-control input-sm" v-model="add.group_id"
+                                        @change="getSelectedPid">
+                                    <option :value="item.group_id" v-for="item in oneMenu">{{item.title}}</option>
+                                </select>
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">用户名：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.username"
+                                       :disabled="add.admin_id"
+                                       class="form-control input-sm"
+                                       :class="{'form-error-tip':errors.has('username')}"
+                                       type="text"
+                                       name="username"
+                                       v-validate="'required'">
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('username')">
+                                {{ errors.first('username') }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">姓名：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.realname" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">密码：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.pwd" :disabled="add.admin_id == 1" class="form-control input-sm"
+                                       type="text" value="">
+                            </div>
+                            <div class="col-xs-4 col-md-2" v-show="add.admin_id == 1">不可修改密码</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">渠道商地址：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.channel_addr" class="form-control input-sm" type="text" value="">
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row layui-form">
+                            <div class="col-xs-2 col-md-1">是否渠道：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input name="addHide" v-model.number="add.is_channel" type="radio" class="with-gap"
+                                       id="radio_3"
+                                       value="1"/>
+                                <label for="radio_3">是</label>
+                                <input name="addHide" v-model.number="add.is_channel" type="radio" id="radio_4"
+                                       class="with-gap"
+                                       value="0"/>
+                                <label for="radio_4" class="ml-30">否</label>
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">邮箱账号：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.email"
+                                       class="form-control input-sm"
+                                       :class="{'form-error-tip':errors.has('email')}"
+                                       type="text"
+                                       name="email"
+                                       v-validate="'email'">
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('email')">
+                                {{errors.first('email')}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">联系电话：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input v-model="add.tel"
+                                       class="form-control input-sm"
+                                       :class="{'form-error-tip':errors.has('mobile')}"
+                                       type="text"
+                                       name="mobile"
+                                       v-validate="'required|mobile'">
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('mobile')">
+                                {{errors.first('mobile')}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-1" style="text-align:right;"></div>
+                            <div class="col-md-4" style="text-align:left;">
+                                <a class="btn btn-danger" href='javascript:window.close()'>
+                                    <i class="glyphicon glyphicon-off"></i>关闭
+                                </a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-outline-success" @click="save"><i
+                                        class="glyphicon glyphicon-send"></i>保存
+                                </button>
+                            </div>
+                            <div class="col-md-4" style="text-align:left;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<!--验证插件-->
+<script src="../../Content/veevalidate/vee-validate.js"></script>
+<script src="../../Content/veevalidate/zh_CN.js"></script>
+<script>
+    var source = getUrlParams('source');
+    var admin_id = getUrlParams('id');
+    console.log(source);
+    console.log(admin_id);
+    if (source == 'add') {
+        $('.panel-title').html('添加管理员')
+    } else {
+        $('.panel-title').html('编辑管理员')
+    }
+    layui.use('layer', function () {
+        var layer = layui.layer
+    })
+    const config = {
+        errorBagName: 'errors', // change if property conflicts.
+        fieldsBagName: 'fieldBags',  // 报冲突时 可自定义修改字段名称
+        delay: 0, // 错误提示的延迟时间
+        strict: true, // 没有设置规则的表单不进行校验，
+        enableAutoClasses: false,
+        locale: 'zh_CN', // 对语言（中文）的配置
+        classNames: {
+            touched: 'touched', // the control has been blurred
+            untouched: 'untouched', // the control hasn't been blurred
+            valid: 'valid', // model is valid
+            invalid: 'invalid', // model is invalid
+            pristine: 'pristine', // control has not been interacted with
+            dirty: 'dirty' // control has been interacted with
+        },
+        events: 'input', //* *input|blur** 在用户输入和表单失去焦点时都进行校验 可单独写  blur或input
+        inject: true
+    }
+    //引入vue后，需要添加vee-validata的js和语言包文件(目前只用中文)
+    //js使用方式，指定语言、修改默认提示，添加自定义验证
+    VeeValidate.Validator.localize({
+        zh_CN: {
+            messages: {
+                required: function (name) {
+                    console.log(name);
+                    switch (name) {
+                        case 'username':
+                            name = '用户名'
+                            break
+                    }
+                    return name + "不能为空！";
+                },
+                email: function () {
+                    return "邮箱格式无效"
+                },
+                mobile: function () {
+                    return "必须是11位手机号码"
+                },
+                repeat: function () {
+                    return "两次密码不一致！"
+                },
+                min_value: function (name, min) {
+                    console.log(name, min)
+                    let unit = ""
+                    switch (name) {
+                        case 'danjia':
+                            name = '悬赏单价'
+                            unit = '元/人'
+                            break
+                        case 'geshu':
+                            name = '悬赏个数'
+                            unit = '人'
+                            break
+                    }
+                    return name + '最少需要' + min[0] + unit
+                },
+                decimal: function (name) {
+                    console.log(name)
+                    let unit = ""
+                    switch (name) {
+                        case 'danjia':
+                            name = '悬赏单价'
+                            break
+                        case 'geshu':
+                            name = '悬赏个数'
+                            break
+                    }
+                    return name + '必须是数字'
+                },
+            },//定义成我们需要的文字提示
+        }
+
+    });
+    // 自定义验证规则
+    // 重复验证密码
+    // VeeValidate.Validator.extend('repeat', {
+    //     validate: function (value) {
+    //         console.log(value)
+    //         return addGame.repeat == addGame.pass_word;
+    //     }
+    // });
+    VeeValidate.Validator.extend('mobile', {
+        messages: {
+            en: field => field + '必须是11位手机号码',
+        },
+        validate: value => {
+            return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+        }
+    });
+    Vue.use(VeeValidate, config);
+    var app = new Vue({
+        el: '#myVue',
+        data: {
+            oneMenu: [],
+            add: {
+                group_id: '',
+                username: '',
+                channel_addr: '',
+                is_channel: 0,
+                email: '',
+                tel: '',
+                pwd: '',
+                is_open: 0,
+                realname: ''
+            }
+        },
+        mounted: function () {
+            var that = this
+            //获取一级菜单
+            $.ajax({
+                method: 'get',
+                url: qp_url + 'admin/auth/adminGroupList?token=' + getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    let resData = res.data
+                    that.oneMenu = resData
+                }
+            })
+            if (source == 'edit') {
+                //获取管理员详细信息
+                $.ajax({
+                    method: 'get',
+                    url: qp_url + 'admin/auth/adminInfo?admin_id=' + admin_id,
+                    dataType: 'json',
+                    success: function (res) {
+                        let resData = res.data
+                        if (res.status == 1) {
+                            that.add = resData
+                        }
+                    }
+                })
+            }
+        },
+        methods: {
+            getSelectedPid: function (e) {
+                console.log(e)
+            },
+            save: function () {
+                var that = this;
+                var postData = this.add
+
+                this.$validator.validate().then(valid => {
+                    console.log(valid)
+                    if (valid) {
+                        if (source == 'edit') {
+                            $.ajax({
+                                method: 'POST',
+                                url: qp_url + 'admin/auth/adminEdit?token=' + getStorage('token'),
+                                dataType: 'json',
+                                data: postData,
+                                success: function (res) {
+                                    layer.msg(res.msg)
+                                    if (res.status == 1) {
+                                        window.opener.reloadTable()
+                                    }
+                                }
+                            })
+                        } else {
+                            $.ajax({
+                                method: 'POST',
+                                url: qp_url + 'admin/auth/adminAdd?token=' + getStorage('token'),
+                                dataType: 'json',
+                                data: postData,
+                                success: function (res) {
+                                    layer.msg(res.msg)
+                                    if (res.status == 1) {
+                                        window.opener.reloadTable()
+                                    }
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

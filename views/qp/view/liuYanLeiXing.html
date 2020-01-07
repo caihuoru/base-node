@@ -1,0 +1,312 @@
+
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>客服中心 - 问题类别</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet" />
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <style type="text/css">
+        tbody tr td {
+            height: 50px;
+        }
+        tbody tr td .layui-table-cell{
+            height: 38px;
+            line-height: 38px;
+        }
+        tbody tr td:nth-child(n+3) .layui-table-cell {
+            outline: 1px solid #e6e6e6;
+            outline-offset: -5px;
+        }
+
+        tbody tr td:last-child .layui-table-cell{
+            outline: 0px solid #e6e6e6;
+            outline-offset: 0px;
+        }
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+    <div id="content" class="main-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box-inner">
+                    <div class="box-header well" data-original-title="">
+                        <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：客服中心 - 留言类型 </h2>
+                        <div class="box-icon">
+                            <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                                <i class="glyphicon glyphicon-repeat"></i>
+                            </a>
+                            <a href="#" class="btn btn-minimize btn-round btn-default">
+                                <i class="glyphicon glyphicon-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="box-content" style="overflow: hidden; display: block;">
+                        <!--查询栏开始-->
+                        <div class="alert alert-info">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline cursor-style">
+                                        <li><a href="add/QuestionTypeInfo.html?param=0&type=2" class="btn btn-outline-success"> <i class="glyphicon glyphicon-plus icon-white"></i>新增 </a></li>
+                                        <li><button type="button" class="btn btn-outline-success" onclick="updateMore()"> <i class="glyphicon glyphicon-edit icon-white"></i>批量编辑 </button></li>
+                                        <li><button type="button" class="btn btn-danger layui-btn-danger" onclick="Del()"> <i class="glyphicon glyphicon-trash icon-white"></i>删除 </button></li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <!--查询栏结束-->
+                        <div class="row">
+                            <div class="col-md-10" style="padding-bottom:5px; padding-top:5px; ">
+                                温馨提示：点击表格可修改，点击“编辑按钮”保存当前行数据（如果编辑多行，选中点击“批量编辑”）
+                            </div>
+                        </div>
+                        <!--table开始-->
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                            <table id="layTable" lay-filter="test"></table>
+
+                            <table style="display: none" class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
+                                <thead>
+                                    <tr role="row">
+                                        <th><input name="ckall" type="checkbox" value="" onclick="SelectAll(this,'cid')" /></th>
+                                        <th>ID</th>
+                                        <th>类别名称</th>
+                                        <th>是否显示</th>
+                                        <th>管理</th>
+                                    </tr>
+                                </thead>
+                                    <tr>
+                                        <td><input name='cid' type='checkbox' value='1' /></td>
+                                        <td>1</td>
+                                        <td contenteditable="true" class="TypeName_1">无法登陆</td>
+                                        <td contenteditable="true" class="IsShow_1">是</td>
+                                        <td><a class="l" href='javascript:void(0)' onclick='update(1)'>编辑</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input name='cid' type='checkbox' value='2' /></td>
+                                        <td>2</td>
+                                        <td contenteditable="true" class="TypeName_2">支付问题</td>
+                                        <td contenteditable="true" class="IsShow_2">是</td>
+                                        <td><a class="l" href='javascript:void(0)' onclick='update(2)'>编辑</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input name='cid' type='checkbox' value='3' /></td>
+                                        <td>3</td>
+                                        <td contenteditable="true" class="TypeName_3">故障问题</td>
+                                        <td contenteditable="true" class="IsShow_3">是</td>
+                                        <td><a class="l" href='javascript:void(0)' onclick='update(3)'>编辑</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input name='cid' type='checkbox' value='4' /></td>
+                                        <td>4</td>
+                                        <td contenteditable="true" class="TypeName_4">游戏问题</td>
+                                        <td contenteditable="true" class="IsShow_4">是</td>
+                                        <td><a class="l" href='javascript:void(0)' onclick='update(4)'>编辑</a></td>
+                                    </tr>
+                            </table>
+                        </div>
+                        <!--table结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pageObj = {};
+        var type=2;
+        //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+        var selectRows = [];
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#layTable'
+                // , height: 512
+                , url: '' //数据接口
+                , request: {
+                    pageName: 'pageIndex' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+                , response: { //res 即为原始返回的数据
+                    statusName: 'status',
+                    statusCode: 1,
+                    // msgName: 'msg',
+                    // dataName: 'data',
+                },
+                parseData: function (res) {
+                    console.log(res)
+                    return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+                }
+                , page: {
+                    'theme': '#2D2D3C'
+                } //开启分页
+                , limits: [10, 20, 30, 50, 80, 100]
+                , limit: 10
+                , cellMinWidth: 120
+                , cols: [[ //表头
+                    {type:'checkbox'}
+                    ,{field: 'announcer', title: 'ID'}
+                    , {field: 'announcer', title: '类别名称', edit: 'text'}
+                    , {field: 'announcer', title: '是否显示', edit: 'text'}
+                    , {
+                        field: 'null', title: '管理', minWidth: 350, templet: function (d) {
+                            return `
+                           <button class="layui-btn layui-btn-xs">编辑</button>
+                           `
+                        }
+                    }
+                ]]
+                , done: function (res, curr, count) {
+                    $('th').css({'text-align': 'center'});
+                }
+
+            });
+            //监听复选框选择事件
+            table.on('checkbox(test)', function (obj) {
+                var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+                selectRows = checkStatus.data
+            });
+        });
+    //收放事件
+    $('.btn-minimize').click(function (e) {
+        e.preventDefault();
+        var $target = $(this).parent().parent().next('.box-content');
+        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        $target.slideToggle();
+    });
+    function Del() {
+        var data = {};
+        // var cid = GetSelectValues();
+        var cid =GetSelectedDatas(selectRows);
+        if (cid == "") {
+            layer.alert('未选中任何数据', {
+                icon: 7,
+                skin: 'layer-ext-moon'
+            })
+            return false;
+        }
+        if (confirm("删除会同时删除该类别的问题信息，确定删除吗？")) {
+            data.cid = cid;
+            data.TypeID=type;
+            AjaxSubmit("/Customer/DelQuestionType", data, callBack, "del");
+        }
+    }
+
+    function updateMore() {
+        var data = {};
+        // var cid = GetSelectValues();
+        var cid =GetSelectedDatas(selectRows);
+        if (cid == "") {
+            layer.alert('未选中任何数据', {
+                icon: 7,
+                skin: 'layer-ext-moon'
+            })
+            return false;
+        }
+        if (cid.indexOf(',') > -1) {
+            var array = cid.split(',');
+            var id = 0, name = "", isshow = ""
+            var msg = "";
+            for (x in array) {
+                id = array[x];
+                name = $('.TypeName_' + id).text();
+                isshow = $('.IsShow_' + id).text();
+                if (name == "") {
+                    msg += "ID(" + id + ")名称不能为空\n";
+                    break;
+                }
+
+                if (isshow == "") {
+                    msg += "ID(" + id + ")是否显示不能为空\n";
+                    break;
+                }
+                if (isshow == "是")
+                    isshow = "True"
+                else if (isshow == "否")
+                    isshow = "False"
+                else {
+                    msg += "ID(" + id + ")是否显示只能为是否\n";
+                    break;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Customer/DoQuestionTypeInfo",
+                    async: false,
+                    data: { ID: id, TypeName: name, IsShow: isshow, Mode: 'edit', TypeID: type },
+                    dataType: 'json',
+                    success: function (data) {
+                        var result = eval(data);
+                        if (result.IsOk) {
+                            msg += "ID(" + id + ")编辑成功\n"
+                        }
+                        else {
+                            msg += "ID(" + id + ")" + result.Msg
+                        }
+                    }
+                })
+            }
+            alert(msg);
+        } else {
+            update(cid);
+        }
+    }
+
+    function update(id) {
+        var name = $('.TypeName_' + id).text();
+        var isshow = $('.IsShow_' + id).text();
+
+        if (name == "") {
+            alert("名称不能为空");
+            return false;
+        }
+
+        if (isshow == "") {
+            alert("是否显示不能为空");
+            return false;
+        }
+        if (isshow == "是")
+            isshow = "True"
+        else if (isshow == "否")
+            isshow = "False"
+        else {
+            alert("是否显示只能为是否");
+            return false;
+        }
+        var data = { ID: id, TypeName: name, IsShow: isshow, Mode: 'edit',TypeID: type };
+        AjaxSubmit("/Customer/DoQuestionTypeInfo", data, callBack, "update");
+
+    }
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "update":
+                alert(jsonData.Msg);
+                break;
+            case "del":
+                alert(jsonData.Msg);
+                location.reload();
+                break;
+        }
+    }
+</script>
+</body>
+</html>

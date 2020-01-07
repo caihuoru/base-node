@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>代理系统-代理管理</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
+    <style type="text/css">
+        .layui-table-cell.laytable-cell-1-0-10 {
+            white-space: normal !important;
+            text-align: justify !important;
+            height: auto;
+        }
+
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：代理系统-代理管理 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>
+                                        <input name="txtSearch" id="txtSearch" placeholder="代理号"
+                                               class="form-control input-sm input-width-238" type="text"
+                                               maxlength="20"/>
+                                    </li>
+                                    <li>
+                                        抽水比例：
+                                    </li>
+                                    <li>
+                                        <input name="txtRate" id="txtRate"
+                                               class="form-control input-sm inline input-width-100"
+                                               type="text" maxlength="3"/>%
+                                    </li>
+                                    <li>
+                                        QQ：
+                                    </li>
+                                    <li style="display: none;">
+                                        金币变化日期：
+                                        <input id="txtStartDate" class="input-width-150" type="text" readonly="readonly"
+                                               value=""/>至
+                                        <input type="text" id="txtEndDate"
+                                               class="input-width-150"
+                                               readonly="readonly"
+                                               value=""/>
+                                    </li>
+                                    <li>
+                                        <input name="txtQQ" id="txtQQ" class="form-control input-sm input-width-150"
+                                               type="text" maxlength="12"/>
+                                    </li>
+                                    <li>
+                                        <a class="btn btn-outline-success search" href="#" id="btnQuery"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn btn-primary" onclick="history.go(0);"><i
+                                                class="glyphicon glyphicon-repeat"></i>刷新</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-2" style="display: none">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                                <label>
+                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                                            id="pagecount">
+                                        <option value="10" selected="selected">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> 条/页
+                                </label>
+                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="padding-bottom:5px; padding-top:5px; text-align:right;">
+                            <a class="btn btn-outline-success" href="Daili/AddInfo.html"><i
+                                    class="glyphicon glyphicon-plus icon-white"></i> 新增 </a>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+
+                        <table style="display: none" class="table table-striped table-bordered">
+                            <thead>
+                            <tr role="row">
+                                <th class="sorting">代理账号</th>
+                                <th class="sorting" style="width:90px;">代理类型</th>
+                                <th class="sorting">真实姓名</th>
+                                <th class="sorting">QQ号码</th>
+
+                                <th class="sorting">微信号</th>
+
+                                <th class="sorting">金币</th>
+
+                                <th class="sorting">抽水比例</th>
+                                <th class="sorting">状态</th>
+                                <th class="sorting">注册日期</th>
+                                <th class="sorting">最后登录日期</th>
+
+                                <th class="sorting">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <!--分页控件-->
+                        <div class="row">
+                            <div class="col-md-6">
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                    <ul class="pagination" id="pagin"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript">
+    var pageObj = {};
+    var postData = {};//搜索条件
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var table;
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url: qp_url + 'admin/Daili/AegntList'//数据接口
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.list //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 100
+            , cols: [[ //表头
+                {field: 'AgentAcc', title: '代理账号'}
+                , {
+                    field: 'IsClient', title: '代理类型', templet: function (d) {
+                        switch (d.IsClient) {
+                            case 0:
+                                return '抽水提成'
+                            case 2:
+                                return '银商'
+                            case 3:
+                                return '充值提成'
+                            case 4:
+                                return '无限代理'
+                        }
+                    }
+                }
+                , {field: 'RealName', title: '真实姓名'}
+                , {field: 'QQ', title: 'QQ号码', minWidth: 120}
+                , {field: 'WeChat', title: '微信号', minWidth: 120}
+                , {
+                    field: 'Score', title: '金币', templet: function (d) {
+                        return parseFloat(d.Score).toFixed(2)
+                    }
+                }
+                , {
+                    field: 'AgentRate', title: '抽水比例', templet: function (d) {
+                        return (d.AgentRate * 100) + '%'
+                    }
+                }
+                , {
+                    field: 'AgentStatus', title: '状态', templet: function (d) {
+                        if (d.AgentStatus == 0) {
+                            return '<span class="normal">正常</span>'
+                        } else {
+                            return '<span class="wrong">停用</span>'
+                        }
+                    }
+                }
+                , {field: 'RegDate', title: '注册日期'}
+                , {field: 'LastDate', title: '最后登录日期', minWidth: 150}
+                , {
+                    field: '', title: '操作', minWidth: 400, fixed: 'right', templet: function (d) {
+                        return `
+                                <a href='javascript:void(0)' onclick="tc('Daili/EditInfo.html?aid=${d.AgentID}')">详细资料</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/AllNextAgent.html?aid=${d.AgentID}')">下级代理</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/AllNextUser.html?aid=${d.AgentID}')">下级玩家</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/AgentScoreChange.html?aid=${d.AgentID}')">金币变化</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/NextPayList.html?agentId=${d.AgentID}')">下级充值记录</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/NextGameRecordList.html?agentId=${d.AgentID}')">下级游戏记录</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/NextDrawList.html?agentId=${d.AgentID}')">下级提现记录</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/RechargeList.html?agentId=${d.AgentID}')">线下充值记录</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/PlayerScoreList.html?agentId=${d.AgentID}')">玩家总输赢</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/ReportList.html?agentId=${d.AgentID}')">充值提成</a>
+                                <a href='javascript:void(0)' onclick="tc('Daili/PaySetting.html?agentId=${d.AgentID}')">充值配置</a>
+<!--                            <a href="Daili/EditInfo.html?aid=7" >详细资料</a>-->
+<!--                            <a href="Daili/AllNextAgent.html?aid=7">下级代理</a>-->
+<!--                            <a href="Daili/AllNextUser.html?aid=7">下级玩家</a>-->
+<!--                            <a href="Daili/AgentScoreChange.html?aid=7">金币变化</a>-->
+<!--                            <a href="Daili/NextPayList.html?agentId=7">下级充值记录</a>-->
+<!--                            <a href="Daili/NextGameRecordList.html?agentId=7">下级游戏记录</a>-->
+<!--                            <a href="Daili/NextDrawList.html?agentId=7">下级提现记录</a>-->
+<!--                            <a href="Daili/RechargeList.html?agentId=7">线下充值记录</a>-->
+<!--                            <a href="Daili/PlayerScoreList.html?agentId=7">玩家总输赢</a>-->
+<!--                            <a href="Daili/ReportList.html?agentId=7">充值提成</a>-->
+<!--                            <a href="Daili/PaySetting.html?agentId=7">充值配置</a>-->
+                            `
+                    }
+                }
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+    });
+    $(document).ready(function () {
+        docReady();
+    });
+
+    function tc(url) {
+        if (url.indexOf('ReportList') > -1)
+            openWindowOwn(url, '', 1600, 800)
+        else
+            openWindowOwn(url, '', 1200, 800)
+    }
+
+    function reloadTable() {
+        var curPage = $(".layui-laypage-em").next().html(); //当前页码值
+        console.log("当前页码", curPage);
+        table.reload('layTable', {
+            pageIndex: curPage,
+        })
+    }
+
+    function docReady() {
+        // //加载数据
+        // postData.pageSize = parseInt($("#pagecount").val());
+        // postData.pageIndex = 1;
+        // AjaxSearch(postData);
+
+        //收放事件
+        $('.btn-minimize').click(function (e) {
+            e.preventDefault();
+            var $target = $(this).parent().parent().next('.box-content');
+            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $target.slideToggle();
+        });
+        // //选择页码
+        // $("#pagecount").change(function (e) {
+        //     postData.pageSize = parseInt($(this).val());
+        //     postData.pageIndex = 1;
+        //     AjaxSearch(postData);
+        // });
+        // //刷新
+        // $("#btnRefresh").click(function (e) {
+        //     AjaxSearch(postData);
+        // });
+        //普通搜索事件
+        $("#btnQuery").click(function () {
+            postData.aname = $('#txtSearch').val();
+            postData.qq = $('#txtQQ').val();
+            postData.rate = parseInt($('#txtRate').val()) / 100;
+            // postData.pageSize = parseInt($("#pagecount").val());
+            // AjaxSearch(postData);
+            table.reload('layTable', {
+                where: postData
+                , page: {
+                    curr: 1
+                }
+            })
+        });
+    }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+        $('#pagin').paging("/Daili/AegntList", postData, CreatTableBody, postData.pageIndex);
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics) {
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr>");
+                html += stringFormat("<td>{0}</td>", item.AgentAcc);
+                html += stringFormat("<td>{0}</td>", item.IsClient == "0" ? "抽水提成" : item.IsClient == "2" ? "银商" : item.IsClient == "3" ? "充值提成" : item.IsClient == "4" ? "无限代理" : "");
+                html += stringFormat("<td>{0}</td>", item.RealName);
+                html += stringFormat("<td>{0}</td>", item.QQ);
+                //html += stringFormat("<td>{0}</td>", item.ShowName);
+                html += stringFormat("<td>{0}</td>", item.WeChat);
+                //html += stringFormat("<td>{0}</td>", parseInt(item.IsClient)==1?"是":"否" );
+                html += stringFormat("<td>{0}</td>", item.Score.toFixed(2));
+                html += stringFormat("<td>{0}</td>", item.AgentRate * 100 + '%');
+                html += stringFormat("<td>{0}</td>", item.AgentStatus == 0 ? "<font color='#71C671'>正常</font>" : "<font color='#FF0000'>停用</font>");
+                html += stringFormat("<td>{0}</td>", item.RegDate);
+                html += stringFormat("<td>{0}</td>", item.LastDate);
+                //html += stringFormat("<td>{0}</td>", item.ShowSort);
+                var str = "<a href='javascript:void(0)' onclick=\"tc('/Daili/EditInfo?aid={0}')\">详细资料</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/AllNextAgent?aid={0}')\">下级代理</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/AllNextUser?aid={0}')\">下级玩家</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/AgentScoreChange?aid={0}')\">金币变化</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/NextPayList?agentId={0}')\">下级充值记录</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/NextGameRecordList?agentId={0}')\">下级游戏记录</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/NextDrawList?agentId={0}')\">下级提现记录</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/RechargeList?agentId={0}')\">线下充值记录</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/PlayerScoreList?agentId={0}')\">玩家总输赢</a>";
+                //if (item.IsClient == 3)
+                str += " <a href='javascript:void(0)' onclick=\"tc('/Daili/ReportList?agentId={0}')\">充值提成</a> <a href='javascript:void(0)' onclick=\"tc('/Daili/PaySetting?agentId={0}')\">充值配置</a>";
+                html += stringFormat("<td class='caozuo'>" + str + "</td>", item.AgentID);
+                html += "</tr>";
+            });
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+
+</script>
+</body>
+</html>

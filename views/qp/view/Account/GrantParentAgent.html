@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台管理-选择上级代理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/layui-v2.5.4/layui/css/layui.css" rel="stylesheet">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：后台管理-选择上级代理</h2>
+            </div>
+
+            <div class="tab-content">
+                <div class="container tab-pane active">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group new-input-style margin-t-b clearfix">
+                            <label class="pull-left control-label" style="text-align:right;padding: 0">用户标识：</label>
+                            <div class="pull-left">
+                                <label  id="userid"></label>
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style margin-t-b clearfix">
+                            <label class="pull-left control-label" style="text-align:right;">代理账号：</label>
+                            <div class="pull-left">
+                                <input id="txtAgentAcc" class="form-control input-width-150" type="text" value="">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-absolute">
+                <ul class="cursor-style clearfix new-add-btn">
+                    <li class="pull-left" style="margin-right: 10px;">
+                        <a class="btn btn-outline-success search btn-md" href="#" onclick="Add();"><i class="glyphicon glyphicon-send"></i>保存</a></li>
+                    <li class="pull-left">
+                        <a class="btn btn-danger search btn-md" href="#" onclick="window.close();"><i class="glyphicon glyphicon-off"></i>关闭</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script>
+    var id =getUrlParams('param')
+    $('#userid').text(id)
+    layui.use('layer',function () {
+        var layer = layui.layer
+    })
+    function Add() {
+        var agentAcc = $("#txtAgentAcc").val();
+        if (agentAcc == "") {
+            layer.alert("请输入上级代理账号");
+            return false;
+        }
+        $.ajax({
+            type:'POST',
+            url:qp_url + 'admin/Account/ExcuteParentAgent',
+            dataType:'json',
+            data:{
+                token:getStorage('token'),
+                UserID:id,
+                agentAcc:agentAcc
+            },
+            success:function (res) {
+                layer.msg(res.msg)
+                if(res.status == 1){
+                    window.opener.reloadTable()
+                }
+            }
+        })
+        // var data = { agentAcc: agentAcc, Param: '121082', ModuleID: parseInt('100') };
+        // AjaxSubmit("/Account/ExcuteParentAgent", data, callBack, "add");
+    }
+    //回调函数
+    function callBack(jsonData, fname) {
+        if (fname == "add") {
+            alert(jsonData.Msg);
+            window.close();
+            window.opener.location.reload();
+        }
+    }
+</script>
+
+</body>
+</html>

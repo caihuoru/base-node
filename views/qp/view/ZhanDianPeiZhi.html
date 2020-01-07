@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet" />
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <style type="text/css">
+        tbody tr td {
+            height: 50px;
+        }
+
+        tbody tr td .layui-table-cell {
+            height: 38px;
+            line-height: 38px;
+        }
+
+        tbody tr td:nth-child(n+3) .layui-table-cell {
+            outline: 1px solid #e6e6e6;
+            outline-offset: -5px;
+        }
+
+        tbody tr td:nth-child(7) .layui-table-cell,
+        tbody tr td:last-child .layui-table-cell {
+            outline: 0px solid #e6e6e6;
+            outline-offset: 0px;
+        }
+
+        .wrap,
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content" class="main-content">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：网站系统 - 站点配置</h2>
+            </div>
+            <ul class="media nav nav-tabs margin-b-10">
+                <!--                <li ><a href="/Web/SiteConfig?param=26&title=联系方式配置" title="联系方式配置">联系方式配置</a></li>-->
+                <!--                <li class="active"><a href="/Web/SiteConfig?param=27&title=站点配置" title="站点配置">站点配置</a></li>-->
+                <!--                <li ><a href="/Web/SiteConfig?param=33&title=移动大厅配置" title="移动大厅配置">移动大厅配置</a></li>-->
+                <!--                <li ><a href="/Web/SiteConfig?param=34&title=服务器切换配置" title="服务器切换配置">服务器切换配置</a></li>-->
+                <!--                <li ><a href="/Web/SiteConfig?param=38&title=分享配置" title="分享配置">分享配置</a></li>-->
+                <!--                <li ><a href="/Web/IOSConfig?param=-1&title=IOS内购配置" title="IOS内购配置">IOS内购配置</a></li>-->
+                <li><a href="javascript:void(0);" title="联系方式配置">联系方式配置</a></li>
+                <li class="active"><a href="javascript:void(0);" title="站点配置">站点配置</a></li>
+                <li><a href="javascript:void(0);" title="移动大厅配置">移动大厅配置</a></li>
+                <li><a href="javascript:void(0);" title="服务器切换配置">服务器切换配置</a></li>
+                <li><a href="javascript:void(0);" title="分享配置">分享配置</a></li>
+                <li><a href="javascript:void(0);" acc="ios" title="IOS内购配置">IOS内购配置</a></li>
+            </ul>
+            <div class="tab-content" style="margin-top:-11px">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">网站系统 - 站点配置</h3>
+                    </div>
+                    <div class="parts1">
+                        <div class="panel-body">
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">键名：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtConfigKey" class="form-control input-sm"
+                                        readonly="readonly" value="SiteConfig" />
+                                </div>
+                                <div class="col-xs-5 col-md-3" style="text-align:left">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">名称：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtConfigName" class="form-control input-sm"
+                                        readonly="readonly" value="站点配置" />
+                                </div>
+                                <div class="col-xs-5 col-md-3" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段说明：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <textarea class="form-control " id="txtConfigString" rows="5">参数说明
+字段1：站点名称
+字段2：站点域名
+字段3：注册说明</textarea>
+                                </div>
+                                <div class="col-xs-5 col-md-3" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段1：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtField1" class="form-control input-sm" value="5G娱乐" />
+                                </div>
+                                <div class="col-xs-5 col-md-3" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段2：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtField2" class="form-control input-sm"
+                                        value="http://qq.com/" />
+                                </div>
+                                <div class="col-xs-5 col-md-3" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段3：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtField3" class="form-control input-sm"
+                                        value="注册账号后，下载游戏领取" />
+                                </div>
+                                <div class="col-xs-5 col-md-3" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段4：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtField4" class="form-control input-sm" value="" />
+                                </div>
+                                <div class="col-xs-5 col-md-4" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段5：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtField5" class="form-control input-sm" value="" />
+                                </div>
+                                <div class="col-xs-5 col-md-4" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段6：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtField6" class="form-control input-sm" value="" />
+                                </div>
+                                <div class="col-xs-5 col-md-4" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段7：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtField7" class="form-control input-sm" value="" />
+                                </div>
+                                <div class="col-xs-5 col-md-4" style="text-align:left">
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="col-xs-2 col-md-2" style="text-align:right">字段8：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input type="text" id="txtField8" class="form-control input-sm" value="" />
+                                </div>
+                                <div class="col-xs-5 col-md-4" style="text-align:left">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+                                    <li></li>
+                                    <li><a class="btn btn-outline-success" href="#" id="btn"><i
+                                                class="glyphicon glyphicon-save"></i>保存</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="parts2" style="display: none;">
+                        <div class="panel-body">
+                            <div class="box-content" style="overflow: hidden; display: block;">
+                                <!--查询栏开始-->
+                                <div class="alert alert-info">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <ul class="list-inline cursor-style">
+                                                <li>
+                                                    <input type="text" placeholder="输入代理账号或代理ID" id="txtSearch"
+                                                        class="form-control input-sm" style="width:300px;">
+                                                </li>
+                                                <li>
+                                                    <select id="ddlTradeType" class="form-control input-sm">
+                                                        <option value="-1" selected="selected">是否苹果内购</option>
+                                                        <option value="0">是</option>
+                                                        <option value="1">否</option>
+                                                    </select>
+                                                </li>
+                                                <li>
+                                                    <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
+                                                            class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--查询栏结束-->
+                                <div class="row">
+                                    <div class="col-md-2" style="display: none;">
+                                        <div id="DataTables_Table_0_length" class="dataTables_length">
+                                            <label>
+                                                <select size="1" name="DataTables_Table_0_length"
+                                                    aria-controls="DataTables_Table_0" id="pagecount">
+                                                    <option value="10" selected="selected">10</option>
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select> 条/页
+                                            </label>
+                                            <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12"
+                                        style="padding-bottom:5px; padding-top:5px; text-align:right;">
+                                        <button type="button" id="reload" class="btn btn-outline-success"
+                                            onclick="openWindowOwn('add/setting_ios.html?source=new','PlayerControlInfo',800, 600)"
+                                            data-type="reload"><i class="glyphicon glyphicon-plus icon-white"></i>新增
+                                        </button>
+                                        <button type="button" class="btn btn-danger delete_"><i
+                                                class="glyphicon glyphicon-trash icon-white"></i>删除
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--table开始-->
+                                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center"
+                                    role="grid">
+                                    <table id="layTable" lay-filter="test"></table>
+
+                                    <table style="display: none;"
+                                        class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                                        id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th><input name="ckall" type="checkbox" value=""
+                                                        onclick="SelectAll(this,'cid')" /></th>
+                                                <th>代理ID</th>
+                                                <th>代理账号</th>
+                                                <th>代理名称</th>
+                                                <th>主版本号</th>
+                                                <th>资源版本号</th>
+                                                <th>是否苹果内购</th>
+                                                <th>极光推送Key</th>
+                                                <th>极光推送Secret</th>
+                                                <th>IOS下载地址</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                                    </table>
+                                    <!--分页控件-->
+                                    <div class="row">
+                                        <div class="col-md-6">
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="dataTables_paginate paging_bootstrap pagination"
+                                                style="float:right;">
+                                                <ul class="pagination" id="pagin"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--table结束-->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/html" id="toolbar">
+    <button class="layui-btn layui-btn-xs" onclick="save()">保存</button>
+    <button class="layui-btn layui-btn-warm layui-btn-xs" onclick="cansel()">取消</button>
+</script>
+    <script type="text/html" id="radiobtn">
+    <input type="checkbox" name="sex" lay-skin="switch" lay-text="是|否" lay-filter="isIos">
+</script>
+    <script type="text/javascript">
+        var dataArray = [];
+        $.ajax({
+            url: qp_url + "admin/web/ConfigInfo?token="+getStorage('token'),
+            type: "get",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                console.log(data)
+                var data = data.data;
+                dataArray = data;
+                var html = "";
+                for (var i = 0; i < data.length; i++) {
+                    html += `<li><a href="javascript:void(0);" title="${data[i].ConfigName}" data-ConfigID='${data[i].ConfigID}'>${data[i].ConfigName}</a></li>`
+                }
+                html += ` <li><a href="javascript:void(0);" acc="ios" title="IOS内购配置">IOS内购配置</a></li>`;
+                $(".media.nav.nav-tabs.margin-b-10").html(html);
+            }
+        })
+        //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+        var selectRows = [];
+        var table;
+        var dataBak = [];
+
+        layui.use('table', function () {
+            table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#layTable'
+                // , height: 512
+                , url: qp_url + "admin/web/GetIOSConfigs?token="+getStorage('token') //数据接口
+                , request: {
+                    pageName: 'pageIndex' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+                , response: { //res 即为原始返回的数据
+                    statusName: 'status',
+                    statusCode: 1,
+                    // msgName: 'msg',
+                    // dataName: 'data',
+                },
+                parseData: function (res) {
+                    console.log(res.data)
+                    // console.log
+                    return {
+                        "status": res.status, //解析接口状态
+                        "msg": res.data.msg, //解析提示文本
+                        "count": res.data.total, //解析数据长度 ,需要数据库返回
+                        "data": res.data.list //解析数据列表
+                    };
+                }
+                , id: 'layTable'
+                , page: {
+                    'theme': '#2D2D3C'
+                } //开启分页
+                , limits: [10, 20, 30, 50, 80, 100]
+                , limit: 10
+                , cellMinWidth: 130
+                , cols: [[ //表头
+                    { type: 'checkbox' }
+                    , { field: 'AgentID', title: '代理ID' }
+                    , { field: 'AgentAcc', title: '代理账号', edit: 'text' }
+                    , { field: 'AgentName', title: '代理名称', edit: 'text' }
+                    , { field: 'SrcVersionNo', title: '主版本号', edit: 'text' }
+                    , { field: 'VersionNo', title: '资源版本号', edit: 'text' }
+                    , { field: 'IsIOSShop', title: '是否苹果内购', edit: 'text' }
+                    , { field: 'AppKey', title: '极光推送Key', edit: 'text' }
+                    , { field: 'AppSecret', title: '极光推送Secret', edit: 'text' }
+                    , { field: 'AppUrl', title: 'IOS下载地址', edit: 'text' }
+                    , {
+                        field: 'AgentID', title: '操作', templet: function (d) {
+                            return `<button class="layui-btn layui-btn-xs save" data-AgentID='${d.AgentID}'>保存</button>
+                                    <button class="layui-btn layui-btn-warm layui-btn-xs" onclick="cansel()">取消</button>`;
+                        }
+                    }
+                ]]
+                , done: function (res, curr, count) {
+                    $('th').css({ 'text-align': 'center' });
+                }
+
+            });
+            var $ = layui.$, active = {
+                reload: function () {
+                    //执行重载
+
+                    // console.log(table)
+                    // var tableBak = table.cache.layTable;
+                    // for (var i = 0; i < tableBak.length; i++) {
+                    //     dataBak.push(tableBak[i])
+                    // }
+                    dataBak.push({
+                        // LAY_TABLE_INDEX: 20,
+                        announcer: "",
+                        head_img: "",
+                        id: null,
+                        like_number: "",
+                        picture_list: "",
+                        release_time: "",
+                        task_content: "",
+                        task_title: "",
+                        uid: null,
+                        viewing_count: ""
+                    })
+                    table.reload('layTable', {
+                        url: ''
+                        , data: dataBak
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+                }
+            };
+
+            $('#reload').on('click', function () {
+                // var type = $(this).data('type');
+                // active[type] ? active[type].call(this) : '';
+            });
+            //监听复选框选择事件
+            table.on('checkbox(test)', function (obj) {
+                var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+                selectRows = checkStatus.data
+                console.log(selectRows)
+            });
+            //普通搜索事件
+            $("#btnQuery").click(function (e) {
+                var DBAddr = $("#txtSearch").val();
+                console.log(DBAddr)
+                table.reload('layTable', {
+                    where: {
+                        keyword: DBAddr,
+                        stute: $("#ddlTradeType").val(),
+                        pageIndex: 1,
+                        pageSize: 10
+                    }
+                })
+            });
+            // 更新保存
+            $(document).on("click", ".save", function () {
+                let obj = {
+                    AgentID: $(this).data("agentid"),
+                    AgentName: $(this).parent().parent().parent().find("[data-field=AgentName] div").html(),
+                    SrcVersionNo: $(this).parent().parent().parent().find("[data-field=SrcVersionNo] div").html(),
+                    AgentAcc: $(this).parent().parent().parent().find("[data-field=AgentAcc] div").html(),
+                    VersionNo: $(this).parent().parent().parent().find("[data-field=VersionNo] div").html(),
+                    IsIOSShop: $(this).parent().parent().parent().find("[data-field=IsIOSShop] div").html(),
+                    AppKey: $(this).parent().parent().parent().find("[data-field=AppKey] div").html(),
+                    AppSecret: $(this).parent().parent().parent().find("[data-field=AppSecret] div").html(),
+                    AppUrl: $(this).parent().parent().parent().find("[data-field=AppUrl] div").html(),
+                }
+                // console.log(obj)
+                if (!obj.AgentID || obj.AgentID == "undefined") {
+                    delete obj.AgentID;
+                    $.ajax({
+                        url: qp_url + "admin/web/AddIOSConfig?token="+getStorage('token'),
+                        type: "post",
+                        dataType: "json",
+                        data: obj,
+                        success: function (data) {
+                            alert(data.msg);
+                            window.location.reload();
+                        }
+                    })
+                } else {
+                    $.ajax({
+                        url: qp_url + "admin/web/ModifyIOSConfig?token="+getStorage('token'),
+                        type: "post",
+                        dataType: "json",
+                        data: obj,
+                        success: function (data) {
+                            alert(data.msg);
+                            table.reload('layTable', {
+                                where: {
+                                    pageIndex: 1,
+                                    pageSize: 10
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+            // 删除
+            $(document).on("click", ".delete_", function (o) {
+
+                var data = {};
+
+                // var cid = GetSelectValues();
+                var cid = GetSelectedDatas(selectRows, 'AgentID');
+                console.log(cid)
+                if (cid == "") {
+                    layer.alert('未选中任何数据', {
+                        icon: 7,
+                        skin: 'layer-ext-moon'
+                    })
+                    return;
+                }
+                data = { AgentID: cid };
+
+                console.log(data)
+                if (confirm("确定删除吗？")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: qp_url + "admin/web/DelIOSConfig?token="+getStorage('token'),
+                        dataType: 'json',
+                        data: data,
+                        success: function (resData) {
+                            console.log(resData)
+                            if (resData.status == 1) {
+                                layer.msg(resData.msg, { time: 2000, icon: 1 });
+                                setTimeout(function () {
+                                    window.history.go(0)
+                                }, 1500)
+                            } else {
+                                layer.msg(resData.msg, { time: 2000, icon: 2 });
+                            }
+                        }
+                    })
+                }
+            })
+        });
+
+        $('.media li').on('click', function () {
+            $('.media li').removeClass('active')
+            $(this).addClass('active')
+            $('.tab-content .panel-title').html($(this).find('a').text())
+            var acc = $(this).find('a').attr('acc')
+            if (acc == 'ios') {
+                $('.parts1').hide()
+                $('.parts2').show()
+            } else {
+                var ConfigID = Number($(this).find("a").data("configid"));
+                for (var i = 0; i < dataArray.length; i++) {
+                    if (ConfigID == dataArray[i].ConfigID) {
+                        let data = dataArray[i];
+                        console.log(data)
+                        $("#txtConfigKey").val(data.ConfigKey);
+                        $("#txtConfigName").val(data.ConfigName);
+                        $("#txtConfigString").val(data.ConfigString);
+                        $("#txtField1").val(data.Field1);
+                        $("#txtField2").val(data.Field2);
+                        $("#txtField3").val(data.Field3);
+                        $("#txtField4").val(data.Field4);
+                        $("#txtField5").val(data.Field5);
+                        $("#txtField6").val(data.Field6);
+                        $("#txtField7").val(data.Field7);
+                        $("#txtField8").val(data.Field8);
+                        break;
+                    }
+                }
+                $('.parts2').hide()
+                $('.parts1').show()
+            }
+        })
+        $(document).ready(function () {
+            docReady();
+        });
+
+        function addRows() {
+            var html = '<tr><td>123</td></tr>'
+            $('.layui-table tbody tr:last-child').after(html)
+        }
+
+        function docReady() {
+            $("#btn").click(function (e) {
+                e.preventDefault();
+                add();
+            });
+            $(".media li").eq(1).trigger("click");
+        }
+
+        function add() {
+            // console.log(table.cache)
+            // var tableBak = table.cache.layTable;
+            // for (var i = 0; i < tableBak.length; i++) {
+            //     dataBak.push(tableBak[i])
+            // }
+            // var dataBak = {
+            //     AgentAcc: $("[data-field=AgentAcc]").val(),
+            //     AgentName: 2222,
+            //     IsIOSShop: 1,
+            //     VersionNo: 1111,
+            //     SrcVersionNo: 111111,
+            //     AppKey: "",
+            //     AppSecret: "",
+            //     AppUrl: ""
+            // }
+            console.log(dataBak);
+            table.reload("layTable", {
+                page: {
+                    curr: 1
+                },
+                data: dataBak
+            })
+            // AjaxSubmit("/Web/DoSiteConfig", data, callBack, "del");
+        }
+
+        $("#btn").click(function () {
+            $.ajax({
+                url: qp_url + "admin/web/DoSiteConfig?token="+getStorage('token'),
+                type: "post",
+                dataType: "json",
+                data: {
+                    ConfigID: $(".active").find("a").data("configid"),
+                    ConfigKey: $("#txtConfigKey").val(),
+                    ConfigName: $("#txtConfigName").val(),
+                    ConfigString: $("#txtConfigString").val(),
+                    Field1: $("#txtField1").val(),
+                    Field2: $("#txtField2").val(),
+                    Field3: $("#txtField3").val(),
+                    Field4: $("#txtField4").val(),
+                    Field5: $("#txtField5").val(),
+                    Field6: $("#txtField6").val(),
+                    Field7: $("#txtField7").val(),
+                    Field8: $("#txtField8").val()
+                },
+                success: function (data) {
+                    alert(data.msg);
+                    $.ajax({
+                        url: qp_url + "admin/web/ConfigInfo?token="+getStorage('token'),
+                        type: "get",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            console.log(data)
+                            var data = data.data;
+                            dataArray = data;
+
+                        }
+                    })
+                }
+            })
+        })
+        //回调函数
+        function callBack(jsonData, fname) {
+            switch (fname) {
+                case "del":
+                    alert(jsonData.Msg);
+                    window.location.reload();
+                    //window.opener.location.reload();
+                    break;
+            }
+        }
+        function cansel() {
+            console.log(this)
+        }
+
+    </script>
+</body>
+
+</html>

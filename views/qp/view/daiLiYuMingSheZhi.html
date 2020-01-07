@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>代理系统 - 代理域名设置</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="info">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：代理系统 - 代理域名设置</h2>
+            </div>
+            <div class="tab-content padding-margin-0">
+
+                <div class="panel panel-info no-bord">
+
+                    <div class="panel-heading no-bord-radio">
+                        <h3 class="panel-title">代理域名设置</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table>
+                            <tr>
+                                <td class="tr-center">注册推广码：</td>
+                                <td class="tr-main">
+                                    <input class="form-control input-sm" style="width:350px;" type="text" id="text_url"
+                                           value="" v-model="info.regTgAddr1"/><br/>
+                                    <input class="form-control input-sm" style="width:350px;" type="text" id="text_url2"
+                                           value="" v-model="info.regTgAddr2"/><br/>
+                                    <input class="form-control input-sm" style="width:350px;" type="text" id="text_url3"
+                                           value="" v-model="info.regTgAddr3"/><br/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tr-center">首页推广码：</td>
+                                <td class="tr-main">
+                                    <input class="form-control input-sm" style="width:350px;" type="text"
+                                           id="text_tgurl" value="" v-model="info.mainTgAddr1"/><br/>
+                                    <input class="form-control input-sm" style="width:350px;" type="text"
+                                           id="text_tgurl2" value="" v-model="info.mainTgAddr2"/><br/>
+                                    <input class="form-control input-sm" style="width:350px;" type="text"
+                                           id="text_tgurl3" value="" v-model="info.mainTgAddr3"/><br/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-outline-success search btn-md" href="#" @click="Save"><i
+                                        class="glyphicon glyphicon-save"></i>保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+   layui.use(['layer'],function () {
+       var layer = layui.layer;
+   })
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            info: {}
+        },
+        mounted: function () {
+            var that = this;
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Daili/getAgentBaseURL',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 1) {
+                        that.info = res.data
+                    }
+                }
+            })
+        },
+        methods: {
+            Save: function () {
+                var postData = {
+                    URL: this.info.regTgAddr1,
+                    URL2:this.info.regTgAddr2 ,
+                    URL3:this.info.regTgAddr3 ,
+                    TGURL:this.info.mainTgAddr1 ,
+                    TGURL2: this.info.mainTgAddr2,
+                    TGURL3:this.info.mainTgAddr3
+                }
+                if(postData.URL.indexOf('http://') > 0 || postData.URL2.indexOf('http://') > 0 || postData.URL3.indexOf('http://') > 0){
+                    layer.alert("地址格式不正确 不需要填写 http");
+                    return
+                }
+                // if(postData.TGURL.indexOf('http://') > 0 || postData.TGURL2.indexOf('http://') > 0 || postData.TGURL3.indexOf('http://') > 0){
+                //     layer.alert("地址格式不正确 不需要填写 http");
+                // return
+                // }
+                $.ajax({
+                    type: 'GET',
+                    url: qp_url + 'admin/Daili/modifyAgentBaseURL',
+                    data:postData,
+                    dataType: 'json',
+                    success: function (res) {
+                        layer.alert(res.msg)
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

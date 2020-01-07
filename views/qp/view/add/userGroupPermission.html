@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>后台管理-用户组列表</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .box-content {
+            background: #E2E1E5;
+        }
+
+        body .layui-tree-entry:hover {
+            background: transparent;
+        }
+
+        body .layui-tree-entry {
+            height: auto;
+        }
+
+        .layui-tree-pack .layui-tree-set {
+            background: #F2F2F2;
+            margin: 10px 0;
+        }
+
+        .layui-tree-pack .layui-tree-pack .layui-tree-set {
+            background: #fff;
+            padding: 10px 0;
+            margin: 5px 0;
+        }
+        .layui-tree-pack .layui-tree-pack .layui-tree-pack .layui-tree-set {
+            width: auto;
+            display: inline-block;
+        }
+        .second,.third{
+            padding-left: 10px;}
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content margin-t-10">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：用户组列表-配置权限 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+<!--                <div class="box-content">-->
+<!--                    <div class="demo-tree">-->
+<!--                        <div class="first"><input type="checkbox" value="0" id="check0"><label for="check0">全部</label></div>-->
+<!--                        <div class="second" v-for="item in tree[0].child">-->
+<!--                            <input type="checkbox" :value="item.id" :id="'check'+item.id"><label :for="'check'+item.id">{{item.title}}</label>-->
+<!--                            <div class="third" v-for="child in item.child">-->
+<!--                                <input type="checkbox" :value="child.id" :id="'check'+child.id"><label :for="'check'+child.id">{{child.title}}</label>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="box-content">
+                    <div id="tree" class="demo-tree"></div>
+                </div>
+
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-4" style="text-align:left;">
+                        <a class="btn btn-danger" href='javascript:window.close()'>
+                            <i class="glyphicon glyphicon-off"></i>关闭
+                        </a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-outline-success" onclick="save()"><i
+                                class="glyphicon glyphicon-send"></i>保存
+                        </button>
+                    </div>
+                    <div class="col-md-4" style="text-align:left;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    var tree;
+    $(function () {
+        $.ajax({
+            method: 'get',
+            url: qp_url + 'admin/auth/groupAccess',
+            dataType: 'json',
+            data:{
+                token: getStorage('token'),
+            },
+            success:function (res) {
+                let resData = deepClone(res.data);
+                let arr = [{
+                    id: 0,
+                    open: true,
+                    spread: true,
+                    pid: 0,
+                    title: "全部",
+                    children: [],
+                }];
+                resData.sort(function (a,b) {
+                    var value1 = a.pid,
+                        value2 = b.pid;
+                    //总分相同
+                    if (value1 === value2) {
+                        // 按语文分数降序排序
+                        return a.id - b.id;
+                    }
+                    // 总分不同，降序排序
+                    return value1 - value2;
+                })
+                // console.log(resData)
+                resData.forEach(function (item,index) {
+                    item['children'] = []
+                    item['spread'] = true
+
+                    if(item.id != 0){//排除权限名为’全部‘的项
+                        item['id']=item.id
+                        if(item.pid == 0){
+                            arr[0]['children'].push(item)
+                        }else{
+                            let first = getFirstIndex(arr[0].children,item.pid);
+                            // console.log(first,arr[0]['child'][first],item.pid)
+                            if(first > -1){
+                                arr[0]['children'][first]['children'].push(item)
+                            }else{
+                                // console.log(arr[0]['children'])
+                                // console.log(item)
+                                let obj = getSecondIndex(arr[0]['children'],item.pid);
+                                if(obj.first > -1){
+                                    arr[0]['children'][obj.first]['children'][obj.second]['children'].push(item)
+                                }
+                            }
+                        }
+                    }
+                    // console.log(item)
+                })
+
+                // console.log(arr)
+                layui.use(['tree', 'util'], function () {
+                    tree = layui.tree
+                        var  layer = layui.layer
+                        , util = layui.util
+                        //模拟数据1
+                        , data1 = arr;
+                    var myTree = tree.render({
+                        elem: '#tree'
+                        ,id:'demoId'
+                        , data: data1
+                        , showCheckbox: true
+                        , showLine: false  //是否开启连接线
+                        ,click: function(obj){
+                            // console.log(obj.data); //得到当前点击的节点数据
+                            // console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+                            // console.log(obj.elem); //得到当前节点元素
+                            // console.log(obj.data.children); //当前节点下是否有子节点
+                            obj.elem.find('.layui-form-checkbox').click()
+                        }
+                    });
+
+                    $.ajax({
+                        method: 'get',
+                        url: qp_url + 'admin/auth/groupInfo',
+                        dataType: 'json',
+                        data: {
+                            token: getStorage('token'),
+                            group_id: getUrlParams('group_id'),
+                        },
+                        success: function (res) {
+                            // console.log(myTree)
+                            let groupArr = res.data.rules.split(',').map(Number);
+                            // console.log(groupArr)
+                            let del = [];
+                            if(groupArr.indexOf(0) > -1){
+                                groupArr.splice(groupArr.indexOf(0),1)
+                            }
+                            arr[0].children.forEach(function (item,index) {
+                                if(groupArr.indexOf(item.id) > -1){
+                                    groupArr.splice(groupArr.indexOf(item.id),1)
+                                }
+                                if(item.children.length > 0){
+                                    item.children.forEach(function (item2,index2) {
+                                        if(item2.children.length > 0){
+                                            groupArr.splice(groupArr.indexOf(item2.id),1)
+                                        }
+                                    })
+                                }
+                            })
+                            myTree.setChecked(groupArr)
+                                // myTree.setChecked('#tree',res.data.rules.split(','))
+                                // tree.setChecked('#tree',[15])
+                            // tree.setChecked(res.data.rules.split(','))
+                        }
+                    })
+                })
+            }
+        })
+
+    })
+    function getFirstIndex(arr,sid){
+        var num = -1;
+        arr.forEach(function (item,index) {
+            if(item.id == sid){
+            // console.log(item,index,sid)
+                num = index
+            }
+        })
+        // console.log(num)
+        return num
+    }
+    function getSecondIndex(arr,sid){
+        let obj = {
+            first: -1,
+            second: -1
+        };
+        arr.forEach(function (item,index) {
+            if(item.children.length > 0){
+                // console.log(item)
+                item.children.forEach(function (item2,index2) {
+                    if(item2.id == sid){
+                        obj.first = index;
+                        obj.second = index2;
+                    }
+                })
+            }
+        })
+        return obj
+    }
+    function save() {
+        //获得选中的节点
+        var checkedData = tree.getChecked('demoId'); //获取选中节点的数据
+        var ids = getCheckedId(checkedData);
+        console.log(ids);
+        $.ajax({
+            type:'POST',
+            url:qp_url + 'admin/auth/groupSetAccess',
+            dataType:'json',
+            data:{
+                token:getStorage('token'),
+                rules:ids,
+                group_id:getUrlParams('group_id')
+            },
+            success:function (res) {
+                console.log(res)
+                layer.msg(res.msg)
+            }
+
+        })
+    }
+    //遍历获取选中的权限的id
+    function getCheckedId(jsonObj) {
+        var id = "";
+        $.each(jsonObj, function (index, item) {
+            if (id != "") {
+                id = id + "," + item.id;
+            }
+            else {
+                id = item.id;
+            }
+            var i = getCheckedId(item.children);
+            if (i != "") {
+                id = id + "," + i;
+            }
+        });
+        return id;
+    }
+</script>
+</body>
+</html>

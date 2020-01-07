@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>管理后台-用户信息</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <link href="../../Content/laydate/need/laydate.css" rel="stylesheet"/>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .panel-body .row div:first-child {
+            text-align: right;
+        }
+
+        .tab-content {
+            padding: 0 0 10px;
+            margin-top: -11px
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="userInfo">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：管理后台-用户信息</h2>
+            </div>
+            <ul class="media nav nav-tabs margin-b-10">
+                <li>
+                    <a :href="'AccountsInfo.html?param='+userID" title="">基本信息</a>
+                </li>
+                <li class="active">
+                    <a href="javascript:void(0);" title="">详细信息</a>
+                </li>
+                <li>
+                    <a :href="'AccountsTreasureInfo.html?param='+userID" title="">财富信息</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" title="" style="display:none">积分信息</a>
+                </li>
+                <li>
+                    <a :href="'AccountsRecordInfo.html?param='+userID" title="">记录信息</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">详细信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">ID号码：</div>
+                            <div class="col-xs-2 col-md-1"><label id="ltGameID1">{{userInfo.GameID}}</label></div>
+                            <div class="col-xs-2 col-md-1">帐号：</div>
+                            <div class="col-xs-2 col-md-1"><label id="ltAccounts1">{{userInfo.Accounts}}</label></div>
+                            <div class="col-xs-2 col-md-1">身份证号码：</div>
+                            <div class="col-xs-2 col-md-1"><label id="ltCardNum">{{userInfo.CardNum}}</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">真实姓名：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtCompellation"
+                                       class="form-control input-sm"
+                                       type="text"
+                                       v-model="userInfo.Compellation">
+                            </div>
+                            <div class="col-xs-4 col-md-2"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">银行卡号：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtBankNO"
+                                       maxlength="25"
+                                       onkeyup="if(isNaN(value))execCommand('undo');"
+                                       class="form-control input-sm"
+                                       type="text" v-model="userInfo.BankNO">
+                            </div>
+                            <div class="col-xs-4 col-md-2"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">银行名称：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtBankName"
+                                       maxlength="25"
+                                       class="form-control input-sm"
+                                       type="text" v-model="userInfo.BankName">
+                            </div>
+                            <div class="col-xs-4 col-md-2"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">银行地址：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtBankAddress"
+                                       maxlength="120"
+                                       class="form-control input-sm"
+                                       type="text" v-model="userInfo.BankAddress">
+                            </div>
+                            <div class="col-xs-4 col-md-2"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">QQ号码：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtQQ"
+                                       class="form-control input-sm"
+                                       type="text"
+                                       maxlength="16"
+                                       onkeyup="if(isNaN(value))execCommand('undo');"
+                                       v-model="userInfo.QQ">
+                            </div>
+                            <div class="col-xs-4 col-md-2">QQ字符长度不可超过16个字符</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">电子邮箱：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtEMail"
+                                       class="form-control input-sm"
+                                       type="text"
+                                       maxlength="32"
+                                       v-model="userInfo.EMail"></div>
+                            <div class="col-xs-4 col-md-2">电子邮箱字符长度不可超过32个字符</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">支付宝：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtSeatPhone"
+                                       class="form-control input-sm"
+                                       type="text" maxlength="32"
+                                       v-model="userInfo.SeatPhone">
+                            </div>
+                            <div class="col-xs-4 col-md-2">支付宝字符长度不可超过32个字符</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">手机号码：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtMobilePhone"
+                                       class="form-control input-sm"
+                                       type="text" maxlength="16"
+                                       onkeyup="if(isNaN(value))execCommand('undo');"
+                                       v-model="userInfo.MobilePhone"></div>
+                            <div class="col-xs-4 col-md-2">手机号码字符长度不可超过16个字符</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">邮政编码：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtPostalCode"
+                                       class="form-control input-sm"
+                                       type="text" maxlength="8"
+                                       onkeyup="if(isNaN(value))execCommand('undo');"
+                                       v-model="userInfo.PostalCode"></div>
+                            <div class="col-xs-4 col-md-2">邮政编码字符长度不可超过8个字符</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">居住地址：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <textarea class="form-control"
+                                          id="txtDwellingPlace" rows="2"
+                                          placeholder="居住地址"
+                                          maxlength="128"
+                                          v-model="userInfo.DwellingPlace"></textarea>
+                            </div>
+                            <div class="col-xs-4 col-md-2">长度不可超过128个字符</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">用户备注：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <textarea class="form-control"
+                                          id="txtUserNote" rows="2"
+                                          placeholder="用户备注"
+                                          maxlength="256" v-model="userInfo.UserNote"></textarea>
+                            </div>
+                            <div class="col-xs-4 col-md-2">长度不可超过256个字符</div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-outline-success search btn-md" href="#" onclick="Add1();"><i
+                                        class="glyphicon glyphicon-send"></i>保存</a></li>
+                                <li><a class="btn btn-danger search btn-md" href="#" onclick="window.close();"><i
+                                        class="glyphicon glyphicon-off"></i>关闭</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/lhgdialog/lhgdialog.min.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var param = getUrlParams('param')
+    var myVue = new Vue({
+        el: "#content",
+        data: {
+            userID: param,
+            userInfo: {}
+        },
+        mounted:function () {
+            var that = this;
+            //获取用户信息
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Account/AccountsInfo?token=' + getStorage('token') + '&UserID=' + param,
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    if (res.status == 1) {
+                        that.userInfo = res.data
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                }
+            })
+        }
+    })
+
+
+    $(document).ready(function () {
+
+    });
+
+    function Add1() {
+        var istrue = true;
+        var UserID = parseInt('0');
+        var istrue = true;
+        var QQ = $("#txtQQ").val();
+        if (istrue && (QQ != "" && isNaN(QQ))) {
+            alert("QQ应为数字");
+            istrue = false;
+            return false;
+        }
+        var EMail = $("#txtEMail").val();
+        if (istrue && (EMail != "" && !isEmail(EMail))) {
+            istrue = false;
+            alert("EMail格式不正确");
+
+            return false;
+        }
+
+        var SeatPhone = $("#txtSeatPhone").val();
+        //if (istrue && (SeatPhone != "" && !isPhone(SeatPhone))) {
+        //    istrue = false;
+        //   alert("固话不能格式不正确");
+        //    return false;
+        //}
+        var MobilePhone = $("#txtMobilePhone").val();
+        if (istrue && (MobilePhone != "" && !isPhone(MobilePhone))) {
+            istrue = false;
+            alert("手机号格式不正确");
+            return false;
+        }
+        var DwellingPlace = $("#txtDwellingPlace").val();
+        //if (istrue && DwellingPlace == "") {
+        //    alert("居住地址不能为空");
+        //    return false;
+        //}
+        var UserNote = $("#txtUserNote").val();
+        //if (istrue && UserNote == "") {
+        //    istrue = false;
+        //    alert("用户备注不能为空");
+        //    return false;
+        //}
+        var Compellation = $("#txtCompellation").val();
+        var BankNO = $("#txtBankNO").val();
+        var BankName = $("#txtBankName").val();
+        var BankAddress = $("#txtBankAddress").val();
+        var PostalCode = $('#txtPostalCode').val();
+        if (istrue) {
+            var data = {
+                UserID: UserID,
+                Accounts: $("#ltAccounts1").html(),
+                QQ: QQ,
+                EMail: EMail,
+                SeatPhone: SeatPhone,
+                MobilePhone: MobilePhone,
+                DwellingPlace: DwellingPlace,
+                UserNote: UserNote,
+                Compellation: Compellation,
+                BankNO: BankNO,
+                BankName: BankName,
+                BankAddress: BankAddress,
+                PostalCode: PostalCode
+            };
+            AjaxSubmit("/Account/UpdateIndividualDatum", data, callBack, "add");
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        if (fname == "add") {
+            alert(jsonData.Msg);
+            window.close();
+            //window.opener.location.reload();
+        }
+    };
+</script>
+
+</body>
+</html>

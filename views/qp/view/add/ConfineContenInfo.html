@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台管理-限制字符</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        .panel-body .row {
+            margin: 15px 0;
+        }
+
+        .panel-body .row div:first-child {
+            text-align: right;
+            min-width: 120px;
+        }
+
+        .btn-outline-primary {
+            border-right: 1px solid rgba(0, 0, 0, 0.3);
+        }
+body{
+    overflow-y: scroll!important;
+}
+    </style>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：后台管理-限制字符</h2>
+            </div>
+            <div class="tab-content padding-margin-0">
+                <div class="panel panel-primary no-bord">
+                    <div class="panel-heading no-bord-radio">
+                        <h3 class="panel-title">后台管理-限制字符</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">限制字符：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtString" style="width:350px;display:inline;"
+                                       class="form-control input-sm" type="text" value="">
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">批量输入：</div>
+                            <div class="col-xs-3 col-md-2">
+                                <input id="upfile" name="upfile" type="file"
+                                       style="display:none"
+                                       onchange='UploadFile("upfile", "admin/Gamecommon/GetFileContext", "txtString");'>
+                                <button type="button"
+                                        class="form-control btn btn-primary pull-left input-sm input-width-150"
+                                        onclick="$('input[id=upfile]').click();"><span
+                                        class="glyphicon glyphicon-open"></span>上传文件
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1"></div>
+                            <div class="col-xs-8 col-md-10">
+                                <p style="color:red;">文件格式为.txt,限制字符之间用","隔开，不要有重复字符</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">失效时间：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtEnjoinOverDate"
+                                       style="width: 350px; display: inline;"
+                                       type="text"
+                                       class="laydate-icon strtime"
+                                       readonly="readonly" placeholder="请选择时间" value=""/>
+                            </div>
+                            <div class="col-xs-4 col-md-2" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">警告：</div>
+                            <div class="col-xs-8 col-md-8"><span style="color:red;"> 失效时间不填写，则默认为永久限制</span></div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-outline-primary search btn-md" href="../xianZhiZiFu.html"><i
+                                        class="glyphicon glyphicon-circle-arrow-left"></i>返回</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="#" onclick="add();"><i
+                                        class="glyphicon glyphicon-send"></i>保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    var param = getUrlParams('param')
+    var IntParam = getUrlParams('id')
+    $(function () {
+        laydate.render({
+            elem: '#txtEnjoinOverDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        if (param == 'edit') {
+            $("#txtString").val(getUrlParams('str'))
+            $("#txtEnjoinOverDate").val(getUrlParams('date'))
+        }
+    })
+    layui.use(['layer'], function () {
+        var layer = layui.layer
+    })
+
+    function add() {
+        var EnjoinOverDatestr = $("#txtEnjoinOverDate").val();
+        var String = $("#txtString").val();
+        if (String == "") {
+            layer.alert("限制字符不能为空");
+            return false;
+        }
+        if (EnjoinOverDatestr != "") {
+            if (EnjoinOverDatestr <= Time.today().NowDate) {
+                layer.alert("失效时间不能小于当前时间");
+                return false;
+            }
+        }
+        var data = {
+            String: String,
+            EnjoinOverDate: EnjoinOverDatestr == '永久限制' ? '' : EnjoinOverDatestr,
+            IntParam: IntParam,
+            token: getStorage('token')
+        };
+        $.ajax({
+            type: 'POST',
+            url: qp_url + 'admin/Account/AddConfineContentInfo?token=' + getStorage('token'),
+            data: data,
+            dataType: 'json',
+            success: function (res) {
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1})
+                    setTimeout(function () {
+                        window.location.href = '../xianZhiZiFu.html'
+                    }, 1000)
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2})
+                }
+            }, error: function (err) {
+                layer.alert('请检查上传的文件是否合法！', {icon: 2})
+            }
+        })
+        // AjaxSubmit("/Account/AddConfineContentInfo", data, callBack, "add");
+    }
+
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "add":
+                alert(jsonData.Msg);
+                window.location.href = "/Account/ConfineContentList"
+                break;
+        }
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+</script>
+</body>
+</html>

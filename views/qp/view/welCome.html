@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>后台管理-欢迎页面</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link href="../Content/statistics.css" rel="stylesheet">
+    <style type="text/css">
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="tab-content" >
+                <!--统计内容开始-->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">平台信息</h3>
+                            </div>
+                            <div class="panel-body main-min-height ptxx">
+                                <div class="part">
+                                    <div class="cpanel">
+                                        <div class="title">实时数据
+                                            <span>2019-8-15</span>
+                                        </div>
+                                        <div id="chart1"></div>
+                                    </div>
+                                </div>
+                                <div class="part">
+                                    <div class="cpanel">
+                                        <div class="title">数据汇总
+                                            <span>2019-8-15</span>
+                                        </div>
+                                        <div class="zstj" style="padding: 0 20px;">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                    <p>玩家携带金币数</p>
+                                                    <p><label id="ltRegPresent">4,000.00</label></p>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                    <p>玩家银行存款量</p>
+                                                    <p><label>27015.58</label></p>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                    <p>玩家金币交易量</p>
+                                                    <p><label>27015.58</label></p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                    <p>渠道金币数</p>
+                                                    <p><label>27015.58</label></p>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                    <p>渠道抽水量</p>
+                                                    <p><label>27015.58</label></p>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                    <p>渠道结算金币数</p>
+                                                    <p><label>27015.58</label></p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div  class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                    <p>渠道总数</p>
+                                                    <p><label>27015.58</label></p>
+                                                </div>
+                                                <div  class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                                    <p>系统抽水总量</p>
+                                                    <p><label>27015.58</label></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cpanel">
+                                        <div class="title">人数汇总
+                                            <span>2019-8-15</span>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                                <div class="circle" title="当前在线人数"><p>当前在线人数</p></div>
+                                                <div class="num color-blue font-bold">20,348</div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                                <div class="circle" title="新增玩家人数"><p>新增玩家人数</p></div>
+                                                <div class="num color-blue font-bold">20,348</div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                                <div class="circle" title="注册玩家总数"><p>注册玩家总数</p></div>
+                                                <div class="num color-blue font-bold">20,348</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div style="display: none" class="panel-body main-div-padding-0 main-min-height">
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6"
+                                         style="text-align:right;color:red;">今日充值额度：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;color:red;">0</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6"
+                                         style="text-align:right;color:red;">彩票盈利额度：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;color:red;">0.00</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6"
+                                         style="text-align:right;color:red;">今日盈利额度：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;color:red;">0</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6"
+                                         style="text-align:right;color:red;">当前在线人数：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;color:red;">0</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6"
+                                         style="text-align:right;color:red;">今日交易总量：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;color:red;">0</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6"
+                                         style="text-align:right;color:red;">系统今日抽水总量：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;color:red;">0.00</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6"
+                                         style="text-align:right;color:red;">代理商今日抽水总量：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;color:red;">0.00</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">新增玩家人数：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;">0</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">注册玩家总数：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;">4</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">代理总数：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label
+                                            style="text-align:left;">6</label></div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">
+                                        玩家携带金币总数：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label style="text-align:left;">20746.35</label>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">
+                                        玩家银行存款总数：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label style="text-align:left;">27015.58</label>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">
+                                        玩家金币交易总量：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label style="text-align:left;">0.00</label>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">代理金币总数：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label style="text-align:left;">1253.54</label>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">系统抽水总量：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label style="text-align:left;">6166.88</label>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">
+                                        代理商抽水总量：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label style="text-align:left;">368.36</label>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                                    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="text-align:right;">
+                                        代理结算金币总数：
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6"><label style="text-align:left;">233.00</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">机器人信息</h3>
+                            </div>
+                            <div class="panel-body main-min-height ptxx" style="background: #F2F2F2">
+                                <div class="part" style="width: 100%;">
+                                    <div class="cpanel">
+                                        <div class="title">实时数据
+                                            <span>2019-8-15</span>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-4 col-sm-2 col-xs-2">
+                                                <div class="circle" title="在线机器人总数"><p>在线机器人总数</p></div>
+                                                <div class="num color-blue font-bold">20,348</div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-2 col-xs-2">
+                                                <div class="circle" title="机器人总数"><p>机器人总数</p></div>
+                                                <div class="num color-blue font-bold">2,048</div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-2 col-xs-2">
+                                                <div class="circle" title="机器人金币总量"><p>机器人金币总量</p></div>
+                                                <div class="num color-blue font-bold">11,120,048</div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-2 col-xs-2">
+                                                <div class="circle" title="房间损耗"><p>房间损耗</p></div>
+                                                <div class="num color-blue font-bold">20,048</div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-2 col-xs-2">
+                                                <div class="circle" title="总充值（元）"><p>总充值（元）</p></div>
+                                                <div class="num color-blue font-bold">20,048</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height:50px; text-align:center; vertical-align:middle;">
+                    <a id="btnQuery" class="btn btn-outline-success search" href="#" onclick="history.go(0);"><i
+                            class="glyphicon glyphicon-zoom-in icon-white"></i>立即更新</a>
+                </div>
+                <!--统计内容结束-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--[if lt IE 9]>
+<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<!--    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>-->
+<script src="../Scripts/echarts-all-3.js"></script>
+<script type="text/javascript">
+    var chart1 = echarts.init(document.getElementById('chart1'));
+    var option = {
+        title: {
+            show: false
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['今日数据', '昨日数据'],
+            right: 20,
+            top: 22
+        },
+        // grid: {
+        //     left: '60',
+        //     right: '60',
+        //     top: '50',
+        //     bottom: '50'
+        // },
+        toolbox: {
+            show: false,
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                data: ['充值额度', '盈利额度', '交易总量', '系统抽水总量', '渠道抽水总量'],
+                axisLabel: {
+                    interval: 0
+                }
+            }
+        ],
+        yAxis: [
+            {
+                name: '数值',
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '今日数据',
+                type: 'bar',
+                data: [1000, 4009, 7000, 2312, 2556],
+                barWidth: 10,
+                itemStyle: {
+                    normal: {
+                        color: '#45A1FF'
+                    }
+                }
+            },
+            {
+                name: '昨日数据',
+                type: 'bar',
+                barWidth: 10,
+                data: [2006, 5009, 9000, 2604, 2807],
+                itemStyle: {
+                    normal: {
+                        color: '#2F4050'
+                    }
+                }
+            }
+        ]
+    };
+    chart1.setOption(option);
+</script>
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台管理 - 邮件系统</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Content/laydate/laydate.js"></script>
+    <script src="../Scripts/pagination.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <style type="text/css">
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：后台管理 - 邮件系统 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>
+                                        <a id="btnQuery" class="btn btn-outline-success search" href="#"
+                                           onclick="openWindowOwn('sendEmail.html', '', 800, 500)"><i
+                                                class="glyphicon glyphicon-send icon-white"></i>&nbsp;发送邮件</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!--table开始-->
+                    <div class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="showEmail">
+    <a href="javascript:void(0)" lay-event="showDetail">查看内容</a>
+</script>
+<script type="text/javascript">
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [], table, tab = 1;//tab标识是操作的IP还是手机号
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url: qp_url + 'admin/Email/getList?token='+getStorage('token') //数据接口
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.list //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 120
+            , cols: [[ //表头
+                {field: 'id', title: '邮件ID'}
+                // , {field: '', title: '收件人昵称'}
+                , {field: 'UserID', title: '收件人ID',templet:function (d) {
+                        return d.UserID ? d.UserID : ''
+                    }}
+                , {field: 'user_account', title: '收件人账号'}
+                , {field: 'title', title: '标题'}
+                , {field: 'content', title: '内容', minWidth: 180, toolbar: '#showEmail'}
+                , {field: 'send_time', title: '发送时间', minWidth: 200}
+                , {field: 'send_identify', title: '操作人ID'}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            if(obj.event == 'showDetail'){
+                layer.open({
+                    type:1,
+                    title:'邮件内容'
+                    , content: '<div style="padding: 20px">'+data.content+'</div>'
+                    ,area:['400px','250px']
+                })
+            }
+        })
+    });
+    function reloadTable() {
+        var curPage = $(".layui-laypage-em").next().html(); //当前页码值
+        console.log("当前页码", curPage);
+        table.reload('layTable', {
+            pageIndex: curPage,
+        })
+    }
+</script>
+</body>
+</body>
+</html>

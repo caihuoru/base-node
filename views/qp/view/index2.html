@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>后台管理系统</title>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../Content/common.css" rel="stylesheet" />
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/tabs.css" rel="stylesheet" />
+    <style type="text/css">
+        #rbox {
+            display: none;
+        }
+
+        body {
+            width: 100%;
+            background: #f4f3f9;
+        }
+
+        .row {
+            margin-right: 0px;
+            margin-left: 0px;
+        }
+
+        .fl:hover {
+            text-decoration: none;
+        }
+
+        .fl {
+            width: 220px;
+            height: 90px;
+            background: #222E60;
+        }
+
+        .fl div {
+            color: #667acd;
+            font-size: 24px;
+            line-height: 90px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="warper">
+<audio src="../Content/images/star.mp3" id="unread"></audio>
+<div class="wrap" id="myVue" style="display:none;" v-show="tabs">
+    <!-- 主体内容start -->
+    <div class="main-list clearfix ">
+        <div class="menu" id="selectbox">
+            <div class="head-right">
+                <img id="avatar"
+                     :src=" JSON.parse(getStorage('customerInfo')).avatar || '../Content/images/headImg.png'"
+                     class="icon" onclick="popList()">
+                <div class="row">
+                    <span onclick="popList()">欢迎您,<span
+                            id="realname">{{JSON.parse(getStorage('customerInfo')).realname}}</span></span>
+                    <i class="glyphicon hdicon glyphicon-triangle-bottom" onclick="popList()"></i>
+                </div>
+                <div id="poplist">
+                    <ul>
+                        <li><a href="index2.html">后台首页</a></li>
+                        <li id="editInfo"><a href="userInfo.html">修改个人资料</a></li>
+                        <li onclick='BindIp(0);'>绑定IP</li>
+                        <li onclick='loginOut();'>安全退出</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="scroll-box">
+                <ul v-for="(item,index) in tabs" class="menulist">
+                    <li>
+                        <div class="one-menu">
+                                <span class="icon"
+                                      :style="{'background-image':'url(../Content/images/'+item.icon+')'}"></span>
+                            <span>{{item.title}}</span>
+                            <i></i>
+                        </div>
+                        <div class="two-menu" style="display:none;">
+                            <a v-for="menu in item.child" :href="menu.front_href" class="J_menuItem"
+                               v-if="menu.id != 337">
+                                <!-- 隐藏规则管理 -->
+                                <span>{{menu.title}} </span>
+                                <i></i>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- 左边导航栏end -->
+        </div>
+        <!-- 主体内容end -->
+        <!-- 右边主体内容start -->
+        <div class="main">
+            <div class="row content-tabs">
+                <button class="roll-nav roll-left J_tabLeft">
+                    <i class="glyphicon glyphicon-backward"></i>
+                </button>
+                <nav class="page-tabs J_menuTabs" style="width: auto;">
+                    <div class="page-tabs-content">
+                        <a href="javascript:;" class="active J_menuTab" data-id="Home/Welcome">首页</a>
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right J_tabRight">
+                    <i class="glyphicon glyphicon-forward"></i>
+                </button>
+                <div class="btn-group roll-nav roll-right">
+                    <button class="dropdown J_tabClose" data-toggle="dropdown">
+                        关闭操作<span class="caret"></span>
+
+                        </button>
+                        <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                            <li class="J_tabShowActive">
+                                <a>定位当前选项卡</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="J_tabCloseAll">
+                                <a>关闭全部选项卡</a>
+                            </li>
+                            <li class="J_tabCloseOther">
+                                <a>关闭其他选项卡</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row J_mainContent" id="content-main">
+                    <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="Welcome2.html"
+                        frameborder="0" data-id="Home/Welcome" seamless></iframe>
+                </div>
+
+
+            </div>
+            <!-- 右边主体内容end -->
+            <!--提示框-->
+            <div id="pop" class="popstyle clearfix">
+                <div class="alert-header">
+                    <h1>信息提示</h1>
+                    <img  src="../Content/images/close.png">
+                </div>
+                <div id="popContent" class="pop-content">
+                    有新的未读客服消息
+                </div>
+            </div>
+
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../Scripts/tabs.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script src="../Scripts/axios.js"></script>
+<script src="../Scripts/socket.io.js"></script>
+<script type="text/javascript">
+    if(!JSON.parse(getStorage('customerInfo'))) {
+        window.location.href = 'login.html'
+    }
+    let myH=$(window).height() - 50;
+    $('.J_iframe').height(myH)
+    var socket
+    var nickname, avatar = JSON.parse(getStorage('customerInfo')).avatar || '../img/kf_default@2x.png';
+    $(function () {
+        socket = io(request_url2);
+        socket.on('connect', function () {
+            socket.emit('login', {
+                identity: 'notice',
+                    name: JSON.parse(getStorage('customerInfo')).nickName,
+                img: avatar
+            });  // 触发登录事件
+            });
+        socket.on('loginSuc', (data) => {
+            console.log('loginSuc', data)
+            $('.name').hide();
+            nickname = data.id;
+            // my.ico = data.img;
+            // my.name = data.name;
+            // bindUser = data.id;
+        })
+        socket.on('notice', (data) => {
+            console.log('notice', data)
+            if (notice[data.type]) {
+                $('#unread')[0].play()
+                $('#popContent').text(data.msg+'，点击查看').data('index',notice[data.type])
+                $('#pop').css('transform','translateY(0)')
+            }
+        })
+        // setTimeout(function () {
+        //     let postData = {
+        //         type: 'gold',
+        //         msg: '有一条新的金币交易记录'
+        //     }
+        //     $.post(request_url2 + 'notice',postData, function (data) {
+        //         console.log(data)
+        //     },'json')
+        // },2000)
+        $('#pop .alert-header img').click(function () {
+            $('#pop').css('transform', 'translateY(calc(100% + 60px))')
+        })
+        $('#popContent').click(function () {
+            var m = $(this).data('index');
+            var o = $('.J_menuItem[data-index='+m+']').attr('href');
+            var l = $('.J_menuItem[data-index='+m+']').text()
+            $('#pop').css('transform', 'translateY(calc(100% + 60px))')
+            $('.J_menuItem').removeClass('active')
+            $('.J_menuItem[data-index="' + m + '"]').addClass('active')
+            $(".J_mainContent .J_iframe").each(function () {
+                console.log($(this).data("id"), o)
+                if ($(this).data("id") == o) {
+                    $(this).show().siblings(".J_iframe").hide();
+                    $('.J_menuTab').removeClass('active')
+                    $('.J_menuTab[data-id="' + o + '"]').addClass('active')
+                    $(this)[0].contentWindow.location.reload(true);
+                    return false
+                }
+            })
+            if ($('.J_menuTab[data-id="' + o + '"]').length < 1) {
+                var p = '<a href="javascript:;" class="active J_menuTab" data-id="' + o + '">' + l + ' <i class="glyphicon glyphicon-remove-circle"></i></a>';
+                var n = '<iframe class="J_iframe" name="iframe' + m + '" width="100%" height="'+myH+'" src="' + o + '" frameborder="0" data-id="' + o + '" seamless></iframe>';
+                $('.page-tabs-content a').removeClass('active')
+                $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(n);
+                $(".J_menuTabs .page-tabs-content").append(p);
+                $('.glyphicon').removeClass('glyphicon-triangle-top')
+            }
+        })
+    })
+
+    let notice = [];
+    var _height = $(window).height();
+    var myVue = new Vue({
+        el: '#myVue',
+        data: {
+            tabs: {}
+        },
+        created: function () {
+
+        },
+        mounted: function () {
+            var that = this
+            $.ajax({
+                type: 'GET',
+                url: qp_url + "admin/auth/showtab?token=" + getStorage('token'),
+                dataType: "json",
+                success: function (rsp) {
+                    console.log(rsp)
+                    if (rsp.status == 1) {
+                        that.tabs = rsp.data
+                        console.log(rsp.data)
+                    } else {
+                        alert(rsp.msg);
+                    }
+                    that.$nextTick(function () {
+                        init()
+                        $('.J_menuItem span').each(function () {
+                            let name = $(this).text().replace(' ', '');
+                            let index = $(this).parent().data('index');
+                            // console.log(name)
+                            if (name == '在线客服') {
+                                notice['customer'] = index
+                            }
+                            if (name == '金币交易管理') {
+                                notice['gold'] = index
+                            }
+                        })
+                    })
+                }
+            })
+        },
+        methods: {}
+    })
+    $('#editInfo a').click(function (e) {
+            e.preventDefault()
+            var o = $(this).attr('href');
+            var l = $(this).text()
+            var m = 99;
+            $(".J_mainContent .J_iframe").each(function () {
+                console.log($(this).data("id"), o)
+                if ($(this).data("id") == o) {
+                    $(this).show().siblings(".J_iframe").hide();
+                    $('.J_menuTab').removeClass('active')
+                    $('.J_menuTab[data-id="' + o + '"]').addClass('active')
+                    return false
+                }
+            })
+            if ($('.J_menuTab[data-id="' + o + '"]').length < 1) {
+                var p = '<a href="javascript:;" class="active J_menuTab" data-id="' + o + '">' + l + ' <i class="glyphicon glyphicon-remove-circle"></i></a>';
+                var n = '<iframe class="J_iframe" name="iframe' + m + '" width="100%" height="'+myH+'" src="' + o + '" frameborder="0" data-id="' + o + '" seamless></iframe>';
+                $('.page-tabs-content a').removeClass('active')
+                $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(n);
+                $(".J_menuTabs .page-tabs-content").append(p);
+                $('#poplist').toggle()
+                $('.glyphicon').removeClass('glyphicon-triangle-top')
+            }
+        })
+        $(document).on('click', '.one-menu', function () {
+        console.log("$('#selectbox .scroll-box')[0].scrollTop", $('#selectbox .scroll-box')[0].scrollTop)
+        $(this).parents('.menulist').siblings().find('.two-menu').hide();
+        $(this).toggleClass('menuActive')
+        $(this).parents('.menulist').siblings().find('.one-menu').removeClass('menuActive')
+        $(this).next().slideToggle()
+        if ($(this).next().offset().top + $(this).next().find('.J_menuItem').length * 60 > _height) {
+            $('#selectbox .scroll-box').animate({scrollTop: $(this).offset().top - 185 + 'px'}, 500)
+        } else {
+            $('#selectbox .scroll-box').animate({scrollTop: 0 + 'px'}, 500)
+        }
+    })
+
+    function loginOut() {
+        $.ajax({
+            type: 'GET',
+            url: qp_url + "admin/index/logout?token=" + getStorage('token'),
+            dataType: "json",
+            success: function (rsp) {
+                console.log(rsp)
+                if (rsp.status == 1) {
+                    window.location.href = 'login.html'
+                    delStorage('token')
+                } else {
+                    alert(rsp.msg);
+                }
+            }
+        });
+    }
+
+
+    $('#myTab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+
+    function popList() {
+        $('#poplist').toggle()
+        $('.hdicon').toggleClass('glyphicon-triangle-top')
+    }
+    //绑定IP
+    function BindIp(id) {
+        var data = {};
+        data.isbind = id;
+    }
+
+    function CallBack(result, fn) {
+        if (fn == "bindip") {
+            $(".header-list a:eq(2)").remove();
+            $(".header-list a:eq(1)").after(result.IsBind > 0 ? "<a href='javascript:void(0);' onclick='BindIp(0);'>绑定IP</a>" : "<a href='javascript:void(0);' onclick='BindIp(1);'>取消绑定</a>");
+        }
+    }
+
+    function ShowHide(obj) {
+        //var oStyle = obj.style;
+        //var imgId = obj.id.replace("M", "S");
+        var picid = obj.replace(/M/g, "P")
+        var $self = $("#" + obj);
+        if ($self.css('display') == "none") {
+            $self.show();
+            $("#" + picid).attr("src", "http://qq.com/Content/images/arrBig.gif");
+        } else {
+            $self.hide();
+            $("#" + picid).attr("src", "http://qq.com/Content/images/arrBig1.gif");
+        }
+        //oStyle.display == "none" ? oStyle.display = "block" : oStyle.display = "none";
+        //oStyle.display == "none" ? document.getElementById(imgId).src = "/Content/images/arrBig1.gif" : document.getElementById(imgId).src = "/Content/images/arrBig.gif";
+    }
+
+    function GetUrl(obj, url) {
+        //加入一个随机防止OPEN的缓存
+        vNum = Math.random()
+        vNum = Math.round(vNum * 1000)
+        if (url.valueOf("?") > 0) {
+            url = url + "&" + vNum;
+        } else {
+            url = url + "?" + vNum;
+        }
+        window.open(url, "frm_main_content");
+        var trList = document.getElementsByTagName("tr");
+        for (var i = 0; i < trList.length; i++) {
+            if (trList[i].className == "linkBg") {
+                trList[i].className = "s";
+            }
+        }
+        obj.className = "linkBg";
+    }
+
+    function Redd(url, title, fnub, snub) {
+        $("#frm_main_content").attr("src", url);
+        $(".show-box").show().html(title);
+        $(".one-menu").hide();
+        $(".two-menu").hide();
+        var li = $(".menulist li:eq(" + fnub + ")");
+        $(li).find(".two-menu").show();
+        $(li).find(".two-menu a").removeClass("active");
+        var a = $(li).find(".two-menu a:eq(" + snub + ")").addClass("active");
+    }
+
+
+    $(function () {
+        // 一级菜单栏的切换效果
+        //$(".one-menu a").on("click", function () {
+        //    var _this = $(this);
+        //    _this.parent().siblings().children("a").siblings("ul").hide("slow");
+        //    _this.siblings().toggle("slow");
+        //})
+        // 二级菜单栏的切换效果
+        //$(".two-menu li").on("click", function () {
+        //    $(".one-menu a").removeClass("active");
+        //    $(this).parent().prev().addClass("active")
+        //    $(this).parent().hide("slow");
+        //    $(".two-menu li").removeClass("active");
+        //    $(this).addClass("active");
+        //})
+        // $(".show-box").on("click", function () {
+        //     $(this).hide();
+        //     $(".two-menu").hide();
+        //     $(".one-menu").show("slow");
+        // })
+        // $(".one-menu").on("click", function () {
+        //     // var defaultCheckHtml = $(this).html();
+        //     // $(".show-box").show().html(defaultCheckHtml);
+        //     $(this).parents('.menulist').siblings().find('.two-menu').hide();
+        //     $(this).toggleClass('menuActive')
+        //     $(this).parents('.menulist').siblings().find('.one-menu').removeClass('menuActive')
+        //     $(this).next().slideToggle()
+        //     console.log($(this).next().offset().top, $(this).next().find('.J_menuItem').length * 60)
+        //     if ($(this).next().offset().top + $(this).next().find('.J_menuItem').length * 60 > _height) {
+        //         $('#selectbox .scroll-box').animate({scrollTop: $(this).next().offset().top + $(this).next().find('.J_menuItem').length * 60 + 'px'}, 1000)
+        //     }
+        // })
+        // $(".two-menu a").on("click", function () {
+        //     $(".two-menu a").removeClass("active");
+        //     $(this).addClass("active");
+        // })
+    })
+
+
+    //弹窗拖动效果start
+    function Drag(boxName, dragName) {
+        // 获取标签------拖拽小块、父级
+        this.box = $(boxName)[0];
+        this.drag = $(dragName)[0];
+        // 记录父元素距离窗口的距离
+        //this.parentX = this.box.offsetLeft;
+        //this.parentY = this.box.offsetTop;
+        // 块自身的宽度
+        this.dragW = this.drag.clientWidth;
+        this.dragH = this.drag.clientHeight;
+        this.lenX = 0;//鼠标相对窗口x的距离
+        this.lenY = 0;//鼠标相对窗口y的距离
+        var _this = this;
+
+
+        this.drag.onmousedown = function (e) {
+            _this.lenX = e.clientX + document.body.scrollLeft - _this.drag.offsetLeft;
+            _this.lenY = e.clientY + document.body.scrollTop - _this.drag.offsetTop;
+            //alert(this.lenX + "|" + this.lenY)
+            var evt = e || window.event;
+            _this.dragStart();
+        }
+
+        this.limitX = this.box.clientWidth - this.drag.clientWidth;
+        this.limitY = this.box.clientHeight - this.drag.clientHeight;
+        this.sportX = 0;
+        this.sportY = 0;
+    }
+
+    // 拖拽开始
+    Drag.prototype.dragStart = function () {
+        var _this = this;
+
+        document.onmousemove = function (e) {
+            e.preventDefault();
+
+            var evt = e || window.event;
+            _this.dragMove(evt);
+        }
+        document.onmouseup = function () {
+            _this.dragEnd();
+        }
+    }
+    // 拖拽移动
+    //Drag.prototype.dragMove = function (e) {
+    //    e.preventDefault();
+    //    this.drag.style.left = e.clientX - this.parentX - (this.dragW / 2) + "px";
+    //    this.drag.style.top = e.clientY - this.parentY - (this.dragH / 2) + "px";
+
+    //}
+    // 拖拽结束
+    Drag.prototype.dragEnd = function () {
+        document.onmousemove = null;
+    }
+
+    //function LimitDrag(boxName, dragName) {
+    //    Drag.call(this, boxName, dragName)
+    //    this.limitX = this.box.clientWidth - this.drag.clientWidth;
+    //    this.limitY = this.box.clientHeight - this.drag.clientHeight;
+    //    this.sportX = 0;
+    //    this.sportY = 0;
+    //}
+
+    // 方法的继承
+    //for (var i in Drag.prototype) {
+    //    LimitDrag.prototype[i] = Drag.prototype[i];
+    //}
+
+    // 重写父类的方法
+    Drag.prototype.dragMove = function (e) {
+        this.sportX = e.clientX - this.lenX;
+        this.sportY = e.clientY - this.lenY;
+
+            if (this.sportX <= 0) {
+                this.sportX = 0;
+            }
+            if (this.sportX >= this.limitX) {
+                this.sportX = this.limitX;
+            }
+            if (this.sportY <= 0) {
+                this.sportY = 0;
+            }
+            if (this.sportY >= this.limitY) {
+                this.sportY = this.limitY;
+            }
+            this.drag.style.left = this.sportX + "px";
+            this.drag.style.top = this.sportY + "px";
+        }
+        //new Drag("#frm_main_content", "#pop");
+        //弹窗拖动效果end
+        // $.ajax({
+    //     type: "post",
+    //     headers: {"auth": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjExMTEiLCJpYXQiOjE1NjMzNDgxMDAsImV4cCI6MTU2MzM1NTMwMH0.NBUGhXbb-3ykDg9E-RjqmuhIt16uq4p_-nYgTvHZKPw"},
+    //     // data:{
+    //     //     email:"123@qq.com",
+    //     //     passWord:"1212"
+    //     // },
+    //     success: function (data) {
+    //         console.log(data)
+    //         // localStorage.setItem("token",data.data.token)
+    //     }
+    // })
+
+
+    // $.ajax({
+    //     type:"post",
+    //     headers: {"auth": localStorage.getItem("token")},
+    //     data:{
+    //         email:"123@qq.com",
+    //         passWord:"1212"
+    //     },
+    //     success:function(data){
+    //         console.log(data)
+    //         localStorage.setItem("token",data.data.token)
+    //     }
+    // })
+</script>
+</body>
+</html>

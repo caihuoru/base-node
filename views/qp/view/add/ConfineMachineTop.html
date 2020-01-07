@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台管理-机器码注册数【TOP100】</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：后台管理-机器码注册数【TOP100】 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div style="padding:5px 15px; text-align:right;">
+                            <a class="btn btn-primary" href="javascript:void(0)" onclick="add();">
+                                <i class="glyphicon glyphicon-retweet"></i>
+                                永久限制注册/登录
+                            </a>
+                            <a class="btn btn-danger" href="javascript:void(0)" onclick="window.close();">
+                                <i class="glyphicon glyphicon-off"></i>
+                                关闭
+                            </a>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                        <table style="display: none"
+                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                            <tr role="row">
+                                <th>
+                                    <input name="ckall" type="checkbox" value="" onclick="SelectAll(this,'cid')"/>
+                                </th>
+                                <th>排名</th>
+                                <th>机器码</th>
+                                <th>注册人数</th>
+                                <th>限制登录</th>
+                                <th>限制注册</th>
+                                <th>限制的失效时间</th>
+                            </tr>
+                            </thead>
+                            <tbody role="alert" aria-live="polite" aria-relevant="all">
+                            <tr class="odd">
+                                <td><input name='cid' type='checkbox' value=''/></td>
+                                <td>1</td>
+                                <td></td>
+                                <td>4</td>
+                                <td>正常</td>
+                                <td>正常</td>
+                                <td>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--分页控件-->
+                        <div class="row">
+                            <div class="col-md-6">
+
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [], table;
+    layui.use(['table', 'layer'], function () {
+        table = layui.table;
+        var layer = layui.layer
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            , url: qp_url + 'admin/Account/ConfineMachineTop' //数据接口
+            , where: {
+                token: getStorage('token')
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    // "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data //解析数据列表
+                };
+            }
+            , page: false
+            , cols: [[ //表头
+                {type: 'checkbox'}
+                , {type: 'numbers', title: '排名'}
+                , {field: 'RegisterMachine', title: '机器码'}
+                , {field: 'Counts', title: '注册人数'}
+                , {
+                    field: 'EnjoinLogon', title: '限制登录', templet: function (d) {
+                        // console.log(d);
+                        if (d.EnjoinLogon == 1) {
+                            return '<span class="wrong">禁止</span>'
+                        } else {
+                            return '<span class="normal">正常</span>'
+                        }
+                    }
+                }
+                , {
+                    field: 'EnjoinRegister', title: '限制注册', templet: function (d) {
+                        if (d.EnjoinRegister == 1) {
+                            return '<span class="wrong">禁止</span>'
+                        } else {
+                            return '<span class="normal">正常</span>'
+                        }
+                    }
+                }
+                , {field: 'EnjoinOverDate', title: '限制的失效时间'}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+        //监听复选框选择事件
+        table.on('checkbox(test)', function (obj) {
+            var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+            selectRows = checkStatus.data
+        });
+    });
+
+    function add() {
+        var data = {
+            token: getStorage('token')
+        };
+        // var cid = GetSelectValues();
+        var cid = GetSelectedDatas(selectRows, 'RegisterMachine');
+        if (cid == "") {
+            layer.alert('未选中任何数据', {
+                icon: 7,
+                skin: 'layer-ext-moon'
+            })
+            return;
+        }
+        data['cid'] = cid;
+        if (data.cid != null) {
+
+            layer.confirm('确定对' + data.cid + '永久限制登录/注册吗？', {
+                icon: 3,
+                title: '提示',
+                btn: ['确定', '取消']
+            }, function (index) {
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + 'admin/Account/AddConfineMachineTop?token='+getStorage('token'),
+                    data: data,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.status == 1) {
+                            layer.msg(res.msg, {time: 1000, icon: 1})
+                            table.reload('layTable')
+                        } else {
+                            layer.msg(res.msg, {time: 1000, icon: 1})
+                        }
+                    }
+                })
+                layer.close(index);
+            });
+            // AjaxSubmit("/Account/DelConfineMachine", data, callBack, "del");
+        }
+
+        // AjaxSubmit("/Account/AddConfineMachineTop", data, callBack, "add");
+    }
+
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "add":
+                alert(jsonData.Msg);
+                window.close();
+                window.opener.location.reload();
+                break;
+        }
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+</script>
+</body>
+</html>

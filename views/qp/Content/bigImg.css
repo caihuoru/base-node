@@ -1,0 +1,138 @@
+
+/*************************************************Rest Start*************************************************/
+body{font:14px/1.5 "Microsoft YaHei","\5FAE\8F6F\96C5\9ED1,\9ED1\4F53","\5b8b\4f53",arial,Helvetica,Tahoma,sans-serif;margin:0 auto;color:#333;}
+p,ul,ol,dl,dt,dd,h1,h2,h3,h4,h5,h6,form,input,select,button,textarea,iframe{margin:0;padding:0;}
+img{border:0 none;vertical-align:top;}
+ul,li,ol{list-style-type:none;}
+table{border-collapse:collapse;border-spacing:0;}
+i,em,address,caption,cite,code,dfn,var{font-style:normal;font-weight:normal;}
+a{color:#333;text-decoration:none; }
+a:hover{color:#777;}
+a,a:hover{outline:0;}
+input,button,textarea,select,optgroup,option{font-family:"Microsoft YaHei","\5FAE\8F6F\96C5\9ED1,\9ED1\4F53","\5b8b\4f53",arial,Helvetica,Tahoma,sans-serif; font-size: inherit; font-style: inherit; font-weight: inherit; outline: 0;}
+
+.cl:after,.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+.cl,.clearfix{zoom:1}
+@font-face {font-family: "picIcon";
+    src: url('fonts/iconfont.eot'); /* IE9*/
+    src: url('fonts/iconfont.eot') format('embedded-opentype'), /* IE6-IE8 */
+    url('fonts/iconfont.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+    url('fonts/iconfont.svg') format('svg'); /* iOS 4.1- */
+}
+.picView-magnify-list{}
+.picView-magnify-list li{float:left;display:inline-block;width:100px;height:60px;border:1px solid #ccc;margin-right:10px;}
+.picView-magnify-list li a{display:block;overflow:hidden;}
+.picView-magnify-list li a img{width:100px;height:60px;}
+
+.magnify-toolbar .magnify-btn,.magnify-btn-close,.magnify-loader{
+    font-family: "picIcon" !important;
+    font-size: 25px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@-webkit-keyframes icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+.magnify-modal {
+    position: fixed;
+    z-index: 9999;
+    width: 800px;
+    height: 600px;
+    background-color: #333;
+    background-color: rgba(0, 0, 0, 0.85);
+    -webkit-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+    cursor: default;
+}
+
+.magnify-header {
+    position: relative;
+    height: 40px;
+    z-index:9;
+}
+
+.magnify-footer {
+    height: 50px;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    z-index:9;
+}
+
+.magnify-toolbar{
+    display: inline-block;
+    height: 50px;
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+.magnify-toolbar .magnify-btn{display:inline-block;width:50px;height:50px;margin:0;color:#999;line-height:50px;}
+.magnify-btn-close{width:40px;height:40px;margin:0;color:#999;line-height:40px;position: absolute;right:0;top:0;font-size:15px;text-align:center;}
+.magnify-toolbar .magnify-btn:hover,.magnify-btn-close:hover{color:#fff;}
+
+
+.magnify-btn-close:before{content: "\ea4f"}
+.magnify-btn-zoomIn:before{content: "\e7dd"}
+.magnify-btn-zoomOut:before{content:'\e7dc'}
+.magnify-btn-prev:before{content:'\e624'}
+.magnify-btn-next:before{content:'\e9ce'}
+.magnify-btn-fullScreen:before{content:'\e63f'}
+.magnify-btn-actualSize:before{content:'\e615'}
+.magnify-btn-rotateLeft:before{content:'\ece3'}
+.magnify-btn-rotateRight:before{content:'\ece4'}
+.magnify-loader:before{content:'\e600'}
+.magnify-loader{
+    -webkit-animation: icon-spin 1s infinite steps(8);
+    -o-animation: icon-spin 1s infinite steps(8);
+    animation: icon-spin 1s infinite steps(8);
+    width:50px;
+    height:50px;
+    text-align:center;
+    line-height:50px;
+    color:#999;
+    font-size:35px;
+    position:absolute;
+    left:50%;
+    margin-left:-25px;
+    top:40%;
+}
+
+.magnify-title{font-size:14px;white-space: nowrap;text-overflow: ellipsis;user-select: none;overflow:hidden;color:#fff;padding:0 40px 0 15px;line-height:40px;}
+
+.magnify-image{display:none;position:relative;max-width: none}
+.magnify-stage{position:absolute;left:0;right:0;bottom:0;top:0;border:none;overflow:hidden;}
+
+.is-grab {
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+.is-grabbing {
+    cursor: move;
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+}

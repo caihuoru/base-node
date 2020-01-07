@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台系统 - 邮件系统</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link href="../Content/layui-v2.5.4/layui/css/layui.css" rel="stylesheet"/>
+    <style type="text/css">
+        .panel-body .row div:first-child {
+            text-align: right;
+        }
+
+        .layui-upload-list {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .panel-body .row div:first-child {
+            width: 120px;
+        }
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box-inner margin-t-10">
+            <div class="box-header well" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：后台系统 - 邮件系统 - 发送邮件 </h2>
+                <div class="box-icon">
+                    <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                        <i class="glyphicon glyphicon-repeat"></i>
+                    </a>
+                    <a href="#" class="btn btn-minimize btn-round btn-default">
+                        <i class="glyphicon glyphicon-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="box-content" style="overflow: hidden; display: block;">
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="inline">
+                                <select id="pid" class="form-control input-sm">
+                                    <option value="1">收件人ID</option>
+                                    <option value="2">收件人账号</option>
+                                    <option value="3">渠道ID</option>
+                                    <option value="4">全渠道</option>
+                                </select>
+                            </div>
+                            <div class="inline">
+                                <input class="form-control input-sm"
+                                       type="text"
+                                       id="identify"
+                                       placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="inline">标题：</div>
+                            <div class="inline">
+                                <input class="form-control input-sm"
+                                       id='title' type="text" placeholder="请输入邮件标题" value="">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="inline" style="vertical-align: top">内容：</div>
+                            <div class="inline">
+                                <textarea class="form-control "
+                                          id="content" style="width: 300px" rows="5" type="text"
+                                          placeholder="请输入邮件内容"
+                                          value=""></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-1" style="text-align:right;"></div>
+                            <div class="col-md-4" style="text-align:left;">
+                                <a class="btn btn-danger" href='javascript:window.close()'>
+                                    <i class="glyphicon glyphicon-off"></i>关闭
+                                </a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn btn-outline-success" onclick="save()"><i
+                                        class="glyphicon glyphicon-send"></i>保存
+                                </button>
+                            </div>
+                            <div class="col-md-4" style="text-align:left;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script>
+    layui.use('layer', function () {
+        var layer = layui.layer
+    })
+    function save() {
+        var postData = {
+            send_type: $('#pid').val(),
+            send_identify: $('#identify').val(),
+            title: $('#title').val(),
+            content: $('#content').val(),
+        }
+        console.log(postData);
+        if (postData.send_identify.trim() == "") {
+            layer.alert('请输入收件人信息！')
+            return
+        }
+        if (postData.title.trim() == "") {
+            layer.alert('请输入邮件标题！')
+            return
+        }
+        if (postData.content.trim() == "") {
+            layer.alert('请输入邮件内容！')
+            return
+        }
+        $.post(qp_url + 'admin/Email/addEmail?token='+getStorage('token'), postData, function (res) {
+            if (res.status == 1) {
+                layer.msg(res.msg, {time: 1000, icon: 1})
+                setTimeout(function () {
+                    window.close()
+                },1000)
+                window.opener.reloadTable()
+            } else {
+                layer.msg(res.msg, {time: 1000, icon: 2})
+            }
+        }, 'json')
+    }
+</script>
+</body>
+</html>

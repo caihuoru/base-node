@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>财务系统 - 金币交易设置</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+
+    <style>
+        .x5 {
+            width: 80px;
+            height: 25px;
+            border: 1px solid #ABADB3;
+            font-size: 14px;
+            background-color: #FFFFFF;
+            line-height: 25px;
+            margin-right: 6px;
+        }
+
+        .error-bord {
+            border: 2px solid red;
+        }
+
+        .panel-body .row div:first-child {
+            text-align: right;
+            width: 145px;
+        }
+
+        .panel-body input[type='text'] {
+            text-align: center;
+        }
+
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="info">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：财务系统 - 金币交易设置</h2>
+            </div>
+            <div class="tab-content padding-margin-0">
+
+                <div class="panel panel-info no-bord">
+
+                    <div class="panel-heading no-bord-radio">
+                        <h3 class="panel-title">金币交易设置</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">系统是否开启：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input type="checkbox" class="fxk" name="checkbox" id="systemSwitch"
+                                       value="1" v-model="info.IsOpen"/>开启
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">锁定金币出售：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="regGoldCanSale" type="radio" value="1" id="cs" v-model="info.IsSale"/>
+                                <label for="cs">出售</label>
+                                <input name="regGoldCanSale" type="radio" value="0" checked="checked" id="bcs"
+                                       v-model="info.IsSale"/>
+                                <label for="bcs">不出售</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">出款限制局数：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="GameCnt" class="x5" type="text"
+                                       id="leastCount" v-model="info.GameCnt"
+                                       :class="{'error-bord':errors.has('GameCnt')}"
+                                       v-validate="'required|decimal:0'"
+                                />局 &nbsp;填写玩家多少局后才可以兑换金币
+                                <span class="wrong" v-show="errors.has('GameCnt')">限制局数请输入整数</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">出款限制流水：</div>
+                            <div class="col-xs-8 col-md-8">
+                                <input name="TurnoverLimit" class="x5" type="text" id="minliushui" value="0"
+                                       :class="{'error-bord':errors.has('TurnoverLimit')}"
+                                       v-model="info.TurnoverLimit"
+                                       v-validate="'required|decimal:2|min_value:0'"
+                                />元 &nbsp;填写玩家流水达到多少金币后才可以兑换
+                                <span class="wrong" v-show="errors.has('TurnoverLimit')">限制流水输入不合法</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">出款时间：</div>
+                            <div class="col-xs-6 col-md-8" id="opdayTD">
+                                <input type="checkbox" class="fxk" name="checkbox" value="1" id="w1"/>周一
+                                <input type="checkbox" class="fxk" name="checkbox" value="2" id="w2"/>周二
+                                <input type="checkbox" class="fxk" name="checkbox" value="4" id="w3"/>周三
+                                <input type="checkbox" class="fxk" name="checkbox" value="8" id="w4"/>周四
+                                <input type="checkbox" class="fxk" name="checkbox" value="16" id="w5"/>周五
+                                <input type="checkbox" class="fxk" name="checkbox" value="32" id="w6"/>周六
+                                <input type="checkbox" class="fxk" name="checkbox" value="64" id="w7"/>周日
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1"></div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="Shour" type="text" class="x5" id="openTime1" value=""
+                                       v-model="info.Shour"
+                                       v-validate="'required|numeric|min_value:0|max_value:24'"
+                                />--
+                                <input name="Ehour" type="text" class="x5" id="openTime2" value=""
+                                       v-model="info.Ehour"
+                                       v-validate="'required|numeric|min_value:0|max_value:24'"
+                                />
+                                <span class="wrong"
+                                      v-show="errors.has('Shour') || errors.has('Ehour')"> 开放时段取值在：0-24</span>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">每天限制出售：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="DailyApplyTimes" class="x5" type="text" id="saleTimes" value=""
+                                       v-model="info.DailyApplyTimes"
+                                       :class="{'error-bord':errors.has('DailyApplyTimes')}"
+                                       v-validate="'required|decimal:0|min_value:0'"
+                                />次 &nbsp;&nbsp;不限制次数请设置为0
+                                <span class="wrong" v-show="errors.has('DailyApplyTimes')"> 请输入限制出售次数，值为整数</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">金币出售价格：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="BalancePrice" class="x5" type="text" id="ratio" value=""
+                                       v-model="info.BalancePrice"
+                                       disabled
+                                       :class="{'error-bord':errors.has('BalancePrice')}"
+                                       v-validate="'required|decimal:2|min_value:0'"
+                                />金币=1元
+                                <span class="wrong" v-show="errors.has('BalancePrice')"> 金币出售价格不合法</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--                                <div class="col-xs-2 col-md-1">最少出售金币：</div>-->
+                            <div class="col-xs-2 col-md-1">出款限制：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="MinBalance" class="x5" type="text" id="leastScore" value=""
+                                       v-model="info.MinBalance"
+                                       :class="{'error-bord':errors.has('MinBalance')}"
+                                       v-validate="'required|decimal:2|min_value:0'"
+                                />
+                                金币
+                                <span class="wrong" v-show="errors.has('MinBalance')"> 出款限制不合法</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--                                <div class="col-xs-2 col-md-1">交易手续费：</div>-->
+                            <div class="col-xs-2 col-md-1">出款税率：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="CounterFee" class="x5" type="text" id="serverChargeRatio" value=""
+                                       v-model="info.CounterFee"
+                                       :class="{'error-bord':errors.has('CounterFee')}"
+                                       v-validate="'required|decimal:2|min_value:0|max_value:100'"
+                                />
+                                %交易金额
+                                <span class="wrong" v-show="errors.has('CounterFee')"> 出款税率取值0-100</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">最低手续费：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="MinCounterFee" class="x5" type="text" id="leastCharge" value=""
+                                       v-model="info.MinCounterFee"
+                                       :class="{'error-bord':errors.has('MinCounterFee')}"
+                                       v-validate="'required|decimal:2|min_value:0'"
+                                />元
+                                <span class="wrong" v-show="errors.has('MinCounterFee')"> 最低手续费输入不合法</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--                                <div class="col-xs-2 col-md-1">最低银行金币：</div>-->
+                            <div class="col-xs-2 col-md-1">银行保留金额：</div>
+                            <div class="col-xs-6 col-md-10">
+                                <input name="MinPlayerScore" class="x5 layui-input" type="text" id="leastPower"
+                                       value="10"
+                                       v-model="info.MinPlayerScore"
+                                       :class="{'error-bord':errors.has('MinPlayerScore')}"
+                                       v-validate="'required|decimal:2|min_value:0'"
+                                />金币&nbsp;
+                                &nbsp;玩家银行金币只有大于此设置才能进入交易页面
+                                <span class="wrong" v-show="errors.has('MinPlayerScore')"> 金额不合法</span>
+                            </div>
+                        </div>
+                        <div class="row" style="display: none;">
+                            <div class="col-xs-2 col-md-1">交易金额倍数：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input name="DrawMultiple" class="x5" type="text" id="drawMultiple" value=""
+                                       v-model="info.DrawMultiple"
+                                       :class="{'error-bord':errors.has('DrawMultiple')}"
+                                       v-validate="'required|decimal:2|min_value:0'"
+                                />倍
+                                <span class="wrong" v-show="errors.has('DrawMultiple')"> 交易金额倍数不合法</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-outline-success search btn-md" href="#" @click="Save"><i
+                                        class="glyphicon glyphicon-save"></i>保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script src="../Content/veevalidate/vee-validate.js"></script>
+<script src="../Content/veevalidate/zh_CN.js"></script>
+<script src="../Content/veevalidate/config.js"></script>
+<script type="text/javascript">
+    layui.use(['layer', function () {
+        var layer = layui.layer
+    }]);
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            info: {},
+        },
+        mounted: function () {
+            var that = this;
+            //获取显示的信息
+            $.ajax({
+                type: 'POST',
+                url: qp_url + 'admin/Promoter/getTradeSetInfo?token=' + getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 1) {
+                        that.info = res.data[0]
+                        let totl = res.data[0].WeekOpenDay
+                        for (var i = 6; i >= 0; i--) {
+                            if (totl - Math.pow(2, i) >= 0) {
+                                totl -= Math.pow(2, i)
+                                $("#w" + (i + 1)).prop("checked", true);
+                            }
+                        }
+                    }
+                }
+            })
+        },
+        methods: {
+            Save: function () {
+                var openDate = 0;
+                $("#opdayTD").children().each(function (i) {
+                    var _this = $(this);
+                    if (_this.prop("checked")) {
+                        openDate |= _this.val()
+                    }
+                });
+                this.info['WeekOpenDay'] = openDate
+                this.info['ID'] = 2
+                this.info.IsOpen = this.info.IsOpen ? '1' : 0
+                this.$validator.validate().then(valid => {
+                    if (valid) {
+                        $.ajax({
+                            type: 'POST',
+                            url: qp_url + 'admin/trade/UpdateTradeSet?token=' + getStorage('token'),
+                            data: this.info,
+                            dataType: 'json',
+                            success: function (res) {
+                                layer.msg(res.msg, {time: 1000, icon: res.status ? 1 : 2})
+                            }
+                        })
+                    } else {
+                        layer.msg('输入信息有误！', {time: 1000, icon: 2})
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

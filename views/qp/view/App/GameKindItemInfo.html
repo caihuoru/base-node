@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>游戏系统 - 游戏管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <script src="../../Content/laydate/laydate.js"></script>
+    <style type="text/css">
+        .panel-body .row div:first-child {
+            width: 120px;
+            text-align: right;
+        }
+
+        .panel-body .row input[type='text'] {
+            max-width: 350px;
+            display: inline;;
+        }
+
+        [type=radio]:checked,
+        [type=radio]:not(:checked) {
+            position: absolute;
+            left: auto;
+            opacity: 1;
+        }
+
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：游戏系统 - 游戏管理</h2>
+            </div>
+            <ul class="media nav nav-tabs margin-b-10">
+                <li><a href="../gameManage.html">模块</a></li>
+                <li class="active"><a href="GameKindItemList.html?tag=c&title=游戏管理" title="游戏">游戏</a></li>
+                <li><a href="GameTypeItemList.html?tag=c&title=游戏类型管理" title="类型">类型</a></li>
+                <li><a href="MobileKindList.html?tag=c&title=手游管理" title="手游">手游</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">新增游戏信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">游戏标识：</div>
+                            <div class="col-xs-6 col-md-3"><input type="text" placeholder="请输入游戏标识" id="txtKindID"
+                                                                  class="form-control input-sm" maxlength="9"
+                                                                  onkeyup="if(isNaN(value))execCommand('undo')"
+                                                                  value="10000"></div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left;color:red;">请输入正确的游戏标识，必须为整数</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">游戏名称：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtKindName" placeholder="请输入游戏名称"
+                                                                  class="form-control input-sm" type="text"
+                                                                  maxlength="31" value=""></div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">游戏类型：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select class="form-control input-sm input-width-150" id="ddlTypeID">
+
+                                </select>
+                            </div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">挂接：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select class="form-control input-sm input-width-150" id="ddlJoin">
+                                </select>
+                            </div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">排序：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtSortID" placeholder="请输入排序"
+                                                                  style="display:inline;"
+                                                                  class="form-control input-sm input-width-150"
+                                                                  type="text"
+                                                                  onkeyup="if(isNaN(value))execCommand('undo')"
+                                                                  maxlength="9"
+                                                                  value="0"></div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left;color:red;">请输入正确的排序，必须为整数</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">模块名称：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select class="form-control input-sm input-width-150" id="ddlGameID">
+                                </select>
+                            </div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">进程名字：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtProcessName" placeholder="请输入进程名字"
+                                                                  class="form-control input-sm" type="text"
+                                                                  maxlength="32" value=""></div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">规则路径：</div>
+                            <div class="col-xs-6 col-md-3">
+                                    <textarea id="txtGameRuleUrl" class="form-control input-sm" rows="3"
+                                              maxlength="256"></textarea>
+                            </div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">下载路径：</div>
+                            <div class="col-xs-6 col-md-3">
+                                    <textarea id="txtDownLoadUrl" class="form-control input-sm" rows="3"
+                                              maxlength="256"></textarea>
+                            </div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">赢一局经验：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtWinExperience" placeholder="请输入赢一局经验"
+                                                                  onkeyup="if(isNaN(value))execCommand('undo')"
+                                                                  style="display:inline;"
+                                                                  class="form-control input-sm input-width-150"
+                                                                  type="text" maxlength="9"
+                                                                  value="10.00"></div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left;color:red;">在该游戏中赢一局奖励的经验</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">游戏属性：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="cblGameFlag" value="1"> 新
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="cblGameFlag" value="2"> 荐
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="cblGameFlag" value="4"> 热
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="cblGameFlag" value="8"> 赛
+                                </label>
+                            </div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left;color:red;"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">禁用状态：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <label class="radio-inline">
+                                    <input type="radio" name="rbtnNullity" value="0" class="zhengChang"> 正常
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="rbtnNullity" value="1" class="jinYong"> 禁用
+                                </label>
+                            </div>
+                            <div class="col-xs-3 col-md-4" style="text-align:left;color:red;"></div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-outline-primary search btn-md" href="GameKindItemList.html"><i
+                                        class="glyphicon glyphicon-circle-arrow-left"></i>返回</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="#" onclick="add();"><i
+                                        class="glyphicon glyphicon-send"></i>保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //获取挂接的游戏列表
+    $.ajax({
+        url: qp_url + 'admin/Gamecommon/GetGameList?token=' + getStorage('token'),
+        type: "get",
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            data = data.data;
+            let html = "";
+            for (var i = 0; i < data.length; i++) {
+                html += `<option value="${data[i].KindID}">${data[i].KindName}</option>`
+            }
+            $("#ddlJoin").html(html);
+
+        }
+    })
+    //获取模块名称
+    $.ajax({
+        url: qp_url + 'admin/Gamecommon/ModelNameList?token=' + getStorage('token'),
+        type: "get",
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            data = data.data;
+            let html = "";
+            for (var i = 0; i < data.length; i++) {
+                html += `<option value="${data[i].GameID}">${data[i].GameName}</option>`
+            }
+            $("#ddlGameID").html(html);
+
+        }
+    })
+    //获取游戏类型
+    $.ajax({
+        url: qp_url + 'admin/Gamecommon/GameTypeList?token=' + getStorage('token'),
+        type: "get",
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            data = data.data;
+            let html = "";
+            for (var i = 0; i < data.length; i++) {
+                html += `<option value="${data[i].TypeID}">${data[i].TypeName}</option>`
+            }
+            $("#ddlTypeID").html(html);
+
+        }
+    })
+    var dataObj = {};
+    var array = [];
+    var ID = getUrlParams("KindID");
+    if (ID == null || ID == "null" || !ID) {
+    } else {
+        $("#txtWinExperience").parent().parent().hide();
+        $.ajax({
+            url: qp_url + 'admin/App/GetGameKindItemInfo?token=' + getStorage('token'),
+            type: "post",
+            dataType: "json",
+            data: {
+                KindID: ID
+            },
+            success: function (data) {
+                dataObj = data.data;
+                // console.log(data)
+                $("[name=cblGameFlag]").each(function (i, d) {
+                    array.push(Number($(d).val()));
+                })
+
+                function getRights(num, ary) {
+                    console.log(num)
+                    if (num == 0) {
+                        return []
+                    }
+                    var temp = [];
+                    for (var i = ary.length - 1; i >= 0; i--) {
+                        if (num - ary[i] < 0) {
+                            continue;
+                        } else {
+                            num -= ary[i]
+                            temp.push(ary[i])
+                            $(`[value='${ary[i]}'`).attr("checked", "checked");
+
+                        }
+                    }
+                    return temp
+                }
+
+                getRights(dataObj.GameFlag, array)
+                $("#txtKindID").val(dataObj.KindID);
+                $("#txtKindName").val(dataObj.KindName);
+                $("#ddlTypeID").val(dataObj.TypeID);
+                $("#ddlJoin").val(dataObj.JoinID);
+                $("#txtSortID").val(dataObj.SortID);
+                $("#ddlGameID").val(dataObj.GameID);
+                $("#txtProcessName").val(dataObj.ProcessName);
+                $("#txtGameRuleUrl").val(dataObj.GameRuleUrl);
+                $("#txtDownLoadUrl").val(dataObj.DownLoadUrl);
+                $("#txtWinExperience").val(dataObj.WinExperience);
+                if (dataObj.Nullity === 0) {
+                    $(".zhengChang").attr("checked", "checked");
+                } else {
+                    $(".jinYong").attr("checked", "checked");
+                }
+            }
+        })
+    }
+
+    function add() {
+        var KindID = $("#txtKindID").val();
+        if (KindID == "") {
+            alert("游戏标识不能为空");
+            return false;
+        }
+        if (isNaN(KindID)) {
+            alert("游戏标识为整数");
+            return false;
+        }
+        var KindName = $("#txtKindName").val();
+        if (KindName == "") {
+            alert("游戏名称不能为空");
+            return false;
+        }
+        var TypeID = $("#ddlTypeID").val();
+        if (parseInt(TypeID) < 1) {
+            alert("请选择游戏类型");
+            return false;
+        }
+        var JoinID = $("#ddlJoin").val();
+        //if (parseInt(JoinID) < 1) {
+        //    alert("请选择游戏挂接");
+        //    return false;
+        //}
+        var SortID = $("#txtSortID").val();
+        if (SortID == "") {
+            alert("排序不能为空");
+            return false;
+        }
+        if (isNaN(SortID)) {
+            alert("排序必须为数字");
+            return false;
+        }
+        var GameID = $("#ddlGameID").val();
+        if (parseInt(GameID) < 1) {
+            alert("请选择游戏模块");
+            return false;
+        }
+        var ProcessName = $("#txtProcessName").val();
+        if (ProcessName == "") {
+            alert("进程名称不能为空");
+            return false;
+        }
+
+        var GameRuleUrl = $("#txtGameRuleUrl").val();
+        var DownLoadUrl = $("#txtDownLoadUrl").val();
+        var WinExperience = $("#txtWinExperience").val();
+        // if (WinExperience == "") {
+        //     alert("赢一局经验不能为空");
+        //     return false;
+        // }
+        if (isNaN(WinExperience)) {
+            alert("赢一局经验为数字");
+            return false;
+        }
+        if (parseInt(WinExperience) < 1) {
+            alert("赢一局经验为大于0的数字");
+            return false;
+        }
+        var GameFlag = GetCheckListCheckedSum("cblGameFlag");
+        var Nullity = $('input:radio[name="rbtnNullity"]:checked').val();
+        if (Nullity == null) {
+            alert("请选择禁用状态");
+            return false;
+        }
+        var data = {
+            KindID: KindID,
+            KindName: KindName,
+            TypeID: TypeID,
+            JoinID: JoinID,
+            SortID: SortID,
+            GameID: GameID,
+            ProcessName: ProcessName,
+            GameRuleUrl: GameRuleUrl,
+            DownLoadUrl: DownLoadUrl,
+            GameFlag: GameFlag,
+            Nullity: Nullity,
+            WinExperience: WinExperience,
+            IntParam: parseInt('0')
+        };
+        if (ID == null || ID == "null" || !ID) {
+
+            console.log(data)
+        } else {
+            data.IntParam = data.KindID;
+
+        }
+        $.ajax({
+            url: qp_url + "admin/App/AddGameKindItemInfo?token=" + getStorage('token'),
+            type: "post",
+            data: data,
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                alert(data.msg);
+            }
+        })
+    }
+
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "add":
+                alert(jsonData.Msg);
+                window.location.href = "/App/GameKindItemList"
+                break;
+        }
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>客服中心 - 在线客服</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/bigImg.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link href="../Content/index.css" rel="stylesheet"/>
+    <style>
+        body .form-control {
+            display: inline-block;
+        }
+
+        .layui-table-cell {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content" style="padding-bottom: 0;">
+    <audio src="../Content/images/star.mp3" id="unread"></audio>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner ">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：客服中心 - 在线客服 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--table开始-->
+                    <div class="row" id="table">
+                        <div class="col-12 pb-20" style="overflow-x: hidden;">
+                            <div class="main">
+<!--                                <div class="header" style="line-height: 85px;padding-top: 0;">-->
+<!--                                    人工客服-->
+<!--                                </div>-->
+                                <div id="container">
+                                    <div class="contacts">
+                                        <h1>咨询用户(<span id="num">{{users.length}}</span>)</h1>
+                                        <ul id="users">
+                                            <li v-for="(item,key) in users" :data-name="item.name" :data-scenes="item.scenes" :data-online="item.online" :data-id="item.id" :data-userindex="item.userIndex" :class="{action:action == item.id}" @click="getRecord">
+                                                <img :src="item.img || '../Content/images/headImg.png'">
+                                                <div class="column ml-5">
+                                                    <p class="nickname">{{item.name}}</p>
+                                                    <p style="font-size: 12px;color: #999;">{{item.time}}</p>
+                                                    <p v-if="item.online == 1" style="font-size: 12px;color: red;">在线<span v-if="item.unread == '1'">（未读）</span>-{{item.scenes}}</p>
+                                                    <p v-else style="font-size: 12px;color: #999;">离线<span v-if="item.unread == '1'">（未读）</span>-{{item.scenes}}</p>
+
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <p v-if="!users">当前无人在线哟~</p>
+                                    </div>
+                                    <div class="conversation">
+                                        <ul id="messages" class="messages">
+                                            <li v-for="item in talkIng" :class='item.side'>
+                                                <span class='time'>{{item.time}}</span>
+                                                <img :src="item.img || '../img/headImg.png'">
+                                                <div>
+                                                    <span>{{item.name}}</span>
+                                                    <p v-if="item.type == 'text'">{{item.msg}}</p>
+                                                    <p v-if="item.type == 'img'"><a href="javascript:void(0)" data-magnify="gallery" data-group="g1" :data-src="item.msg" ><img :src="item.msg"/></a></p>
+                                                </div>
+                                            </li>
+                                            <span class="time" v-if="talkIng.length < 1">{{username}} 暂无历史消息</span>
+
+                                        </ul>
+                                        <form action="">
+                                            <div class="edit">
+                                                <input type="file" id="file">
+                                                <i class="fa fa-picture-o" id="img"></i>
+                                            </div>
+                                            <div v-if="scenes" class="recordChange" @click="recordChange" :data-scenes="scenes == '充值' ? '客服' : '充值'">点击查看{{scenes == '充值' ? '客服' : '充值'}}聊天记录</div>
+                                            <!-- autocomplete禁用自动完成功能 -->
+                                            <textarea id="m" autofocus></textarea>
+                                            <button class="btn rBtn" id="sub">发送</button>
+                                            <!--                                    <button class="btn" id="clear">关闭</button>-->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/axios.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Scripts/socket.io.js"></script>
+<script src="../Scripts/bigImg.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    let loading;
+
+    //收放事件
+    $('.btn-minimize').click(function (e) {
+        e.preventDefault();
+        var $target = $(this).parent().parent().next('.box-content');
+        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        $target.slideToggle();
+    });
+    $(function () {
+        var app = new Vue({
+            el: '#table',
+            data: {
+                users:{},
+                username: '',
+                action:'',
+                scenes: '',
+                talkIng:[],
+                userUnread: 1,
+                settings: {
+                    quickly: "订单-支付",
+                }
+            },
+            mounted: function () {
+                var _this = this;
+            },
+            methods: {
+                getRecord(e){
+                    var that = this;
+                    // console.log(e.currentTarget.dataset.id)
+                    bindUser = e.currentTarget.dataset.id;
+                    bindUserName = e.currentTarget.dataset.name;
+                    this.scenes = e.currentTarget.dataset.scenes;
+                    this.action = e.currentTarget.dataset.id;
+                    this.username = e.currentTarget.dataset.name;
+                    this.userUnread = e.currentTarget.dataset.online == 1 ? 0 : 1;
+                    var userIndex = e.currentTarget.dataset.userindex;
+
+                    console.log('userIndex',userIndex)
+                    socket.emit('customerChange', {
+                        customer: nickname,
+                        user: bindUser,
+                    });
+                    socket.emit('unread',{
+                        userIndex: userIndex
+                    })
+                    app.talkIng = []
+                    // app.users[userIndex]['unread'] = 0;
+                    // console.log(' app.users[userIndex]', app.users[userIndex])
+                    var name = e.currentTarget.dataset.name
+                    axios({
+                        method: 'get',
+                        url: request_url2 + 'getChatRecord?name='+name+'&scenes='+that.scenes,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                    }).then(function (res) {
+                        var resData = res.data;
+                        console.log(resData)
+                        app.talkIng = resData;
+                        app.$nextTick(function () {
+                            showBigImg()
+                            scrollToBottom()
+                            setTimeout(function () {
+                                scrollToBottom()
+                            },1000)
+                        })
+                    })
+                },
+                recordChange(e){
+                    var _scenes = e.currentTarget.dataset.scenes;
+                    this.scenes = _scenes
+                    this.talkIng = []
+                    axios({
+                        method: 'get',
+                        url: request_url2 + 'getChatRecord?name='+bindUserName+'&scenes='+_scenes,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                    }).then(function (res) {
+                        var resData = res.data;
+                        console.log(resData)
+                        app.talkIng = resData;
+                        app.$nextTick(function () {
+                            showBigImg()
+                            scrollToBottom()
+                            setTimeout(function () {
+                                scrollToBottom()
+                            },1000)
+                        })
+                    })
+                }
+            }
+        });
+        var bindUser = "",bindUserName;
+        // 用户点击发送表情
+        $("body").on("click", '.emoji li img', function (ev) {
+            var old = $('#m').val();
+            var num = $(this).data("id");
+            $('#m').val(old + '[emoji' + num + ']');
+            $('.selectBox').css('display', "none");
+        });
+        // io-client
+        // 连接成功会触发服务器端的connection事件
+        var nickname,avatar = JSON.parse(getStorage('customerInfo')).avatar || '../img/kf_default@2x.png';
+        var socket = io(request_url2);
+        socket.on('connect', function () {
+            socket.emit('login', {
+                identity: 'customer',
+                name: JSON.parse(getStorage('customerInfo')).nickName,
+                img: avatar
+            });  // 触发登录事件
+            return false;
+        });
+        var my = {};
+        var allYuyan = [];
+
+        // 登录成功，隐藏登录层
+        socket.on('loginSuc', (data) => {
+            console.log('loginSuc',data)
+            $('.name').hide();
+            nickname = data.id;
+            // my.ico = data.img;
+            // my.name = data.name;
+            // bindUser = data.id;
+        })
+        socket.on('loginError', () => {
+            console.log('昵称已存在');
+        });
+        socket.on('userDisconnect',(data) => {
+            console.log('userDisconnect',data)
+            if(app.action == data){
+                app.action = ''
+                app.userUnread = 1;
+                // app.talkIng = []
+                var data = new Date().toTimeString().substr(0, 8);
+                $('#messages').append(`<p class='system'><span>${data}</span><br /><span>该用户离开了客服咨询室<span></p>`);
+                // 滚动条总是在最底部
+                scrollToBottom()
+            }
+        })
+        // 系统提示消息
+        socket.on('system', (user) => {
+            // var data = new Date().toTimeString().substr(0, 8);
+            // $('#messages').append(`<p class='system'><span>${data}</span><br /><span>${user.name}  ${user.status}了客服咨询室<span></p>`);
+            // // 滚动条总是在最底部
+            // $('#messages').scrollTop($('#messages')[0].scrollHeight);
+        });
+
+        // 监听抖动事件
+        socket.on('shake', (user) => {
+            var data = new Date().toTimeString().substr(0, 8);
+            $('#messages').append(`<p class='system'><span>${data}</span><br /><span>${user.name}发送了一个窗口抖动</span></p>`);
+            shake();
+            // 滚动条总是在最底部
+            $('#messages').scrollTop($('#messages')[0].scrollHeight);
+        });
+
+        // 显示在线人员
+        socket.on('disUser', (usersInfo) => {
+            console.log(usersInfo)
+            usersInfo.sort(function (a,b) {
+                return new Date(b.time).getTime() - new Date(a.time).getTime()
+            })
+            app.users = usersInfo;
+            // displayUser(usersInfo);
+        });
+
+        // 发送消息
+        $('#sub').click(sendMsg);
+        $('#m').keyup((ev) => {
+            if (ev.which == 13) {
+                sendMsg();
+            }
+        });
+
+        // 接收消息
+        socket.on('receiveMsg', (obj) => {
+            console.log('talkIng',obj,bindUser)
+            console.log(obj.name , nickname)
+            if(obj.side == 'left' && obj.unread == 1){
+                let unread = document.getElementById('unread');
+                console.log(unread)
+                $('#unread')[0].play();
+                unread.play();
+            }
+            if(obj.my == nickname){
+                obj['img'] = avatar
+            }
+            if(obj.my == bindUser || obj.toUser == bindUser){
+                app.talkIng.push(obj);
+                scrollToBottom()
+                app.$nextTick(function () {
+                    showBigImg()
+                })
+            }
+        });
+
+
+        // 发送消息
+        var color = '#000000';
+
+        function sendMsg() {
+            if ($('#m').val() == '') {
+                alert('请输入内容！');
+                return false;
+            }
+            if (!bindUser) {
+                alert('请选择需要回复的客户！');
+                return false;
+            }
+            color = $('#color').val();
+            socket.emit('sendMsg', {
+                msg: $('#m').val(),
+                color: '#000000',
+                type: 'text',
+                img: avatar,
+                nickname: nickname,
+                scenes: app.scenes,
+                name: JSON.parse(getStorage('customerInfo')).nickName,
+                userId: nickname,
+                toUser: bindUser,
+                toUserName: bindUserName,
+                userUnread: app.userUnread
+            });
+            $('#m').val('');
+            console.log(bindUser)
+            return false;
+        }
+
+        var timer;
+
+        function shake() {
+            $('.main').addClass('shaking');
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                $('.main').removeClass('shaking');
+            }, 500);
+        }
+
+
+        // 清空历史消息
+        $('#clear').click(() => {
+            $('#messages').text('');
+            socket.emit('disconnect');
+        });
+
+        // 渲染表情
+        init();
+
+        function init() {
+            for (var i = 0; i < 141; i++) {
+                $('.emoji').append('<li id=' + i + '><img  data-id=' + (i + 1) + ' src="image/emoji/emoji (' + (i + 1) + ').png"></li>');
+            }
+        }
+
+        // 显示表情
+        $('#smile').click(() => {
+            $('.selectBox').css('display', "block");
+        });
+        $('#smile').dblclick((ev) => {
+            $('.selectBox').css('display', "none");
+        });
+        $('#m').click(() => {
+            $('.selectBox').css('display', "none");
+        });
+
+        // // 用户点击发送表情
+        // $('.emoji li img').click((ev)=> {
+        //     ev = ev || window.event;
+        //     var src = ev.target.src;
+        //     var emoji = src.replace(/\D*/g, '').substr(6, 8);
+        //     var old = $('#m').val();
+        //     $('#m').val(old+'[emoji'+emoji+']');
+        //     $('.selectBox').css('display', "none");
+        // });
+
+        // 用户发送抖动
+        $('.edit #shake').click(function () {
+            socket.emit('shake', {
+                toUser: bindUser,
+                nickname: nickname
+            });
+        });
+
+        // 用户发送图片
+        $('#file').change(function () {
+            var maxWidth = 600;
+            //判断上传文件格式
+            console.log(this.files[0])
+            if (!this.files[0].type.match(/image\/*/)) {
+                return swal('上传的图片格式不正确')
+            }
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function (e) {
+                // 实例一个图片获取图片宽高
+                var img = new Image();
+                img.src = this.result;
+                img.onload = function () {
+                    var _height = img.height, _width = img.width;
+                    if(_width > maxWidth){
+                        var scale = maxWidth / _width;
+                        _width = toFixed2(_width * scale);
+                        _height = toFixed2(_height * scale);
+                    }
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    canvas.width = _width;
+                    canvas.height = _height;
+                    ctx.drawImage(img,0,0,_width,_height);
+                    var imgToBase64 = canvas.toDataURL();
+                    // $('body').append('<img src="' + imgToBase64 + '" style="width:100%;margin: 0">');
+                    $.ajax({
+                        type: 'POST',
+                        url: serverPath + 'saveImg.php',
+                        dataType: 'json',
+                        data: {
+                            name: getDateString('','number')+'.'+getRandomNumber(8),
+                            image: imgToBase64
+                        },
+                        success: function (data) {
+                            var resData = data;
+                            console.log(resData)
+                            if(resData.code == 0){
+                                socket.emit('sendMsg', {
+                                    msg: resData.imgPath,
+                                    color: '#000000',
+                                    img: avatar,
+                                    identity: 'customer',
+                                    type: 'img',
+                                    toUser: bindUser,
+                                    nickname: nickname,
+                                    userId: nickname
+                                });
+                                // app.talkIng.push({
+                                //     msg: resData.imgPath,
+                                //     color: "#000000",
+                                //     identity: 'customer',
+                                //     nickname: nickname,
+                                //     name: JSON.parse(getStorage('customerInfo')).nickName,
+                                //     side: "right",
+                                //     type: "img",
+                                // });
+                                scrollToBottom()
+                                this.$nextTick(function () {
+                                    showBigImg()
+                                })
+                            }                            // console.log(code);
+                        },
+
+                        error: function () {
+                            console.log('出错了！');//原有的提示，建议改善
+                        }
+                    });
+                    console.log('imgWidth:%spx,imgHeight:%spx', _width, _height);
+                }
+            }
+        });
+        function scrollToBottom() {
+            $('#messages').stop().animate({scrollTop:$('#messages')[0].scrollHeight+'px'},1000)
+        }
+        function speak(obj) {
+            $('#messages').html('');
+            console.log("yes",obj)
+            for (var i = 0; i < allYuyan.length; i++) {
+                console.log(i)
+                if ((obj[i].toUser == bindUser && obj[i].my == nickname) || (obj[i].toUser == bindUser && obj[i].my == bindUser) || (obj[i].toUser == nickname && obj[i].my == bindUser)) {
+                    if (obj[i].type == 'img') {
+                        $('#messages').append(`
+                            <li class='${obj[i].side}'>
+                              <img src="${obj[i].img}">
+                              <div>
+                                <span>${obj[i].name}</span>
+                                <p style="padding: 0;">${obj[i].msg}</p>
+                              </div>
+                            </li>
+                          `);
+                        $('#messages').scrollTop($('#messages')[0].scrollHeight);
+                        return;
+                    }
+
+                    // 提取文字中的表情加以渲染
+                    var msg = obj[i].msg;
+                    var content = '';
+                    while (msg.indexOf('[') > -1) {  // 其实更建议用正则将[]中的内容提取出来
+                        var start = msg.indexOf('[');
+                        var end = msg.indexOf(']');
+
+                        content += '<span>' + msg.substr(0, start) + '</span>';
+                        content += '<img src="image/emoji/emoji%20(' + msg.substr(start + 6, end - start - 6) + ').png">';
+                        msg = msg.substr(end + 1, msg.length);
+                    }
+                    content += '<span>' + msg + '</span>';
+
+                    $('#messages').append(`
+                    <li class='${obj[i].side}'>
+                    <span class='time'>${obj[i].time}</span>
+                      <img src="${obj[i].img}">
+                      <div>
+                        <span>${obj[i].name}</span>
+                        <p style="color: ${obj[i].color};">${content}</p>
+                      </div>
+                    </li>
+                  `);
+                    // 滚动条总是在最底部
+                    $('#messages').scrollTop($('#messages')[0].scrollHeight);
+                }
+            }
+        }
+        function showBigImg() {
+            $('[data-magnify]').Magnify({
+                Toolbar: [
+                    'prev',
+                    'next',
+                    'rotateLeft',
+                    'rotateRight',
+                    'zoomIn',
+                    'actualSize',
+                    'zoomOut'
+                ],
+                keyboard:true,
+                draggable:true,
+                movable:true,
+                modalSize:[$(window).width()*0.8,$(window).height()*0.8],
+                beforeOpen:function (obj,data) {
+                    console.log('beforeOpen')
+                },
+                opened:function (obj,data) {
+                    console.log('opened')
+                },
+                beforeClose:function (obj,data) {
+                    console.log('beforeClose')
+                },
+                closed:function (obj,data) {
+                    console.log('closed')
+                },
+                beforeChange:function (obj,data) {
+                    console.log('beforeChange')
+                },
+                changed:function (obj,data) {
+                    console.log('changed')
+                }
+            });
+        }
+
+    })
+
+
+
+</script>
+</body>
+
+</html>

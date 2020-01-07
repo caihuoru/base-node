@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>数据分析 - 清理数据</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link href="../Content/common.css" rel="stylesheet" />
+
+    <style type="text/css">
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+
+<body class="backgroud">
+    <div id="content" class="main-content">
+        <div class="row">
+            <div class="box-inner">
+                <div class="col-md-12">
+                    <div class="box-inner">
+                        <div class="box-header well" data-original-title="">
+                            <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：数据分析 - 清理数据 </h2>
+                            <div class="box-icon">
+                                <a href="#" class="btn btn-round btn-default" onclick="history.go(0)">
+                                    <i class="glyphicon glyphicon-repeat"></i>
+                                </a>
+                                <a href="#" class="btn btn-minimize btn-round btn-default">
+                                    <i class="glyphicon glyphicon-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="box-content tab-content" style="overflow: hidden; display: block;padding: 10px;">
+                            <!--table开始-->
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                                <table
+                                    class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                                    id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>管理</th>
+                                            <th>清理记录截止时间</th>
+                                            <th>数据表名称</th>
+                                            <th>记录总数</th>
+                                            <th>记录最小时间</th>
+                                            <th>记录最大时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all" id="allData">
+                                        <!-- <tr id="tr1">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(1)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_1" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>进出房间记录表</td>
+                                            <td>19562</td>
+                                            <td>2019-07-06</td>
+                                            <td>2019-07-15</td>
+                                        </tr>
+                                        <tr id="tr2">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(2)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_2" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>游戏记录总局表</td>
+                                            <td>1054</td>
+                                            <td>2019-07-08</td>
+                                            <td>2019-07-15</td>
+                                        </tr>
+                                        <tr id="tr3">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(3)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_3" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>游戏记录详情表</td>
+                                            <td>1082</td>
+                                            <td>2019-07-08</td>
+                                            <td>2019-07-15</td>
+                                        </tr>
+                                        <tr id="tr4">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(4)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_4" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>银行操作记录表</td>
+                                            <td>7</td>
+                                            <td>2019-07-09</td>
+                                            <td>2019-07-12</td>
+                                        </tr>
+                                        <tr id="tr5">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(5)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_5" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>金币变化记录表</td>
+                                            <td>1104</td>
+                                            <td>2019-07-06</td>
+                                            <td>2019-07-15</td>
+                                        </tr>
+                                        <tr id="tr6">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(6)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_6" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>推广抽水详情</td>
+                                            <td>0</td>
+                                            <td>2019-07-15</td>
+                                            <td>2019-07-15</td>
+                                        </tr>
+                                        <tr id="tr7">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(7)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_7" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>代理金币变化详情表</td>
+                                            <td>0</td>
+                                            <td>2019-07-15</td>
+                                            <td>2019-07-15</td>
+                                        </tr>
+                                        <tr id="tr8">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(8)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_8" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>代理信息变化记录</td>
+                                            <td>0</td>
+                                            <td>2019-07-15</td>
+                                            <td>2019-07-15</td>
+                                        </tr>
+                                        <tr id="tr9">
+                                            <td><button class="btn btn-outline-danger input-sm"
+                                                    onclick="submitForm(9)"><i
+                                                        class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button>
+                                            </td>
+                                            <td><input id="date_9" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输记录截止时间" /></td>
+                                            <td>管理员操作记录</td>
+                                            <td>28</td>
+                                            <td>2019-07-08</td>
+                                            <td>2019-07-15</td>
+                                        </tr> -->
+                                    </tbody>
+                                </table>
+                                <!--分页控件-->
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                    </div>
+                                    <div class="col-md-6">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--table结束-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Content/laydate/laydate.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <script type="text/javascript">
+        var index;
+        layui.use(['layer'],function () {
+            var layer = layui.layer;
+            index = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+        })
+        $.ajax({
+            url: qp_url + "admin/Analysis/ClearTableData?token=" + getStorage('token'),
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                data = data.data;
+                let html = "";
+                for (var i = 0; i < data.length; i++) {
+                    html += ` <tr id="tr${i + 1}" data-id=${data[i].ID}>
+                        <td><button class="btn btn-outline-danger input-sm" onclick="submitForm(${data[i].ID})"><i class="glyphicon glyphicon-log-out icon-white"></i>确定清除</button></td>
+                        <td><input id="date_${i + 1}" class="input-width-150" type="text" readonly="readonly" placeholder="请输记录截止时间" /></td>
+                        <td>${data[i].TabName}</td>
+                        <td>${data[i].Counts}</td>
+                        <td>${data[i].MinTime}</td>
+                        <td>${data[i].MaxTime}</td>
+                    </tr>`
+                    $("#allData").html(html);
+                }
+                //时间选择器
+                for (var i = 1; i < 10; i++) {
+                    laydate.render({
+                        elem: '#date_' + i
+                        ,theme:'#00B4E5'
+                    });
+                }
+                // docReady();
+            },complete:function () {
+                layer.close(index)
+            }
+        })
+
+
+        var pageObj = {};
+        var postData = {};//搜索条件
+        // function docReady() {
+        //     //收放事件
+        //     $('.btn-minimize').click(function (e) {
+        //         e.preventDefault();
+        //         var $target = $(this).parent().parent().next('.box-content');
+        //         if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        //         else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        //         $target.slideToggle();
+        //     });
+        // }
+
+        function StrToDateTime(timestr) {
+            var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+            return dt;
+        }
+        function submitForm(Id) {
+            pageObj.ID = Id;
+            var time = $("#tr" + Id + " input[type=text]:eq(0)").val().trim();
+            if (time == "") {
+                alert("请输入清理记录截止时间");
+                return false;
+            }
+            pageObj.DateTime = time;
+            $.ajax({
+                url: qp_url + "admin/Analysis/DoClearTableData?token=" + getStorage('token'),
+                type: "post",
+                dataType: "json",
+                data: pageObj,
+                success: function (data) {
+                    alert(data.msg);
+                }
+            })
+
+        }
+        //回调函数
+        function callBack(jsonData, fname) {
+            switch (fname) {
+                case "del":
+                    window.location.reload();
+                    break;
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

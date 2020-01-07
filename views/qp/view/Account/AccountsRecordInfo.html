@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width" />
+    <title>管理后台-用户信息</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link href="../../Content/common.css" rel="stylesheet" />
+    <link href="../../Content/laydate/need/laydate.css" rel="stylesheet" />
+    <style type="text/css">
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="userID">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：管理后台-用户信息</h2>
+            </div>
+            <ul class="media nav nav-tabs margin-b-10">
+                <li>
+                    <a :href="'AccountsInfo.html?param='+userID" title="">基本信息</a>
+                </li>
+                <li>
+                    <a :href="'AccountsDetailInfo.html?param='+userID" title="">详细信息</a>
+                </li>
+                <li>
+                    <a :href="'AccountsTreasureInfo.html?param='+userID" title="">财富信息</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" title="" style="display:none">积分信息</a>
+                </li>
+                <li class="active">
+                    <a href="javascript:void(0);" title="">记录信息</a>
+                </li>
+            </ul>
+            <div class="tab-content" style="margin-top:-11px">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">记录信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-xs-2 col-md-1" style="text-align:right">ID号码：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{info.GameID}}</label></div>
+                            <div class="col-xs-2 col-md-1" style="text-align:right">帐号：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{info.Accounts}}</label></div>
+                        </div>
+
+                    </div>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">基本修改记录</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript:openWindowOwn('RecordAccountsExpendList.html?type=0&param=0' ,'raccounts 0 ',800,500);">历史修改帐号记录</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('RecordAccountsExpendList.html?type=1&param=0', 'RAccounts 0', 800, 500);">
+                                            历史修改昵称记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('RecordPasswdExpendList.html?param=0', 'RPassword 0', 800, 500);">
+                                            历史密码记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('RecordUserInoutList.html?param=0' , 'UserInout 0' , 1800, 800);">
+                                            进出记录
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">财富信息记录</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('RecordDrawInfoList.html?param=0', 'RDrawInfo 0', 1200, 500);">
+                                            游戏记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('RecordInsureList.html?param=0', 'RInsure 0', 1200, 500);">
+                                            保险柜记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('../Filled/ShareInfoList.html?account=', 'ShareDetail 0', 1200, 500);">
+                                            充值记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('RecordGlodList.html?param=0&Account=', 'RecordGlodList 0', 1200, 500);">
+                                            金币变化记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('../Trade.html?param=0&Account=', 'RecordGlodList 0', 1200, 500);">
+                                            提现记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('../Abnormal/AccountGameScore.html?param=0&Account=', 'AccountGameScore 0', 1200, 600);">
+                                            游戏总输赢
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-heading" style="display:none">
+                        <h3 class="panel-title">积分信息记录</h3>
+                    </div>
+                    <div class="panel-body" style="display:none">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordUserScoreInoutList?param=0', 'UserScoreInout 0', 1500, 500);">
+                                            进出记录
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-heading" style="display:none">
+                        <h3 class="panel-title">系统赠送记录</h3>
+                    </div>
+                    <div class="panel-body" style="display:none">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordGrantMemberList?param=0', 'RGrantMember 0', 800, 500);">
+                                            赠送会员记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordGrantTreasureList?param=0', 'RGrantTreasure 0', 800, 500);">
+                                            赠送游戏币记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordGrantExperienceList?param=0', 'RGrantExperience 0', 800, 500);">
+                                            赠送经验记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordGrantScoreList?param=0', 'RGrantScore 0', 800, 500);">
+                                            赠送积分记录
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="list-inline">
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordGrantGameIDList?param=0', 'RGrantGameID 0', 800, 500);">
+                                            赠送靓号记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordGrantClearScoreList?param=0', 'RGrantClearScore 0', 800, 500);">
+                                            清零积分记录
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordGrantClearFlee?param=0', 'RGrantClearFlee 0', 800, 500);">
+                                            清零逃率记录
+                                        </a>
+                                    </li>
+                                    <li></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-heading" style="display:none">
+                        <h3 class="panel-title">魅力兑换记录</h3>
+                    </div>
+                    <div class="panel-body" style="display:none">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+                                    <li>
+                                        <a href="javascript:void(0)" class="l" onclick="javascript: openWindowOwn('/Account/RecordConvertPresentList?param=0', 'RConvertPresent 0', 1200, 500);">
+                                            魅力兑换记录
+                                        </a>
+                                    </li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-danger search btn-md" href="#" onclick="window.close();"><i class="glyphicon glyphicon-off"></i>关闭</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+
+<script type="text/javascript">
+    var param = getUrlParams('param')
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            userID: param,
+            info: {}
+        }, mounted: function () {
+            var that = this;
+            //获取用户信息
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Account/AccountsInfo?token=' + getStorage('token') + '&UserID=' + param,
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    if (res.status == 1) {
+                        that.info = res.data
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                }
+            })
+        }
+    })
+</script>
+
+</body>
+</html>

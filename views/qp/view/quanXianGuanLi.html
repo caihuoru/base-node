@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>权限管理-权限管理</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style>
+        body .form-control {
+            display: inline-block;
+        }
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content margin-t-10">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：权限管理-权限管理 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="btn btn-outline-success search" href="#"
+                               onclick="openWindowOwn('add/QuanXianGuanLi.html?type=add','PlayerControlInfo',800, 500)">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                新增
+                            </a>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
+                        <table class="layui-table" id="treeTable" lay-filter="treeTable"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="status">
+    <input type="checkbox" name="menustatus" value="{{d.id}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="menustatus" {{ d.menustatus == 1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="order">
+    <input name="{{d.id}}" data-id="{{d.id}}" class="list_order layui-input" style="height: 28px;" value=" {{d.sort}}" size="10"/>
+</script>
+<script type="text/html" id="icon">
+    <span class="icon" style="display: inline-block;width: 30px;height: 30px;background: url(../Content/images/{{d.icon}}) left top;background-size: auto 100%"></span>
+</script>
+<script type="text/html" id="action">
+        <span class="layui-btn layui-btn-normal layui-btn-xs" onclick="openWindowOwn('add/QuanXianGuanLi.html?id={{d.id}}&type=edit','PlayerControlInfo',800, 500)">编辑</span>&nbsp;&nbsp;
+        <span class="layui-btn layui-btn-warm layui-btn-xs"  lay-event="del">删除</span>
+<!--    <a href="{:url('ruleEdit')}?id={{d.id}}" class="layui-btn  layui-btn-normal layui-btn-xs">编辑</a>-->
+<!--    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del">删除</a>-->
+</script>
+<script type="text/html" id="topBtn">
+    <a href="{:url('ruleAdd')}" class="layui-btn layui-btn-sm">{:lang('add')}权限</a>
+</script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    var editObj=null,ptable=null,treeGrid=null,tableId='treeTable',layer=null;
+    layui.config({
+        base: '../Content/layui-v2.5.4/layui/extend/'
+    }).extend({
+        treeGrid:'treeGrid'
+    }).use(['jquery','treeGrid','layer','form'], function () {
+        var $=layui.jquery;
+        treeGrid = layui.treeGrid;
+        layer=layui.layer;
+        form = layui.form;
+        ptable=treeGrid.render({
+            id:tableId
+            ,elem: '#'+tableId
+            ,idField:'id'
+            ,url:qp_url+'admin/auth/adminRule?token='+getStorage('token')
+            ,method: 'get'
+            ,response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            }
+            ,parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data //解析数据列表
+                };
+            }
+            ,cellMinWidth: 100
+            ,treeId:'id'//树形id字段名称
+            ,treeUpId:'pid'//树形父id字段名称
+            ,treeShowName:'title'//以树形式显示的字段
+            ,height:'full-140'
+            ,isFilter:false
+            ,iconOpen:true//是否显示图标【默认显示】
+            ,isOpenDefault:true//节点默认是展开还是折叠【默认展开】
+            ,cols: [[
+                {field: 'id', title: 'ID', width: 70, fixed: true},
+                {field: 'icon', align: 'center',title: '图标', width: 60,templet: '#icon'},
+                {field: 'title', align:'left', title: '权限名称', width: 200},
+                {field: 'href', title: '控制器', width: 200},
+                {field: 'menustatus',align: 'center',title: '菜单状态', width: 150,toolbar: '#status'},
+                {field: 'sort',align: 'center', title: '排序', width: 80, templet: '#order'},
+                {width: 160,align: 'center', toolbar: '#action'}
+            ]]
+            ,page:false
+        });
+        treeGrid.on('tool('+tableId+')',function (obj) {
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('您确定要删除该记录吗？', function(index){
+                    var loading = layer.load(1, {shade: [0.1, '#fff']});
+                    $.post(qp_url+'admin/auth/ruleDel?token='+getStorage('token'),{'id':data.id},function (res) {
+                        layer.close(loading);
+                        console.log(res)
+                        if (res.status==1) {
+                            layer.msg(res.msg,{time:1000,icon:1});
+                            obj.del();
+                        }else{
+                            layer.msg(res.msg,{time:1000,icon:2});
+                            treeGrid.render;
+                            return false;
+                        }
+                    },'json')
+                    layer.close(index);
+                });
+            }
+        });
+        form.on('switch(menustatus)', function(obj){
+            loading =layer.load(1, {shade: [0.1,'#fff']});
+            var id = this.value;
+            var menustatus = obj.elem.checked===true?1:0;
+            console.log(id,menustatus)
+            $.post(qp_url+'admin/auth/ruleState?token='+getStorage('token'),{'id':id,'menustatus':menustatus},function (res) {
+                layer.close(loading);
+                console.log(res)
+                if (res.status==1) {
+                    layer.msg(res.msg,{time:1000,icon:1});
+                    treeGrid.render;
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                    treeGrid.render;
+                    return false;
+                }
+            },'json')
+        });
+        $('body').on('blur','.list_order',function() {
+            var id = $(this).attr('data-id');
+            var sort = $(this).val();
+            $.post('{:url("ruleOrder")}',{id:id,sort:sort},function(res){
+                if(res.code==1){
+                    layer.msg(res.msg,{time:1000,icon:1},function(){
+                        location.href = res.url;
+                    });
+                }else{
+                    layer.msg(res.msg,{time:1000,icon:2});
+                    treeGrid.render;
+                }
+            })
+        })
+
+    });
+    function openAll() {
+        var treedata=treeGrid.getDataTreeList(tableId);
+        treeGrid.treeOpenAll(tableId,!treedata[0][treeGrid.config.cols.isOpen]);
+    }
+    //收放事件
+    $('.btn-minimize').click(function (e) {
+        e.preventDefault();
+        var $target = $(this).parent().parent().next('.box-content');
+        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        $target.slideToggle();
+    });
+
+    function windowClose(msg) {
+        console.log(123)
+        history.go(0);
+    }
+    //菜单栏点击事件
+    function GrantManager(opType) {
+        // var cidStr = GetSelectValues();
+        var cidStr = GetSelectedDatas(selectRows);
+        if (cidStr.length > 0) {
+            if (cidStr == "") {
+                layer.alert('未选中任何数据', {
+                    icon: 7,
+                    skin: 'layer-ext-moon'
+                })
+                return;
+            }
+            var data = {cid: cidStr};
+            switch (opType) {
+                //解除绑定代理
+                case "JiechuDaili":
+                    if (confirm("解除后无法恢复，请慎用"))
+                        AjaxSubmit("Account/JiechuDaili.html", data, callBack, "JiechuDaili");
+                    break;
+                //解散桌子
+                case "DissolveTable":
+                    AjaxSubmit("Account/DissolveTable.html", data, callBack, "DissolveTable");
+                    break;
+                //冻结
+                case "FreezeAccount":
+                    AjaxSubmit("Account/FreezeAccount.html", data, callBack, "FreezeAccount");
+                    break;
+                //解冻
+                case "UnfreezeAccount":
+                    AjaxSubmit("Account/UnfreezeAccount.html", data, callBack, "UnfreezeAccount");
+                    break;
+                case "SettingAndroid":
+                    AjaxSubmit("Account/SettingAndroid.html", data, callBack, "SettingAndroid");
+                    break;
+                case "CancleAndroid":
+                    AjaxSubmit("Account/CancleAndroid.html", data, callBack, "CancleAndroid");
+                    break;
+                case "GrantMember":
+                    openWindowOwn('Account/GrantMember.html?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantTreasure":
+                    openWindowOwn('Account/GrantTreasure.html?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantGameID":
+                    openWindowOwn('Account/GrantGameID.html?param=' + cidStr + '&accounts={1}', '_GrantGameID', 600, 400);
+                    break;
+                case "GrantExperience":
+                    openWindowOwn('Account/GrantExperience?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantScore":
+                    openWindowOwn('Account/GrantScore?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantClearScore":
+                    openWindowOwn('Account/GrantClearScore?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantFlee":
+                    openWindowOwn('Account/GrantFlee?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "UpdateIpAddress":
+                    openWindowOwn('Account/IpAddress.html?cid=' + cidStr, '', 600, 300);
+                    break;
+                case "GrantParentAgent":
+                    openWindowOwn('Account/GrantParentAgent.html?param=' + cidStr, '', 600, 300);
+                    break;
+                case "GrantParentSpreader":
+                    openWindowOwn('Account/GrantParentSpreader.html?param=' + cidStr, '', 600, 300);
+                    break;
+
+            }
+        } else {
+            layer.alert('请选择操作项', {
+                icon: 7,
+                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+            })
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "DissolveTable":
+                alert(jsonData.Msg);
+                break;
+            default:
+                alert(jsonData.Msg);
+                AjaxSearch(postData);
+                break;
+        }
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+
+</script>
+</body>
+
+</html>

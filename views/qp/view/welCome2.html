@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>后台管理-欢迎页面</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link href="../Content/common.css" rel="stylesheet" />
+    <link href="../Content/statistics.css" rel="stylesheet">
+    <link rel="stylesheet" href="../Content/home.css">
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Scripts/echarts-all-3.js"></script>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+            background: #F3F6FF;
+        }
+
+        .row {
+            margin: 0;
+        }
+
+        .margin-t36 {
+            margin-top: 36px;
+        }
+
+        .main-content {
+            background: #F3F6FF;
+            width: 100%;
+            padding: 0 30px;
+            box-sizing: border-box;
+        }
+
+        .tab-content {
+            padding: 45px 0 0;
+            background: #F3F6FF;
+        }
+
+        .box-inner {
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content" class="main-content" style="opacity: 0;">
+        <div class="">
+            <div class="carousel">
+                <div>
+                    <select class="form-control inline" style="width: 105px" v-model="showtype" @change="btnQuery(1)">
+                        <option value="0">今日</option>
+                        <option value="1">汇总</option>
+                        <option value="2">历史汇总</option>
+                    </select>
+                    <div v-show="showtype == 1" class="inline">
+                        <input id="txtStartDate" type="text" readonly="readonly"> -
+                        <input id="txtEndDate" type="text" readonly="readonly">
+                        <a class="btn btn-outline-success btn-sm search" href="javascript:void(0);" id="btnquery"
+                            @click="btnQuery"><i class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <div class="row">
+                        <div class="home-item-title inline margin-r39">
+                            系统概况
+                        </div>
+                        <img class="home-refresh" src="../Content/images/home-icon/refresh@2x.png"
+                            onclick="history.go(0);">
+                        <span class="home-tip">实时在线人数：{{userOnlineNum}}人</span>
+                    </div>
+                    <div class="row bg-white margin-t36 col5" style="padding-bottom: 40px;">
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/qiandai@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{allWithdrawAmount}}元</div>
+                                <div>{{date}}总兑换金额</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1  col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/duihuan@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{allWithdrawUser}}人</div>
+                                <div>{{date}}总兑换人数</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/renci@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{allWithdrawTimes}}次</div>
+                                <div>{{date}}总兑换人次</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/g@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{allCloseAmount}}元</div>
+                                <div>{{date}}关闭订单金额</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/danzi@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{allProfit}}元</div>
+                                <div>{{date}}总盈亏</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/dhbl@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <!-- <div>{{withdrawPoint}}%</div> -->
+                                <div>{{withdrawPoint}}</div>
+                                <div>{{date}}兑换比率</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/xtss@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{allRevenue}}元</div>
+                                <div>{{date}}系统税收</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/xtsy@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{allWinLose}}元</div>
+                                <div>{{date}}系统输赢</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/09@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{allPayAmount}}元</div>
+                                <div>{{date}}总充值金额</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row margin-t36">
+                        <div class="home-item-title inline margin-r39">
+                            用户注册
+                        </div>
+                    </div>
+                    <div class="row bg-white margin-t36 col5" style="padding-bottom: 40px;">
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/xz@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{newRegisterUser}}人</div>
+                                <div>新增注册</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1  col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/ios@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{newRegisterIosUser}}人</div>
+                                <div>新增IOS注册</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/az@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{newRegisterAandroidUser}}人</div>
+                                <div>新增安卓注册</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/ip@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{newRegisterIP}}个</div>
+                                <div>新增注册IP</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/bdsj@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{bindPhoneNum}}人</div>
+                                <div>新增绑定手机</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/bdzfb@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{bindZfbNum}}人</div>
+                                <div>新增绑定支付宝</div>
+                            </div>
+                        </div>
+                        <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
+                            <img src="../Content/images/home-icon/bdyhk@2x.png" class="home-section-icon">
+                            <div class="inline" style="vertical-align: middle">
+                                <div>{{bindBankNum}}人</div>
+                                <div>新增绑定银行卡</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-7 col-md-7 col-sm-7 padding-left-0">
+                            <ul id="prog-box">
+                                <p id="total-user">用户总数:{{allUserNum}}人</p>
+                                <li>
+                                    <p class="bar-box" id="prog-val1">
+                                        <span class="bar bar-login"></span>
+                                    </p>
+                                    <h3>用户登录数：</h3>
+                                    <label>{{todayLoginUserNum}}人</label>
+                                </li>
+                                <li>
+                                    <p class="bar-box" id="prog-val2">
+                                        <span class="bar bar-active"></span>
+                                    </p>
+                                    <h3>活跃用户数：</h3>
+                                    <label>{{todayGameUserNum}}人</label>
+                                </li>
+                                <li>
+                                    <p class="bar-box" id="prog-val3">
+                                        <span class="bar bar-hall"></span>
+                                    </p>
+                                    <h3>最高在线人数（大厅）：</h3>
+                                    <label>{{todayClientUserMax}}人</label>
+                                </li>
+                                <li>
+                                    <p class="bar-box" id="prog-val4">
+                                        <span class="bar bar-game"></span>
+                                    </p>
+                                    <h3>最高在线人数（游戏中）：</h3>
+                                    <label>{{todayGameUserMax}}人</label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5">
+                            <!--                            用户注册统计图-->
+                            <div id="echarts1"></div>
+                        </div>
+                    </div>
+                    <div class="row margin-t36">
+                        <div class="home-item-title inline margin-r39">
+                            用户充值
+                        </div>
+                    </div>
+                    <div class="row margin-t36">
+                        <div class="col-lg-6 col-md-6 col-sm-6 padding-left-0 ">
+                            <div id="echarts2" class=""></div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 ">
+                            <div id="echarts3" class=""></div>
+                        </div>
+                    </div>
+                    <div class="row margin-t36">
+                        <div class="col-lg-6 col-md-6 col-sm-6 padding-left-0 ">
+                            <div id="echarts4"></div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div id="echarts5"></div>
+                        </div>
+                    </div>
+                    <div class="row margin-t36">
+                        <div class="home-item-title inline margin-r39">
+                            三方渠道统计
+                        </div>
+                    </div>
+                    <div class="row margin-t36 bg-white padd">
+                        <table id="tab" cellpadding="1" cellspacing="1" border="1">
+                            <tr class="tab-h-title">
+                                <th class="tab-head"><span>老用户</span><span>新用户</span></th>
+                                <th colspan="2">充值（金额/元）</th>
+                                <th colspan="2">充值（人数）</th>
+                                <th colspan="2">充值（人次）</th>
+                            </tr>
+                            <tr>
+                                <th>三方通道</th>
+                                <th>{{oldUserPayAmountThird}}</th>
+                                <th>{{newUserPayAmountThird}}</th>
+                                <th>{{oldUserPayNumThird}}</th>
+                                <th>{{newUserPayNumThird}}</th>
+                                <th>{{oldUserPayTimesThird}}</th>
+                                <th>{{newUserPayTimesThird}}</th>
+                            </tr>
+                            <tr>
+                                <th>VIP充值</th>
+                                <th>{{oldUserPayAmountVIP}}</th>
+                                <th>{{newUserPayAmountVIP}}</th>
+                                <th>{{oldUserPayNumVIP}}</th>
+                                <th>{{newUserPayNumVIP}}</th>
+                                <th>{{oldUserPayTimesVIP}}</th>
+                                <th>{{newUserPayTimesVIP}}</th>
+                            </tr>
+                            <tr>
+                                <th>专享闪付</th>
+                                <th>{{oldUserPayAmountQuick}}</th>
+                                <th>{{newUserPayAmountQuick}}</th>
+                                <th>{{oldUserPayNumQuick}}</th>
+                                <th>{{newUserPayNumQuick}}</th>
+                                <th>{{oldUserPayTimesQuick}}</th>
+                                <th>{{newUserPayTimesQuick}}</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--[if lt IE 9]>
+<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+    <script src="../Content/laydate/laydate.js"></script>
+    <script src="../Scripts/vue.min.js"></script>
+    <script src="../Scripts/axios.js"></script>
+    <script src="../Scripts/pagination.js"></script>
+    <script type="text/javascript">
+        let that = {};
+        var _width = 150 / $('#echarts1').width();
+        $.ajax({
+            type: 'GET',
+            url: qp_url + "admin/Analysis/systemStatistics?token=" + getStorage('token'),
+            dataType: "json",
+            // async: false,
+            success: function (rsp) {
+                if (rsp.status == 1) {
+                    that = rsp.data
+                    that.date = "今日";
+                    that.showtype = 0
+                    $('#prog-val1').css({ 'width': (that.todayLoginUserNum / that.allUserNum) * 100 + '%' })
+                    $('#prog-val2').css({ 'width': (that.todayGameUserNum / that.allUserNum) * 100 + '%' })
+                    $('#prog-val3').css({ 'width': (that.todayClientUserMax / that.allUserNum) * 100 + '%' })
+                    $('#prog-val4').css({ 'width': (that.todayGameUserMax / that.allUserNum) * 100 + '%' })
+                    var myVue = new Vue({
+                        el: '#content',
+                        data: that,
+                        methods: {
+                            btnQuery: function () {
+                                let $this = this;
+                                var txtStartDate = $("#txtStartDate").val();
+                                var txtEndDate = $("#txtEndDate").val();
+                                if ($this.showtype == 1) {
+                                    if (txtStartDate != "" && txtEndDate != "") {
+                                        if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                                            alert("开始日期不能大于结束时间");
+                                            return false;
+                                        }
+                                        if (StrToDateTime(txtEndDate) > StrToDateTime(timestampToTime(new Date() / 1000))) {
+                                            alert("结束时间不能超出今天!");
+                                            return false;
+                                        }
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                                $.ajax({
+                                    type: 'GET',
+                                    url: qp_url + "admin/Analysis/systemStatistics?token=" + getStorage('token'),
+                                    dataType: "json",
+                                    data: function () {
+                                        if ($this.showtype == 0) {
+                                            $this.date = "今日";
+                                            return
+                                        } else if ($this.showtype == 1) {
+                                            $this.date = "汇总";
+                                            return {
+                                                startTime: txtStartDate,
+                                                endTime: txtEndDate
+                                            }
+                                        } else {
+                                            $this.date = "汇总";
+                                            return {
+                                                startTime: "2018-01-01",
+                                                endTime: timestampToTime(new Date() / 1000, true)
+                                            }
+                                        }
+                                    }(),
+                                    success: function (rsp) {
+                                        if (rsp.status == 1) {
+                                            let that = rsp.data;
+                                            for (obj in rsp.data) {
+                                                $this[obj] = that[obj];
+                                            }
+                                            // 重新渲染图表
+                                            rendering(that);
+                                        } else {
+                                            alert(rsp.msg);
+                                        }
+                                    }
+                                })
+
+                            }
+                        }
+                    })
+                    $(document).ready(function () {
+                        //时间选择器
+                        laydate.render({
+                            elem: '#txtStartDate'
+                            , theme: '#00B4E5'
+                        });
+                        laydate.render({
+                            elem: '#txtEndDate'
+                            , theme: '#00B4E5'
+                        });
+                    });
+                    // 默认调用
+                    rendering(that);
+                } else {
+                    alert(rsp.msg);
+                    parent.location.href = 'login.html'
+                }
+            }, complete: function () {
+                $("#content").css({ "opacity": "1" });
+            }
+
+        })
+
+
+        function rendering(that) {
+            // 注册充值比例
+            that.userReg = []
+            let v1 = (that.registerUserPayNum / that.newRegisterUser) * 100 || 0
+            that.userReg.push(v1.toFixed(2))
+            let v2 = (that.bindPhoneNum / that.newRegisterUser) * 100 || 0
+            that.userReg.push(v2.toFixed(2))
+            let v3 = (that.bindZfbNum / that.newRegisterUser) * 100 || 0
+            that.userReg.push(v3.toFixed(2))
+            let v4 = (that.bindBankNum / that.newRegisterUser) * 100 || 0
+            that.userReg.push(v4.toFixed(2))
+
+            // 初始化
+            var chart1 = echarts.init(document.getElementById('echarts1'));
+            var chart2 = echarts.init(document.getElementById('echarts2'));
+            var chart3 = echarts.init(document.getElementById('echarts3'));
+            var chart4 = echarts.init(document.getElementById('echarts4'));
+            var chart5 = echarts.init(document.getElementById('echarts5'));
+
+            // 用户注册
+            chart1.setOption(barOption(that.userReg));
+            // 充值金额
+            chart2.setOption(recharge(that.userPayAmont, '充值金额（元）', 'Recharge amount', false, "金额"));
+            // 充值人数
+            chart3.setOption(recharge(that.userPayNum, '充值人数（人）', 'Recharge number', false, "人数"));
+            // 充值占比
+            chart4.setOption(recharge(that.userPayAmont, '充值占比（元）', 'Recharge percentage', true, "占比"));
+            // 总充值
+            chart5.setOption(recharge(that.allPay, '总充值（元）', 'Total recharge', false, "总金额", true));
+
+        }
+
+        function offsetW() {
+            return (50 - parseInt(_width * 100)) + '%'
+        }
+
+        function barOption(ArrAy_) {
+            return {
+                backgroundColor: '#fff',
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['注册充值比率', '注册绑定手机比率', '注册绑定支付宝比率', '注册绑定银行卡比率'],
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLabel: {
+                            interval: 0,
+                            formatter: function (params) {
+                                if (document.body.clientWidth > 1460) {
+                                    return params;
+                                }
+                                var newParamsName = "";// 最终拼接成的字符串
+                                var paramsNameNumber = params.length;// 实际标签的个数
+                                var provideNumber = 5;// 每行能显示的字的个数
+                                var rowNumber = Math.ceil(paramsNameNumber / provideNumber);// 换行的话，需要显示几行，向上取整
+                                /**
+                                 * 判断标签的个数是否大于规定的个数， 如果大于，则进行换行处理 如果不大于，即等于或小于，就返回原标签
+                                 */
+                                // 条件等同于rowNumber>1
+                                if (paramsNameNumber > provideNumber) {
+                                    /** 循环每一行,p表示行 */
+                                    for (var p = 0; p < rowNumber; p++) {
+                                        var tempStr = "";// 表示每一次截取的字符串
+                                        var start = p * provideNumber;// 开始截取的位置
+                                        var end = start + provideNumber;// 结束截取的位置
+                                        // 此处特殊处理最后一行的索引值
+                                        if (p == rowNumber - 1) {
+                                            // 最后一次不换行
+                                            tempStr = params.substring(start, paramsNameNumber);
+                                        } else {
+                                            // 每一次拼接字符串并换行
+                                            tempStr = params.substring(start, end) + "\n";
+                                        }
+                                        newParamsName += tempStr;// 最终拼成的字符串
+                                    }
+
+                                } else {
+                                    // 将旧标签的值赋给新标签
+                                    newParamsName = params;
+                                }
+                                //将最终的字符串返回
+                                return newParamsName
+                            }
+                        }
+                    }
+                ],
+                legend: {
+                    data: ['注册充值比率', '注册绑定手机比率', '注册绑定支付宝比率', '注册绑定银行卡比率']
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        min: 0,
+                        max: 100,
+                        splitNumber: 5
+                    }
+                ],
+                series: [
+                    {
+                        type: 'bar',
+                        barWidth: '30%',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'top',
+                                formatter: '{c}%',
+                                textStyle: {
+                                    color: '#8E8E8E',
+                                    fontSize: 16,
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: function (params) {
+                                    var colorList = [
+                                        ['#FF66B3', '#FC5299', '#FA397C'],
+                                        ['#AD76FC', '#8A6BFC', '#645FFB'],
+                                        ['#81B4F1', '#7197DE', '#6071C7'],
+                                        ['#F5B48D', '#F99C53', '#FD8825'],
+                                    ];
+                                    var index = params.dataIndex;
+                                    if (params.dataIndex >= colorList.length) {
+                                        index = params.dataIndex - colorList.length;
+                                    }
+                                    return new echarts.graphic.LinearGradient(0, 0, 0, 1,
+                                        [{
+                                            offset: 0,
+                                            color: colorList[index][0]
+                                        },
+                                        {
+                                            offset: 1,
+                                            color: colorList[index][1]
+                                        }
+                                        ]);
+                                }
+                            }
+                        },
+                        data: ArrAy_
+                    }
+                ]
+            }
+        }
+
+        // 用户充值函数
+        function recharge(ArrAy_, txt, subtext, Percentage, style_txt, isshow) {
+            return {
+                backgroundColor: '#fff',
+                title: {
+                    x: 30,
+                    y: 32,
+                    text: txt,
+                    subtext: subtext,
+                    textStyle: {
+                        //文字颜色
+                        color: '#595959',
+                        //字体风格,'normal','italic','oblique'
+                        fontStyle: 'normal',
+                        //字体大小
+                        fontSize: 20
+                    },
+                    subtextStyle: {
+                        color: '#595959',
+                        //字体风格,'normal','italic','oblique'
+                        fontStyle: 'normal',
+                        //字体大小
+                        fontSize: 16
+                    }
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 30,
+                    y: '60%',
+                    data: function () {
+
+                        let arr = [];
+                        for (var i = 0; i < ArrAy_.length; i++) {
+                            arr.push(ArrAy_[i].name)
+                        }
+                        return arr
+                    }(),
+                    textStyle: {    //图例文字的样式
+                        color: '#959595',  //文字颜色
+                        fontSize: 14    //文字大小
+                    }
+                },
+                color: ['#FA3576', '#FFA9C5', '#4D4EB1', '#B8B9FF'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: 'center',
+                    // position : 'center',
+                    style: {
+                        text: function () {
+                            if (Percentage) {
+                                return '金额\n' + "100%";
+                            } else {
+                                let sum = 0;
+                                for (var i = 0; i < ArrAy_.length; i++) {
+                                    sum += Number(ArrAy_[i].value <= 0 ? 0 : ArrAy_[i].value);
+                                }
+                                console.log(sum);
+                                // if(sum)
+                                return style_txt + '\n' + sum;//值为负的就归0
+                            }
+
+
+                        }(),
+                        textAlign: 'center',
+                        fill: '#8E8E8E', //文字的颜色
+                        fontSize: 20,
+                        width: 100,
+                    }
+                }],
+                series: [
+                    {
+                        name: '数据',
+                        type: 'pie',
+                        radius: ['60', '100'],
+                        center: ['50%', '50%'],
+                        data: function () {
+
+                            let arr = [];
+                            for (var i = 0; i < ArrAy_.length; i++) {
+                                arr.push({
+                                    value: (ArrAy_[i].value < 0 ? 0 : ArrAy_[i].value),
+                                    name: ArrAy_[i].name
+                                })
+                            }
+                            return arr
+                        }().sort(function (a, b) {
+                            return a.value - b.value;
+                        }),
+                        roseType: 'radius',
+                        label: {
+                            normal: {
+                                formatter: function (params) {
+                                    if (Percentage) {
+                                        console.log(params.percent)
+                                        return (params.percent <= 0 ? "" : params.percent + "%")
+                                    } else {
+                                        if (isshow) {
+                                            return "";
+                                        } else {
+                                            return (params.value <= 0 ? "" : style_txt + ":" + params.value)
+                                        }
+
+                                    }
+                                },
+                                textStyle: {
+                                    color: '#8E8E8E',
+                                    fontSize: 16,
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        animationType: 'scale',
+                        animationEasing: 'elasticOut',
+                        animationDelay: function (idx) {
+                            return Math.random() * 200;
+                        }
+                    }
+
+                ]
+            };
+        }
+
+        function timestampToTime(timestamp, all) {
+            var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+            var D = date.getDate() + ' ';
+            if (all) {
+                var h = date.getHours() + ':';
+                var m = date.getMinutes() + ':';
+                var s = date.getSeconds();
+            } else {
+                var h = 0 + ':';
+                var m = 0 + ':';
+                var s = 0;
+            }
+
+            return Y + M + D + h + m + s;
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>排行榜 - 当月排行榜</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Content/laydate/laydate.js"></script>
+    <script src="../Scripts/pagination.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <style type="text/css">
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<body class="backgroud">
+<ul class="nav nav-tabs" style="margin-top:10px;">
+    <li class="active" data-id="recharge"><a href="javascript:void(0)">当月充值</a></li>
+    <li data-id="withdraw"><a href="javascript:void(0)">当月提现</a></li>
+    <li data-id="win"><a href="javascript:void(0)">当月赢钱</a></li>
+    <li data-id="lose"><a href="javascript:void(0)">当月输钱</a></li>
+</ul>
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：排行榜 - 当月排行榜 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>日期查询：</li>
+                                    <li>
+                                        <input id="txtStartDate" class="input-width-150" type="text" readonly="readonly"
+                                               placeholder="请输入开始时间"/>
+                                    </li>
+                                    <li>
+                                        <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!--table开始-->
+                    <div class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="barDemo">
+    <span class="layui-btn layui-btn-normal layui-btn-xs"
+          onclick="window.open('./add/ConfineAddressInfo.html?param='+tab,'_self')" lay-event="edit">更新</span>
+    <span class="layui-btn layui-btn-warm layui-btn-xs">删除</span>
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'month'
+            , theme: '#00B4E5'
+            , value: new Date()
+        });
+    });
+    var table, tab = 1;//tab标识是操作的IP还是手机号
+    layui.use('table', function () {
+        table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url: qp_url + 'admin/Ranking/rechangeRankingListM' //数据接口
+            , where: {
+                Date: todayDateMDY(true),
+                type: tab,
+                token:getStorage('token')
+
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total >= 100 ? 100 : res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.list //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [100]
+            , limit: 100
+            , cols: [[ //表头
+                {field: 'randindId', title: '排名'}
+                , {field: 'UserID', title: '用户ID'}
+                , {
+                    field: 'RegAccounts', title: '用户帐号', minWidth: 150, templet: function (d) {
+                        return `<a  href='javascript:void(0);' onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.RegAccounts}</a>`
+                    }
+                }
+                , {field: 'NickName', title: '用户昵称'}
+                , {field: 'total', title: '当月充值合计',templet:function (d) {
+                        return parseFloat(d.total).formatMoney()
+                    }}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+
+        });
+    });
+
+
+    $('.nav li').click(function () {
+        var id = $(this).data().id;
+        $(this).addClass("active").siblings().removeClass("active");
+        switch (id) {
+            case 'recharge':
+                tab = 1;
+                table.reload('layTable', {
+                    url: qp_url + 'admin/Ranking/rechangeRankingListM' //数据接口
+                    , where: {
+                        Date: $('#txtStartDate').val(),
+                        type: tab
+                        ,token:getStorage('token')
+
+                    }
+                    , cols: [[ //表头
+                        {field: 'randindId', title: '排名'}
+                        , {field: 'UserID', title: '用户ID'}
+                        , {
+                            field: 'RegAccounts', title: '用户帐号', minWidth: 150, templet: function (d) {
+                                return `<a  href='javascript:void(0);' onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.RegAccounts}</a>`
+                            }
+                        }
+                        , {field: 'NickName', title: '用户昵称'}
+                        , {field: 'total', title: '当月充值合计'}
+                    ]]
+                });
+                break;
+            case 'withdraw':
+                tab = 2;
+                table.reload('layTable', {
+                    url: qp_url + 'admin/Ranking/rechangeRankingListM' //数据接口
+                    , where: {
+                        Date: $('#txtStartDate').val(),
+                        type: tab
+                        ,token:getStorage('token')
+
+                    }
+                    , cols: [[ //表头
+                        {field: 'randindId', title: '排名'}
+                        , {field: 'UserID', title: '用户ID'}
+                        , {
+                            field: 'RegAccounts', title: '用户帐号', minWidth: 150, templet: function (d) {
+                                return `<a  href='javascript:void(0);' onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.RegAccounts}</a>`
+                            }
+                        }
+                        , {field: 'NickName', title: '用户昵称'}
+                        , {field: 'total', title: '当月提现合计'}
+                    ]]
+                });
+                break;
+            case 'win':
+                tab = 3;
+                table.reload('layTable', {
+                    url: qp_url + 'admin/Ranking/rechangeRankingListM' //数据接口
+                    , where: {
+                        Date: $('#txtStartDate').val(),
+                        type: tab
+                        ,token:getStorage('token')
+
+                    }
+                    , cols: [[ //表头
+                        {field: 'randindId', title: '排名'}
+                        , {field: 'UserID', title: '用户ID'}
+                        , {
+                            field: 'RegAccounts', title: '用户帐号', minWidth: 150, templet: function (d) {
+                                return `<a  href='javascript:void(0);' onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.RegAccounts}</a>`
+                            }
+                        }
+                        , {field: 'NickName', title: '用户昵称'}
+                        , {field: 'total', title: '当月赢钱合计'}
+                    ]]
+                });
+                break;
+            case 'lose':
+                tab = 4;
+                table.reload('layTable', {
+                    url: qp_url + 'admin/Ranking/rechangeRankingListM' //数据接口
+                    , where: {
+                        Date: $('#txtStartDate').val(),
+                        type: tab
+                        ,token:getStorage('token')
+
+                    }
+                    , cols: [[ //表头
+                        {field: 'randindId', title: '排名'}
+                        , {field: 'UserID', title: '用户ID'}
+                        , {
+                            field: 'RegAccounts', title: '用户帐号', minWidth: 150, templet: function (d) {
+                                return `<a  href='javascript:void(0);' onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.RegAccounts}</a>`
+                            }
+                        }
+                        , {field: 'NickName', title: '用户昵称'}
+                        , {field: 'total', title: '当月输钱合计'}
+                    ]]
+                });
+                break;
+        }
+    })
+    $(document).on('click', '#btnQuery', function () {
+        table.reload('layTable', {
+            where: {
+                Date: $('#txtStartDate').val(),
+                type: tab
+            }
+        })
+    })
+</script>
+</body>
+</body>
+</html>

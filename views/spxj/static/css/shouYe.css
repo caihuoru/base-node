@@ -1,0 +1,172 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body,html{
+    width: 100%;
+    height: 100%;
+}
+div{
+    font-size: 12px;
+}
+/* 首页内容区域 */
+.content .shouye_div1,.shouye_div2,.shouye_div3,.shouye_div4{
+    float: left;
+    /* color: #1e88e5; */
+    color: #555f6d;
+    margin-left: 15px;
+    /* font-size: 18px; */
+}
+.shouye_div1 span{
+    color: #1e88e5;
+    padding-right: 7px;
+}
+.shouye_div2 span{
+    color: #1e88e5;
+    padding-right: 7px;
+}
+.shouye_div3 span{
+    color: #1e88e5;
+    padding-right: 7px;
+}
+.shouye_div4 span{
+    color: #1e88e5;
+    padding-right: 7px;
+}
+
+.content {
+    /* width: 1680px; */
+    overflow: hidden;
+    /* border: 2px solid yellow; */
+    height: auto;
+}
+/*1111 用户总数 */
+.shouye_div1{
+    border: 2px solid #1e88e5;
+    width: 27%;
+    /* height: 30px; */
+    padding: 12px 12px;
+}
+.shouye_div1 div:first-child{
+    margin-bottom: 10px;
+}
+.shouye_div1 .div1_1{
+    font-size: 26px;
+}
+.shouye_div1 .div1_2{
+    float: left;
+}
+.shouye_div1 .div1_3{
+    float: left;
+    margin-left: 15px;
+}
+.shouye_div1 .div1_4{
+    float: left;
+    margin-left: 15px;
+}
+/* 折线图区域 */
+#main{
+    /* border: 1px solid red; */
+    margin-right: 40px;
+    float: left;
+    margin-top: 30px;
+}
+#main2{
+    float: right !important;
+    margin-top: 30px;
+    margin-right: 140px;
+}
+/*  */
+.font_a{
+    font-size: 28px;
+}
+
+
+
+
+
+
+
+
+
+ /* 2222总收入 */
+.shouye_div2{
+    border: 2px solid #1e88e5;
+    width: 20%;
+    /* height: 30px; */
+    padding: 12px 12px;
+}
+.shouye_div2 div:first-child{
+    margin-bottom: 10px;
+}
+/* 新增 */
+.shouye_div2 .div2_1{
+    font-size: 26px;
+}
+.shouye_div2 .div2_2{
+    float: left;
+}
+.shouye_div2 .div2_3{
+    float: left;
+    margin-left: 15px;
+}
+.shouye_div2 .div2_4{
+    float: left;
+    margin-left: 15px;
+}
+
+
+ /* 3333游戏总数  */
+.shouye_div3{
+    border: 2px solid #1e88e5;
+    width: 20%;
+    /* height: 30px; */
+    padding: 12px 12px;
+}
+.shouye_div3 div:first-child{
+    margin-bottom: 10px;
+}
+/* 新增 */
+.shouye_div3 .div3_1{
+    font-size: 26px;
+
+}
+.shouye_div3 .div3_2{
+    float: left;
+}
+.shouye_div3 .div3_3{
+    float: left;
+    margin-left: 15px;
+}
+.shouye_div3 .div3_4{
+    float: left;
+    margin-left: 15px;
+}
+
+
+/* 44444开发者总数 */
+.shouye_div4{
+    border: 2px solid #1e88e5;
+    width: 20%;
+    /* height: 30px; */
+    padding: 12px 12px;
+}
+.shouye_div4 div:first-child{
+    margin-bottom: 10px;
+}
+/* 新增 */
+.shouye_div4 .div4_1{
+    font-size: 26px;
+
+}
+.shouye_div4 .div4_2{
+    float: left;
+}
+.shouye_div4 .div4_3{
+    float: left;
+    margin-left: 15px;
+}
+.shouye_div4 .div4_4{
+    float: left;
+    margin-left: 15px;
+}

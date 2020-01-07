@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <meta name="viewport" content="width=device-width"/>
+    <title>控制系统-玩家单控</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style>
+        /*.panel-default {
+            width: 50%;
+        }*/
+        .panel-body .row {
+            margin: 15px 0;
+        }
+
+        .minW {
+            min-width: 130px;
+        }
+
+        .layui-form-select {
+            width: 120px;
+            display: inline-block;
+        }
+
+        .layui-form-select dl dd:hover {
+            background-color: #666;
+            color: #fff;
+        }
+
+        .layui-form-select dl dd.layui-this {
+            background-color: #666
+        }
+
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .panel .sub-title {
+            color: #333;
+            background-color: #F5F5F5 !important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" >
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：控制系统-玩家单控</h2>
+            </div>
+            <div class="tab-content">
+                <div class="panel panel-primary layui-form">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">控制系统-玩家单控</h3>
+                    </div>
+                    <div class="panel-body" id="panel-body">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label minW">玩家GameID：</div>
+                            <div class="layui-input-inline">
+                                <input id="txtAccounts" class="layui-input input-sm"
+                                       type="text" maxlength="20" v-model="GameID">
+                            </div>
+                        </div>
+                        <div class="panel panel-default" v-for="(item,index) in userControlList">
+                            <div class="panel-heading sub-title">
+                                {{item.ServerName}}
+                            </div>
+                            <div class="panel-body ">
+                                <div class="layui-form-item" :data-index="index">
+                                    <div class="layui-form-label">输赢：</div>
+                                    <div class="layui-input-inline">
+                                        <input :id="'txtWinScore'+item.ServerID" class="layui-input input-sm"
+                                               type="text" maxlength="12" v-model="item.WinScore"></div>
+                                    <div class="layui-form-label">胜率：</div>
+                                    <div class="layui-input-inline" v-if="item.ServerID == 0">
+                                        <select name="select" class="layui-input input-sm" lay-filter="WinRate" v-model="item.WinRate">
+                                            <option value="0">0</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                            <option value="60">60</option>
+                                            <option value="70">70</option>
+                                            <option value="80">80</option>
+                                            <option value="90">90</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                        <label style="margin-left: 10px;">%</label>
+                                    </div>
+                                    <div class="layui-input-inline" v-else>
+                                        <select name="select" class="layui-input input-sm" lay-filter="WinRate" v-model="item.WinRate">
+                                            <option value="0">0</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                            <option value="60">60</option>
+                                            <option value="70">70</option>
+                                            <option value="80">80</option>
+                                            <option value="90">90</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                        <label style="margin-left: 10px;">%</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li class="edit"><a class="btn btn-danger" href="#"
+                                                                          onclick="closed('1')"><i
+                                        class="glyphicon glyphicon-circle-arrow-left"></i>关闭</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="#" @click="add"><i
+                                        class="glyphicon glyphicon-send"></i>保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            roomList: [],
+            UserID: getUrlParams('userId'),
+            Accounts: '',
+            userType: '',
+            history: '',
+            GameID: getUrlParams('GameID'),
+            userControlList: [],//玩家单控信息列表
+        },
+        mounted: function () {
+            var that = this
+            //获取游戏房间列表
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Gamecommon/RoomList?token=' + getStorage('token') + '&kid=6',
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    let initRoom = [{
+                        ServerID: 0,
+                        ServerName: "其他游戏",
+                        KindID: 0,
+                        WinScore: '',
+                        WinRate: 0,
+                    }];
+                    if (res.status == 1) {
+                        that.roomList = initRoom.concat(res.data)
+                    } else {
+                        that.roomList = initRoom
+                    }
+                    // //已获取了所有的游戏房间列表（包括其他游戏）
+                    // //获取玩家的单控信息
+                    if(getUrlParams('userId')){
+                        $.ajax({
+                            type: 'POST',
+                            url: qp_url + 'admin/Kongzhi/GetPlayerControl?token='+getStorage('token'),
+                            dataType: 'json',
+                            data: {
+                                userId: getUrlParams('userId')
+                            },
+                            success: function (resData) {
+                                console.log(resData)
+                                that.history = resData.data.length
+                                if (resData.status == 1) {//获取了玩家的单控信息
+                                    for (var i = 0; i < that.roomList.length; i++) {
+                                        let item = that.roomList[i]
+                                        let hasInfo = false
+                                        for (var k = 0; k < resData.data.length; k++) {
+                                            if (item.ServerID == resData.data[k].ServerID) {//有该条游戏房间的信息，就赋值
+                                                hasInfo = true
+                                                Object.assign(item, {
+                                                    WinScore: resData.data[k].WinScore,
+                                                    WinRate: resData.data[k].WinRate,
+                                                })
+                                                break;
+                                            }
+                                        }
+                                        if (!hasInfo) {
+                                            Object.assign(item, {
+                                                WinScore: '',
+                                                WinRate: '',
+                                            })
+                                        }
+                                        that.userControlList.push(item)
+                                    }
+                                } else {//没有玩家单控信息，则全部默认
+                                    for (var i = 0; i < that.roomList.length; i++) {
+                                        let item = that.roomList[i]
+                                        Object.assign(item, {
+                                            WinScore: '',
+                                            WinRate: '',
+                                        })
+                                        that.userControlList.push(item)
+                                    }
+                                }
+                                console.log(that.userControlList)
+                                layui.use('form', function () {
+                                    var form = layui.form
+                                    form.render()
+                                    // 同步vue model的值
+                                    form.on('select(WinRate)',function (data) {
+                                        let index = $(data.elem).parents('.layui-form-item').data('index');
+                                        myVue.userControlList[index].WinRate = parseInt(data.value)
+                                    })
+                                })
+                            }
+                        })
+                    }else{
+                        that.userControlList = that.roomList
+                        layui.use('form', function () {
+                            var form = layui.form
+                            form.render()
+                            // 同步vue model的值
+                            form.on('select(WinRate)',function (data) {
+                                let index = $(data.elem).parents('.layui-form-item').data('index');
+                                myVue.userControlList[index].WinRate = parseInt(data.value)
+                            })
+                        })
+                    }
+                }
+            })
+        },
+        methods: {
+            add: function () {
+                let that = this;
+                console.log(that.userControlList)
+                let paramJson = [];
+                this.userControlList.forEach(function (item, index) {
+                    if(!item.WinRate || !item.WinScore) return
+                    let {ServerID,WinRate,WinScore} = item;
+                    paramJson.push({ServerID,WinRate,WinScore})
+                })
+                console.log(paramJson)
+                console.log(this.history , paramJson.length)
+                if(this.history && this.history > paramJson.length){
+                    return layer.msg('编辑页面不支持删除控制，请返回列表页删除', {time: 2000, icon: 2})
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + 'admin/Kongzhi/DoPlayerControlInfo?token=' + getStorage('token'),
+                    dataType: 'json',
+                    data: {
+                        Accounts: that.GameID,
+                        paramJson: JSON.stringify(paramJson)
+                    },
+                    success: function (resData) {
+                        console.log(resData)
+                        if(resData.status == 1){
+                            layer.msg(resData.msg, {time: 2000, icon: 1});
+                        }else{
+                            layer.msg(resData.msg, {time: 2000, icon: 2});
+                        }
+                    }
+                })
+            }
+        }
+    })
+    var data = {};
+    var roomJson = [], paramJson = [];
+    $(function () {
+
+        function setColor() {
+            var userType = '';
+            var color = "black";
+            if (userType > 0)
+                color = "#" + colors[userType - 1];
+            $("#txtAccounts").css("color", color)
+        }
+
+    })
+
+    function Back() {
+        var params = 'edit';
+        if (params == 'new') {
+            window.location.href = '../wanJiaDanKong.html'
+        } else {
+            window.close()
+        }
+    }
+
+    function add() {
+        var accounts = $("#txtAccounts").val();
+        if (accounts == "") {
+            alert("玩家gameid不能为空");
+            return false;
+        }
+        data.Accounts = accounts;
+        var winScore = $("#txtWinScore0").val();
+        var obj = {};
+        if (winScore != "") {
+            obj.WinScore = parseInt(winScore);
+            obj.WinRate = parseInt($("#ddlWinRate0").val());
+            obj.ServerID = 0;
+            paramJson.push(obj);
+        }
+
+        $.each(roomJson, function () {
+            winScore = $("#txtWinScore" + this.ServerID).val();
+            if (winScore != "") {
+                obj = {};
+                obj.WinScore = parseInt(winScore);
+                obj.WinRate = parseInt($("#ddlWinRate" + this.ServerID).val());
+                obj.ServerID = this.ServerID;
+                paramJson.push(obj);
+            }
+        });
+        data.paramJson = JSON.stringify(paramJson);
+        if (data.paramJson == "[]") {
+            alert("输赢至少需要填一个");
+            return false;
+        }
+        AjaxSubmit("/KongZhi/DoPlayerControlInfo", data, callBack, "add");
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "add":
+                alert(jsonData.Msg);
+                window.location.href = "/KongZhi/PlayerControlList"
+                //window.close();
+                break;
+        }
+    }
+    function closed(msg) {
+        window.close()
+        window.opener.windowClose(msg)
+    }
+    function QueryString(n) {
+        var t = location.href, f = t.substring(t.indexOf("?") + 1, t.length).split("&"), u = {}, r;
+        for (i = 0; j = f[i]; i++)
+            u[j.substring(0, j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=") + 1, j.length);
+        return r = u[n.toLowerCase()], typeof r == "undefined" ? "" : r;
+    }
+</script>
+</body>
+</html>

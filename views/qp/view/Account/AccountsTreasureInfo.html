@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>管理后台-用户信息</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <link href="../../Content/laydate/need/laydate.css" rel="stylesheet"/>
+    <style>
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="userID">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：管理后台-用户信息</h2>
+            </div>
+            <ul class="media nav nav-tabs margin-b-10">
+                <li>
+                    <a :href="'AccountsInfo.html?param='+userID" title="">基本信息</a>
+                </li>
+                <li>
+                    <a :href="'AccountsDetailInfo.html?param='+userID" title="">详细信息</a>
+                </li>
+                <li class="active">
+                    <a href="javascript:void(0);" title="">财富信息</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" title="" style="display:none">积分信息</a>
+                </li>
+                <li>
+                    <a :href="'AccountsRecordInfo.html?param='+userID" title="">记录信息</a>
+                </li>
+            </ul>
+            <div class="tab-content" style="margin-top:-11px">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">财富信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1" style="text-align:right">ID号码：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.GameID}}</label></div>
+                            <div class="col-xs-2 col-md-1" style="text-align:right">帐号：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.Accounts}}</label></div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1" style="text-align:right">携带金额：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.Score}}</label></div>
+                            <div class="col-xs-2 col-md-1" style="text-align:right">保险柜金额：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.InsureScore}}</label></div>
+
+                        </div>
+                        <div class="row">
+
+                            <div class="col-xs-2 col-md-1" style="text-align:right">赢局：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.WinCount}}</label></div>
+                            <div class="col-xs-2 col-md-1" style="text-align:right">输局：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.LostCount}}</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1" style="text-align:right">和局：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.DrawCount}}</label></div>
+                            <div class="col-xs-2 col-md-1" style="text-align:right">逃局：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.FleeCount}}</label></div>
+                            <div class="col-xs-2 col-md-1">游戏税收：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.Revenue}}</label></div>
+                        </div>
+
+                    </div>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">登录信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-3 col-md-1" style="text-align:right">登录房间次数：</div>
+                            <div class="col-xs-1 col-md-1"><label>{{caifu.GameLogonTimes}}</label></div>
+                            <div class="col-xs-2 col-md-1" style="text-align:right">在线时长(秒)：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.OnLineTimeCount}}</label></div>
+                            <div class="col-xs-2 col-md-1">游戏时长(秒)：</div>
+                            <div class="col-xs-2 col-md-1"><label>{{caifu.PlayTimeCount}}</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-3 col-md-1" style="text-align:right">登录机器：</div>
+                            <div class="col-xs-4 col-md-1"><label>{{caifu.LastLogonMachine}}</label></div>
+                            <div class="col-xs-2 col-md-1" style="text-align:right"></div>
+                            <div class="col-xs-4 col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-3 col-md-1" style="text-align:right">注册机器：</div>
+                            <div class="col-xs-4 col-md-1"><label>{{caifu.RegisterMachine}}</label></div>
+                            <div class="col-xs-2 col-md-1" style="text-align:right"></div>
+                            <div class="col-xs-4 col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-3 col-md-1" style="text-align:right">登录房间时间：</div>
+                            <div class="col-xs-6 col-md-2">
+                                <label>{{caifu.LastLogonDate}}</label>&nbsp;&nbsp;<label>{{caifu.LogonSpacingTime}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-3 col-md-1" style="text-align:right">登录地址：</div>
+                            <div class="col-xs-4 col-md-2">
+                                <label>{{caifu.LastLogonIP}}</label>&nbsp;&nbsp;<label>{{caifu.LogonIPInfo}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-3 col-md-1" style="text-align:right">注册时间：</div>
+                            <div class="col-xs-4 col-md-2">
+                                <label>{{caifu.RegisterDate}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-3 col-md-1" style="text-align:right">注册地址：</div>
+                            <div class="col-xs-4 col-md-2">
+                                <label>{{caifu.RegisterIP}}</label>&nbsp;&nbsp;<label>{{caifu.RegIPInfo}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">卡线信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <ul class="list-group">
+                                <li class="list-group-item" style="height:35px; background-color:ghostwhite;">
+                                    <ul class="list-inline">
+                                        <li class="col-xs-3 col-md-1">时间</li>
+                                        <li class="col-xs-3 col-md-1">游戏</li>
+                                        <li class="col-xs-3 col-md-1">房间</li>
+                                        <li class="col-xs-3 col-md-1">登录地址</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-danger search btn-md" href="#" onclick="window.close();"><i
+                                        class="glyphicon glyphicon-off"></i>关闭</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var param = getUrlParams('param')
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            userID: param,
+            caifu: {},//财富信息
+            login: {},//登录信息
+            kaxian: {}//卡线信息
+        }, mounted: function () {
+            var that = this;
+            //获取用户信息
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Account/AccountsInfo?token=' + getStorage('token') + '&UserID=' + param,
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    if (res.status == 1) {
+                        that.caifu = res.data
+                    } else {
+                        layer.msg(res.msg)
+                    }
+                }
+            })
+        }
+    })
+</script>
+
+</body>
+</html>

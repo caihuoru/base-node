@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>后台管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link rel="stylesheet" href="../Content/common.css">
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <link href="../Scripts/static/admin.css" rel="stylesheet"/>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <style type="text/css">
+        .layui-form-label {
+            width: 90px;
+        }
+
+        .layui-fluid {
+            height: 100%;
+            overflow-y: auto;
+        }
+    </style>
+    <script>
+        //layui.config({
+        //    base: '/scripts/static/' //静态资源所在路径
+        //}).extend({
+        //    //wangEditor: '../../wangeditor/wangEditor',
+        //    index: 'index' //主入口模块
+        //})
+
+    </script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header" id="divtitle">
+            游戏奖池控制
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-tab layui-tab-brief" lay-filter="component-tabs-reloadgame-prize"
+                 style="position: relative;">
+                <ul class="layui-tab-title" id="tabgame">
+                    <li data-gameid="6" data-typeid="7" id="6">诈金花</li>
+                    <li data-gameid="16" data-typeid="2" id="16">21点</li>
+                    <li data-gameid="28" data-typeid="2" id="28">抢庄牛牛</li>
+                    <li data-gameid="36" data-typeid="2" id="36">通比牛牛</li>
+                    <li data-gameid="44" data-typeid="2" id="44">三公</li>
+                    <li data-gameid="104" data-typeid="1" id="104">百人牛牛</li>
+                    <li data-gameid="108" data-typeid="2" id="108">二八杠</li>
+                    <li data-gameid="109" data-typeid="2" id="109">百人牌九</li>
+                    <li data-gameid="111" data-typeid="1" id="111">豪车俱乐部</li>
+                    <li data-gameid="122" data-typeid="1" id="122">百家乐</li>
+                    <li data-gameid="124" data-typeid="1" id="124">飞禽走兽</li>
+                    <li data-gameid="127" data-typeid="2" id="127">百人骰宝</li>
+                    <li data-gameid="133" data-typeid="2" id="133">龙虎斗</li>
+                    <li data-gameid="202" data-typeid="2" id="202">斗地主</li>
+                    <li data-gameid="211" data-typeid="2" id="211">红黑大战</li>
+                    <li data-gameid="359" data-typeid="2" id="359">扫雷红包</li>
+                    <li data-gameid="406" data-typeid="2" id="406">水果拉霸</li>
+                    <li data-gameid="407" data-typeid="5" id="407">李逵</li>
+                    <li data-gameid="408" data-typeid="5" id="408">蛟龙出海</li>
+                    <li data-gameid="409" data-typeid="5" id="409">金蟾捕鱼</li>
+                    <li data-gameid="413" data-typeid="5" id="413">千炮捕鱼</li>
+                    <li data-gameid="465" data-typeid="2" id="465">二人吹牛</li>
+                    <li data-gameid="517" data-typeid="2" id="517">水浒传</li>
+                    <li data-gameid="9999" data-typeid="2" id="9999">视讯</li>
+                </ul>
+                <div class="layui-tab-content" id="tabcontents">
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-row layui-col-space10">
+                            <div class="layui-col-md5 layui-col-xs12">
+                                <div class="">
+                                    <div class="">
+                                        <form class="layui-form" method="post" action="" lay-filter="component-form-element">
+
+                                            <div class="layui-form-item layui-inline" style="width:400px">
+
+                                                <label class="layui-form-label">操作房型：</label>
+                                                <div class="layui-input-inline">
+                                                    <select id="ddloperroomlist" class="form-control input-sm"
+                                                            lay-filter="roomid"></select>
+                                                </div>
+
+                                            </div>
+                                            <input type="hidden" name="gameid" value="" id="gameidvalue">
+                                            <input type="hidden" name="serverid" value="" id="serveridvalue">
+                                            <input type="hidden" name="typeid" value="" id="typeid">
+                                            <div id="divfish">
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            当前大鱼库存：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <div class="layui-form-mid" id="divStockScore_3">
+                                                                123456
+                                                            </div>
+                                                        </div>
+                                                        <label class="layui-form-label">大鱼库存：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockScore_3"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            当前中鱼库存：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <div class="layui-form-mid" id="divStockScore_2">
+                                                                123456
+                                                            </div>
+                                                        </div>
+                                                        <label class="layui-form-label">中鱼库存：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockScore_2"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            当前小鱼库存：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <div class="layui-form-mid" id="divStockScore_1">
+                                                                1256984
+                                                            </div>
+                                                        </div>
+                                                        <label class="layui-form-label">小鱼库存：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockScore_1"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            大鱼miss值：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StartPoint_3" autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            大鱼概率增长：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="AddSpeed_3" autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            中鱼miss值：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StartPoint_2" autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            中鱼概率增长：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="AddSpeed_2" autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            中鱼miss值：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StartPoint_1" autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label" style="white-space: nowrap;">
+                                                            中鱼概率增长：
+                                                        </label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="AddSpeed_1" autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">全局捕鱼概率：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="TotalCatchRate"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label">抽水率(千分比)：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="TotalReturnPermillage"
+
+                                                                   autocomplete="off" class="layui-input">(1~1000)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">简单模式捕鱼概率：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="EasyModeRate"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label">简单模式人数：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="EasyModeCount"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+
+                                                        <label class="layui-form-label">波动间隔：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="bodongInterval"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label">波动时长：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="bodongDuration"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">抽水：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="TotalReturnScore"
+
+                                                                   autocomplete="off" class="layui-input"
+                                                                   disabled="disabled">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">困难模式捕鱼概率：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="HardModeRate"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label">困难模式人数：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="HardModeCount"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="divexceptfish">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">
+                                                        当前库存：
+                                                    </label>
+                                                    <div class="layui-form-mid" id="divGameStockScore1">
+                                                        <input type="text" name="StockScore"
+                                                               id="game-prize-input-1"
+                                                               autocomplete="off" class="layui-input">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">库存增减：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockScore"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">库存衰减率：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockReducePermillage"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label">库存衰减量：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockReduceScore"
+
+                                                                   autocomplete="off" class="layui-input"
+                                                                   disabled="disabled">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="divzjh">
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">当前库存：</label>
+                                                        <div class="layui-input-inline">
+                                                            <div class="layui-form-mid" id="divGameStockScore2"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">库存增减：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockScore2"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">库存衰减率：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockReducePermillage2"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label">库存衰减量：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="StockReduceScore2"
+
+                                                                   autocomplete="off" class="layui-input"
+                                                                   disabled="disabled">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">最小偷鸡跟注轮数：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="ToujiMinRound"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label">最大偷鸡跟注轮数：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="ToujiMaxRound"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <div class="layui-inline">
+                                                        <label class="layui-form-label">执行概率：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="ToujiRate"
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                        <label class="layui-form-label">偷鸡需要库存：</label>
+                                                        <div class="layui-input-inline">
+                                                            <input type="text" name="ToujiStock"
+
+                                                                   autocomplete="off" class="layui-input">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block">
+                                                    <button class="layui-btn" lay-submit=""
+                                                            lay-filter="component-form-element">
+                                                        提交
+                                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md7 layui-col-xs12">
+                                <!-- 填充内容 -->
+                                <div class="layui-card">
+
+                                    <div class="layui-card-body">
+                                        <div class="layui-tab layui-tab-brief"
+                                             lay-filter="component-tabs-stocklisttitle">
+                                            <ul class="layui-tab-title" id="stocklisttitle">
+
+                                            </ul>
+                                            <div class="layui-tab-content">
+                                                <div class="layui-tab-item layui-show">
+                                                    <button class="layui-btn layui-btn-sm" lay-event="add" id="btnAdd">
+                                                        新增
+                                                    </button>
+                                                    <button class="layui-btn layui-btn-sm" lay-event="save"
+                                                            id="btnSave">保存
+                                                    </button>
+                                                    <table class="layui-table" id="GameStockList">
+                                                        <colgroup>
+                                                            <col width="150">
+                                                            <col>
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr><td>库存等级</td><td>胜率百分比</td><td>操作</td></tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var kindid, typeid, serverid;
+    layui.use(['element', 'table', 'form'], function () {
+
+        var saveflag = 0;
+        var table = layui.table;
+        var form = layui.form
+            , $ = layui.$
+            , element = layui.element
+            , router = layui.router();
+
+        element.render();
+        $.ajax({
+            type: 'get',
+            url: qp_url + 'admin/Gamecommon/CanGame',
+            dataType: 'json',
+            success: function (resData) {
+                if (resData.status == 1) {
+                    $("#tabgame").html('');
+                    resData.data.forEach(function (item) {
+                        // console.log(item)
+                        $("#tabgame").append(`<li data-gameid="${item.KindID}" data-typeid="${item.TypeID}" id="${item.KindID}">${item.KindName}</li>`)
+                    })
+                    $("#tabgame>li:first").addClass("layui-this").click();
+                }
+            }
+        })
+        form.on('submit(component-form-element)', function (data) {
+            console.log('data', data)
+            var StockScore_1 = data.field.StockScore_1 || 0;
+            var StockScore_2 = data.field.StockScore_2 || 0;
+            var StockScore_3 = data.field.StockScore_3 || 0;
+            var StartPoint_1 = data.field.StartPoint_1 || 0;
+            var StartPoint_2 = data.field.StartPoint_2 || 0;
+            var StartPoint_3 = data.field.StartPoint_3 || 0;
+            var AddSpeed_1 = data.field.AddSpeed_1 || "0.00";
+            var AddSpeed_2 = data.field.AddSpeed_2 || "0.00";
+            var AddSpeed_3 = data.field.AddSpeed_3 || "0.00";
+            var TotalCatchRate = data.field.TotalCatchRate;
+            var TotalReturnPermillage = data.field.TotalReturnPermillage;
+            var EasyModeRate = data.field.EasyModeRate;
+            var HardModeRate = data.field.HardModeRate;
+            // var StockOpen = $("#ddlStockOpen").val();
+            var typeid = $("#typeid").val();
+            var serverid = $("#serveridvalue").val();
+            var TotalReturnScore = data.field.TotalReturnScore;
+            var bodongDuration = data.field.bodongDuration;
+            var bodongInterval = data.field.bodongInterval;
+            var EasyModeCount = data.field.EasyModeCount;
+            var HardModeCount = data.field.HardModeCount;
+
+            var StockScore = data.field.StockScore;
+            var StockReduceScore = data.field.StockReduceScore;
+            var StockReducePermillage = data.field.StockReducePermillage;
+            // var StockOpen1 = $("#ddlStockOpen1").val();
+            var StockScore2 = data.field.StockScore2;
+            // var StockOpen2 = $("#ddlStockOpen2").val();
+            var StockReducePermillage2 = data.field.StockReducePermillage2;
+            var StockReduceScore2 = data.field.StockReduceScore2;
+            var ToujiMinRound = data.field.ToujiMinRound;
+            var ToujiMaxRound = data.field.ToujiMaxRound;
+            var ToujiRate = data.field.ToujiRate;
+            var ToujiStock = data.field.ToujiStock;
+            // console.log('typeid', typeid)
+            $.post(qp_url + "admin/Kongzhi/updatefishstock?token=" + getStorage('token'), {
+                StockScore_1: StockScore_1,
+                StockScore_2: StockScore_2,
+                StockScore_3: StockScore_3,
+                StartPoint_1:StartPoint_1,
+                StartPoint_2:StartPoint_2,
+                StartPoint_3:StartPoint_3,
+                AddSpeed_1:AddSpeed_1,
+                AddSpeed_2:AddSpeed_2,
+                AddSpeed_3:AddSpeed_3,
+                TotalCatchRate: TotalCatchRate,
+                TotalReturnPermillage: TotalReturnPermillage,
+                EasyModeRate: EasyModeRate,
+                HardModeRate: HardModeRate,
+                typeid: typeid,
+                serverid: serverid,
+                TotalReturnScore: TotalReturnScore,
+                bodongDuration: bodongDuration,
+                bodongInterval: bodongInterval,
+                EasyModeCount: EasyModeCount,
+                HardModeCount: HardModeCount,
+                StockScore: StockScore,
+                StockReduceScore: StockReduceScore,
+                StockReducePermillage: StockReducePermillage,
+                StockReducePermillage2: StockReducePermillage2,
+                StockReduceScore2: StockReduceScore2,
+                ToujiMinRound: ToujiMinRound,
+                ToujiMaxRound: ToujiMaxRound,
+                ToujiRate: ToujiRate,
+                StockScore2: StockScore2,
+                ToujiStock: ToujiStock
+            }, function (resData) {
+                console.log(resData)
+                if (resData.status == 1) {
+                    layer.msg('操作成功');
+                    GetFishGameStockScoreInfo(serverid);
+
+                } else {
+                    layer.msg(resData.msg);
+                }
+            }, 'json')
+            // console.log(JSON.stringify(data.field));
+            return false;
+        });
+        // 点选过来刷新奖池
+        element.on('tab(component-tabs-reloadgame-prize)', function (obj) {
+            //if (saveflag == 1)
+            //{
+            //    alert("请先保存库存数据");
+            //    return false;
+            //}
+            // console.log(obj)
+            kindid = $("#tabgame>li.layui-this").eq(0).data("gameid");
+            typeid = $("#tabgame>li.layui-this").eq(0).data("typeid");
+            // console.log('kindid', kindid)
+            // console.log('typeid', typeid)
+            $("#typeid").val(typeid);
+            refresh_game_prize(kindid, typeid);
+            refresh_GameStockScore(kindid, typeid);
+        });
+        element.on('tab(component-tabs-stocklisttitle)', function (obj) {
+            //if (saveflag == 1) {
+            //    alert("请先保存库存数据");
+            //    return false;
+            //}
+            serverid = $("#stocklisttitle>li.layui-this").eq(0).data("serverid");
+            typeid = $("#tabgame>li.layui-this").eq(0).data("typeid");
+            refresh_gamestock(serverid,typeid);
+        });
+
+        $('#GameStockList').on('click', '.deletestock', function () {
+            $(this).parent().parent().remove();
+
+        });
+
+        $("#btnAdd").click(function () {
+            console.log($("#GameStockList tbody tr").length,typeid)
+            if ($("#GameStockList tbody tr").length > 9) return layer.msg('最多只能10个等级', {icon: 2, time: 2000})
+            var h;
+            if(typeid == '5'){
+                h = "<tr>" +
+                    "<td><input type='text' name='StockScore_1' lay-verify='number' placeholder='小鱼库存等级' value='' autocomplete='off' class='layui-input'></td>" +
+                    "<td><input type='text' name='CatchFishRate_1' lay-verify='number' placeholder='小鱼捕鱼概率' value='' autocomplete='off' class='layui-input'></td>" +
+                    "<td><input type='text' name='StockScore_2' lay-verify='number' placeholder='中鱼库存等级' value='' autocomplete='off' class='layui-input'></td>" +
+                    "<td><input type='text' name='CatchFishRate_2' lay-verify='number' placeholder='中鱼捕鱼概率' value='' autocomplete='off' class='layui-input'></td>" +
+                    "<td><input type='text' name='StockScore_3' lay-verify='number' placeholder='大鱼库存等级' value='' autocomplete='off' class='layui-input'></td>" +
+                    "<td><input type='text' name='CatchFishRate_3' lay-verify='number' placeholder='大鱼捕鱼概率' value='' autocomplete='off' class='layui-input'></td>" +
+                    "<td><a href='javascript:void(0)' class='deletestock' data-serverid='" + serverid + "' style='text-decoration: underline;font-size: 12px;color: #007DDB'>删除</a></td>" +
+                    "</tr>";
+            }else{
+                h= " <tr><td><input type='text' name='StockScore' lay-verify='number' placeholder='库存等级' value='' autocomplete='off' class='layui-input'></td><td><input type='text' name='StockPercentage' lay-verify='number' placeholder='胜率百分比' value='' autocomplete='off' class='layui-input'></td><td><span class='deletestock layui-btn layui-btn-warm layui-btn-xs'>删除</span></td></tr>";
+            }
+            $("#GameStockList tbody").append($(h));
+            element.init();
+            // saveflag = 1;
+        });
+
+        function showMore() {
+            $("#tabgame").toggleClass('flodsty')
+        }
+
+        $("#btnSave").click(function () {
+            var arr = [];
+            var d = $("#GameStockList tbody").find("tr");
+            var serverid = $("#stocklisttitle>li.layui-this").eq(0).data("serverid");
+            var flag = true;
+            console.log(typeid)
+            if(typeid == '5'){
+                $.each(d, function (i, t) {
+                    var item = {};
+                    item.StockScore_1 = $(t).find("input[name='StockScore_1']").val();
+                    item.StockScore_2 = $(t).find("input[name='StockScore_2']").val();
+                    item.StockScore_3 = $(t).find("input[name='StockScore_3']").val();
+                    item.CatchFishRate_1 = $(t).find("input[name='CatchFishRate_1']").val();
+                    item.CatchFishRate_2 = $(t).find("input[name='CatchFishRate_1']").val();
+                    item.CatchFishRate_3 = $(t).find("input[name='CatchFishRate_1']").val();
+                    item.ID = "";
+                    item.ServerID = serverid;
+                    flag = true;
+                    //验证数据的准确性
+                    $.each(arr, function (ii, tt) {
+                        // console.log(parseFloat(item.StockScore),parseFloat(tt.StockScore),parseFloat(item.StockScore)<parseFloat(tt.StockScore))
+                        // console.log(parseFloat(item.StockPercentage),parseFloat(tt.StockPercentage),parseFloat(item.StockPercentage)<parseFloat(tt.StockPercentage))
+                        if (parseFloat(item.StockScore_1) < parseFloat(tt.StockScore_1)) {
+                            flag = false
+                            $(t).find("input[name='StockScore_1']").css('border-color', '#f00')
+                            return false
+                        }
+                        if (parseFloat(item.StockScore_2) < parseFloat(tt.StockScore_2)) {
+                            flag = false
+                            $(t).find("input[name='StockScore_2']").css('border-color', '#f00')
+                            return false
+                        }
+                        if (parseFloat(item.StockScore_3) < parseFloat(tt.StockScore_3)) {
+                            flag = false
+                            $(t).find("input[name='StockScore_3']").css('border-color', '#f00')
+                            return false
+                        }
+                        if (parseFloat(item.CatchFishRate_1) < parseFloat(tt.CatchFishRate_1)) {
+                            flag = false
+                            $(t).find("input[name='CatchFishRate_1']").css('border-color', '#f00')
+                            return false
+                        }
+                        if (parseFloat(item.CatchFishRate_2) < parseFloat(tt.CatchFishRate_2)) {
+                            flag = false
+                            $(t).find("input[name='CatchFishRate_2']").css('border-color', '#f00')
+                            return false
+                        }
+                        if (parseFloat(item.CatchFishRate_3) < parseFloat(tt.CatchFishRate_3)) {
+                            flag = false
+                            $(t).find("input[name='CatchFishRate_3']").css('border-color', '#f00')
+                            return false
+                        }
+                        $(t).find("input").removeAttr('style')
+                    });
+                    if (flag) {
+                        arr.push(item);
+                    } else {
+                        layer.msg("第" + (i + 1) + "行数据错误,数据不能小于上一行", {icon: 2, time: 2000});
+                        flag = false;
+                        return false;
+                    }
+                });
+                if (!flag) {
+                    return;
+                }
+                $.post(qp_url + "admin/Kongzhi/updatefishstocklevel?token=" + getStorage('token'), {
+                    StockList: JSON.stringify(arr),
+                    ServerID: serverid
+                }, function (json) {
+                    if (json.status == 1) {
+                        layer.msg('操作成功',function () {
+                            $('#stocklisttitle li.layui-this').click()
+                        });
+                    } else {
+                        layer.msg(json.msg);
+                    }
+                }, 'json')
+            }else{
+                $.each(d, function (i, t) {
+                    var item = {};
+                    item.StockScore = $(t).find("input[name='StockScore']").val();
+                    item.StockPercentage = $(t).find("input[name='StockPercentage']").val();
+                    item.ID = "";
+                    item.ServerID = serverid;
+                    flag = true;
+                    //验证数据的准确性
+                    $.each(arr, function (ii, tt) {
+                        // console.log(parseFloat(item.StockScore),parseFloat(tt.StockScore),parseFloat(item.StockScore)<parseFloat(tt.StockScore))
+                        // console.log(parseFloat(item.StockPercentage),parseFloat(tt.StockPercentage),parseFloat(item.StockPercentage)<parseFloat(tt.StockPercentage))
+                        if (parseFloat(item.StockScore) < parseFloat(tt.StockScore)) {
+                            flag = false
+                            $(t).find("input[name='StockScore']").css('border-color', '#f00')
+                            return false
+                        }
+                        if (parseFloat(item.StockPercentage) < parseFloat(tt.StockPercentage)) {
+                            flag = false
+                            $(t).find("input[name='StockPercentage']").css('border-color', '#f00')
+                            return false
+                        }
+                        $(t).find("input").removeAttr('style')
+                    });
+                    if (flag) {
+                        arr.push(item);
+                    } else {
+                        layer.msg("第" + (i + 1) + "行数据错误,数据不能小于上一行", {icon: 2, time: 2000});
+                        flag = false;
+                        return false;
+                    }
+                });
+                if (!flag) {
+                    return;
+                }
+                $.post(qp_url + "admin/Kongzhi/updatestockvalue?token=" + getStorage('token'), {
+                    StockList: JSON.stringify(arr),
+                    ServerID: serverid
+                }, function (json) {
+                    if (json.status == 1) {
+                        layer.msg('操作成功');
+                    } else {
+                        layer.msg(json.msg);
+                    }
+                }, 'json')
+            }
+
+        });
+
+
+        $('#divtitle').on('click', '.refresh-game-prize-btn', function () {
+            GetFishGameStockScoreInfo($("#serveridvalue").val());
+        })
+
+        form.on('select(roomid)', function (data) {
+            console.log('roomid', data)
+            GetFishGameStockScoreInfo(data.value)
+            // alert(data.elem);
+            //console.log(data.elem);
+            //alert(data.value);//判断单选框的选中值
+            //console.log(data.value);
+            //alert(data.othis);
+            //layer.tips('开关checked：' + (this.checked ? 'true' : 'false'), data.othis);
+            //layer.alert('响应点击事件');
+        });
+
+        function GetFishGameStockScoreInfo(serverid) {
+            var typeid = $("#typeid").val();
+            console.log('serverid', serverid, typeid)
+            if (typeid == '7') {
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/Kongzhi/GetZJHStockScoreInfo?token=" + getStorage('token'),
+                    dataType: 'json',
+                    data: {serverid: serverid},
+                    success: function (resData) {
+                        console.log(resData)
+                        if (resData.status == 1) {
+                            var d = resData.data;
+                            if (d.length > 0) {
+                                var data = d[0];
+                                console.log(data)
+                                $("#divGameStockScore2").text(data.stockscore);
+                                $("input[name='StockReduceScore2']").val(data.StockReduceScore);
+                                $("input[name='StockReducePermillage2']").val(data.StockReducePermillage);
+                                $("input[name='ToujiRate']").val(data.ToujiRate);
+                                $("input[name='ToujiMinRound']").val(data.ToujiMinRound);
+                                $("input[name='ToujiMaxRound']").val(data.ToujiMaxRound);
+                                $("input[name='ToujiStock']").val(data.ToujiStock);
+                                //$("#ddlStockOpen2").val(data.StockOpen);
+                                $("#serveridvalue").val(data.serverid);
+                                $("#typeid").val(data.typeid);
+                                form.render();
+                            }
+                        }
+                    }
+                })
+            } else if (typeid == "1") {
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/Kongzhi/GetGameStockScoreInfo1?token=" + getStorage('token'),
+                    dataType: 'json',
+                    data: {serverid: serverid},
+                    success: function (resData) {
+                        console.log(resData)
+                        if (resData.status == 1) {
+                            var d = resData.data;
+                            if (d.length > 0) {
+                                var data = d[0];
+                                console.log(data)
+                                $("#divGameStockScore1").text(data.stockscore);
+                                $("input[name='StockReduceScore']").val(data.StockReduceScore);
+                                $("input[name='StockReducePermillage']").val(data.StockReducePermillage);
+                                //$("#ddlStockOpen1").val(data.StockOpen);
+                                $("#serveridvalue").val(data.serverid);
+                                $("#typeid").val(data.typeid);
+                                form.render();
+                            }
+                        }
+                    }
+                })
+            } else if (typeid == "5") {
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/Kongzhi/GetFishGameStockScoreInfo?token=" + getStorage('token'),
+                    dataType: 'json',
+                    data: {serverid: serverid},
+                    success: function (resData) {
+                        console.log(resData)
+                        if (resData.status == 1) {
+                            var d = resData.data;
+                            if (d.length > 0) {
+                                var data = d[0];
+                                console.log(data)
+                                $("#divStockScore_1").text(data.StockScore_1);
+                                $("#divStockScore_2").text(data.StockScore_2);
+                                $("#divStockScore_3").text(data.StockScore_3);
+                                $("input[name='StartPoint_1']").val(data.StartPoint_1);
+                                $("input[name='StartPoint_2']").val(data.StartPoint_2);
+                                $("input[name='StartPoint_3']").val(data.StartPoint_3);
+                                $("input[name='AddSpeed_1']").val(data.AddSpeed_1);
+                                $("input[name='AddSpeed_2']").val(data.AddSpeed_2);
+                                $("input[name='AddSpeed_3']").val(data.AddSpeed_3);
+                                $("input[name='TotalCatchRate']").val(data.TotalCatchRate);
+                                $("input[name='TotalReturnPermillage']").val(data.TotalReturnPermillage);
+                                $("input[name='EasyModeRate']").val(data.EasyModeRate);
+                                $("input[name='HardModeRate']").val(data.HardModeRate);
+                                $("input[name='bodongInterval']").val(data.bodongInterval);
+                                $("input[name='TotalReturnScore']").val(data.TotalReturnScore);
+                                $("input[name='bodongDuration']").val(data.bodongDuration);
+                                $("input[name='EasyModeCount']").val(data.EasyModeCount);
+                                $("input[name='HardModeCount']").val(data.HardModeCount);
+                                // $("#ddlStockOpen").val(data.StockOpen);
+                                $("#serveridvalue").val(data.serverid);
+
+                                $("#typeid").val(data.typeid);
+                                form.render();
+                                form.render();
+                            }
+                        }
+                    }
+                })
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/Kongzhi/GetGameStockScoreInfo1?token=" + getStorage('token'),
+                    dataType: 'json',
+                    data: {serverid: serverid},
+                    success: function (resData) {
+                        console.log(resData)
+                        if (resData.status == 1) {
+                            var d = resData.data;
+                            if (d.length > 0) {
+                                var data = d[0];
+                                console.log(data)
+                                $("#divGameStockScore1").text(data.stockscore);
+                                $("input[name='StockReduceScore']").val(data.StockReduceScore);
+                                $("input[name='StockReducePermillage']").val(data.StockReducePermillage);
+                                //$("#ddlStockOpen1").val(data.StockOpen);
+                                $("#serveridvalue").val(data.serverid);
+                                $("#typeid").val(data.typeid);
+                                form.render();
+                            }
+                        }
+                    }
+                })
+            }
+        }
+
+        function refresh_game_prize(kindid, typeid) {
+            // console.log(kindid, typeid)
+            if (typeid == "5") {
+                $("#divfish").show();
+                $("#divexceptfish").hide();
+                $("#divzjh").hide();
+            } else if (typeid == "7") {
+                $("#divzjh").show();
+                $("#divfish").hide();
+                $("#divexceptfish").hide();
+            } else {
+                $("#divfish").hide();
+                $("#divexceptfish").show();
+                $("#divzjh").hide();
+            }
+            $("#gameidvalue").val(kindid);
+            $.ajax({
+                type: 'get',
+                url: qp_url + 'admin/Gamecommon/RoomList?kid=' + kindid,
+                dataType: 'json',
+                success: function (resData) {
+                    console.log(resData)
+                    if (resData.status == 1) {
+                        $("#tabcontents>div").addClass("layui-show");
+                        var h = "";
+                        var h1 = "";
+                        $.each(resData.data, function (i, item) {
+                            if (i == 0) {
+                                h += "<option value='" + item.ServerID + "' selected>" + item.ServerName + "</option>";
+                                //h += "<input type='radio' lay-filter='roomid' name='roomid' checked='true' value='" + item.ServerID + "' title='" + item.ServerName + "' />";
+                                h1 += "<li class='layui-this' data-serverid='" + item.ServerID + "'>" + item.ServerName + "</li>";
+                            } else {
+                                h += "<option value='" + item.ServerID + "'>" + item.ServerName + "</option>";
+                                //h += "<input type='radio' lay-filter='roomid' name='roomid'  value='" + item.ServerID + "' title='" + item.ServerName + "' />";
+                                h1 += "<li data-serverid='" + item.ServerID + "'>" + item.ServerName + "</li>";
+                            }
+                        });
+                        $("#ddloperroomlist").html(h);
+                        $("#stocklisttitle").html(h1);
+                        serverid = $("#stocklisttitle>li.layui-this").eq(0).data("serverid");
+                        typeid = $("#tabgame>li.layui-this").eq(0).data("typeid");
+                        refresh_gamestock(serverid,typeid);
+                        GetFishGameStockScoreInfo(resData.data[0].ServerID)
+                        form.render('select'); //刷新select选择框渲染
+                    } else {
+                        $("#tabcontents>div").removeClass("layui-show");
+                        layer.msg('该游戏无可操作房型', {time: 2000, icon: 2})
+                    }
+                }
+            })
+            // AjaxSubmit(qp_url+"admin/GetGameRoomInfoList", {kindid: kindid}, function (jsonData) {
+            //     var d = jsonData;
+            //     var h = "";
+            //     var h1 = "";
+            //     $.each(d, function (i, item) {
+            //         if (i == 0) {
+            //             h += "<option value='" + item.ServerID + "' selected>" + item.ServerName + "</option>";
+            //             //h += "<input type='radio' lay-filter='roomid' name='roomid' checked='true' value='" + item.ServerID + "' title='" + item.ServerName + "' />";
+            //             h1 += "<li class='layui-this' data-serverid='" + item.ServerID + "'>" + item.ServerName + "</li>";
+            //         } else {
+            //             h += "<option value='" + item.ServerID + "'>" + item.ServerName + "</option>";
+            //             //h += "<input type='radio' lay-filter='roomid' name='roomid'  value='" + item.ServerID + "' title='" + item.ServerName + "' />";
+            //             h1 += "<li data-serverid='" + item.ServerID + "'>" + item.ServerName + "</li>";
+            //         }
+            //     });
+            //     $("#ddloperroomlist").html(h);
+            //     $("#stocklisttitle").html(h1);
+            //     serverid = $("#stocklisttitle>li.layui-this").eq(0).data("serverid");
+            //     refresh_gamestock(serverid);
+            //     GetFishGameStockScoreInfo(serverid);
+            //     // form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+            //     form.render();
+            //
+            // }, "add");
+        }
+
+        function refresh_GameStockScore(kindid, typeid) {
+            //if (typeid == "5") {
+
+            //    AjaxSubmit("/KongZhi/GetfishStockScoreInfo", { kindid: kindid }, function (jsonData) {
+            //        var d = jsonData.Table;
+            //        var h = "";
+            //        $.each(d, function (i, item) {
+            //            h += item.servername + ":<span >" + item.stockscore + "</span><br>";
+            //        });
+            //        h += "  <button class='layui-btn layui-btn-xs refresh-game-prize-btn' data-gameid='" + kindid + "' type='button'> 刷新  </button>";
+            //        $("#divGameStockScore").html(h);
+            //        // form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+            //        form.render();
+            //    }, "add");
+            //}
+            //else {
+
+            //    AjaxSubmit("/KongZhi/GetGameStockScoreInfo1", { kindid: kindid }, function (jsonData) {
+            //        var d = jsonData.Table;
+            //        var h = "";
+            //        $.each(d, function (i, item) {
+            //            h += item.servername + ":<span >" + item.stockscore + "</span><br>";
+            //        });
+            //        h += "  <button class='layui-btn layui-btn-xs refresh-game-prize-btn' data-gameid='" + kindid + "' type='button'> 刷新  </button>";
+            //        $("#divGameStockScore").html(h);
+            //        // form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+            //        form.render();
+            //    }, "add");
+            //}
+        }
+
+        function refresh_gamestock(serverid,typeid) {
+            console.log(typeid)
+            $("#serveridvalue").val(serverid);
+            if(typeid == '5'){
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/Kongzhi/GetFishStockLevelListSimple?token=" + getStorage('token'),
+                    dataType: 'json',
+                    data: {serverid: serverid},
+                    success: function (resData) {
+                        console.log(resData)
+                        if (resData.status == 1) {
+                            var d = resData.data;
+                            var h = "";
+                            if (d && d.length > 0) {
+                                $.each(d, function (i, item) {
+                                    h += "<tr>" +
+                                        "<td><input type='text' name='StockScore_1' lay-verify='number' placeholder='小鱼库存等级' value='" + item.StockScore_1 + "' autocomplete='off' class='layui-input'></td>" +
+                                        "<td><input type='text' name='CatchFishRate_1' lay-verify='number' placeholder='小鱼捕鱼概率' value='" + item.CatchFishRate_1 + "' autocomplete='off' class='layui-input'></td>" +
+                                        "<td><input type='text' name='StockScore_2' lay-verify='number' placeholder='中鱼库存等级' value='" + item.StockScore_2 + "' autocomplete='off' class='layui-input'></td>" +
+                                        "<td><input type='text' name='CatchFishRate_2' lay-verify='number' placeholder='中鱼捕鱼概率' value='" + item.CatchFishRate_2 + "' autocomplete='off' class='layui-input'></td>" +
+                                        "<td><input type='text' name='StockScore_3' lay-verify='number' placeholder='大鱼库存等级' value='" + item.StockScore_3 + "' autocomplete='off' class='layui-input'></td>" +
+                                        "<td><input type='text' name='CatchFishRate_3' lay-verify='number' placeholder='大鱼捕鱼概率' value='" + item.CatchFishRate_3 + "' autocomplete='off' class='layui-input'></td>" +
+                                        "<td><a href='javascript:void(0)' class='deletestock' data-serverid='" + serverid + "' style='text-decoration: underline;font-size: 12px;color: #007DDB'>删除</a></td>" +
+                                    "</tr>";
+                                });
+                            }
+                            $("#GameStockList thead").html('<tr><td width="60">小鱼库存等级</td><td>小鱼捕鱼概率</td><td>中鱼库存等级</td><td>中鱼捕鱼概率</td><td>大鱼库存等级</td><td>大鱼捕鱼概率</td><td>操作</td></tr>');
+                            $("#GameStockList tbody").html(h);
+                            element.init();
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/Kongzhi/GetStockLevelListSimple?token=" + getStorage('token'),
+                    dataType: 'json',
+                    data: {serverid: serverid},
+                    success: function (resData) {
+                        console.log(resData)
+                        if (resData.status == 1) {
+                            var d = resData.data;
+                            var h = "";
+                            if (d && d.length > 0) {
+                                $.each(d, function (i, item) {
+                                    h += " <tr><td><input type='text' name='StockScore' lay-verify='number' placeholder='库存等级' value='" + item.StockScore + "' autocomplete='off' class='layui-input'></td><td><input type='text' name='StockPercentage' lay-verify='number' placeholder='胜率百分比' value='" + item.StockPercentage + "' autocomplete='off' class='layui-input'></td><td><a href='javascript:void(0)' class='deletestock' data-serverid='" + serverid + "' style='text-decoration: underline;font-size: 12px;color: #007DDB'>删除</a></td></tr>";
+                                });
+                            }
+                            $("#GameStockList thead").html('<tr><td>库存等级</td><td>胜率百分比</td><td>操作</td></tr>');
+                            $("#GameStockList tbody").html(h);
+                            element.init();
+                        }
+                    }
+                })
+            }
+
+            // AjaxSubmit("/KongZhi/GetStockLevelListSimple", {serverid: serverid}, function (jsonData) {
+            //     var d = jsonData;
+            //     var h = "";
+            //     if (d && d.length > 0) {
+            //         $.each(d, function (i, item) {
+            //             h += " <tr><td><input type='text' name='StockScore' lay-verify='number' placeholder='库存等级' value='" + item.StockScore + "' autocomplete='off' class='layui-input'></td><td><input type='text' name='StockPercentage' lay-verify='number' placeholder='胜率百分比' value='" + item.StockPercentage + "' autocomplete='off' class='layui-input'></td><td><a href='javascript:void(0)' class='deletestock' data-serverid='" + serverid + "' style='text-decoration: underline;font-size: 12px;color: #007DDB'>删除</a></td></tr>";
+            //         });
+            //     }
+            //     $("#GameStockList tbody").html(h);
+            //     element.init();
+            // }, "add");
+        }
+
+        // kindid = $("#tabgame>li.layui-this").eq(0).data("gameid");
+        // typeid = $("#tabgame>li.layui-this").eq(0).data("typeid");
+        // $("#typeid").val(typeid);
+        // // 默认加载一次
+        // refresh_game_prize(kindid, typeid);
+        // refresh_GameStockScore(kindid, typeid);
+
+        //refresh_game_prize(15, 5);
+        //refresh_game_prize(15, 6);
+    });
+</script>
+</body>
+</html>

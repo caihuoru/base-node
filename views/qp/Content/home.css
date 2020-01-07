@@ -1,0 +1,289 @@
+.home-item-title {
+    border-left: 5px solid #58585C;
+    padding-left: 30px;
+    font-size: 25px;
+    color: #58585C;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.box-inner {
+    border: none;
+}
+
+.home-tip {
+    color: #FE5BA5;
+    font-size: 16px;
+    float:right;
+    height: 36px;
+    line-height: 36px;
+    margin-right: 36px;
+}
+
+.margin-r39 {
+    margin-right: 39px;
+}
+
+.home-refresh {
+    width: 36px;
+    height: 36px;
+    float:right;
+    /*right: 0;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    cursor: pointer;
+}
+
+.p-relative {
+    position: relative;
+}
+
+
+
+.home-section-sty1 img {
+    width: 60px;
+    height: 60px;
+    vertical-align: middle;
+}
+
+.home-section-sty1 {
+    margin: 0px 0;
+    padding-top: 40px;
+    font-size: 20px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.col5 .home-section-sty1{
+    width: 20%!important;
+}
+
+.padding-51 {
+    padding: 15px 0;
+}
+
+#prog-box {
+    list-style: none;
+    margin-top: 29px;
+    padding: 75px 52px 55px;
+    font-size: 16px;
+    background: #fff;
+    position: relative;
+}
+
+body #echarts1 {
+    height: 316px;
+    margin-top: 29px;
+    padding-bottom: 20px;
+}
+
+#prog-box li {
+    /*#EDEEEE*/
+    position: relative;
+    margin-bottom: 50px;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#e1ddd9), to(#e9e5e2));
+    background-image: -webkit-linear-gradient(top, #e1ddd9, #e9e5e2);
+    background-image: -moz-linear-gradient(top, #e1ddd9, #e9e5e2);
+    background-image: -ms-linear-gradient(top, #e1ddd9, #e9e5e2);
+    background-image: -o-linear-gradient(top, #e1ddd9, #e9e5e2);
+    background-image: linear-gradient(top, #e1ddd9, #e9e5e2);
+    height: 9px;
+    border-radius: 9px;
+    -webkit-box-shadow: 0 1px 0 #bebbb9 inset, 0 1px 0 #fcfcfc;
+    box-shadow: 0 1px 0 #bebbb9 inset, 0 1px 0 #fcfcfc;
+}
+
+#prog-box li:last-child {
+    margin-bottom: 0;
+}
+
+#prog-box li h3 {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    color: #6A6A6A;
+    font-size: 16px;
+}
+
+#prog-box li label {
+    position: absolute;
+    top: -25px;
+    right: 0;
+    color: #B0B1B2;
+}
+
+.bar {
+    height: 9px;
+    margin: 0px;
+    position: absolute;
+    border-radius: 9px;
+    width: 100%;
+}
+.bar-box{
+    position: relative;
+}
+#total-user{
+    top: 10px;
+    right: 52px;
+    position: absolute;
+    text-align: right;
+}
+
+.bar-login {
+    -webkit-animation: graphic-design 2s ease-in-out;
+    background-color: #8CCAFF;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#8CCAFF), to(#4D4EB1));
+    background-image: -webkit-linear-gradient(to right, #8CCAFF, #4D4EB1);
+    background-image: -moz-linear-gradient(to right, #8CCAFF, #4D4EB1);
+    background-image: -ms-linear-gradient(to right, #8CCAFF, #4D4EB1);
+    background-image: -o-linear-gradient(to right, #8CCAFF, #4D4EB1);
+    background-image: linear-gradient(to right, #8CCAFF, #4D4EB1);
+}
+
+.bar-active {
+    -webkit-animation: html-css 2s ease-in-out;
+    background-color: #FF69B7;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#FF69B7), to(#FA3576));
+    background-image: -webkit-linear-gradient(to right, #FF69B7, #FA3576);
+    background-image: -moz-linear-gradient(to right, #FF69B7, #FA3576);
+    background-image: -ms-linear-gradient(to right, #FF69B7, #FA3576);
+    background-image: -o-linear-gradient(to right, #FF69B7, #FA3576);
+    background-image: linear-gradient(to right, #FF69B7, #FA3576);
+}
+
+.bar-hall {
+    -webkit-animation: jQuery 2s ease-in-out;
+    background-color: #B379FD;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#B379FD), to(#5F5DFA));
+    background-image: -webkit-linear-gradient(to right, #B379FD, #5F5DFA);
+    background-image: -moz-linear-gradient(to right, #B379FD, #5F5DFA);
+    background-image: -ms-linear-gradient(to right, #B379FD, #5F5DFA);
+    background-image: -o-linear-gradient(to right, #B379FD, #5F5DFA);
+    background-image: linear-gradient(to right, #B379FD, #5F5DFA);
+}
+
+.bar-game {
+    -webkit-animation: Wordpress 2s ease-in-out;
+    background-color: #F3C2AF;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#F3C2AF), to(#e06995));
+    background-image: -webkit-linear-gradient(to right, #F3C2AF, #FF5A7F);
+    background-image: -moz-linear-gradient(to right, #F3C2AF, #FF5A7F);
+    background-image: -ms-linear-gradient(to right, #F3C2AF, #FF5A7F);
+    background-image: -o-linear-gradient(to right, #F3C2AF, #FF5A7F);
+    background-image: linear-gradient(to right, #F3C2AF, #FF5A7F);
+}
+
+/*--设置每条进度条的关键帧动画--*/
+@-webkit-keyframes graphic-design {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@-webkit-keyframes html-css {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@-webkit-keyframes jQuery {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@-webkit-keyframes Wordpress {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+#echarts2, #echarts3, #echarts4, #echarts5 {
+    height: 354px;
+}
+
+#tab {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    font-weight: bolder;
+    background-color: #FFFFFF;
+    border: 1px solid #dcdcdc;
+}
+
+#tab tr th {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+body #tab tr th:first-child {
+    width: 120px !important;
+    max-width: 120px !important;
+    min-width: 120px !important;
+}
+
+#tab .tab-h-title {
+    height: 60px;
+    background: #ECF1FF;
+}
+
+#tab tr th:first-child {
+    background: #ECF1FF;
+}
+
+#tab tr:nth-child(n+2) th {
+    height: 112px;
+}
+
+#tab .tab-head {
+    position: relative;
+}
+
+#tab .tab-head::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 30px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #DCDCDC;
+    transform-origin: bottom center;
+    transform: rotateZ(26deg) scale(1.15);
+}
+
+#tab .tab-head span {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+#tab .tab-head span:first-child {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}
+
+#tab .tab-head span:last-child {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.bg-white {
+    background: #fff;
+}
+
+.padd {
+    padding: 51px 44px;
+}

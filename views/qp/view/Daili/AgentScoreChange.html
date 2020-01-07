@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>代理系统-金币变化</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="cTypeList">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：代理系统-金币变化 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>
+                                        被操作账号：<input name="txtSearch" id="txtSearch"
+                                                     class="form-control inline input-width-200" type="text"
+                                                     maxlength="20"/>
+                                        起止日期：<input id="txtStartDate" class="input-width-150" type="text"
+                                                    readonly="readonly" placeholder="请输入开始时间"/>至
+                                        <input type="text" id="txtEndDate" class="input-width-150"
+                                               readonly="readonly"
+                                               placeholder="请输入结束时间"/>
+                                        变化类型：<select name='changeType' id='changeType' v-model="cType">
+                                        <option :value="item.ID" v-for="item in cTypeList">{{item.Name}}</option>
+                                    </select>
+                                    </li>
+
+                                    <li>
+                                        <a class="btn btn-success search" href="#" id="btnQuery"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn btn-primary" onclick="history.go(0);"><i
+                                                class="glyphicon glyphicon-repeat"></i>刷新</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-2" style="display: none;">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                                <label>
+                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                                            id="pagecount">
+                                        <option value="10" selected="selected">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> 条/页
+                                </label>
+                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="padding-top:10px; padding-right:20px; text-align:right;">
+                            符合条件的金币变化总额:<label style="color:red;" id="lbltotal"></label>金币
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+
+                        <table style="display: none;" class="table table-striped table-bordered">
+                            <thead>
+                            <tr role="row">
+                                <th class="sorting">序号</th>
+                                <th class="sorting">变化类型</th>
+                                <th class="sorting">金币变化</th>
+                                <th class="sorting">金币变化前</th>
+                                <th class="sorting">金币变化后</th>
+                                <th class="sorting">被操作账号</th>
+                                <th class="sorting">日期</th>
+                            </tr>
+                            </thead>
+                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                        </table>
+                        <!--分页控件-->
+                        <div class="row">
+                            <div class="col-md-6">
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                    <ul class="pagination" id="pagin"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var myVue = new Vue({
+        el: '#content'
+        , data: {
+            cType: 0,
+            cTypeList: [{
+                ID: 0,
+                Name: "全部"
+            }]
+        }, mounted: function () {
+            var that = this;
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Daili/agentlogtype?token='+getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 1) {
+                        that.cTypeList = that.cTypeList.concat(res.data)
+                    }
+                    console.log(that.cTypeList);
+                }
+            })
+            laydate.render({
+                elem: '#txtStartDate'
+                , type: 'datetime'
+                , theme: '#00B4E5'
+            });
+            laydate.render({
+                elem: '#txtEndDate'
+                , type: 'datetime'
+                , theme: '#00B4E5'
+            });
+            docReady();
+        }
+    })
+    var pageObj = {};
+    var postData = {};//搜索条件
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var table;
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url: qp_url + 'admin/Daili/GetAgentScoreChange?token='+getStorage('token') //数据接口
+            , where: {
+                aid: getUrlParams('aid'),
+                cType: 0
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                if(res.status == 1){
+                    $("#lbltotal").text(res.data.Sum)
+                }
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.list //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 100
+            , cols: [[ //表头
+                {type: 'numbers', title: '序号'}
+                , {field: 'Name', title: '变化类型'}
+                , {field: 'SwapScore', title: '金币变化'}
+                , {field: 'StartScore', title: '金币变化前'}
+                , {field: 'EndScore', title: '金币变化后'}
+                , {field: 'SourceAcc', title: '被操作账号'}
+                , {field: 'SwapDate', title: '日期'}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+
+        });
+    });
+    // $(document).ready(function () {
+    //     laydate.render({
+    //         elem: '#txtStartDate'
+    //         , type: 'datetime'
+    //         , theme: '#6D8DFD'
+    //     });
+    //     laydate.render({
+    //         elem: '#txtEndDate'
+    //         , type: 'datetime'
+    //         , theme: '#6D8DFD'
+    //     });
+    //     docReady();
+    //
+    //
+    // });
+
+    function docReady() {
+        // //加载数据
+        // postData.pageSize = parseInt($("#pagecount").val());
+        // postData.pageIndex = 1;
+        // postData.aid = '7';
+        // AjaxSearch(postData);
+
+        //收放事件
+        $('.btn-minimize').click(function (e) {
+            e.preventDefault();
+            var $target = $(this).parent().parent().next('.box-content');
+            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $target.slideToggle();
+        });
+        // //选择页码
+        // $("#pagecount").change(function (e) {
+        //     postData.pageSize = parseInt($(this).val());
+        //     postData.pageIndex = 1;
+        //     AjaxSearch(postData);
+        // });
+        // //刷新
+        // $("#btnRefresh").click(function (e) {
+        //     AjaxSearch(postData);
+        // });
+    }
+
+    //普通搜索事件
+    $(document).on('click', '#btnQuery', function () {
+        var txtStartDate = $("#txtStartDate").val();
+        var txtEndDate = $("#txtEndDate").val();
+        if (txtStartDate != "" && txtEndDate != "") {
+            if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                alert("开始日期不能大于结束时间");
+                return false;
+            }
+        }
+
+        postData.StartDate = txtStartDate;
+        postData.EndDate = txtEndDate;
+        postData.aname = $('#txtSearch').val();
+        postData.cType = $("#changeType").val();
+        // postData.pageSize = parseInt($("#pagecount").val());
+        // AjaxSearch(postData);
+        table.reload('layTable', {
+            where: postData,
+            page: {
+                curr: 1
+            }
+        })
+    })
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+        $('#pagin').paging("/Daili/GetAgentScoreChange", postData, CreatTableBody, postData.pageIndex);
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics) {
+        $("#lbltotal").html(statistics.Sum);
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr>");
+                html += stringFormat("<td>{0}</td>", item.PageView_RowNo);
+                html += stringFormat("<td>{0}</td>", item.Name);
+
+                html += stringFormat("<td>{0}</td>", "<font color='#FF0000'>" + item.SwapScore + "</font>");
+                html += stringFormat("<td>{0}</td>", item.StartScore);
+                html += stringFormat("<td>{0}</td>", item.EndScore);
+                html += stringFormat("<td>{0}</td>", item.SourceAcc);
+                html += stringFormat("<td>{0}</td>", item.SwapDate);
+                html += "</tr>";
+            });
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+</script>
+
+</body>
+</html>

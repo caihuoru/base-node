@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width" />
+    <title>添加ios配置</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet" />
+    <style>
+        /*.panel-default {
+            width: 50%;
+        }*/
+        .panel-body .row {
+            margin: 15px 0;
+        }
+
+        .minW {
+            min-width: 130px;
+        }
+
+        .layui-form-select {
+            width: 120px;
+            display: inline-block;
+        }
+
+        .layui-form-select dl dd:hover {
+            background-color: #666;
+            color: #fff;
+        }
+
+        .layui-form-select dl dd.layui-this {
+            background-color: #666
+        }
+
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .panel .sub-title {
+            color: #333;
+            background-color: #F5F5F5 !important;
+        }
+
+        .layui-input-inline {
+            width: 400px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content" class="main-content">
+        <div class="">
+            <div class="carousel box-inner">
+                <div class="box-header well clearfix" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：添加ios配置</h2>
+                </div>
+                <div class="tab-content">
+                    <div class="panel panel-primary layui-form">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">添加ios配置</h3>
+                        </div>
+                        <div class="panel-body" id="panel-body">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label minW">代理账号:</div>
+                                <div class="layui-input-inline">
+                                    <input id="AgentAcc" class="layui-input input-sm" type="text" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label minW">代理名称:</div>
+                                <div class="layui-input-inline">
+                                    <input id="AgentName" class="layui-input input-sm" type="text" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label minW">主版本号:</div>
+                                <div class="layui-input-inline">
+                                    <input id="SrcVersionNo" class="layui-input input-sm" type="text" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label minW">资源版本号:</div>
+                                <div class="layui-input-inline">
+                                    <input id="VersionNo" class="layui-input input-sm" type="text" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label minW">是否苹果内购:</div>
+                                <div class="layui-input-inline">
+                                    <input id="IsIOSShop" class="layui-input input-sm" type="text" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label minW">极光推送Key:</div>
+                                <div class="layui-input-inline">
+                                    <input id="AppKey" class="layui-input input-sm" type="text" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label minW">极光推送Secret:</div>
+                                <div class="layui-input-inline">
+                                    <input id="AppSecret" class="layui-input input-sm" type="text" maxlength="20">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label minW">IOS下载地址:</div>
+                                <div class="layui-input-inline">
+                                    <input id="AppUrl" class="layui-input input-sm" type="text" maxlength="20">
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+                                    <li class="edit"><a class="btn btn-danger" href="#" onclick="closed('1')"><i
+                                                class="glyphicon glyphicon-circle-arrow-left"></i>关闭</a></li>
+                                    <li><a class="btn btn-outline-success search btn-md" href="#" onclick=add()><i
+                                                class="glyphicon glyphicon-send"></i>保存</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <script src="../../Scripts/vue.min.js"></script>
+    <script type="text/javascript">
+
+        function closed(msg) {
+            window.close()
+            window.opener.windowClose(msg)
+        }
+
+        function QueryString(n) {
+            var t = location.href, f = t.substring(t.indexOf("?") + 1, t.length).split("&"), u = {}, r;
+            for (i = 0; j = f[i]; i++)
+                u[j.substring(0, j.indexOf("=")).toLowerCase()] = j.substring(j.indexOf("=") + 1, j.length);
+            return r = u[n.toLowerCase()], typeof r == "undefined" ? "" : r;
+        }
+        function add() {
+            let obj = {
+                AgentName: $("#AgentName").val(),
+                SrcVersionNo: $("#SrcVersionNo").val(),
+                AgentAcc: $("#AgentAcc").val(),
+                VersionNo: $("#VersionNo").val(),
+                IsIOSShop: $("#IsIOSShop").val(),
+                AppKey: $("#AppKey").val(),
+                AppSecret: $("#AppSecret").val(),
+                AppUrl: $("#AppUrl").val(),
+            }
+            $.ajax({
+                url: qp_url + "admin/web/AddIOSConfig",
+                type: "post",
+                dataType: "json",
+                data: obj,
+                success: function (data) {
+                    alert(data.msg);
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>推广系统-推广管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .tableH td {
+            font-weight: bold;
+        }
+
+        tbody tr td {
+            text-align: center !important;
+        }
+
+        .panel-title {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="account">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    基本信息
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr class="tableH">
+                            <td>账号：<label>{{account}}</label></td>
+                            <td>昨日返回税收人数</td>
+                            <td>昨日返回税收金额</td>
+                            <td>本周返回税收人数</td>
+                            <td>本周返回税收金额</td>
+                        </tr>
+                        <tr>
+                            <td>直属推广员</td>
+                            <td>{{resData.jbxx.one.zRevenueCount}}</td>
+                            <td>{{resData.jbxx.one.zRevenueYestoday}}</td>
+                            <td>{{resData.jbxx.one.zRevenueWeekCount}}</td>
+                            <td>{{resData.jbxx.one.zRevenueWeekTotal}}</td>
+                        </tr>
+                        <tr>
+                            <td>次级推广员</td>
+                            <td>{{resData.jbxx.two.cRevenueCount}}</td>
+                            <td>{{resData.jbxx.two.cRevenueYestoday}}</td>
+                            <td>{{resData.jbxx.two.cRevenueWeekCount}}</td>
+                            <td>{{resData.jbxx.two.cRevenueWeekTotal}}</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td>三级推广员</td>
+                            <td>{{resData.jbxx.three.sRevenueCount}}</td>
+                            <td>{{resData.jbxx.three.sRevenueYestoday}}</td>
+                            <td>{{resData.jbxx.three.sRevenueWeekCount}}</td>
+                            <td>{{resData.jbxx.three.sRevenueWeekTotal}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    我的直属推广员
+                </h4>
+            </div>
+            <div id="" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <td><b>昨日新增:</b>{{resData.zs.zztxz}}</td>
+                            <td><b>本周新增:</b>{{resData.zs.zbzxz}}</td>
+                            <td><b>所有直属推广员:</b>{{resData.zs.zAllxz}} <a href="javascript:void(0);" class="btn btn-primary btn-xs" role="button"
+                                                    onclick="openWindow('Understrappers.html?type=1&uname='+uname+'&gameid='+uid, 1200, 800)"><span
+                                    class="glyphicon glyphicon-zoom-in">查看直属推广员</span></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    我的次级推广员
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <td><b>昨日新增:</b>{{resData.cs.cztxz}}</td>
+                            <td><b>本周新增:</b>{{resData.cs.cbzxz}}</td>
+                            <td><b>所有次级推广员:</b>{{resData.cs.cAllxz}}<a href="javascript:void(0)" class="btn btn-primary btn-xs" role="button"
+                                                    onclick="openWindow('Understrappers.html?type=2&uname='+uname+'&gameid='+uid, 1200, 800)"><span
+                                    class="glyphicon glyphicon-zoom-in">查看次级推广员</span></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    我的三级推广员
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <td><b>昨日新增:</b>{{resData.ss.sztxz}}</td>
+                            <td><b>本周新增:</b>{{resData.ss.sbzxz}}</td>
+                            <td><b>所有三级推广员:</b>{{resData.ss.sAllxz}} <a href="javascript:void(0)" class="btn btn-primary btn-xs" role="button"
+                                                    onclick="openWindow('Understrappers.html?type=3&uname='+uname+'&gameid='+uid, 1200, 800)"><span
+                                    class="glyphicon glyphicon-zoom-in">查看三级推广员</span></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Scripts/lhgdialog/lhgdialog.min.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var uname = getUrlParams('uname')
+    var uid = getUrlParams('uid')
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            account: getUrlParams('uname'),
+            UserID: getUrlParams('uid'),
+            resData: {
+                jbxx:{
+                    one:{
+                        zRevenueCount:0,
+                        zRevenueYestoday:0,
+                        zRevenueWeekCount:0,
+                        zRevenueWeekTotal:0,
+                    },
+                    two:{
+                        cRevenueCount:0,
+                        cRevenueYestoday:0,
+                        cRevenueWeekCount:0,
+                        cRevenueWeekTotal:0,
+                    },
+                    three:{
+                        sRevenueCount:0,
+                        sRevenueYestoday:0,
+                        sRevenueWeekCount:0,
+                        sRevenueWeekTotal:0,
+                    }
+                },
+                zs:{
+                    zztxz:0,
+                    zbzxz:0,
+                    zAllxz:0,
+                },
+                cs:{
+                    cztxz:0,
+                    cbzxz:0,
+                    cAllxz:0,
+                },
+                ss:{
+                    sztxz:0,
+                    sbzxz:0,
+                    sAllxz:0,
+                },
+            }
+        },
+        mounted: function () {
+            var that = this
+            $.post(qp_url + 'admin/Promoter/managerSpreadInfo', {
+                UserID: getUrlParams('uid'),
+                token:getStorage('token')
+            }, function (res) {
+                if (res.status == 1) {
+                    that.resData = res.data
+                }
+            }, 'json')
+        }
+    })
+</script>
+
+</body>
+</html>

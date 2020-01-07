@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>财务系统 - 代理设置</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style>
+        .x5 {
+            width: 110px;
+            height: 25px;
+            border: 1px solid #ABADB3;
+            font-size: 14px;
+            background-color: #FFFFFF;
+            line-height: 25px;
+            margin-right: 6px;
+        }
+
+        .col-xs-2 {
+            width: 16%;
+        }
+
+        .checkbox-style input {
+            margin-left: 10px;
+        }
+
+        .panel-body .row div:first-child {
+            min-width: 165px;
+            text-align: right;
+            padding: 0;
+        }
+
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="info">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：财务系统 - 代理设置</h2>
+            </div>
+            <div class="tab-content padding-margin-0">
+
+                <div class="panel panel-info no-bord">
+
+                    <div class="panel-heading no-bord-radio">
+                        <h3 class="panel-title">代理设置</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">系统是否开启：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <select id="systemopen" v-model="info.IsOpen">
+                                    <option value="1">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">每周开放日期：</div>
+                            <div class="col-xs-9 col-md-10 checkbox-style" id="opdayTD">
+                                <input type="checkbox" id="openday1" value="1" name="opentime"/>&nbsp;周一
+                                <input type="checkbox" id="openday2" value="2" name="opentime"/>&nbsp;周二
+                                <input type="checkbox" id="openday3" value="4" name="opentime"/>&nbsp;周三
+                                <input type="checkbox" id="openday4" value="8" name="opentime"/>&nbsp;周四
+                                <input type="checkbox" id="openday5" value="16" name="opentime"/>&nbsp;周五
+                                <input type="checkbox" id="openday6" value="32" name="opentime"/>&nbsp;周六
+                                <input type="checkbox" id="openday7" value="64" name="opentime"/>&nbsp;周日
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">开放时段：</div>
+                            <div class="col-xs-8 col-md-6">
+                                开放时间： <select id="openTime" v-model="info.SOpenTime"></select>
+                                关闭时间： <select id="openClose" v-model="info.EOpenTime"></select>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">每日申请次数：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input class="form-control x5 input-width-238 inline" type="text" id="Txt_ApplyNum"
+                                       value="" v-model="info.DailyApplyTimes"/> 不限制册数请设置为0
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">结算价格：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input class="form-control x5 input-width-238 inline" type="text" id="Txt_ApplyRate"
+                                       value="" v-model="info.BalancePrice"/> =1元
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">每次最少结算金额：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input class="form-control x5 input-width-238 inline" type="text" id="Txt_MinApply"
+                                       value="" v-model="info.MinBalance"/> 金币
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">结算手续费：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input class="form-control x5 input-width-238 inline" type="text" id="Txt_ApplyEndRate"
+                                       value="" v-model="info.CounterFee"/> %
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">最低手续费：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input class="form-control x5 input-width-238 inline" type="text" id="Txt_MinScore"
+                                       value="" v-model="info.MinCounterFee"/> 元
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">上下级代理抽水比例最小间隔：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input class="form-control x5 input-width-238 inline" type="text"
+                                       id="Txt_MinCspercentBlank" value="" v-model="info.DiffAgentRate"/> %
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">下级代理最高抽水比例：</div>
+                            <div class="col-xs-6 col-md-6">
+                                <input class="form-control x5 input-width-238 inline" type="text" id="Txt_MaxCspercent"
+                                       value="" v-model="info.MaxAgentRate"/> %
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1"></div>
+                            <div class="col-xs-6 col-md-6 margin-t-10">
+                                <a class="btn btn-outline-success search btn-md" href="#" @click="Save"><i
+                                        class="glyphicon glyphicon-save"></i>保存</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--                        <ul class="list-group">-->
+                    <!--                            <li class="list-group-item">-->
+                    <!--                                <ul class="list-inline">-->
+                    <!--                                    <li><a class="btn btn-outline-success search btn-md" href="#" onclick="Save();"><i class="glyphicon glyphicon-save"></i>保存</a></li>-->
+                    <!--                                </ul>-->
+                    <!--                            </li>-->
+                    <!--                        </ul>-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['layer'],function () {
+        var layer = layui.layer;
+    })
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            info: {}
+        },
+        mounted: function () {
+            var that = this;
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Daili/getAgentBaseURL?token='+getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 1) {
+                        that.info = res.data
+                        let totl = res.data.WeekOpenDay
+                        for (var i = 6; i >= 0; i--) {
+                            if (totl - Math.pow(2, i) >= 0) {
+                                totl -= Math.pow(2, i)
+                                $("#openday" + (i + 1)).prop("checked", true);
+                            }
+                        }
+                    }
+                }
+            })
+        },
+        methods: {
+            Save: function () {
+                var that = this;
+                var openDays = 0;
+                $("#opdayTD").children().each(function (i) {
+                    var _this = $(this);
+                    if (_this.prop("checked"))
+                        openDays |= _this.val()
+                });
+                var re = /^[0-9]+$/;
+                var cspercentblank = that.info.DiffAgentRate
+                if (!re.test(cspercentblank)) {
+                    layer.alert("抽水比例最小间隔请输入一个正整数！");
+                    that.info.DiffAgentRate=1
+                    return;
+                }
+                if (parseInt(cspercentblank) >= 90) {
+                    layer.alert("抽水比例最小间隔不能大于90");
+                    that.info.DiffAgentRate=1
+                    return;
+
+                }
+                var maxcspercent = that.info.MaxAgentRate
+                if (!re.test(maxcspercent)) {
+                    layer.alert("下级代理最高抽水比例请输入一个正整数！");
+                    that.info.MaxAgentRate=1
+                    return;
+                }
+                if (parseInt(maxcspercent) >= 100) {
+                   layer.alert("下级代理最高抽水比例不能大于100");
+                    that.info.MaxAgentRate=1
+                    return;
+                }
+                that.info.WeekOpenDay = openDays
+                console.log(that.info);
+                var postData = {
+                    BalancePrice: that.info.BalancePrice,
+                    CounterFee: that.info.CounterFee,
+                    DailyApplyTimes: that.info.DailyApplyTimes,
+                    DiffAgentRate: that.info.DiffAgentRate,
+                    EOpenTime: that.info.EOpenTime,
+                    IsOpen: that.info.IsOpen,
+                    MaxAgentRate: that.info.MaxAgentRate,
+                    MinBalance: that.info.MinBalance,
+                    MinCounterFee: that.info.MinCounterFee,
+                    SOpenTime: that.info.SOpenTime,
+                    WeekOpenDay: openDays,
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + 'admin/Daili/UpdateAgentSet?token='+getStorage('token'),
+                    data: postData,
+                    dataType: 'json',
+                    success: function (res) {
+                       layer.msg(res.msg)
+                    }
+                })
+                // var postData = {};
+                // postData.IsOpen = $("#systemopen").val();
+                // postData.WeekOpenDay = openDays.toString();
+                // postData.SOpenTime = $("#openTime").val();
+                // postData.EOpenTime = $("#openClose").val();
+                // postData.DailyApplyTimes = $("#Txt_ApplyNum").val();
+                // postData.BalancePrice = $("#Txt_ApplyRate").val();
+                // postData.MinBalance = $("#Txt_MinApply").val();
+                // postData.CounterFee = $("#Txt_ApplyEndRate").val();
+                // postData.MinCounterFee = $("#Txt_MinScore").val();
+                // postData.DiffAgentRate = $("#Txt_MinCspercentBlank").val();
+                // postData.MaxAgentRate = $("#Txt_MaxCspercent").val();
+                // postData.sData = JSON.stringify(postData)
+
+            }
+            //
+        }
+    })
+
+    var CreateOpenTimeDom = function () {
+        var optionHTML = new String();
+        for (var i = 1; i <= 24; i++) {
+            optionHTML += "<option value='" + i + "'>" + i + "</option>";
+        }
+        $("#openTime,#openClose").html(optionHTML);
+    }
+    var ShowData = function () {
+        $("#systemopen").val('1');
+        for (var i = 0; i < 7; i++) {
+            if (('127' & Math.pow(2, i)) > 0) {
+                $("input[name='" + i + "']").prop("checked", true);
+            }
+        }
+        $("#openTime").val('1');
+        $("#openClose").val('24');
+    }
+    $(function () {
+        CreateOpenTimeDom();
+        ShowData();
+    })
+
+    function Save() {
+
+        var openDays = 0;
+        $("#opdayTD").children().each(function (i) {
+            var _this = $(this);
+            if (_this.prop("checked"))
+                openDays |= _this.val()
+        });
+        var re = /^[0-9]+$/;
+        var cspercentblank = $("#Txt_MinCspercentBlank").val()
+        if (!re.test(cspercentblank)) {
+            alert("抽水比例最小间隔请输入一个正整数！");
+            return;
+        }
+        if (parseInt(cspercentblank) >= 90) {
+            alert("抽水比例最小间隔不能大于90");
+            return;
+
+        }
+        var maxcspercent = $("#Txt_MaxCspercent").val()
+        if (!re.test(maxcspercent)) {
+            alert("下级代理最高抽水比例请输入一个正整数！");
+            return;
+        }
+        if (parseInt(maxcspercent) >= 100) {
+            alert("下级代理最高抽水比例不能大于100");
+            return;
+
+        }
+        var postData = {};
+        postData.IsOpen = $("#systemopen").val();
+        postData.WeekOpenDay = openDays.toString();
+        postData.SOpenTime = $("#openTime").val();
+        postData.EOpenTime = $("#openClose").val();
+        postData.DailyApplyTimes = $("#Txt_ApplyNum").val();
+        postData.BalancePrice = $("#Txt_ApplyRate").val();
+        postData.MinBalance = $("#Txt_MinApply").val();
+        postData.CounterFee = $("#Txt_ApplyEndRate").val();
+        postData.MinCounterFee = $("#Txt_MinScore").val();
+        postData.DiffAgentRate = $("#Txt_MinCspercentBlank").val();
+        postData.MaxAgentRate = $("#Txt_MaxCspercent").val();
+        postData.sData = JSON.stringify(postData)
+        AjaxSubmit("/Daili/UpdateAgentSet", postData, callBack, "save");
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "save":
+                alert(jsonData.Msg);
+                window.location.reload();
+                break;
+        }
+    }
+</script>
+</body>
+</html>

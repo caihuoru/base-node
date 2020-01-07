@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>权限管理-管理员列表</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style>
+        body{
+            overflow-y: scroll!important;
+        }
+        body .form-control {
+            display: inline-block;
+        }
+        .layui-table-cell{
+            text-align: center;}
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner ">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：权限管理-管理员列表 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="btn btn-outline-success search" href="#"
+                               onclick="openWindowOwn('add/adminRoleInfo.html?source=add', '', 800, 800)">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                新增
+                            </a>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table class="layui-table" id="list" lay-filter="list"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="open">
+    {{# if(d.admin_id==1){ }}
+    <input type="checkbox" disabled name="is_open" value="{{d.admin_id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" checked>
+    {{# }else{  }}
+    <input type="checkbox" name="is_open" value="{{d.admin_id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" {{ d.is_open == 1 ? 'checked' : '' }}>
+    {{# } }}
+</script>
+
+<script type="text/html" id="channel">
+    {{# if(d.admin_id==1){ }}
+    <input type="checkbox" disabled name="is_channel" value="{{d.admin_id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" checked>
+    {{# }else{  }}
+    <input type="checkbox" name="is_channel" value="{{d.admin_id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="channel" {{ d.is_channel == 1 ? 'checked' : '' }}>
+    {{# } }}
+</script>
+<script type="text/html" id="bar">
+    <span class="layui-btn layui-btn-normal layui-btn-xs" onclick="openWindowOwn('add/adminRoleInfo.html?source=edit&id={{d.admin_id}}', '', 800, 800)">编辑</span>&nbsp;&nbsp;
+    <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del" >删除</span>&nbsp;&nbsp;
+</script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    let loading;
+    var tableIn;
+    layui.use(['table', 'form'], function () {
+        var table = layui.table, form = layui.form, $ = layui.jquery;
+       tableIn = table.render({
+            elem: '#list',
+            url: qp_url + 'admin/auth/adminList?token=' + getStorage('token'),
+            method: 'get',
+            response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            },
+            title: '管理员列表',
+            cols: [[
+                {field: 'admin_id', title: '编号', width: 60, fixed: true}
+                , {field: 'username', title: '用户名', width: 150}
+                , {field: 'title', title: '用户组', width: 200}
+                , {field: 'email', title: '邮箱', width: 200}
+                , {field: 'tel', title: '联系电话', width: 150}
+                , {field: 'ip', title: 'IP地址', width: 150, hide: true}
+                , {field: 'is_open', title: '状态', width: 150, toolbar: '#open'}
+                , {field: 'is_channel', title: '是否代理', width: 150, toolbar: '#channel'}
+                , {
+                    title: '操作',minWidth:200,fixed:'right',toolbar:'#bar'
+                }
+            ]]
+        });
+        form.on('switch(open)', function (obj) {
+            loading = layer.load(1, {shade: [0.1, '#fff']});
+            var id = this.value;
+            var is_open = obj.elem.checked === true ? 1 : 0;
+            $.post(qp_url+'/admin/auth/adminState', {'id': id, 'is_open': is_open}, function (res) {
+                layer.close(loading);
+                typeof res == 'string' ? res = JSON.parse(res) : ''
+                console.log(res)
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1});
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2});
+                    return false;
+                }
+            })
+        });
+        form.on('switch(channel)', function (obj) {
+            loading = layer.load(1, {shade: [0.1, '#fff']});
+            var id = this.value;
+            var is_channel = obj.elem.checked === true ? 1 : 0;
+            $.post(qp_url+'/admin/auth/adminStateChannel', {'id': id, 'is_channel': is_channel}, function (res) {
+                layer.close(loading);
+                typeof res == 'string' ? res = JSON.parse(res) : ''
+                console.log(res)
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1});
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2});
+                    return false;
+                }
+            })
+        });
+        table.on('tool(list)', function (obj) {
+            console.log(obj)
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('你确定要删除吗？', function (index) {
+                    $.ajax({
+                        type: 'POST',
+                        url: qp_url + 'admin/auth/adminDel',
+                        dataType: "json",
+                        data: {
+                            token:getStorage('token'),
+                            admin_id: data.admin_id
+                        },
+                        success: function (res) {
+                            if (res.status == 1) {
+                                obj.del();
+                                layer.msg(res.msg)
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        }
+                    })
+                });
+            }
+        });
+
+    });
+
+    //添加和编辑完管理员信息后，重新加载表格
+    function reloadTable() {
+        tableIn.reload()
+    }
+
+    function openAll() {
+        var treedata = treeGrid.getDataTreeList(tableId);
+        treeGrid.treeOpenAll(tableId, !treedata[0][treeGrid.config.cols.isOpen]);
+    }
+    let postData;
+    //收放事件
+    $('.btn-minimize').click(function (e) {
+        e.preventDefault();
+        var $target = $(this).parent().parent().next('.box-content');
+        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        $target.slideToggle();
+    });
+
+
+    //菜单栏点击事件
+    function GrantManager(opType) {
+        // var cidStr = GetSelectValues();
+        var cidStr = GetSelectedDatas(selectRows);
+        if (cidStr.length > 0) {
+            if (cidStr == "") {
+                layer.alert('未选中任何数据', {
+                    icon: 7,
+                    skin: 'layer-ext-moon'
+                })
+                return;
+            }
+            var data = {cid: cidStr};
+            switch (opType) {
+                //解除绑定代理
+                case "JiechuDaili":
+                    if (confirm("解除后无法恢复，请慎用"))
+                        AjaxSubmit("Account/JiechuDaili.html", data, callBack, "JiechuDaili");
+                    break;
+                //解散桌子
+                case "DissolveTable":
+                    AjaxSubmit("Account/DissolveTable.html", data, callBack, "DissolveTable");
+                    break;
+                //冻结
+                case "FreezeAccount":
+                    AjaxSubmit("Account/FreezeAccount.html", data, callBack, "FreezeAccount");
+                    break;
+                //解冻
+                case "UnfreezeAccount":
+                    AjaxSubmit("Account/UnfreezeAccount.html", data, callBack, "UnfreezeAccount");
+                    break;
+                case "SettingAndroid":
+                    AjaxSubmit("Account/SettingAndroid.html", data, callBack, "SettingAndroid");
+                    break;
+                case "CancleAndroid":
+                    AjaxSubmit("Account/CancleAndroid.html", data, callBack, "CancleAndroid");
+                    break;
+                case "GrantMember":
+                    openWindowOwn('Account/GrantMember.html?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantTreasure":
+                    openWindowOwn('Account/GrantTreasure.html?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantGameID":
+                    openWindowOwn('Account/GrantGameID.html?param=' + cidStr + '&accounts={1}', '_GrantGameID', 600, 400);
+                    break;
+                case "GrantExperience":
+                    openWindowOwn('Account/GrantExperience?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantScore":
+                    openWindowOwn('Account/GrantScore?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantClearScore":
+                    openWindowOwn('Account/GrantClearScore?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantFlee":
+                    openWindowOwn('Account/GrantFlee?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "UpdateIpAddress":
+                    openWindowOwn('Account/IpAddress.html?cid=' + cidStr, '', 600, 300);
+                    break;
+                case "GrantParentAgent":
+                    openWindowOwn('Account/GrantParentAgent.html?param=' + cidStr, '', 600, 300);
+                    break;
+                case "GrantParentSpreader":
+                    openWindowOwn('Account/GrantParentSpreader.html?param=' + cidStr, '', 600, 300);
+                    break;
+
+            }
+        } else {
+            layer.alert('请选择操作项', {
+                icon: 7,
+                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+            })
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "DissolveTable":
+                alert(jsonData.Msg);
+                break;
+            default:
+                alert(jsonData.Msg);
+                AjaxSearch(postData);
+                break;
+        }
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex) {
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr>");
+                html += stringFormat("<td style=\"width: 30px;\"><input name='cid' type='checkbox' value='{0}'/></td>", item.UserID);
+                html += stringFormat("<td><font color=\"{1}\">{0}</font></td>", item.UserID, (parseInt(item.UserType) == 1 ? "#0000ff" : (parseInt(item.UserType) == 2 ? "#009944" : (parseInt(item.UserType) == 3 ? "#b38850" : (parseInt(item.UserType) == 4 ? "#ff00ff" : "#555555")))));
+                html += stringFormat("<td>{0}</td>", item.GameID);
+                html += stringFormat("<td>{0}</td>", G_AddUserNameLink(item.Accounts, item.UserID, item.UserType));
+                //html += stringFormat("<td>{0}</td>", item.NickName);
+                //html += stringFormat("<td>{0}</td>", item.Gender);
+                //html += stringFormat("<td>{0}</td>", item.Experience);
+                //html += stringFormat("<td>{0}</td>", item.LoveLiness);
+                //html += stringFormat("<td>{0}</td>", item.Present);
+                //html += stringFormat("<td>{0}</td>", item.MemberName);
+                //html += stringFormat("<td>{0}</td>", item.Accounts);
+                //html += stringFormat("<td>{0}</td>", item.MasterOrder);
+                html += stringFormat("<td>{0}</td>", item.Compellation == null ? "" : item.Compellation);
+                html += stringFormat("<td>{0}</td>", item.Score == null ? 0.00 : item.Score.formatMoney());
+                html += stringFormat("<td>{0}</td>", item.InsureScore == null ? 0.00 : item.InsureScore.formatMoney());
+                html += stringFormat("<td>{0}</td>", item.Score == null ? 0.00 : item.rechargeAmount.formatMoney());
+                html += stringFormat("<td>{0}</td>", item.Score == null ? 0.00 : item.withdrawamount.formatMoney());
+                html += stringFormat("<td>{0}</td>", item.Superior == null ? "" : item.Superior);
+                html += stringFormat("<td>{0}</td>", item.SpAccounts == null ? "" : item.SpAccounts);
+                html += stringFormat("<td>{0}</td>", ConverTimeToDHMS(item.PlayTimeCount));
+                html += stringFormat("<td>{0}</td>", item.RegisterDate);
+                html += stringFormat("<td>{0}</td>", item.RegisterIP);
+                //html += stringFormat("<td>{0}</td>", item.GameLogonTimes);
+                html += stringFormat("<td>{0}</td>", item.LastLogonDate);
+                html += stringFormat("<td>{0}</td>", item.LastLogonIP);
+                html += stringFormat("<td>{0}</td>", item.Nullity == 0 ? "<font style='color:green'>正常</font>" : "<font style='color:red'>停权</font>");
+
+                html += "</tr>";
+            });
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+
+    var ConverTimeToDHMS = function (seconds) {
+        if (seconds <= 0)
+            return "0秒";
+        var str = "";
+        var day = parseInt(seconds / 0x15180);
+        var hour = parseInt((seconds % 0x15180) / 0xe10);
+        var minute = parseInt((seconds % 0xe10) / 60);
+        var second = parseInt(seconds % 60);
+        if (day > 0)
+            str += day + "天";
+        if (hour > 0)
+            str += hour + "小时";
+        else
+            str += "0小时";
+        if (minute > 0)
+            str += minute + "分";
+        else
+            str += "0分";
+        if (second > 0)
+            str += second + "秒";
+        else
+            str += "0秒";
+        return str;
+    };
+</script>
+</body>
+
+</html>

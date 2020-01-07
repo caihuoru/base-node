@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>数据分析 - 系统统计</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link href="../Content/common.css" rel="stylesheet" />
+    <link href="../Content/statistics.css" rel="stylesheet">
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Scripts/echarts-all-3.js"></script>
+    <style type="text/css">
+        .panel .panel-heading {
+            background-color: #2F4050 !important;
+            color: #fff;
+        }
+
+        .panel-body {
+            border: 1px solid #2F4050;
+            border-radius: 2px;
+            margin: -2px 0 20px;
+        }
+
+        .panel-default {
+            border-color: transparent;
+        }
+
+        .panel-body .row {
+            margin: 0;
+        }
+
+        .wrap,
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll !important;
+        }
+
+        .line {
+            width: 70%;
+            background-color: #dfdfdf;
+            height: 5px;
+            border-radius: 25px;
+            margin: 0 auto;
+            padding-left: 25%;
+            position: relative;
+            font-size: 13px;
+        }
+
+        .line .jd_line {
+            width: 0%;
+            height: 5px;
+            border-radius: 25px;
+            position: relative;
+            background: cadetblue;
+        }
+
+        .jd_line:hover {
+            height: 8px;
+            top: -1px;
+        }
+
+        .line div {
+            position: absolute;
+            width: 55px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-break: break-all;
+        }
+
+        .line div:first-child {
+            left: -60px;
+            top: -5px;
+            text-align: right;
+        }
+
+        .line div:last-child {
+            right: -60px;
+            top: -5px;
+            text-align: left;
+        }
+
+        #yxsh,
+        #yxss,
+        #fjsh,
+        #fjss {
+            position: relative;
+            top: -8px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+
+<body class="backgroud">
+    <div id="content" class="main-content">
+
+        <div class="carousel box-inner" id="myVue" style="opacity: 0;">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：数据分析 - 系统统计</h2>
+                <div class="box-icon">
+                    <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                        <i class="glyphicon glyphicon-repeat"></i>
+                    </a>
+                    <a href="#" class="btn btn-minimize btn-round btn-default">
+                        <i class="glyphicon glyphicon-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="box-content" style="overflow: hidden; display: block;">
+                <div class="col-md-4 col-lg-4 col-xs-6 col-sm-6">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">用户统计</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    <div class="circle" title="在线人数">
+                                        <p>在线人数</p>
+                                    </div>
+                                    <div class="num" id="ltOnLineCount">{{OnLineCount}}人</div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    <div class="circle" title="停权用户">
+                                        <p>停权用户</p>
+                                    </div>
+                                    <div class="num" id="ltDisenableCount">{{DisenableCount}}人</div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    <div class="circle" title="注册总人数">
+                                        <p>注册总人数</p>
+                                    </div>
+                                    <div class="num" id="ltAllCount">{{AllCount}}人</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">游戏币统计</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    <div class="circle" title="游戏币">
+                                        <p>游戏币</p>
+                                    </div>
+                                    <div class="num" id="ltScore">{{Score}}</div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    <div class="circle" title="保险柜">
+                                        <p>保险柜</p>
+                                    </div>
+                                    <div class="num" id="ltInsureScore">{{InsureScore}}</div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                    <div class="circle" title="总量">
+                                        <p>总量</p>
+                                    </div>
+                                    <div class="num" id="ltAllScore">{{AllScore}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">赠送统计</h3>
+                        </div>
+                        <div class="panel-body zstj">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>注册</p>
+                                    <p><label id="ltRegPresent">{{RegPresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>代理注册</p>
+                                    <p><label id="ltAgentRegPresent">{{AgentRegPresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>低保</p>
+                                    <p><label id="ltDBPresent">{{DBPresent}}</label></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>签到</p>
+                                    <p><label id="ltYBPresent">{{QDPresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>元宝兑换</p>
+                                    <p><label id="ltQDPresent">{{YBPresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>魅力兑换</p>
+                                    <p><label id="ltMLPresent">{{MLPresent}}</label></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>在线时长</p>
+                                    <p><label id="ltOnlinePresent">{{OnlinePresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>任务奖励</p>
+                                    <p><label id="ltRWPresent">{{RWPresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>实名验证</p>
+                                    <p><label id="ltSMPresent">{{SMPresent}}</label></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>会员每日送金</p>
+                                    <p><label id="ltDayPresent">{{DayPresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>比赛奖励</p>
+                                    <p><label id="ltMatchPresent">{{MatchPresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>等级升级</p>
+                                    <p><label id="ltDJPresent">{{DJPresent}}</label></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>分享</p>
+                                    <p><label id="ltSharePresent">{{SharePresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>转盘</p>
+                                    <p><label id="ltLotteryPresent">{{LotteryPresent}}</label></p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                    <p>后台</p>
+                                    <p><label id="ltWebPresent">{{WebPresent}}</label></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-4 col-xs-6 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">税收统计</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="input-width-100 inline" style="text-align:right">游戏总税收：</div>
+                                <div class="inline"><label class="color-blue font-bold"
+                                        id="ltRevenue">{{Revenue}}</label>游戏币
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-width-100 inline" style="text-align:right">转账税收：</div>
+                                <div class="inline"><label class="color-blue font-bold"
+                                        id="ltTransferRevenue">{{TransferRevenue}}</label>游戏币
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">游戏税收（当日的数据不在统计之内）</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="yxss" style="width: 100%;height: 270px"></div>
+                            <!--                        <div class="row" style="margin-top:5px;margin-bottom:5px;">-->
+                            <!--                          -->
+
+                            <!--                            <ul class="list-group">-->
+                            <!--                            </ul>-->
+                            <!--                        </div>-->
+                        </div>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">房间税收(当日的数据不在统计之内)</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="fjss" style="width: 100%;height: 270px"></div>
+                            <!--                        <div class="row" style="margin-top:5px;margin-bottom:5px;">-->
+                            <!--                          -->
+
+                            <!--                            <ul class="list-group">-->
+                            <!--                            </ul>-->
+                            <!--                        </div>-->
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-6 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">损耗统计</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div>
+                                <div style="text-align:center">损耗总量（当日的数据不在统计之内）</div>
+                            </div>
+                            <div class="margin-t-10">
+                                <div style="text-align:center"><label class="color-blue font-bold"
+                                        id="ltWaste">{{Waste}}</label>游戏币
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">游戏损耗（当日的数据不在统计之内）</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="yxsh" style="width: 100%;height: 270px">
+                                <div class="part">
+                                    <div style="text-align: center;margin-bottom: 2px;">红黑大战</div>
+                                    <div class="line">
+                                        <span>0</span>
+
+                                        <div class="jd_line">
+
+                                        </div>
+                                        <span>0</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--                        <div class="row" style="margin-top:5px;margin-bottom:5px;">-->
+                        <!--                            <div id="yxsh" style="width: 100%;height: 300px"></div>-->
+                        <!--                            <ul class="list-group">-->
+                        <!--                            </ul>-->
+                        <!--                        </div>-->
+
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">房间损耗（当日的数据不在统计之内）</h3>
+                        </div>
+                        <div class="panel-body">
+                            <!-- <div id="fjsh" style="width: 100%;height: 270px"></div> -->
+                            <div id="fjsh" style="width: 100%;height: 270px">
+                                <div class="part">
+                                    <div style="text-align: center;margin-bottom: 2px;">红黑大战</div>
+                                    <div class="line">
+                                        <span>0</span>
+
+                                        <div class="jd_line">
+
+                                        </div>
+                                        <span>0</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--                        </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../Scripts/vue.min.js"></script>
+    <script src="../Scripts/axios.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            let that = {};
+            let echartsArray = {};
+            $.ajax({
+                type: 'GET',
+                url: qp_url + "admin/Analysis/SystemStat",
+                dataType: "json",
+                async: false,
+                success: function (rsp) {
+                    if (rsp.status == 1) {
+                        that = rsp.data.stat
+                        echartsArray = rsp.data.four;
+                        $("#myVue").css({ "opacity": "1" })
+                    } else {
+                        alert(rsp.msg);
+                    }
+                }
+            })
+
+            var myVue = new Vue({
+                el: '#myVue',
+                data: that
+            })
+            $(document).ready(function () {
+                docReady();
+            });
+
+            function docReady() {
+                //收放事件
+                $('.btn-minimize').click(function (e) {
+                    e.preventDefault();
+                    var $target = $(this).parent().parent().next('.box-content');
+                    if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+                    else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                    $target.slideToggle();
+                });
+            }
+
+            // var chart1 = echarts.init(document.getElementById('yxss'));
+            // var chart2 = echarts.init(document.getElementById('fjss'));
+            // var chart3 = echarts.init(document.getElementById('yxsh'));
+            // var chart4 = echarts.init(document.getElementById('fjsh'));
+
+
+            // 游戏税收
+            //chart1.setOption(option(echartsArray.ServerIDStat));
+            action("#yxss", echartsArray.gameSata, true);
+            // 房间税收
+            // chart2.setOption(option(echartsArray.WasteStat));
+            action("#fjss", echartsArray.ServerIDStat, true);
+            // 游戏损耗
+            // chart3.setOption(option(echartsArray.ServerIDWasteStat));
+            action("#yxsh", echartsArray.WasteStat)
+            // 房间损耗
+            // chart4.setOption(option(echartsArray.gameSata));
+            action("#fjsh", echartsArray.ServerIDWasteStat)
+
+            // 损耗统计
+            function action(dom, Array_, shui) {
+                let color = ['#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050 ", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050 ", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050", '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050"];
+                let _arr = [new Array()];
+                for (var i = 0; i < Array_.length; i++) {
+                    if (Array_[i].totalRevenue) {
+                        _arr.push(Array_[i].totalRevenue);
+                    } else if (Array_[i].totalWaste) {
+                        _arr.push(Array_[i].totalWaste);
+                    }
+
+                };
+                let num_max = Math.max(..._arr);
+                let num_min = Math.min(..._arr);
+                // Array_.sort(function (a, b) {
+                //     if (a.totalRevenue) {
+                //         return a.totalRevenue - b.totalRevenue;
+                //     } else {
+                //         return a.totalWaste - b.totalWaste;
+                //     }
+
+                // });
+                // let num_min = Array_[0].totalRevenue || Array_[0].totalWaste;
+                // let num_max = Array_[Array_.length - 1].totalRevenue || Array_[Array_.length - 1].totalWaste;
+                let html = "";
+                for (var i = 0; i < Array_.length; i++) {
+                    let value = Array_[i].totalRevenue || Array_[i].totalWaste;
+                    let name = Array_[i].GameKindName || Array_[i].GameRoomName;
+                    let max;
+                    let min;
+                    let r_jindu;
+                    let l_left;
+                    // let
+                    if (Number(value) <= 0) {
+                        if (Number(value) == 0 && Number(num_min) == 0) {
+                            r_jindu = 0;
+                            l_left = 0;
+                        } else {
+                            r_jindu = (value / num_min * 0.55) * 100;
+                            l_left = ((value / num_min * 0.55) * 100);
+
+                            //避免过小宽度无法展示 
+                            if (l_left > 0 && l_left < 0.5) {
+                                r_jindu = 0.5;
+                                l_left = 0.5;
+                            }
+
+                        }
+                        min = value;
+                        max = "0.00";
+
+                    } else {
+                        r_jindu = (value / num_max) * 100;
+                        l_left = 0;
+                        max = value;
+
+                        //避免过小宽度无法展示 
+                        if (r_jindu > 0 && r_jindu < 0.4) {
+                            r_jindu = 0.4;
+                        }
+                        min = "0.00";
+                    }
+
+
+                    if (shui) {
+                        html += `<div class="part">
+                    <div style="padding-left:40%;margin-bottom: 2px;font-size:13px;">${name}</div>
+                        <div class="line" style='padding-left:0;' title='${value}'>
+                            <div title='${min}'>${min}</div>
+                            <div class="jd_line" style="background:${color[i]};width:${r_jindu}%;position:relative;left:-${l_left}%"></div>
+                            <div title='${max}'>${max}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+                    } else {
+                        html += `<div class="part">
+                    <div style="padding-left:40%;margin-bottom: 2px;font-size:13px;">${name}</div>
+                        <div class="line" title='${value}'>
+                            <div title='${min}'>${min}</div>
+                            <div class="jd_line" style="background:${color[i]};width:${r_jindu}%;position:relative;left:-${l_left}%"></div>
+                            <div title='${max}'>${max}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+                    }
+                }
+
+
+                $(dom).html(html);
+            }
+
+            // 税收统计
+            function option(Array_) {
+                return {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    color: ['#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050"],
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        // data: ['通比牛牛', '通比牛牛1', '通比牛牛2', '通比牛牛3', '通比牛牛4', '通比牛牛5', '通比牛牛6', '通比牛牛7', '通比牛牛8', '通比牛牛9']
+                        data: function () {
+                            let newArray = [];
+                            for (var i = 0; i < Array_.length; i++) {
+                                let shuju = Array_[i].GameKindName || Array_[i].GameRoomName || "未命名"
+                                newArray.push(shuju)
+                            }
+                            return newArray;
+                        }()
+                    },
+                    graphic: [{ //环形图中间添加文字
+                        type: 'text', //通过不同top值可以设置上下显示
+                        left: 'center',
+                        top: '45%',
+                        style: {
+                            text: '',
+                            textAlign: 'center',
+                            fill: 'blue', //文字的颜色
+                            width: 30,
+                            height: 30,
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                        }
+                    }],
+                    series: [
+                        {
+                            name: '数据统计',
+                            type: 'pie',
+                            radius: [60, 80],
+                            avoidLabelOverlap: false,
+                            center: ['70%', '50%'],//圆形居中
+                            funnelAlign: 'left',
+                            hoverAnimation: false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                emphasis: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: '20',
+                                        fontWeight: 'bold'
+                                    }
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            // data: [
+                            //     { value: 115, name: '通比牛牛' },
+                            //     { value: 102, name: '通比牛牛1' },
+                            //     { value: 335, name: '通比牛牛2' },
+                            //     { value: 310, name: '通比牛牛3' },
+                            //     { value: 234, name: '通比牛牛4' },
+                            //     { value: 135, name: '通比牛牛5' },
+                            //     { value: 1048, name: '通比牛牛6' },
+                            //     { value: 251, name: '通比牛牛7' },
+                            //     { value: 147, name: '通比牛牛8' },
+                            //     { value: 102, name: '通比牛牛9' }
+                            // ]
+
+                            data: function () {
+                                let newArray = [];
+                                for (var i = 0; i < Array_.length; i++) {
+                                    newArray.push(
+                                        {
+                                            value: Math.abs(Array_[i].totalRevenue || Array_[i].totalWaste || 0),
+                                            name: Array_[i].GameKindName || Array_[i].GameRoomName
+                                        }
+                                    )
+                                }
+                                return newArray;
+                            }()
+                        }
+                    ]
+                };
+            }
+        })
+
+    </script>
+</body>
+
+</html>

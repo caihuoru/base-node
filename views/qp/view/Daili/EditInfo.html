@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>代理系统 - 详细资料</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <link href="../../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
+    <style type="text/css">
+        .col-md-2, .col-md-3 {
+            padding: 0;
+        }
+
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="info">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：代理系统 - 详细资料</h2>
+            </div>
+            <div class="tab-content padding-margin-0">
+
+                <div class="panel panel-info no-bord">
+
+                    <div class="panel-heading no-bord-radio">
+                        <h3 class="panel-title">详细资料</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">代理账号：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="AgentAcc" class="form-control" value="" v-model="info.AgentAcc"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">代理密码：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="Pwd" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">真实姓名：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="RealName" class="form-control" value="" v-model="info.RealName"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">QQ号码：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="QQ" class="form-control" value="" v-model="info.QQ"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">名称：</div>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="txtShowName"
+                                       value="" v-model="info.ShowName"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">微信号：</div>
+                            <div class="col-md-3">
+                                <input class="form-control" type="text" id="txtWeChat"
+                                       value="" v-model="info.WeChat"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
+                            <div class="col-md-2" style="text-align:right">代理类别：</div>
+                            <div class="col-md-3">
+                                <select id="dailiType" class="form-control" v-model="info.IsClient">
+                                    <option value="-1">请选择</option>
+                                    <option value="0">抽水提成</option>
+                                    <option value="2">银商</option>
+                                    <option value="3">充值提成</option>
+                                    <option value="4">无限代理</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">开户行名称：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="BankName" class="form-control" value="" v-model="info.BankName"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">开户行账号：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="BankAcc" class="form-control" value="" v-model="info.BankAcc"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">开户行地址：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="BankAddress" class="form-control" value=""
+                                       v-model="info.BankAddress"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">资产（金币）：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="Score" class="form-control input-width-150 inline" value=""
+                                       readonly="readonly" v-model="info.Score"/>
+                                <a class="btn btn-primary search btn-md" href="#" onclick="ShowPayScore();"><i
+                                        class="glyphicon glyphicon-export"></i>充值</a>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">抽水比例：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="AgentRate" class="form-control input-width-150 inline" value=""
+                                       v-model="info.AgentRate"/>%
+                            </div>
+                            <font color="red" style="display: none">提示：选择是抽水比例无效</font>
+                        </div>
+
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">状态：</div>
+                            <div class="col-md-3">
+                                <select class="x4 form-control input-sm" id="statSelect" v-model="info.AgentStatus">
+                                    <option value="0">正常</option>
+                                    <option value="1">停用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;display:none">
+                            <div class="col-md-2" style="text-align:right">上级代理：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="ParentAcc" class="form-control" value=""
+                                       v-model="info.ParentAcc"/>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">绑定域名：</div>
+                            <div class="col-md-3">
+                                <input type="text" id="AgentDomain" class="form-control" value=""
+                                       v-model="info.AgentDomain"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;" >
+                            <div class="col-md-2" style="text-align:right">查看权限：</div>
+                            <div class="col-md-6" id="queryrightdiv">
+                                <input id="query1" name="queryRight" type="checkbox" value="1"/>玩家充值记录
+                                <input id="query2" name="queryRight" type="checkbox" value="2"/>玩家游戏记录
+                                <input id="query3" name="queryRight" type="checkbox" value="4"/>玩家提现记录
+                                <input id="query4" name="queryRight" type="checkbox" value="8"/>查看总输赢
+                                <input id="query5" name="queryRight" type="checkbox" value="16"/>代理公告
+                                <input id="query6" name="queryRight" type="checkbox" value="32"/>资料修改
+                                <input id="query7" name="queryRight" type="checkbox" value="64"/>玩家管理
+                                <input id="query8" name="queryRight" type="checkbox" value="128"/>代理管理
+                                <input id="query9" name="queryRight" type="checkbox" value="256"/>我的报表
+                                <input id="query10" name="queryRight" type="checkbox" value="512"/>我的抽水记录
+                                <input id="query11" name="queryRight" type="checkbox" value="1024"/>金币变化记录
+<!--                                <input id="query12" name="queryRight" type="checkbox" value="2048" style="display: none;" />代理输赢情况-->
+<!--                                <input id="query13" name="queryRight" type="checkbox" value="4096" style="display: none;" />玩家输赢情况-->
+                                <input id="query14" name="queryRight" type="checkbox" value="8192"/>提款
+                                <input id="query15" name="queryRight" type="checkbox" value="16384"/>提款记录
+                                <input id="query16" name="queryRight" type="checkbox" value="32768"/>充值提成报表
+                                <input id="query17" name="queryRight" type="checkbox" value="65536"/>在线玩家
+                                <input id="query18" name="queryRight" type="checkbox" value="131072"/>代理总输赢
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">备注：</div>
+                            <div class="col-md-3">
+                                <textarea id="Memo" class="form-control" style="width:350px;display:inline;"
+                                          rows="3" v-model="info.Memo"></textarea>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;margin-bottom:5px;">
+                            <div class="col-md-2" style="text-align:right">排序号：</div>
+                            <div class="col-md-3">
+                                <input class="form-control input-sm input-width-150" type="text" id="txtSort"
+                                       value="" v-model="info.ShowSort"/>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li class="col-md-2" style="text-align:right"><a class="btn btn-danger"
+                                                                                 href="#" @click="window.close()"><i
+                                        class="glyphicon glyphicon-remove"></i>关闭</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="#" @click="add"><i
+                                        class="glyphicon glyphicon-save"></i>保存</a></li>
+                                <li style="display: none;"><a class="btn btn-primary search btn-md" href="#" onclick="ClearAgentPack();"><i
+                                        class="glyphicon glyphicon-save"></i>解绑所有玩家</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="payScore" style="display: none">
+    <div class="center" style="padding:20px;">
+        <label>充值金额：</label>
+        <input id="TextScore" class="form-control inline input-width-150" type="text" maxlength="12"/>
+    </div>
+    <div class="center">
+        <a class="btn btn-primary search btn-md w80" href="#" onclick="PayScore();" style="color: #fff;">充值</a>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['layer'], function () {
+        var layer = layui.layer
+    })
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            info: {}
+        },
+        mounted: function () {
+            var that = this
+            //获取显示的信息
+            $.ajax({
+                type: 'POST',
+                url: qp_url + 'admin/Daili/getAgentInfo?token='+getStorage('token'),
+                data: {
+                    aid: getUrlParams('aid')
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 1) {
+                        that.info = res.data[0]
+                        let totl = res.data[0].QueryRight
+                        for (var i = 17; i >= 0; i--) {
+                            if (totl - Math.pow(2, i) >= 0) {
+                                totl -= Math.pow(2, i)
+                                $("#query" + (i + 1)).prop("checked", true);
+                            }
+                        }
+                    }
+                }
+            })
+        },
+        methods: {
+            add: function () {
+                var that = this;
+                console.log(that.info.Pwd);
+                var psd = $('#Pwd').val()
+                if (psd) {
+                    if (psd.length < 6) {
+                        layer.alert("代理密码必须大于6位");
+                        return;
+                    }
+                    //if (/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,16}$/.test(postData.Pwd) == false) {
+                    //    alert("密码必须是6-16位的英文数字组合!");
+                    //    return;
+                    //}
+
+                    //if (postData.Pwd.indexOf('-') > 0 || postData.Pwd.indexOf('\'') > 0) {
+                    //    alert("密码不能包含特殊字符 - 和 ' ");
+                    //    return;
+                    //}
+                }
+                console.log(that.info.AgentRate % 1 === 0);
+                if (!isNaN(that.info.AgentRate)) {
+                    if (!(that.info.AgentRate % 1 === 0)) {
+                        layer.alert("抽水比例必须在0-100之间的整数");
+                        return;
+                    }
+                    if (parseInt(that.info.AgentRate) > 100 || parseInt(that.info.AgentRate) < 0) {
+                        layer.alert("抽水比例必须在0-100之间的整数")
+                        return;
+                    }
+                }else {
+                    layer.alert("抽水比例必须在0-100之间的数字")
+                    return;
+                }
+
+                if (that.info.RealName === "") {
+                    layer.alert("真实姓名不能为空");
+                    return;
+                }
+                //if (!/[u4e00-u9fa5]+/.test(postData.RealName)) {
+                //    if (postData.RealName.length > 5) {
+                //        alert("真实姓名最多5位");
+                //        return;
+                //    }
+                //}
+                //else {
+                //    alert("真实姓名只能为中文");
+                //    return;
+                //}
+                if (that.info.Memo.length > 1000) {
+                    layer.alert("备注不能多于1000字")
+                    return;
+
+                }
+                if (that.info.AgentDomain.length > 0) {
+                    if (that.info.AgentDomain.length > 900) {
+                        layer.alert("域名长度不要超过900");
+                        return;
+                    }
+
+                }
+                console.log(that.info.ShowSort == "");//0 == ""我真是无语了
+                var Sort = $('#txtSort').val();
+                if (Sort == '') {
+                    layer.alert("排序号不能为空")
+                    return
+                }
+                if (!/^[0-9]*$/.test(Sort)) {
+                    layer.alert("排序号只能为数字")
+                    return
+                }
+                that.info['Pwd'] = psd
+                var queryDate=0;
+                $("#queryrightdiv").children().each(function (i) {
+                    var _this = $(this);
+                    if (_this.prop("checked")) {
+                        queryDate |= _this.val()
+                    }
+                });
+                this.info.QueryRight=queryDate
+                console.log(that.info);
+                $.ajax({
+                    type: 'post',
+                    url: qp_url + 'admin/Daili/agentEdit?token='+getStorage('token'),
+                    data: that.info,
+                    dataType: 'json',
+                    success: function (res) {
+                        layer.alert(res.msg)
+                        if(res.status == 1){
+                            window.opener.reloadTable()
+                            // window.close();
+                        }
+                        // layer.msg(res.msg)
+                        // myVue.info.Score =(parseFloat( myVue.info.Score) + parseFloat(pscore)).toFixed(4)
+                    }
+                })
+            }
+        }
+    })
+
+    var aid = getUrlParams('aid')
+    var dailiType = parseInt('3');
+    //页面初始化
+    // $(document).ready(function () {
+    //     if (dailiType == 2) {
+    //         $("#queryrightdiv").hide();
+    //     } else {
+    //         $("#queryrightdiv").show();
+    //     }
+    //     $('#dailiType').val(dailiType);
+    //     $('#statSelect').val('0');
+    //     //选择页码
+    //     $("#dailiType").change(function (e) {
+    //         if (parseInt($(this).val()) == 2) {
+    //             $("#queryrightdiv").hide();
+    //         } else {
+    //             $("#queryrightdiv").show();
+    //         }
+    //     });
+    // });
+
+    function add() {
+        var postData = {};
+        postData.Pwd = $("#Pwd").val();
+        postData.RealName = $("#RealName").val();
+        postData.QQ = $("#QQ").val();
+        postData.BankName = $("#BankName").val();
+        postData.BankAcc = $("#BankAcc").val();
+        postData.BankAddress = $("#BankAddress").val();
+        postData.AgentRate = $("#AgentRate").val();
+        postData.AgentStatus = $("#statSelect").val();
+        postData.ParentAcc = $("#ParentAcc").val();
+        postData.Memo = $("#Memo").val();
+        postData.AgentDomain = $("#AgentDomain").val();
+        postData.ShowName = $("#txtShowName").val();
+        postData.WeChat = $("#txtWeChat").val();
+        postData.IsClient = $('#dailiType').val();
+        if (postData.Pwd != "") {
+            if (postData.Pwd.length < 6) {
+                alert("代理密码必须大于6位");
+                return;
+            }
+            //if (/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,16}$/.test(postData.Pwd) == false) {
+            //    alert("密码必须是6-16位的英文数字组合!");
+            //    return;
+            //}
+
+            //if (postData.Pwd.indexOf('-') > 0 || postData.Pwd.indexOf('\'') > 0) {
+            //    alert("密码不能包含特殊字符 - 和 ' ");
+            //    return;
+            //}
+        }
+        if (!isNaN(postData.AgentRate)) {
+            if (postData.AgentRate.indexOf('.') > 0) {
+                alert("抽水比例必须在0-100之间的整数");
+                return;
+            }
+            if (parseInt(postData.AgentRate) > 100 || parseInt(postData.AgentRate) < 0) {
+                alert("抽水比例必须在0-100之间的整数")
+                return;
+            }
+        } else {
+            alert("抽水比例必须在0-100之间的数字")
+            return;
+        }
+
+        if (postData.RealName === "") {
+            alert("真实姓名不能为空");
+            return;
+        }
+        //if (!/[u4e00-u9fa5]+/.test(postData.RealName)) {
+        //    if (postData.RealName.length > 5) {
+        //        alert("真实姓名最多5位");
+        //        return;
+        //    }
+        //}
+        //else {
+        //    alert("真实姓名只能为中文");
+        //    return;
+        //}
+        if (postData.Memo.length > 1000) {
+            alert("备注不能多于1000字")
+            return;
+
+        }
+        if (postData.AgentDomain.length > 0) {
+            if (postData.AgentDomain.length > 900) {
+
+                alert("域名长度不要超过900");
+                return;
+            }
+
+        }
+        var Sort = $('#txtSort').val();
+        if (Sort == "") {
+            alert("排序号不能为空")
+            return
+        }
+        if (!/^[0-9]*$/.test(Sort)) {
+            alert("排序号只能为数字")
+            return
+        }
+
+        postData.ShowSort = Sort;
+        postData.AgentRate = postData.AgentRate / 100;
+        postData.RechargeRate = postData.RechargeRate / 100;
+        postData.AgentID = aid;
+        postData.QueryRight = 0;
+        $("input[name='queryRight']:checked").each(function (index, item) {
+            postData.QueryRight += parseInt($(this).val());
+        });
+        postData.sData = JSON.stringify(postData);
+
+        AjaxSubmit("/Daili/Edit", postData, callBack, "add");
+    }
+
+    //解绑所有玩家
+    function ClearAgentPack() {
+        if (confirm("解除绑定后不能恢复，请再次确认")) {
+            AjaxSubmit("/Daili/ClearAgentPack", {aid: aid}, callBack, "ClearAgentPack");
+        }
+    }
+
+    //充值
+    var PayScore = function () {
+        var pscore = $("#TextScore").val();
+        if (pscore == "")
+            layer.alert("充值金额不能为空")
+        else if (isNaN(pscore))
+            layer.alert("充值金额不正确");
+        else {
+            $.ajax({
+                type: 'post',
+                url: qp_url + 'admin/Daili/Pay?token='+getStorage('token'),
+                data: {
+                    aid: getUrlParams('aid'),
+                    score: pscore
+                },
+                dataType: 'json',
+                success: function (res) {
+                    layer.msg(res.msg)
+                    if (res.status == 1) {
+                        myVue.info.Score = (parseFloat(myVue.info.Score) + parseFloat(pscore)).toFixed(4)
+                        $('.ui-button').click()
+                    }
+                }
+            })
+            // AjaxSubmit("/Daili/Pay", {aid: aid, score: pscore}, callBack, "pay");
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "add":
+                alert(jsonData.Msg);
+                window.close();
+                //window.opener.location.reload();
+                break;
+            case "pay":
+                alert(jsonData.Msg);
+                location.reload();
+                break;
+            case "ClearAgentPack":
+                alert(jsonData.Msg);
+                break;
+        }
+    }
+
+    var ShowPayScore = function () {
+        $("#payScore").dialog({
+            autoOpen: true,
+            height: 200,
+            width: 380,
+            modal: true,
+            title: "充值金额"
+        });
+    }
+</script>
+
+</body>
+</html>

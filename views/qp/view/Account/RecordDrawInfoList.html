@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>用户系统 - 游戏记录</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style>
+        p {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .layui-table tbody tr .layui-table-cell {
+            height: auto !important;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+
+    </style>
+
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="userID">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：用户系统 - 游戏记录 </h2>
+
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+
+                </div>
+                <ul class="media nav nav-tabs">
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=0'" title="">基本信息</a>
+                    </li>
+                    <li style="display: none;">
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=1'" title="">详细信息</a>
+                    </li>
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=2'" title="">财富信息</a>
+                    </li>
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=3'" title="">记录信息</a>
+                    </li>
+                    <li class="active">
+                        <a :href="'RecordDrawInfoList.html?param='+userID+'&account='+ account" title="">游戏记录</a>
+                    </li>
+                    <li>
+                        <a :href="'../chongZhiJiLu.html?param='+userID+'&account='+ account" title="">充值记录</a>
+                        <!--                        <a :href="'../chongZhiJiLu.html?param='+userID+'&account='+ userInfo.Accounts" title="">充值记录</a>-->
+                    </li>
+                    <li>
+                        <a :href="'RecordGlodList.html?param='+userID+'&account='+ account" title="">金币流水</a>
+                    </li>
+                    <li>
+                        <a :href="'RecordUserInoutList.html?param='+userID+'&account='+ account" title="">进出记录</a>
+                    </li>
+                    <li>
+                        <a :href="'tuiGuang.html?param='+userID+'&account='+ account" title="">推广</a>
+                    </li>
+                    <li>
+                        <a :href="'shuiShouJiLu.html?param='+userID+'&account='+ account" title="">税收记录</a>
+                    </li>
+                </ul>
+                <ul class="media nav nav-tabs" style="display: none;">
+                    <li data-id="duizhan" class="active">
+                        <a href="javascript:void(0);" title="">对战场</a>
+                    </li>
+                    <li data-id="bairen">
+                        <a href="javascript:void(0);" title="">百人场</a>
+                    </li>
+                </ul>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>
+                                        日期查询：
+                                        <input id="txtStartDate" class="input-width-150" type="text" readonly="readonly"
+                                               placeholder="请输入开始时间"/>至<input type="text" id="txtEndDate"
+                                                                              class="input-width-150"
+                                                                              readonly="readonly"
+                                                                              placeholder="请输入结束时间"/>
+                                    </li>
+                                    <li><a class="btn btn-outline-success search" href="#" id="btnquery"><i
+                                            class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-12 top-tip" style="padding-bottom:0px; padding-top:10px; ">
+                            <p>总输赢<span id="sumWinlose"></span></p>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                        <table style="display: none"
+                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                            <tr role="row">
+                                <th>插入时间</th>
+                                <th>游戏</th>
+                                <th>房间</th>
+                                <th>桌子</th>
+                                <th>用户数</th>
+                                <th>机器人数</th>
+                                <th>损耗</th>
+                                <th>税收/服务费</th>
+
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                            </tr>
+                            </thead>
+                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                        </table>
+                        <!--分页控件-->
+                        <div class="row">
+                            <div class="col-md-6">
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                    <ul class="pagination" id="pagin"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../../Scripts/pagination.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script type="text/html" id="operate">
+    <div>
+        <span>查看</span>
+        <img src="../../Content/images/down.gif" lay-event="showinfo{{d.DrawID}}" data-isopen="0"
+             style="cursor: pointer;">
+    </div>
+</script>
+<script type="text/javascript">
+    //获取牌局信息和当前用户的牌
+    //参数totalStr：从服务端得到的字符串
+    function getUserCards(totalStr) {
+        //牌局信息
+        var info = totalStr;
+        let cards = [[],[],[],[]];
+        let value = 14;
+        for (var i = 0; i < 54; i++) {
+            let char = parseInt(info.charAt(i));
+            value > 15 ? value -= 13 : ''
+            i == 52 ? value = 16 : i == 53 ? value = 17 : ''
+            let obj = {
+                name: i,
+                value: value,
+            };
+            if(char)cards[char].push(obj)
+            value++
+        }
+        return cards
+    }
+
+    $("#txtStartDate").val(Time.today().StartDate);
+    $("#txtEndDate").val(Time.today().NowDate);
+    var param = getUrlParams('param')
+    var pageObj = {};
+    var postData = {};//搜索条件
+    var table;
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            userID: param,
+            account: getUrlParams('account') || ''
+        }
+    })
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtEndDate', format: 'yyyy-MM-dd 23:59:59'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        docReady();
+    });
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            , url: qp_url + "admin/account/UserGameLog?token=" + getStorage('token') //数据接口
+            , where: postData
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                $('#sumWinlose').html(res.data.Sum)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.list //解析数据列表
+                };
+            }
+            , cellMinWidth: 100
+            , height: 600
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cols: [[ //表头
+                {field: 'UserID', title: '用户ID'}
+                , {field: 'NickName', title: '用户昵称'}
+                , {field: 'GameKindName', title: '游戏名称'}
+                , {field: 'GameRoomName', title: '房间名称', minWidth: 145}
+                , {field: 'DrawID', title: '局数标识'}
+                , {field: 'PlayTimeCount', title: '游戏时间',templet:function (d) {
+                        return ConverTimeToDHMS(d.PlayTimeCount)
+                    }}
+                , {field: '', title: '牌局信息', minWidth: 120, toolbar: '#operate'}
+                , {field: 'PreScore', title: '变化前金币'}
+                , {field: 'Score', title: '用户金币变化', minWidth: 120}
+                , {field: 'afterScore', title: '变化后金币'}
+                , {field: 'TableID', title: '桌子'}
+                , {field: 'UserCount', title: '用户数目'}
+                , {field: 'AndroidCount', title: '机器人数'}
+                , {field: 'Waste', title: '损耗'}
+                , {field: 'Revenue', title: '税收/服务费', minWidth: 120}
+                , {field: 'InsertTime', title: '游戏日期', width: 170}
+                , {field: 'StartTime', title: '开始时间', width: 170}
+                , {field: 'ConcludeTime', title: '结束时间', width: 170}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+        //监听工具条点击事件
+        table.on('tool(test)', function (obj) {
+            var objData = obj.data;
+            var isopen = $(this).context.dataset.isopen//看看是否已经展开，如果展开的，就将其关闭  0未展开，1展开
+            if ($(this).attr('src') == '../../Content/images/up.gif') {
+                $(this).attr('src', '../../Content/images/down.gif')
+            } else {
+                $(this).attr('src', '../../Content/images/up.gif')
+            }
+            var tableId = 'child' + obj.data.DrawID
+            var current_tr = obj.tr[obj.tr.length - 1]
+            if (isopen == 1) {
+                $('.' + tableId).toggle()
+                return;
+            }
+            $(this).context.dataset.isopen = 1
+            if (obj.event == 'showinfo' + obj.data.DrawID) {
+                var _html = '<tr><td class="' + tableId + '" colspan="' + obj.tr.find('td').length + '"><table id="' + tableId + '" lay-filter="' + tableId + '"></table></td></tr>'
+                $(current_tr).after(_html);
+                table.render({
+                    elem: '#' + tableId
+                    , url: qp_url + "admin/Analysis/GetUserGameRecord?token=" + getStorage('token')//数据接口
+                    , where: {
+                        drawID: obj.data.DrawID
+                    }
+                    , request: {
+                        pageName: 'pageIndex' //页码的参数名称，默认：page
+                        , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    }
+                    , response: { //res 即为原始返回的数据
+                        statusName: 'status',
+                        statusCode: 1,
+                        // msgName: 'msg',
+                        // dataName: 'data',
+                    },
+                    parseData: function (res) {
+                        var data = res.data
+                        console.log(res)
+                        if(objData.GameKindName == '斗地主'){
+                            if(data.length < 3){
+                                for(var i = data.length; i < 3; i++){
+                                    let obj = {};
+                                    let ChairID = data[0].ChairID + i
+                                    console.log(ChairID)
+                                    ChairID > 2 ? ChairID = 0 : ''
+                                    obj.NickName = '机器人'
+                                    obj.ChairID = ChairID
+                                    data.push(obj)
+                                }
+                            }
+                        }
+
+                        return {
+                            "status": res.status, //解析接口状态
+                            "msg": res.msg, //解析提示文本
+                            "count": 1, //解析数据长度 ,需要数据库返回
+                            // "count": res.data.total, //解析数据长度 ,需要数据库返回
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    , cols: [[ //表头
+                        {field: 'UserID', title: '用户ID', width: 120}
+                        , {field: 'Accounts', title: '用户账号', width: 120}
+                        , {field: 'NickName', title: '用户昵称', width: 120}
+                        , {
+                            field: 'ChairID', title: '椅子编号', width: 120, templet: function (d) {
+                                return (d.ChairID + 1)
+                            }
+                        }
+                        , {
+                            field: 'PlayTimeCount', title: '游戏时长',width:120, templet: function (d) {
+                                return ConverTimeToDHMS(d.PlayTimeCount)
+                            }
+                        }
+                        , {
+                            field: 'TableCardInfo', title: '牌型', minWidth:350, templet: function (d) {
+                                if(objData.GameKindName == '斗地主') {
+                                    var res = getUserCards(objData.TableCardInfo)
+                                    let card = res[d.ChairID+1];
+                                    let html = '<div class="cards">'
+                                    card.sort(function (a, b) {
+                                        return b.value - a.value
+                                    })
+                                    for(let i in card){
+                                        let item = card[i];
+                                        html += '<img src="../../Content/images/pk/'+item.name+'.jpg" data-value="'+item.value+'">'
+                                    }
+                                    html += '</div>'
+                                    return html
+                                }else{
+                                    return ``
+                                }
+                            }
+                        }
+                        , {field: 'Score', title: '输赢积分',width: 120}
+                        , {field: 'Revenue', title: '税收/服务费',width: 120}
+
+                        , {field: 'InsertTime', title: '插入时间',width: 120}
+                        , {field: '', title: ''}
+                    ]]
+                    , done: function (res, curr, count) {
+                        $('th').css({'text-align': 'center'});
+                    }
+                })
+            }
+        });
+    });
+
+
+    function docReady() {
+        postData.StartDate = Time.today().StartDate;
+        postData.EndDate = Time.today().NowDate;
+        postData.UserID = param;
+
+        $("#btnquery").click(function (e) {
+            e.preventDefault();
+            var txtStartDate = $("#txtStartDate").val();
+            var txtEndDate = $("#txtEndDate").val();
+            if (txtStartDate != "" && txtEndDate != "") {
+                if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                    layer.alert("开始日期不能大于结束时间");
+                    return false;
+                }
+            }
+            if (txtStartDate != "" && txtEndDate != "") {
+                postData.StartDate = txtStartDate;
+                postData.EndDate = txtEndDate;
+            }
+            table.reload('layTable', {
+                where: postData
+                , page: {
+                    curr: 1
+                }
+            })
+        });
+    }
+</script>
+
+</body>
+</html>

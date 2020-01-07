@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>数据分析 - 每日数据统计</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+
+        table tr th {
+            text-align: center;
+            font-weight: bold;
+            color: #444;
+        }
+
+        table tbody tr td:first-child {
+            vertical-align: middle;
+        }
+
+        table tbody tr td label {
+            font-weight: normal !important;
+        }
+
+        table tbody tr:active {
+            background: none !important;
+        }
+    </style>
+</head>
+
+<body>
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="box-inner">
+            <div class="col-md-12">
+                <div class="box-inner">
+                    <div class="box-header well" data-original-title="">
+                        <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：数据分析 - 每日数据统计 </h2>
+                        <div class="box-icon">
+                            <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                                <i class="glyphicon glyphicon-repeat"></i>
+                            </a>
+                            <a href="#" class="btn btn-minimize btn-round btn-default">
+                                <i class="glyphicon glyphicon-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="box-content tab-content" style="overflow: hidden; display: block;padding: 10px">
+                        <!--查询栏开始-->
+                        <div class="alert alert-info">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline cursor-style">
+                                        <li>日期查询：</li>
+                                        <li>
+                                            <input id="txtStartDate" class="input-width-150" type="text"
+                                                   readonly="readonly" value=""/>&nbsp;&nbsp;至&nbsp;&nbsp;
+                                            <input id="txtEndDate" class="input-width-150" type="text"
+                                                   readonly="readonly" value=""/>
+                                        </li>
+                                        <li>
+                                            <a id="btnQuery" class="btn btn-outline-success search" href="#">
+                                                <i class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="padding-top: 10px">
+                            <table class="table table-bordered bootstrap-datatable datatable responsive dataTable">
+                                <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>系统概况</th>
+                                    <th>用户注册</th>
+                                    <th>用户充值</th>
+                                    <th>三方渠道统计</th>
+                                </tr>
+                                </thead>
+                                <tbody id="data">
+                                <tr>
+                                    <td>正在请求数据.....</td>
+                                    <td>正在请求数据.....</td>
+                                    <td>正在请求数据.....</td>
+                                    <td>正在请求数据.....</td>
+                                    <td>正在请求数据.....</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    // $("#txtStartDate").val(timestampToTime(new Date() / 1000));
+    // $("#txtEndDate").val(timestampToTime(new Date() / 1000));
+    // 没分页先注释
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'date'
+            , value: new Date()
+            , theme: '#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtEndDate'
+            , type: 'date'
+            , value: new Date()
+            , theme: '#00B4E5'
+        });
+    });
+
+    //普通搜索事件
+    $("#btnQuery").click(function (e) {
+        let postData = {};
+        var txtStartDate = $("#txtStartDate").val();
+        var txtEndDate = $("#txtEndDate").val();
+        if (txtStartDate != "" && txtEndDate != "") {
+            if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                alert("开始日期不能大于结束时间");
+                return false;
+            }
+            if (StrToDateTime(txtEndDate) > StrToDateTime(timestampToTime(new Date() / 1000))) {
+                alert("结束时间不能超出今天!");
+                return false;
+            }
+        }
+        postData.StartDate = txtStartDate;
+        postData.EndDate = txtEndDate;
+        // console.log(postData)
+        render(postData);
+    });
+    var DateObj = {
+        StartDate: timestampToTime(new Date() / 1000),
+        EndDate: timestampToTime(new Date() / 1000)
+    }
+    render(DateObj);
+
+    function timestampToTime(timestamp, all) {
+        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = date.getDate() + ' ';
+        if (all) {
+            var h = date.getHours() + ':';
+            var m = date.getMinutes() + ':';
+            var s = date.getSeconds();
+        } else {
+            var h = 0 + ':';
+            var m = 0 + ':';
+            var s = 0;
+        }
+
+        return Y + M + D + h + m + s;
+    }
+
+    function render(obj) {
+        $.ajax({
+            url: qp_url + "admin/Analysis/everyDayStat?token="+getStorage('token'),
+            type: "get",
+            dataType: "json",
+            data: obj,
+            success: function (data) {
+                let html = "";
+                data = data.data;
+                for (var i = 0; i < data.length; i++) {
+                    html += `   <tr>
+                                    <td>${data[i].xtgk.date}</td>
+                                    <td>
+                                        <div>
+                                            <label>总兑换金额：</label>
+                                            <div class="inline">${data[i].xtgk.applyOrderTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>总兑换人数：</label>
+                                            <div class="inline">${data[i].xtgk.namTotal}人</div>
+                                        </div>
+                                        <div>
+                                            <label>总兑换人次：</label>
+                                            <div class="inline">${data[i].xtgk.namTotal}次</div>
+                                        </div>
+                                        <div>
+                                            <label>关闭订单金额：</label>
+                                            <div class="inline">${data[i].xtgk.closeTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>总盈亏：</label>
+                                            <div class="inline">${data[i].xtgk.zyk}元</div>
+                                        </div>
+                                        <div>
+                                            <label>兑换比率：</label>
+                                            <div class="inline">${(data[i].xtgk.dhbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                        <div>
+                                            <label>系统税收：</label>
+                                            <div class="inline">${data[i].xtgk.xtss}元</div>
+                                        </div>
+                                        <div>
+                                            <label>系统输赢：</label>
+                                            <div class="inline">${data[i].xtgk.systemWin}元</div>
+                                        </div>
+                                        <div>
+                                            <label>总充值金额：</label>
+                                            <div class="inline">${data[i].xtgk.zcz}元</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <label>新增注册：</label>
+                                            <div class="inline">${data[i].yhzc.userTotal}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新增IOS注册：</label>
+                                            <div class="inline">${data[i].yhzc.iosTotal}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新增安卓注册：</label>
+                                            <div class="inline">${data[i].yhzc.androidTotal}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新增注册IP：</label>
+                                            <div class="inline">${data[i].yhzc.ipTotal}个</div>
+                                        </div>
+                                        <div>
+                                            <label>新增绑定手机：</label>
+                                            <div class="inline">${data[i].yhzc.bindMobileTotal}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新增绑定支付宝：</label>
+                                            <div class="inline">${data[i].yhzc.bindzfbTotal}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新增绑定银行卡：</label>
+                                            <div class="inline">${data[i].yhzc.bindbankTotal}人</div>
+                                        </div>
+                                        <div>
+                                            <label>登陆用户数：</label>
+                                            <div class="inline">${data[i].yhzc.loginTotal}人</div>
+                                        </div>
+                                        <div>
+                                            <label>活跃用户数：</label>
+                                            <div class="inline">${data[i].yhzc.activeTotal}人</div>
+                                        </div>
+
+                                        <div>
+                                            <label>注册充值比率：</label>
+                                            <div class="inline">${(data[i].yhzc.zcczbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                        <div>
+                                            <label>注册绑定手机比率：</label>
+                                            <div class="inline">${(data[i].yhzc.zcbdsjbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                        <div>
+                                            <label>注册绑定支付宝比率：</label>
+                                            <div class="inline">${(data[i].yhzc.zcbdzfbbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                        <div>
+                                            <label>注册绑定银行卡比率：</label>
+                                            <div class="inline">${(data[i].yhzc.zcbdyhkbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <label>总充值金额：</label>
+                                            <div class="inline">${data[i].yhcz.allChangeTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>（iOS）用户总充值：</label>
+                                            <div class="inline">${data[i].yhcz.iosChangeTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>（安卓）用户总充值：</label>
+                                            <div class="inline">${data[i].yhcz.androidChangeTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户（iOS）充值：</label>
+                                            <div class="inline">${data[i].yhcz.newIosChaTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户（iOS）充值：</label>
+                                            <div class="inline">${data[i].yhcz.oldIosChaTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户（安卓）充值：</label>
+                                            <div class="inline">${data[i].yhcz.newAdChaTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户（安卓）充值：</label>
+                                            <div class="inline">${data[i].yhcz.oldAdChaTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户（iOS）充值：</label>
+                                            <div class="inline">${data[i].yhcz.newIosMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户（iOS）充值：</label>
+                                            <div class="inline">${data[i].yhcz.oldIosMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户（安卓）充值：</label>
+                                            <div class="inline">${data[i].yhcz.newAdMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户（安卓）充值：</label>
+                                            <div class="inline">${data[i].yhcz.oldAdMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户（iOS）充值占比：</label>
+                                            <div class="inline">${(data[i].yhcz.ios_xyhczbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户（iOS）充值占比：</label>
+                                            <div class="inline">${(data[i].yhcz.ios_lyhczbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户（安卓）充值占比：</label>
+                                            <div class="inline">${(data[i].yhcz.ad_xyhczbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户（安卓）充值占比：</label>
+                                            <div class="inline">${(data[i].yhcz.ad_lyhczbl * 100).toFixed(2)}%</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h3 class="panel-title wrong">三方通道</h3>
+                                        <div>
+                                            <label>新用户充值金额：</label>
+                                            <div class="inline">${data[i].sfqdtj.sf.sanNewTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值金额：</label>
+                                            <div class="inline">${data[i].sfqdtj.sf.oldsanNewTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户充值人数：</label>
+                                            <div class="inline">${data[i].sfqdtj.sf.sanNewMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值人数：</label>
+                                            <div class="inline">${data[i].sfqdtj.sf.oldsanNewMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户充值人次：</label>
+                                            <div class="inline">${data[i].sfqdtj.sf.sanNewManCount}次</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值人次：</label>
+                                            <div class="inline">${data[i].sfqdtj.sf.oldsanNewManCount}次</div>
+                                        </div>
+                                        <h3 class="panel-title wrong">VIP充值</h3>
+                                        <div>
+                                            <label>新用户充值金额：</label>
+                                            <div class="inline">${data[i].sfqdtj.vip.sanNewTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值金额：</label>
+                                            <div class="inline">${data[i].sfqdtj.vip.oldsanNewTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户充值人数：</label>
+                                            <div class="inline">${data[i].sfqdtj.vip.sanNewMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值人数：</label>
+                                            <div class="inline">${data[i].sfqdtj.vip.oldsanNewMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户充值人次：</label>
+                                            <div class="inline">${data[i].sfqdtj.vip.sanNewManCount}次</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值人次：</label>
+                                            <div class="inline">${data[i].sfqdtj.vip.oldsanNewManCount}次</div>
+                                        </div>
+                                        <h3 class="panel-title wrong">专享闪付</h3>
+                                        <div>
+                                            <label>新用户充值金额：</label>
+                                            <div class="inline">${data[i].sfqdtj.zx.sanNewTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值金额：</label>
+                                            <div class="inline">${data[i].sfqdtj.zx.oldsanNewTotal}元</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户充值人数：</label>
+                                            <div class="inline">${data[i].sfqdtj.zx.sanNewMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值人数：</label>
+                                            <div class="inline">${data[i].sfqdtj.zx.oldsanNewMan}人</div>
+                                        </div>
+                                        <div>
+                                            <label>新用户充值人次：</label>
+                                            <div class="inline">${data[i].sfqdtj.zx.sanNewManCount}次</div>
+                                        </div>
+                                        <div>
+                                            <label>老用户充值人次：</label>
+                                            <div class="inline">${data[i].sfqdtj.zx.oldsanNewManCount}次</div>
+                                        </div>
+                                    </td>
+                                </tr>`
+                }
+                $("#data").html(html)
+            }
+        })
+
+
+    }
+
+</script>
+</body>
+
+</html>

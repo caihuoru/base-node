@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>用户系统 - 金币记录</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <script src="../../Content/laydate/laydate.js"></script>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none;" v-show="postData">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：用户系统 - 金币记录 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <ul class="media nav nav-tabs" v-show="userID">
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=0'" title="">基本信息</a>
+                    </li>
+                    <li style="display: none;">
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=1'" title="">详细信息</a>
+                    </li>
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=2'" title="">财富信息</a>
+                    </li>
+                    <li>
+                        <a :href="'AccountsInfo.html?param='+userID+'&curTab=3'" title="">记录信息</a>
+                    </li>
+                    <li>
+                        <a :href="'RecordDrawInfoList.html?param='+userID+'&account='+ account" title="">游戏记录</a>
+                    </li>
+                    <li>
+                        <a :href="'../chongZhiJiLu.html?param='+userID+'&account='+ account" title="">充值记录</a>
+                        <!--                        <a :href="'../chongZhiJiLu.html?param='+userID+'&account='+ userInfo.Accounts" title="">充值记录</a>-->
+
+                    </li>
+                    <li class="active">
+                        <a :href="'RecordGlodList.html?param='+userID+'&account='+ account" title="">金币流水</a>
+                    </li>
+                    <li>
+                        <a :href="'RecordUserInoutList.html?param='+userID+'&account='+ account" title="">进出记录</a>
+                    </li>
+                    <li>
+                        <a :href="'tuiGuang.html?param='+userID+'&account='+ account" title="">推广</a>
+                    </li>
+                    <li>
+                        <a :href="'shuiShouJiLu.html?param='+userID+'&account='+ account" title="">税收记录</a>
+                    </li>
+                </ul>
+                <div class="box-content" style="overflow: hidden;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>
+                                        玩家账号：
+                                    </li>
+                                    <li v-if="userID">
+                                        {{account}}
+                                    </li>
+                                    <li v-else>
+                                        <input type="text" id="txtAccount" class="form-control input-sm input-width-200"
+                                               v-model="postData.Account" placeholder="请输入账号"/>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="list-group-item mb5">
+                                <ul class="list-inline cursor-style">
+                                    <li>
+                                        游戏：
+                                    </li>
+                                    <li>
+                                        <select class="form-control input-sm" id="ddlGameType"
+                                                v-model="postData.KindID">
+                                            <option :value="item.KindID" v-for="item in gameList">{{item.KindName}}
+                                            </option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        变化类型：
+                                    </li>
+                                    <li>
+                                        <select class="form-control input-sm" id="ddlRecordType"
+                                                v-model="postData.TypeID">
+                                            <option value="0">请选择</option>
+                                            <option :value="item.ID" v-for="item in changeType">{{item.TypeName}}
+                                            </option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        金币变化大于：
+                                    </li>
+                                    <li>
+                                        <input id="scorce" class="form-control input-sm input-width-150"
+                                               type="text" onkeyup="if(isNaN(value))execCommand('undo');"
+                                               placeholder="请输入整数值" v-model="postData.Scorce"/>
+                                    </li>
+                                    <li>
+                                        查询日期：
+                                        <input id="txtStartDate" class="input-width-150"
+                                               type="text" readonly="readonly"
+                                               placeholder="请选择开始时间"/>&nbsp;至&nbsp;
+                                        <input id="txtEndDate" class="input-width-150"
+                                               type="text" readonly="readonly"
+                                               placeholder="请选择结束时间"/>
+                                    </li>
+                                    <li><a class="btn btn-outline-success search" href="javascript:void(0)"
+                                           id="btnquery"
+                                           @click="btnquery"><i
+                                            class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a></li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6" style="padding:10px 20px 0px;"><p>符合条件的金币变化总额：<label
+                                style="color:red;" id="lbltotal">{{statistic.sum}}</label>金币</p>
+                            <div style="padding-bottom:5px; padding-top:5px;">
+                                <div> 注册赠送:<label style="color:red;" id="registerScore">{{statistic.registerScore}}</label>金币
+                                    绑定赠送:<label style="color:red;" id="bindScore">{{statistic.bindScore}}</label>金币
+                                    签到赠送:<label style="color:red;" id="signInScore">{{statistic.signInScore}}</label>金币
+                                    财神任务:<label style="color:red;" id="taskScore">{{statistic.taskScore}}</label>金币
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6" style="padding-bottom:5px; padding-top:5px; text-align:right;">
+                            <div class="btn-group">
+                                <button type="button" id="btnQueryTD" class="btn btn-outline-primary"
+                                        @click="TypeQuery(2)"><i
+                                        class="glyphicon glyphicon-align-left icon-white"></i>今天
+                                </button>
+                                <button type="button" id="btnQueryYD" class="btn btn-outline-primary"
+                                        @click="TypeQuery(3)"><i
+                                        class="glyphicon glyphicon-align-center icon-white"></i>昨天
+                                </button>
+                                <button type="button" id="btnQueryTW" class="btn btn-outline-primary"
+                                        @click="TypeQuery(4)"><i
+                                        class="glyphicon glyphicon-align-right icon-white"></i>本周
+                                </button>
+                                <button type="button" id="btnQueryYW" class="btn btn-outline-primary"
+                                        @click="TypeQuery(5)"><i
+                                        class="glyphicon glyphicon-align-justify icon-white"></i>上周
+                                </button>
+                                <button type="button" id="btnQueryTM" class="btn btn-outline-primary"
+                                        @click="TypeQuery(6)"><i
+                                        class="glyphicon glyphicon-indent-left icon-white"></i>本月
+                                </button>
+                                <button type="button" id="btnQueryYM" class="btn btn-outline-primary"
+                                        @click="TypeQuery(7)"><i
+                                        class="glyphicon glyphicon-indent-right icon-white"></i>上月
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var param = getUrlParams('param')
+    if (getUrlParams('account')) {
+        $('#txtSearch').val(getUrlParams('account'));
+    }
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+            , done: function (value, date, endDate) {
+                myVue.postData.StartDate = value
+            }
+        });
+        laydate.render({
+            elem: '#txtEndDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+            , done: function (value, date, endDate) {
+                myVue.postData.EndDate = value
+            }
+        });
+        // docReady();
+    });
+    var pageObj = {};
+    var postData = {};//搜索条件
+    var table;
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            userID: param,
+            account: getUrlParams('account') || '',
+            gameType: 0,
+            gameList: [],//游戏列表
+            // KindID: -1,
+            changeType: [],//默认的游戏类型
+            // TypeID: 0,
+            // Scorce:'',
+            statistic:{},//统计信息
+            postData: {
+                KindID: -1,//默认的游戏类型
+                TypeID: 0,//默认的变化类型
+                Scorce: '',
+                Account: getUrlParams('account') || '',
+                StartDate: '',
+                EndDate: '',
+                Type: ''
+            }
+        },
+        mounted: function () {
+            var that = this;
+            //获取游戏列表
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Gamecommon/GetGameList?token=' + getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    let otherType = [{
+                        KindID: -1,
+                        KindName: '全部'
+                    }];
+                    if (res.status == 1) {
+                        that.gameList = otherType.concat(res.data)
+                    } else {
+                        that.gameList = otherType
+                    }
+                }
+            })
+            //获取变化类型
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Common/GoldChangeList?token=' + getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    if (res.status == 1) {
+                        that.changeType = res.data
+                    }
+                }
+            })
+            //获取统计信息
+            $.ajax({
+                method: 'get',
+                url: qp_url+ 'admin/Account/GetRecordGlodTotal?token='+getStorage('token'),
+                dataType: 'json',
+                data: {
+                    token: getStorage('token'),
+                    UserID: param,
+                    StartDate: '',
+                    EndDate: '',
+                    Account: getUrlParams('account') || '',
+                },
+                success: function (res) {
+                    if(res.status == 1){
+                        res.data.sum = parseFloat(res.data.sum).formatMoney()
+                        res.data.registerScore = parseFloat(res.data.registerScore).formatMoney()
+                        res.data.bindScore = parseFloat(res.data.bindScore).formatMoney()
+                        res.data.signInScore = parseFloat(res.data.signInScore).formatMoney()
+                        res.data.taskScore = parseFloat(res.data.taskScore).formatMoney()
+                        that.statistic = res.data
+                    }
+                }
+            })
+        },
+        methods: {
+            //总查询按钮,为了不混淆，将type=0
+            btnquery: function () {
+                this.postData.TypeID = this.postData.TypeID > 0 ? this.postData.TypeID : 0;
+                this.postData.Type = '';
+                if (StrToDateTime(this.postData.EndDate) < StrToDateTime(this.postData.StartDate)) {
+                    console.log('123');
+                    layer.alert("开始日期不能大于结束时间");
+                    return false;
+                }
+                table.reload('layTable', {
+                    where: this.postData
+                    , page: {
+                        curr: 1
+                    }
+                })
+            },
+            //按钮组查询
+            TypeQuery: function (num) {
+                this.postData.Type = num;
+                table.reload('layTable', {
+                    where: this.postData
+                    , page: {
+                        curr: 1
+                    }
+                })
+            }
+        }
+    })
+    layui.use(['table', 'layer'], function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url: qp_url + 'admin/Account/GetRecordGlodList' //数据接口
+            , where: {
+                token: getStorage('token'),
+                UserID: param,
+                StartDate: '',
+                EndDate: '',
+                Account: getUrlParams('account') || '',
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , cellMinWidth: 100
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , cols: [[ //表头
+                {field: 'RecordID', title: 'ID'}
+                , {field: 'UserID', title: '用户ID'}
+                , {field: 'Accounts', title: '玩家账号', minWidth: 130}
+                , {field: 'PreScore', title: '变化前携带金币', minWidth: 130,templet:function (d) {
+                        return parseFloat(d.PreScore).formatMoney()
+                    }}
+                , {field: 'afterScore', title: '变化后携带金币', minWidth: 130,templet:function (d) {
+                        return parseFloat(d.afterScore).formatMoney()
+                    }}
+                , {field: 'PreInsureScore', title: '变化前银行金币', minWidth: 130,templet:function (d) {
+                        return parseFloat(d.PreInsureScore).formatMoney()
+                    }}
+                , {field: 'afterInsureScore', title: '变化后银行金币', minWidth: 130,templet:function (d) {
+                        return parseFloat(d.afterInsureScore).formatMoney()
+                    }}
+                , {field: 'PresentScore', title: '金币变化数',minWidth:130,templet:function (d) {
+                        return parseFloat(d.PresentScore).formatMoney()
+                    }}
+                , {field: 'afterAllScore', title: '变化后金币',minWidth:130,templet:function (d) {
+                        return parseFloat(d.afterAllScore).formatMoney()
+                    }}
+                , {field: 'TypeName', title: '交易类型'}
+                , {field: 'CollectDate', title: '记录时间', minWidth: 160}
+                , {field: 'IPAddress', title: '记录IP', minWidth: 130}
+                , {field: 'ServerName', title: '所属游戏', minWidth: 150}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+    });
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    function docReady() {
+        // //加载数据
+        // postData.pageSize = parseInt($("#pagecount").val());
+        // postData.pageIndex = 1;
+        // postData.UserID = parseInt('0');
+        // AjaxSearch(postData);
+        //收放事件
+        // $('.btn-minimize').click(function (e) {
+        //     e.preventDefault();
+        //     var $target = $(this).parent().parent().next('.box-content');
+        //     if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        //     else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        //     $target.slideToggle();
+        // });
+        // $("#btnquery").click(function (e) {
+        //     e.preventDefault();
+        //     var TypeID = parseInt($("#ddlRecordType").val());
+        //     if (TypeID > 0) {
+        //         postData.TypeID = TypeID;
+        //     } else {
+        //         postData.TypeID = 0;
+        //     }
+        //
+        //     var scorce = $("#scorce").val().trim();
+        //     if (scorce != "") {
+        //         postData.Scorce = scorce;
+        //     }
+        //     var Account = $("#txtAccount").val();
+        //     if (Account != "") {
+        //         postData.Account = Account;
+        //     }
+        //     postData.pageSize = parseInt($("#pagecount").val());
+        //     AjaxSearch(postData);
+        // });
+
+        // //选择页码
+        // $("#pagecount").change(function (e) {
+        //     postData.pageSize = parseInt($(this).val());
+        //     postData.pageIndex = 1;
+        //     AjaxSearch(postData);
+        // });
+
+        // //今天查询
+        // $("#btnQueryTD").click(function (e) {
+        //     postData.Type = 2;
+        //     AjaxSearch(postData);
+        // });
+        // //昨天查询
+        // $("#btnQueryYD").click(function (e) {
+        //     postData.Type = 3;
+        //     AjaxSearch(postData);
+        // });
+        // //本周查询
+        // $("#btnQueryTW").click(function (e) {
+        //     postData.Type = 4;
+        //     AjaxSearch(postData);
+        // });
+        // //上周查询
+        // $("#btnQueryYW").click(function (e) {
+        //     postData.Type = 5;
+        //     AjaxSearch(postData);
+        // });
+        // //本月查询
+        // $("#btnQueryTM").click(function (e) {
+        //     postData.Type = 6;
+        //     AjaxSearch(postData);
+        // });
+        // //上月查询
+        // $("#btnQueryYM").click(function (e) {
+        //     postData.Type = 7;
+        //     AjaxSearch(postData);
+        // });
+
+    }
+
+    function AjaxSearch(postData) {
+        var txtStartDate = $("#txtStartDate").val().trim();
+        var txtEndDate = $("#txtEndDate").val().trim();
+        if (txtStartDate != "" && txtEndDate != "") {
+            if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                alert("开始日期不能大于结束时间");
+                return false;
+            }
+        }
+        postData.StartDate = txtStartDate;
+        postData.EndDate = txtEndDate;
+        $('#pagin').paging("/Account/GetRecordGlodList", postData, CreatTableBody, postData.pageIndex);
+    }
+
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics) {
+        $("#lbltotal").html(statistics.Sum);
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr>");
+                html += (postData.UserID == 0 ? "<td>" + item.Account + "</td>" : "");
+                html += stringFormat("<td>{0}</td>", item.PreScore);
+                //html += stringFormat("<td>{0}</td>", item.LastScore);
+                html += stringFormat("<td>{0}</td>", item.PreInsureScore);
+                //html += stringFormat("<td>{0}</td>", item.LastInsureScore);
+                html += stringFormat("<td>{0}</td>", item.PresentScore);
+                html += stringFormat("<td>{0}</td>", item.TypeName);
+                html += stringFormat("<td>{0}</td>", item.CollectDate);
+                html += stringFormat("<td>{0}</td>", item.IPAddress);
+                html += "</tr>";
+            });
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+</script>
+
+</body>
+</html>

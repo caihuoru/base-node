@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>游戏用户-用户管理</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style>
+        body {
+            overflow-y: scroll !important;
+        }
+
+        body .form-control {
+            display: inline-block;
+        }
+
+        .pull-left {
+            margin-top: 10px;
+        }
+
+        .btn-off-section {
+            right: -15%;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：游戏用户-用户管理 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info" id="mySearch">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>普通查询：</li>
+                                    <li>
+                                        <input type="text" v-model="postData.KeyWord" placeholder="用户昵称/用户账号"
+                                               id="txtSearch"
+                                               class="form-control input-sm input-width-200">
+                                    </li>
+                                    <li style="display: none;">
+                                        <input class="margin-5" name="ckitem" type="checkbox" checked id="ckbIsLike"/>
+                                        <label for="ckbIsLike">模糊查询</label>
+                                    </li>
+                                    <li>标识：</li>
+                                    <li>
+                                        <select id="ddlUserType" v-model="postData.userType" class="input-sm"
+                                                @change="selectChange()">
+                                            <option v-for="(value,key) in userTypeList" :value="key"
+                                                    :style="{background:value}">{{key==0?'所有':''}}
+                                            </option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <a class="btn btn-outline-success search" href="javascript:void(0);"
+                                           id="btnquery" @click="btnQuery"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                    </li>
+                                    <li>
+                                        <a class="btn btn-outline-info search" href="javascript:void(0);"
+                                           id="advancedQuery" @click="showAdvanced"><i
+                                                class="glyphicon glyphicon-hand-down"></i>高级查询</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn btn-blue" @click="history.go(0);"><i
+                                                class="glyphicon glyphicon-repeat"></i>刷新</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="list-group-item" style="display: none;" id="advancedQueryList">
+                                <ul class="carousel cursor-style" style="width: 85%;">
+                                    <li class="margin-t-b">
+                                        <div class="clearfix">
+                                            <span class="pull-left">用户状态：</span>
+                                            <div class="l-r-margin pull-left" style="display:none">
+                                                <input class="margin-5" name="advancedck" type="checkbox" value="1"
+                                                       id="securityCheckbox"/>
+                                                <label for="securityCheckbox">申请密保</label>
+                                            </div>
+                                            <div class="l-r-margin pull-left" style="display:none">
+                                                <input class="margin-5" name="advancedck" type="checkbox" value="2"
+                                                       id="memberCheckbox"/>
+                                                <label for="memberCheckbox">会员</label>
+                                            </div>
+                                            <div class="l-r-margin pull-left">
+                                                <input class="margin-5" name="advancedck" type="checkbox" value="3"
+                                                       id="fuzzyCheckbox"/>
+                                                <label for="fuzzyCheckbox">冻结</label>
+                                            </div>
+                                            <div class="l-r-margin pull-left" style="display:none">
+                                                <input class="margin-5" name="advancedck" type="checkbox" value="4"
+                                                       id="robotCheckbox"/>
+                                                <label for="robotCheckbox">机器人</label>
+                                            </div>
+                                            <div class="l-r-margin pull-left" style="display:none">
+                                                <input class="margin-5" name="advancedck" type="checkbox" value="5"
+                                                       id="playerCheckbox"/>
+                                                <label for="playerCheckbox">真实玩家</label>
+                                            </div>
+                                            <div class="pull-left" style="display:none">
+                                                <input class="margin-5" name="advancedck" type="checkbox" value="6"
+                                                       id="adminCheckbox"/>
+                                                <label for="adminCheckbox">管理员</label>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="margin-t-b clearfix">
+                                        <div class="r-margin pull-left">
+                                            注册日期：
+                                            <input id="txtStartDate" class="input-width-150" type="text"
+                                                   readonly="readonly"
+                                                   placeholder="请输入开始时间"/>&nbsp;至&nbsp;
+                                            <input id="txtEndDate" class="input-width-150" type="text"
+                                                   readonly="readonly"
+                                                   placeholder="请输入结束时间"/>
+                                        </div>
+                                        <div class="pull-left">登录日期：
+                                            <input id="txtLoStartDate" class="input-width-150" type="text"
+                                                   readonly="readonly"
+                                                   placeholder="请输入开始时间"/>&nbsp;至&nbsp;
+                                            <input id="txtLoEndDate" class="input-width-150" type="text"
+                                                   readonly="readonly"
+                                                   placeholder="请输入结束时间"/>
+                                        </div>
+                                    </li>
+                                    <li class="margin-t-b clearfix">
+                                        <div class="r-margin pull-left">注册地址：
+                                            <input type="text" id="txtRegIP"
+                                                   class="form-control input-sm input-width-200"
+                                                   v-model="advanceData.RegIP">
+                                        </div>
+                                        <div class="r-margin pull-left">注册机器：
+                                            <input type="text" id="txtRegMachine"
+                                                   class="form-control input-sm input-width-200"
+                                                   v-model="advanceData.RegMachine">
+                                        </div>
+                                        <div class="r-margin pull-left">登录地址：
+                                            <input type="text" id="txtLogIP"
+                                                   class="form-control input-sm input-width-200"
+                                                   v-model="advanceData.LogIP">
+                                        </div>
+                                        <div class="r-margin pull-left">登录机器：
+                                            <input type="text" id="txtLogMachine"
+                                                   class="form-control input-sm input-width-200"
+                                                   v-model="advanceData.LogMachine">
+                                        </div>
+                                    </li>
+                                    <li class="margin-t-b clearfix">
+                                        <div class="r-margin pull-left">手机号码：
+                                            <input type="text" id="txtPhone"
+                                                   class="form-control input-sm input-width-200"
+                                                   v-model="advanceData.Phone">
+                                        </div>
+                                        <div class="r-margin pull-left">真实姓名：
+                                            <input type="text" id="txtTrueName"
+                                                   class="form-control input-sm input-width-200"
+                                                   v-model="advanceData.TrueName">
+                                        </div>
+                                        <div class="r-margin pull-left">推广员账号：
+                                            <input type="text" id="txtAgent"
+                                                   class="form-control input-sm input-width-200"
+                                                   v-model="advanceData.Agent">
+                                        </div>
+                                    </li>
+                                    <li class="btn-off-section">
+                                        <a class="btn btn-outline-success search"
+                                           href="javascript:void(0);"
+                                           id="btnHightQuery" @click="advanceQuery">
+                                            <i class="glyphicon glyphicon-zoom-in icon-white"></i>查询
+                                        </a>
+                                        <a class="btn btn-danger"
+                                           href="javascript:void(0);"
+                                           id="advancedQueryClose" @click="hideAdvanced">
+                                            <i class="glyphicon glyphicon-export icon-white"></i>关闭</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-2" style="display: none;">
+                            <a class="btn btn-outline-success search" href="#"
+                               onclick="openWindowOwn('Account/AddAccount.html', '', 800, 800)">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                新增
+                            </a>
+                            <div style="display: none" id="DataTables_Table_0_length" class="dataTables_length">
+                                <label>
+                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                                            id="pagecount">
+                                        <option value="10" selected="selected">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> 条/页
+                                </label>
+                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="padding-bottom:10px; padding-top:10px;text-align: right">
+                            <a class="btn btn-outline-success search" href="#"
+                               onclick="openWindowOwn('Account/AddAccount.html', '', 800, 800)">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                新增
+                            </a>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('GrantParentSpreader')"><i
+                                        class="glyphicon glyphicon-export icon-white"></i>选择上级推广员
+                                </button>
+                                <button style="display: none;" type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('GrantParentAgent')"><i
+                                        class="glyphicon glyphicon-export icon-white"></i>选择上级代理
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('DissolveTable');"><i
+                                        class="glyphicon glyphicon-ok-circle icon-white"></i>解散桌子
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('FreezeAccount');"><i
+                                        class="glyphicon glyphicon-ban-circle icon-white"></i>冻结
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('UnfreezeAccount');"><i
+                                        class="glyphicon glyphicon-ok-circle icon-white"></i>解冻
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('JiechuDaili');"><i
+                                        class="glyphicon glyphicon-ok-circle icon-white"></i>解除绑定推广员
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('GrantTreasure')"><i
+                                        class="glyphicon glyphicon-export icon-white"></i>赠送游戏币
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('GrantGameID')"><i
+                                        class="glyphicon glyphicon-export icon-white"></i>赠送靓号
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                        onclick="GrantManager('UpdateIpAddress');"><i
+                                        class="glyphicon glyphicon-ok-circle icon-white"></i>修改归属地
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                        <table style="display: none"
+                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" role="columnheader" tabindex="0"
+                                    aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending"
+                                    aria-label="Username: activate to sort column descending" id="allCheck">
+                                    <input name="ckall" type="checkbox" value="" onclick="SelectAll(this,'cid')"/>
+                                </th>
+                                <th>用户标识</th>
+                                <th>游戏ID</th>
+                                <th>用户帐号</th>
+
+                                <th>真实姓名</th>
+                                <th>金币</th>
+
+                                <th>银行金币</th>
+                                <th>充值总额</th>
+                                <th>提现总额</th>
+                                <th>代理商</th>
+
+                                <th>推广员</th>
+                                <th>游戏时长</th>
+
+                                <th>注册时间</th>
+                                <th>注册地址</th>
+
+                                <th>最后登录时间</th>
+                                <th>最后登录地址</th>
+                                <th>状态</th>
+
+                            </tr>
+                            </thead>
+                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                        </table>
+                        <!--分页控件-->
+                        <div class="row" style="display: none">
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                    <ul class="pagination" id="pagin"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script type="text/html" id="fengsuoIP1">
+    <div>
+        <span class="inline w120">{{d.RegisterIP}}</span>
+        <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="fengsuo1">封锁</span>
+    </div>
+</script>
+<script type="text/html" id="fengsuoIP2">
+    <div>
+        <span class="inline w120">{{d.LastLogonIP}}</span>
+        <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="fengsuo2">封锁</span>
+    </div>
+</script>
+<script type="text/html" id="buyuMiss">
+    <div>
+        <input class="form-control inline w80 margin-r10" style="height: 25px;">
+        <span class="layui-btn layui-btn-xs ">保存</span>
+    </div>
+</script>
+<script type="text/html" id="status">
+    {{#  if(d.Nullity == 0){ }}
+    <div class="normal">正常</div>
+    {{#  }else{ }}
+    <div class="wrong">停权</div>
+    {{#  } }}
+</script>
+<script type="text/javascript">
+    var pageObj = {};
+    var postData = {};//搜索条件
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var table, selectRows = [];
+
+    var myVue = new Vue({
+        el: '#mySearch',
+        data: {
+            userTypeList: {},//用户类型
+            postData: {
+                KeyWord: '',
+                Type: 0,//普通搜索
+                IsLike: 0,
+                userType: 0,
+                token: getStorage('token')
+            },//普通搜索条件
+            advanceData: {
+                Type: 1,//高级搜索
+                AccountStu: '',//是否冻结
+                StartDate: '',
+                EndDate: '',
+                LoStartDate: '',
+                LoEndDate: '',
+                RegIP: '',
+                RegMachine: '',
+                LogIP: '',
+                LogMachine: '',
+                Phone: '',
+                TrueName: '',
+                Agent: '',
+                token: getStorage('token')
+            }
+        }
+        , mounted: function () {
+            var that = this
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Account/UserTypeColor?token=' + getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                    if (res.status == 1) {
+                        Object.assign(res.data, {
+                            '0': '#fff'
+                        })
+                        that.userTypeList = res.data
+                    }
+                }
+            })
+        }
+        , methods: {
+            //用户类型选择
+            selectChange: function (e) {
+                let color = this.userTypeList[this.postData.userType];
+                $('#ddlUserType').css('background', color)
+            },
+            //普通搜索事件
+            btnQuery: function (e) {
+                var that = this;
+                // e.preventDefault();
+                if (that.postData.KeyWord == "") {
+                    layer.msg("请输入查询条件");
+                    return false;
+                }
+                // that.postData.IsLike = $('#ckbIsLike').is(':checked') ? 1 : 0;
+                that.postData.IsLike = 1;
+                that.postData.token = getStorage('token')
+                console.log(that.postData);
+                table.reload('layTable', {
+                    // url: qp_url + 'admin/account/GetAccounts' //数据接口
+                    where: that.postData
+                    , page: {
+                        curr: 1
+                    }
+                })
+            },
+            //点击高级查询按钮
+            showAdvanced: function (e) {
+                // e.preventDefault();
+                var $target = $('#advancedQueryList');
+                if ($target.is(':visible'))
+                    $('#advancedQuery i').removeClass('glyphicon glyphicon-hand-up').addClass('glyphicon glyphicon-hand-down');
+                else
+                    $('#advancedQuery i').removeClass('glyphicon glyphicon-hand-down').addClass('glyphicon glyphicon-hand-up');
+                $target.slideToggle();
+            },
+            // 高级查询内容关闭事件
+            hideAdvanced: function (e) {
+                $("#advancedQueryList").hide("show").siblings().children().find("#advancedQuery").children().addClass("glyphicon glyphicon-hand-down");
+            },
+            //高级查询事件
+            advanceQuery: function (e) {
+                var that = this;
+                that.advanceData.AccountStu = $('#fuzzyCheckbox').is(':checked') ? 1 : 0;
+                that.advanceData.token = getStorage('token')
+                that.advanceData.StartDate = $("#txtStartDate").val();
+                that.advanceData.EndDate = $("#txtEndDate").val();
+                if (that.advanceData.StartDate != "" && that.advanceData.EndDate != "") {
+                    if (StrToDateTime(that.advanceData.EndDate) < StrToDateTime(that.advanceData.StartDate)) {
+                        layer.msg("注册开始日期不能大于结束时间");
+                        return false;
+                    }
+                }
+                that.advanceData.LoStartDate = $("#txtLoStartDate").val();
+                that.advanceData.LoEndDate = $("#txtLoEndDate").val();
+                if (that.advanceData.LoStartDate != "" && that.advanceData.LoEndDate != "") {
+                    if (StrToDateTime(that.advanceData.LoEndDate) < StrToDateTime(that.advanceData.LoStartDate)) {
+                        layer.msg("登录开始日期不能大于结束时间");
+                        return false;
+                    }
+                }
+                console.log(that.advanceData);
+                table.reload('layTable', {
+                    // url: qp_url + 'admin/account/GetAccounts' //数据接口
+                    where: that.advanceData
+                    , page: {
+                        curr:1
+                    }
+                })
+            }
+        }
+    })
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtEndDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        //时间选择器
+        laydate.render({
+            elem: '#txtLoStartDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtLoEndDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        // docReady();
+    });
+
+    // function docReady() {
+    //     //收放事件
+    //     // $('.btn-minimize').click(function (e) {
+    //     //     e.preventDefault();
+    //     //     var $target = $(this).parent().parent().next('.box-content');
+    //     //     if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    //     //     else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+    //     //     $target.slideToggle();
+    //     // });
+    // }
+
+    layui.use('table', function () {
+        table = layui.table;
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            , url: qp_url + 'admin/account/GetAccounts' //数据接口
+            , where: {
+                token: getStorage('token'),
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 100
+            , cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                , {
+                    field: 'UserID', title: '用户标识', templet: function (d) {
+                        return `<div style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}">${d.UserID}</div>`
+                    }
+                }
+                , {field: 'GameID', title: '游戏ID'}
+                , {
+                    field: 'Accounts', title: '用户帐号', minWidth: 130, templet: function (d) {
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                    }
+                }
+                , {field: 'NickName', title: '用户昵称', minWidth: 130}
+                , {field: 'Compellation', title: '真实姓名'}
+                , {field: 'ChannelId', title: '推广渠道ID', minWidth: 110}
+                , {field: 'ChannelName', title: '推广渠道账号', minWidth: 115}
+                , {
+                    field: 'RegisterOrigin', title: '设备', minWidth: 90, templet: function (d) {
+                        if (d.RegisterOrigin == 1) {
+                            return '安卓'
+                        }
+                        if (d.RegisterOrigin == 2) {
+                            return 'ios'
+                        }
+                        if (d.RegisterOrigin == 3) {
+                            return 'PC'
+                        }
+                        return '无法获取'
+                    }
+                }
+                , {field: 'HistoryAllWinLose', title: '历史总输赢',templet:function (d) {
+                        return parseFloat(d.HistoryAllWinLose).formatMoney()
+                    }}
+                , {field: 'WinCount', title: '赢局数'}
+                , {field: 'LostCount', title: '输局数'}
+                // , {field: '', title: '捕鱼MISS值', width: 150, toolbar: '#buyuMiss'}
+                , {field: 'Score', title: '携带金币',minWidth:110,templet:function (d) {
+                        return parseFloat(d.Score).formatMoney()
+                    }}
+                , {field: 'InsureScore', title: '银行金币',templet:function (d) {
+                        return parseFloat(d.InsureScore).formatMoney()
+                    }}
+                , {field: 'rechargeAmount', title: '充值总额',templet:function (d) {
+                        return parseFloat(d.rechargeAmount).formatMoney()
+                    }}
+                , {field: 'withdrawamount', title: '提现总额',templet:function (d) {
+                        return parseFloat(d.withdrawamount).formatMoney()
+                    }}
+                // , {field: 'Superior', title: '代理商'}
+                , {field: 'SpreaderAccounts', title: '上级推广员账号',minWidth:130}
+                , {field: 'SpreaderNickName', title: '上级推广员昵称',minWidth:130}
+                , {field: 'ChildPeople', title: '总推广人数'}
+                , {field: 'ReturnMoney', title: '总累计返还'}//包括充值返还（充100，返50）和推广返还
+                , {field: 'PlayTimeCount', title: '游戏时长',minWidth:140}
+                , {field: 'RegisterDate', title: '注册时间', minWidth: 160}
+                , {field: 'RegisterIP', title: '注册地址', minWidth: 180, toolbar: '#fengsuoIP1'}
+                , {field: 'LastLogonDate', title: '最后登录时间', minWidth: 160}
+                , {field: 'LastLogonIP', title: '最后登录地址', minWidth: 180, toolbar: '#fengsuoIP2'}
+                , {field: 'LastLogonMachine', title: '最后登录机器码', minWidth: 160}
+                , {field: 'Nullity', title: '状态', toolbar: '#status'}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+
+        });
+        //监听tool事件
+        table.on('tool(test)', function (obj) {
+            if (obj.event == 'fengsuo1') {
+                fengsuoIP(obj.data.RegisterIP)
+            }
+            if (obj.event == 'fengsuo2') {
+                fengsuoIP(obj.data.LastLogonIP)
+            }
+        });
+        //监听复选框选择事件
+        table.on('checkbox(test)', function (obj) {
+            var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+            selectRows = checkStatus.data
+        });
+
+    });
+
+    function fengsuoIP(ipstr) {
+        layer.confirm('确定封锁' + ipstr + '吗？封锁后该IP地址将永久禁止登录和注册', {
+            icon: 3,
+            title: '提示',
+            btn: ['确定', '取消']
+        }, function (index) {
+            $.post(qp_url + 'admin/Account/AddConfineAddressInfo', {
+                token: getStorage('token'),
+                String: ipstr,
+                EnjoinOverDate: '',
+                Param: '',
+                EnjoinLogon: 1,
+                EnjoinRegister: 1,
+            }, function (res) {
+                layer.msg(res.msg, {time: 1000, icon: res.status})
+            }, 'json')
+            layer.close(index);
+        });
+    }
+
+    function reloadTable() {
+        var curPage = $(".layui-laypage-em").next().html(); //当前页码值
+        console.log("当前页码", curPage);
+        table.reload('layTable', {
+            pageIndex: curPage,
+        })
+    }
+
+    // function docReady() {
+    //     var userTypeHtml = "";
+    //     // for (x in colors) {
+    //     //     userTypeHtml += "<option value=\"" + (parseInt(x) + 1) + "\" style=\"background-color:#" + colors[x] + "\"></option>"
+    //     // }
+    //     // $('#ddlUserType').append(userTypeHtml);
+    //
+    //     //加载数据
+    //     postData.pageSize = parseInt($("#pagecount").val());
+    //     postData.Sort = "";
+    //     postData.Type = 0;
+    //     postData.pageIndex = 1;
+    //     AjaxSearch(postData);
+    //     postData.userType = 0;
+    //     //收放事件
+    //     $('.btn-minimize').click(function (e) {
+    //         e.preventDefault();
+    //         var $target = $(this).parent().parent().next('.box-content');
+    //         if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+    //         else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+    //         $target.slideToggle();
+    //     });
+    //     // //标识选择
+    //     // $("#ddlUserType").change(function (e) {
+    //     //     var v = parseInt($(this).val());
+    //     //     postData.userType = v;
+    //     //     switch (v) {
+    //     //         case 1:
+    //     //             $(this).css("background", '#0000ff');
+    //     //             break;
+    //     //         case 2:
+    //     //             $(this).css("background", '#009944');
+    //     //             break;
+    //     //         case 3:
+    //     //             $(this).css("background", '#b38850');
+    //     //             break;
+    //     //         case 4:
+    //     //             $(this).css("background", '#ff00ff');
+    //     //             break;
+    //     //         default:
+    //     //             $(this).css("background", '#ffffff');
+    //     //             break;
+    //     //     }
+    //     //     postData.pageIndex = 1;
+    //     //     AjaxSearch(postData);
+    //     // });
+    //     //选择页码
+    //     $("#pagecount").change(function (e) {
+    //         postData.pageSize = parseInt($(this).val());
+    //         postData.pageIndex = 1;
+    //         AjaxSearch(postData);
+    //     });
+    //
+    //     // //普通搜索事件
+    //     // $("#btnquery").click(function (e) {
+    //     //     e.preventDefault();
+    //     //     var keyWord = $("#txtSearch").val();
+    //     //     if (keyWord == "") {
+    //     //         layer.msg("请输入查询条件");
+    //     //         return false;
+    //     //     }
+    //     //     postData.token = getStorage('token')
+    //     //     postData.pageIndex = 1
+    //     //     postData.Type = 0//普通查询和高级查询
+    //     //     postData.userType =
+    //     //
+    //     //
+    //     //         // postData.pageSize = parseInt($("#pagecount").val());
+    //     //         postData.Type = 0;
+    //     //     postData.IsLike = $('#ckbIsLike').is(':checked') ? 1 : 0;
+    //     //     postData.KeyWord = keyWord;
+    //     //     AjaxSearch(postData);
+    //     // });
+    //     // 高级查询事件
+    //     $("#advancedQuery").on("click", function (e) {
+    //         // $(this).parents("#userManagementSearch").siblings().show("show");
+    //         e.preventDefault();
+    //         var $target = $(this).parent().parent().parent().next();
+    //         if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon glyphicon-hand-up').addClass('glyphicon glyphicon-hand-down');
+    //         else $('i', $(this)).removeClass('glyphicon glyphicon-hand-down').addClass('glyphicon glyphicon-hand-up');
+    //         $target.slideToggle();
+    //     })
+    //
+    //     // 高级查询内容关闭事件
+    //     $("#advancedQueryClose").on("click", function () {
+    //         $(this).parents("#advancedQueryList").hide("show").siblings().children().find("#advancedQuery").children().addClass("glyphicon glyphicon-hand-down");
+    //     })
+    //     //高级搜索事件
+    //     $("#btnHightQuery").click(function (e) {
+    //         e.preventDefault();
+    //         var accountStuStr = "";
+    //         var istrue = true;
+    //         $("input[name='advancedck']:checked").each(function () {
+    //             if (accountStuStr == "") {
+    //                 accountStuStr += $(this).val();
+    //             } else {
+    //                 accountStuStr += "," + $(this).val();
+    //             }
+    //         });
+    //         var txtStartDate = $("#txtStartDate").val();
+    //         var txtEndDate = $("#txtEndDate").val();
+    //         if (txtStartDate != "" && txtEndDate != "") {
+    //             if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+    //                 istrue = false;
+    //                 alert("注册开始日期不能大于结束时间");
+    //                 return false;
+    //             }
+    //         }
+    //         var txtLoStartDate = $("#txtLoStartDate").val();
+    //         var txtLoEndDate = $("#txtLoEndDate").val();
+    //         if (txtLoStartDate != "" && txtLoEndDate != "") {
+    //             if (StrToDateTime(txtLoEndDate) < StrToDateTime(txtLoStartDate)) {
+    //                 istrue = false;
+    //                 alert("登录开始日期不能大于结束时间");
+    //                 return false;
+    //             }
+    //         }
+    //         var RegIP = $("#txtRegIP").val();
+    //         var RegMachine = $("#txtRegMachine").val();
+    //         var LogIP = $("#txtLogIP").val();
+    //         var LogMachine = $("#txtLogMachine").val();
+    //         //if (RegIP == "" && RegMachine == "" && LogIP == "" && LogMachine == "") {
+    //         //    istrue = false;
+    //         //    alert("您没有输入任何查询条件");
+    //         //    return false;
+    //         //}
+    //         if (istrue) {
+    //             postData.AccountStu = accountStuStr;
+    //             postData.StartDate = txtStartDate;
+    //             postData.EndDate = txtEndDate;
+    //             postData.LoStartDate = txtLoStartDate;
+    //             postData.LoEndDate = txtLoEndDate;
+    //             postData.RegIP = RegIP;
+    //             postData.RegMachine = RegMachine;
+    //             postData.LogIP = LogIP;
+    //             postData.LogMachine = LogMachine;
+    //             postData.pageSize = parseInt($("#pagecount").val());
+    //             postData.pageIndex = 1;
+    //             postData.Type = 1;
+    //             postData.Phone = $('#txtPhone').val();
+    //             postData.TrueName = $('#txtTrueName').val();
+    //             postData.Agent = $('#txtAgent').val();
+    //         }
+    //         AjaxSearch(postData);
+    //     });
+    //
+    // }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+    }
+
+    //菜单栏点击事件
+    function GrantManager(opType) {
+        // var cidStr = GetSelectValues();
+        var cidStr = GetSelectedDatas(selectRows, 'UserID');//由于layui返回的选中行包含所有数据，所以需要传递要筛选的字段
+        console.log(cidStr);
+        if (cidStr.length > 0) {
+            if (cidStr == "") {
+                layer.alert('未选中任何数据', {
+                    icon: 7,
+                    skin: 'layer-ext-moon'
+                })
+                return;
+            }
+            var data = {cid: cidStr};
+            switch (opType) {
+                //解除绑定推广员
+                case "JiechuDaili":
+                    // if (confirm("解除后无法恢复，请慎用"))
+                    // AjaxSubmit("Account/JiechuDaili.html", data, callBack, "JiechuDaili");
+                    layer.confirm('解除后无法恢复，请慎用！', {icon: 0, title: '提示', btn: ['确定解除', '取消操作']}, function (index) {
+                        //do something
+                        $.ajax({
+                            type: 'POST',
+                            url: qp_url + 'admin/Account/JiechuSpreader',
+                            dataType: 'json',
+                            data: {
+                                token: getStorage('token'),
+                                UserID: cidStr
+                            },
+                            success: function (res) {
+                                if (res.status == 1) {
+                                    let msg = ''
+                                    for (var i = 0; i < res.msg.length; i++) {
+                                        msg += res.msg[i] + '\n'
+                                    }
+                                    layer.msg(msg,{time:1000,icon:1})
+                                } else {
+                                    layer.msg(res.msg,{time:1000,icon:2})
+                                }
+                            }
+                        })
+                        layer.close(index);
+                    });
+                    break;
+                //解散桌子
+                case "DissolveTable":
+                    // AjaxSubmit("Account/DissolveTable.html", data, callBack, "DissolveTable");
+                    layer.confirm('确定解散用户' + cidStr + '所在的桌子吗？', {
+                        icon: 3,
+                        title: '提示',
+                        btn: ['确定', '取消']
+                    }, function (index) {
+                        //do something
+                        $.ajax({
+                            type: 'POST',
+                            url: qp_url + 'admin/Account/DissolveTable',
+                            dataType: 'json',
+                            data: {
+                                token: getStorage('token'),
+                                UserID: cidStr
+                            },
+                            success: function (res) {
+                                layer.msg(res.msg)
+                            }
+                        })
+                        layer.close(index);
+                    });
+                    break;
+                //冻结
+                case "FreezeAccount":
+                    // AjaxSubmit("Account/FreezeAccount.html", data, callBack, "FreezeAccount");
+                    layer.confirm('确定冻结用户' + cidStr + '吗？', {
+                        icon: 3,
+                        title: '提示',
+                        btn: ['确定', '取消']
+                    }, function (index) {
+                        //do something
+                        $.ajax({
+                            type: 'POST',
+                            url: qp_url + 'admin/Account/FreezeAccount',
+                            dataType: 'json',
+                            data: {
+                                token: getStorage('token'),
+                                UserID: cidStr
+                            },
+                            success: function (res) {
+                                layer.msg(res.msg)
+                                if(res.status == 1){
+                                    let curPage = $(".layui-laypage-em").next().html(); //当前页码值
+                                    console.log("当前页码", curPage);
+                                    table.reload('layTable', {
+                                        pageIndex: curPage,
+                                    })
+                                }
+                            }
+                        })
+                        layer.close(index);
+                    });
+                    break;
+                //解冻
+                case "UnfreezeAccount":
+                    // AjaxSubmit("Account/UnfreezeAccount.html", data, callBack, "UnfreezeAccount");
+                    layer.confirm('确定解冻用户' + cidStr + '吗？', {
+                        icon: 3,
+                        title: '提示',
+                        btn: ['确定', '取消']
+                    }, function (index) {
+                        //do something
+                        $.ajax({
+                            type: 'POST',
+                            url: qp_url + 'admin/Account/unFreezeAccount',
+                            dataType: 'json',
+                            data: {
+                                token: getStorage('token'),
+                                UserID: cidStr
+                            },
+                            success: function (res) {
+                                layer.msg(res.msg)
+                                if(res.status == 1){
+                                    let curPage = $(".layui-laypage-em").next().html(); //当前页码值
+                                    console.log("当前页码", curPage);
+                                    table.reload('layTable', {
+                                        pageIndex: curPage,
+                                    })
+                                }
+                            }
+                        })
+                        layer.close(index);
+                    });
+                    break;
+                case "SettingAndroid":
+                    AjaxSubmit("Account/SettingAndroid.html", data, callBack, "SettingAndroid");
+                    break;
+                case "CancleAndroid":
+                    AjaxSubmit("Account/CancleAndroid.html", data, callBack, "CancleAndroid");
+                    break;
+                case "GrantMember":
+                    openWindowOwn('Account/GrantMember.html?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantTreasure":
+                    // console.log(selectRows)
+                    //如果操作的是一个用户，那么就显示用户的金币数和银行金币数，如果是多个，就不显示了
+                    if (selectRows.length > 1) {
+                        openWindowOwn('Account/GrantTreasure.html?param=' + cidStr + '&jb=&yh=', '', 600, 420);
+                    } else {
+                        openWindowOwn('Account/GrantTreasure.html?param=' + cidStr + '&jb=' + selectRows[0].Score + '&yh=' + selectRows[0].InsureScore, '', 600, 420);
+                    }
+                    break;
+                case "GrantGameID":
+                    if (selectRows.length > 1) {
+                        return layer.msg('一次只能操作一个用户')
+                    }
+                    openWindowOwn('Account/GrantGameID.html?param=' + cidStr + '&accounts={1}', '_GrantGameID', 600, 350);
+                    break;
+                case "GrantExperience":
+                    openWindowOwn('Account/GrantExperience?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantScore":
+                    openWindowOwn('Account/GrantScore?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantClearScore":
+                    openWindowOwn('Account/GrantClearScore?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "GrantFlee":
+                    openWindowOwn('Account/GrantFlee?cid=' + cidStr, '', 600, 400);
+                    break;
+                case "UpdateIpAddress":
+                    openWindowOwn('Account/IpAddress.html?param=' + cidStr, '', 600, 230);
+                    break;
+                case "GrantParentAgent":
+                    openWindowOwn('Account/GrantParentAgent.html?param=' + cidStr, '', 600, 300);
+                    break;
+                case "GrantParentSpreader":
+                    openWindowOwn('Account/GrantParentSpreader.html?param=' + cidStr, '', 600, 300);
+                    break;
+
+            }
+        } else {
+            layer.alert('请选择操作项', {
+                icon: 7,
+                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+            })
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "DissolveTable":
+                alert(jsonData.Msg);
+                break;
+            default:
+                alert(jsonData.Msg);
+                AjaxSearch(postData);
+                break;
+        }
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex) {
+        var html = "";
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr>");
+                html += stringFormat("<td style=\"width: 30px;\"><input name='cid' type='checkbox' value='{0}'/></td>", item.UserID);
+                html += stringFormat("<td><font color=\"{1}\">{0}</font></td>", item.UserID, (parseInt(item.UserType) == 1 ? "#0000ff" : (parseInt(item.UserType) == 2 ? "#009944" : (parseInt(item.UserType) == 3 ? "#b38850" : (parseInt(item.UserType) == 4 ? "#ff00ff" : "#555555")))));
+                html += stringFormat("<td>{0}</td>", item.GameID);
+                html += stringFormat("<td>{0}</td>", G_AddUserNameLink(item.Accounts, item.UserID, item.UserType));
+                //html += stringFormat("<td>{0}</td>", item.NickName);
+                //html += stringFormat("<td>{0}</td>", item.Gender);
+                //html += stringFormat("<td>{0}</td>", item.Experience);
+                //html += stringFormat("<td>{0}</td>", item.LoveLiness);
+                //html += stringFormat("<td>{0}</td>", item.Present);
+                //html += stringFormat("<td>{0}</td>", item.MemberName);
+                //html += stringFormat("<td>{0}</td>", item.Accounts);
+                //html += stringFormat("<td>{0}</td>", item.MasterOrder);
+                html += stringFormat("<td>{0}</td>", item.Compellation == null ? "" : item.Compellation);
+                html += stringFormat("<td>{0}</td>", item.Score == null ? 0.00 : item.Score.formatMoney());
+                html += stringFormat("<td>{0}</td>", item.InsureScore == null ? 0.00 : item.InsureScore.formatMoney());
+                html += stringFormat("<td>{0}</td>", item.Score == null ? 0.00 : item.rechargeAmount.formatMoney());
+                html += stringFormat("<td>{0}</td>", item.Score == null ? 0.00 : item.withdrawamount.formatMoney());
+                html += stringFormat("<td>{0}</td>", item.Superior == null ? "" : item.Superior);
+                html += stringFormat("<td>{0}</td>", item.SpAccounts == null ? "" : item.SpAccounts);
+                html += stringFormat("<td>{0}</td>", ConverTimeToDHMS(item.PlayTimeCount));
+                html += stringFormat("<td>{0}</td>", item.RegisterDate);
+                html += stringFormat("<td>{0}</td>", item.RegisterIP);
+                //html += stringFormat("<td>{0}</td>", item.GameLogonTimes);
+                html += stringFormat("<td>{0}</td>", item.LastLogonDate);
+                html += stringFormat("<td>{0}</td>", item.LastLogonIP);
+                html += stringFormat("<td>{0}</td>", item.Nullity == 0 ? "<font style='color:green'>正常</font>" : "<font style='color:red'>停权</font>");
+
+                html += "</tr>";
+            });
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+
+    var ConverTimeToDHMS = function (seconds) {
+        if (seconds <= 0)
+            return "0秒";
+        var str = "";
+        var day = parseInt(seconds / 0x15180);
+        var hour = parseInt((seconds % 0x15180) / 0xe10);
+        var minute = parseInt((seconds % 0xe10) / 60);
+        var second = parseInt(seconds % 60);
+        if (day > 0)
+            str += day + "天";
+        if (hour > 0)
+            str += hour + "小时";
+        else
+            str += "0小时";
+        if (minute > 0)
+            str += minute + "分";
+        else
+            str += "0分";
+        if (second > 0)
+            str += second + "秒";
+        else
+            str += "0秒";
+        return str;
+    };
+</script>
+</body>
+
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>后台管理-用户组列表</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style>
+        body .form-control {
+            display: inline-block;
+        }
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：后台管理-用户组列表 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a class="btn btn-outline-success search" href="javascript:void(0);"
+                               onclick="addUserGroup()">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                添加用户组
+                            </a>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/html" id="operateMenu">
+    <button class="layui-btn layui-btn-xs" onclick="openWindowOwn('add/userGroupPermission.html?group_id={{d.group_id}}', '', 800, 800)">配置规则</button>
+    <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</button>
+    <button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del">删除</button>
+</script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    var table;
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    layui.use('table', function () {
+        table = layui.table, $ = layui.jquery;
+        table.render({
+            elem: '#layTable'
+            , id: 'myTable'
+            // , height: 512
+            , url: qp_url + 'admin/auth/adminGroupList' //数据接口
+            , where: {
+                token: getStorage('token'),
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 100
+            , cols: [[ //表头
+                {field: 'group_id', title: '编号', sort: true}
+                , {field: 'title', title: '用户组名'}
+                , {field: 'addtime', title: '添加时间', minWidth: 200, sort: true}
+                , {field: null, title: '操作', minWidth: 200, toolbar: '#operateMenu'}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+        table.on('tool(test)', function (obj) {
+            console.log(obj)
+            var data = obj.data;
+            var layEvent = obj.event;
+            var tr = obj.tr;
+            if (layEvent === 'del') {
+                if(data.group_id == 1){
+                    layer.alert('超级管理员不能删除')
+                    return;
+                }
+                layer.confirm('你确定删除【' + data.title + '】？', function (index) {
+                    $.ajax({
+                        type: 'POST',
+                        url: qp_url + 'admin/auth/groupDel',
+                        dataType: "json",
+                        data: {
+                            token:getStorage('token'),
+                            group_id: data.group_id
+                        },
+                        success: function (res) {
+                            if (res.status == 1) {
+                                obj.del();
+                                layer.msg(res.msg)
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        }
+                    })
+                })
+            } else if (layEvent === 'edit') {
+                layer.open({
+                    type: 1
+                    , title: '编辑用户组'
+                    , content: `
+                        <div style="padding: 20px 30px">
+                            <label class="margin-r10">用户组名</label>
+                            <input id="userGroup" required class="form-control form-inline input-width-200 " placeholder="请输入用户组名" value="${data.title}">
+                        </div>
+            `
+                    , area: ['400px', '200px']
+                    , btn: ['保存', '返回']
+                    , yes: function (index, layero) {
+                        $.ajax({
+                            type: 'POST',
+                            url: qp_url + 'admin/auth/groupEdit',
+                            dataType: "json",
+                            data: {
+                                token:getStorage('token'),
+                                title: $('#userGroup').val(),
+                                group_id: data.group_id
+                            },
+                            success: function (res) {
+                                layer.close(index)
+                                if (res.status == 1) {
+                                    obj.update({
+                                        title: $('#userGroup').val()
+                                    });
+                                    layer.msg(res.msg)
+                                } else {
+                                    layer.msg(res.msg)
+                                }
+                            }
+                        })
+                    }
+                });
+            }
+        })
+    });
+    // 添加用户组
+    function addUserGroup() {
+        layer.open({
+            type: 1
+            , title: '添加用户组'
+            , content: `
+                        <div style="padding: 20px 30px">
+                            <label class="margin-r10">用户组名</label>
+                            <input id="userGroup" required class="form-control form-inline input-width-200 " placeholder="请输入用户组名">
+                        </div>
+            `
+            , area: ['400px', '200px']
+            , btn: ['保存', '返回']
+            , yes: function (index, layero) {
+                if($('#userGroup').val()==""){
+                    layer.msg('用户组名不能为空！')
+                    return;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + 'admin/auth/groupAdd',
+                    dataType: "json",
+                    data: {
+                        token:getStorage('token'),
+                        title: $('#userGroup').val()
+                    },
+                    success: function (res) {
+                        layer.close(index)
+                        if (res.status == 1) {
+                            table.reload('myTable')
+                            layer.msg(res.msg)
+                        } else {
+                            layer.msg(res.msg)
+                        }
+                    }
+                })
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>控制系统 - 游戏控制</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Scripts/pagination.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+    <link href="../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
+    <script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+    <style>
+        .layui-table-body .layui-table-cell{
+            height: 38px;
+            line-height: 38px;
+            overflow: visible;
+        }
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：控制系统 - 游戏控制 </h2>
+                    <div class="box-icon">
+                        <a href="#" id="reload" class="btn btn-round btn-default">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <ul class="media nav nav-tabs">
+<!--                    <li data-id="16"><a href="javascript:void(0)" title="21点">21点</a></li>-->
+<!--                    <li data-id="36"><a href="javascript:void(0)" title="通比牛牛">通比牛牛</a></li>-->
+<!--                    <li data-id="6"><a href="javascript:void(0)" title="诈金花">诈金花</a></li>-->
+<!--                    <li data-id="28"><a href="javascript:void(0)" title="抢庄牛牛">抢庄牛牛</a></li>-->
+<!--                    <li data-id="44"><a href="javascript:void(0)" title="三公">三公</a></li>-->
+<!--                    <li data-id="465"><a href="javascript:void(0)" title="二人吹牛">二人吹牛</a></li>-->
+                </ul>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <div class="row">
+                        <div class="col-md-2" style="display: none">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                                <label>
+                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                                            id="pagecount">
+                                        <option value="10" selected="selected">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> 条/页
+                                </label>
+                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                        <table style="display: none"
+                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                            <tr role="row">
+                                <th>ID</th>
+                                <th>房间名</th>
+                                <th>房间损耗（不含当日）</th>
+                                <th>今日房间损耗</th>
+                                <th>机器人胜率</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                        </table>
+                        <!--分页控件-->
+                        <div class="row">
+                            <div class="col-md-6">
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                    <ul class="pagination" id="pagin"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="open">
+    <input type="checkbox" name="is_open" value="{{d.ServerID}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" {{ d.IsOpen == 1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="rate">
+    <div style="width: 100%;display: flex;flex-direction: row;">
+        <select name="select" class="layui-input input-sm" id="winRate" data-id="{{d.ServerID}}" lay-filter="WinRate">
+            <option {{d.WinRate == 0 ? 'selected' : ''}} value="0">0</option>
+            <option {{d.WinRate == 10 ? 'selected' : ''}} value="10">10</option>
+            <option {{d.WinRate == 20 ? 'selected' : ''}} value="20">20</option>
+            <option {{d.WinRate == 30 ? 'selected' : ''}} value="30">30</option>
+            <option {{d.WinRate == 40 ? 'selected' : ''}} value="40">40</option>
+            <option {{d.WinRate == 50 ? 'selected' : ''}} value="50">50</option>
+            <option {{d.WinRate == 60 ? 'selected' : ''}} value="60">60</option>
+            <option {{d.WinRate == 70 ? 'selected' : ''}} value="70">70</option>
+            <option {{d.WinRate == 80 ? 'selected' : ''}} value="80">80</option>
+            <option {{d.WinRate == 90 ? 'selected' : ''}} value="90">90</option>
+            <option {{d.WinRate == 100 ? 'selected' : ''}} value="100">100</option>
+        </select>
+        <span>&nbsp;%</span>
+    </div>
+
+</script>
+<script type="text/javascript">
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [];
+    let table,form
+    layui.use(['table', 'form'], function () {
+        table = layui.table
+        form = layui.form
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            // , height: 512
+            , method: 'post'
+            , id: 'test'
+            , url: qp_url + 'admin/Kongzhi/GetGameSettingList?token=' + getStorage('token') //数据接口
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , where: {
+                KindID: 21
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                // console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cols: [[ //表头
+                {field: 'ServerID', title: 'ID'}
+                , {field: 'ServerName', title: '房间名'}
+                , {field: 'Waste', title: '房间损耗（不含当日）'}
+                , {field: 'TdWaste', title: '今日房间损耗'}
+                , {field: 'WinRate', title: '机器人胜率',style: 'height: 38px', templet: '#rate'}
+                , {
+                    field: 'IsOpen', title: '状态', toolbar: '#open'
+                }
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+        $.get(qp_url + 'admin/Gamecommon/CanGame',function (data) {
+            // console.log(data)
+            if(data.status == 1){
+                $('.nav-tabs').html('')
+                data.data.forEach(function (item) {
+                    // console.log(item)
+                    $('.nav-tabs').append(`<li data-id="${item.KindID}"><a href="javascript:void(0)" title="${item.KindName}">${item.KindName}</a></li>`)
+                })
+                docReady();
+            }else{
+                docReady();
+            }
+        },'json')
+
+        //监听复选框选择事件
+        table.on('checkbox(test)', function (obj) {
+            var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+            selectRows = checkStatus.data
+        });
+        form.on('switch(open)', function (obj) {
+            console.log(obj)
+            loading = layer.load(1, {shade: [0.1, '#fff']});
+            var id = this.value;
+            var is_open = obj.elem.checked === true ? 1 : 0;
+            $.post(qp_url+'/admin/Kongzhi/IsOpen?token='+ getStorage('token'), {'ServerID': id, 'IsOpen': is_open}, function (res) {
+                layer.close(loading);
+                typeof res == 'string' ? res = JSON.parse(res) : ''
+                console.log(res)
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1});
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2});
+                    setTimeout(function () {
+                        window.history.go(0)
+                    },1500)
+                    return false;
+                }
+            })
+        });
+        form.on('select(WinRate)',function (data) {
+            let id = $(data.elem).parents('.layui-table-cell').find('select').data('id');
+            loading = layer.load(1, {shade: [0.1, '#fff']});
+            console.log(id)
+            $.post(qp_url+'/admin/Kongzhi/DoSetting?token='+ getStorage('token'), {'ServerID': id, 'WinRate': data.value}, function (res) {
+                layer.close(loading);
+                typeof res == 'string' ? res = JSON.parse(res) : ''
+                console.log(res)
+                if (res.status == 1) {
+                    layer.msg(res.msg, {time: 1000, icon: 1});
+                } else {
+                    layer.msg(res.msg, {time: 1000, icon: 2});
+                    setTimeout(function () {
+                        window.history.go(0)
+                    },1500)
+                    return false;
+                }
+            },'json')
+        })
+    });
+
+    var pageObj = {};
+    var postData = {};//搜索条件
+    var sid = 0;
+    var OpObj;
+
+    function docReady() {
+        $('.nav-tabs li:first').addClass("active");
+        var kid = $('.nav-tabs li:first').attr("data-id");
+
+        postData.pageSize = parseInt($("#pagecount").val());
+        postData.pageIndex = 1;
+        postData.KindID = kid;
+        AjaxSearch(postData);
+
+        $('.nav-tabs li').click(function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            kid = $(this).attr("data-id");
+            postData.KindID = kid;
+            AjaxSearch(postData);
+        })
+
+        $('#reload').click(function () {
+            AjaxSearch(postData);
+        })
+        //收放事件
+        $('.btn-minimize').click(function (e) {
+            e.preventDefault();
+            var $target = $(this).parent().parent().next('.box-content');
+            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $target.slideToggle();
+        });
+
+        //选择页码
+        $("#pagecount").change(function (e) {
+            postData.pageSize = parseInt($(this).val());
+            postData.pageIndex = 1;
+            AjaxSearch(postData);
+        });
+        //普通搜索事件
+        $("#btnQuery").click(function (e) {
+            var keyWord = $("#txtSearch").val();
+            postData.pageSize = parseInt($("#pagecount").val());
+            postData.KeyWord = keyWord;
+            AjaxSearch(postData);
+        });
+    }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+        // console.log(table)
+        $.ajax({
+            type: 'POST',
+            url: qp_url + 'admin/Kongzhi/GetGameSettingList?token=' + getStorage('token'),
+            dataType: 'json',
+            data: postData,
+            success: function (resData) {
+                // console.log(resData)
+                table.reload('test', {
+                    where: postData
+                })
+            }
+        })
+    }
+
+
+    var ShowAdd = function (id, winRate) {
+        // OpObj = new OpeIframeWindow("AddAcc", "修改胜率", {autoOpen: true, height: 200, width: 300, modal: true}, true);
+        // sid = id;
+        // $("#winRate").val(winRate);
+        layer.open({
+            type: 1,
+            title: '修改胜率',
+            skin: 'layui-layer-qian', //加上边框
+            area: ['380px', '150px'], //宽高
+            content: `<div id="dialog">
+                            <div class="layui-form">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">胜率:</label>
+                                    <div class="layui-input-inline" style="text-align: left">
+                                        <input class="layui-input inline w80 margin-r10">%
+                                    </div>
+                                </div>
+                            </div>
+                      </div>`
+        });
+    }
+
+    var DoSetting = function () {
+        var data = {ServerID: sid, WinRate: $("#winRate").val()}
+        AjaxSubmit("/KongZhi/DoSetting", data, callBack, "do");
+    }
+
+    function setOpen(id, isOpen) {
+        if (isOpen == 0) {
+            if (confirm('确认关闭吗？')) {
+                AjaxSubmit("/KongZhi/IsOpen", {ServerID: id, IsOpen: isOpen}, callBack, "open");
+            }
+        } else {
+            AjaxSubmit("/KongZhi/IsOpen", {ServerID: id, IsOpen: isOpen}, callBack, "open");
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        console.log(jsonData, fname)
+        switch (fname) {
+            case "do":
+                alert(jsonData.Msg);
+                OpObj.Close();
+                AjaxSearch(postData);
+                break;
+            case "open":
+                AjaxSearch(postData);
+        }
+    }
+</script>
+</body>
+</html>

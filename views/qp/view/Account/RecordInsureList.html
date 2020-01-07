@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>用户系统 - 银行记录</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
+
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：用户系统 - 银行记录 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>
+                                        日期查询：
+                                        <input id="txtStartDate" class="input-width-150"
+                                               type="text" readonly="readonly"
+                                               placeholder="请输入开始时间"/>至
+                                        <input id="txtEndDate" class="input-width-150"
+                                               type="text" readonly="readonly"
+                                               placeholder="请输入结束时间"/>
+                                        <select id="ddlTradeType">
+                                            <option value="0">全部</option>
+                                            <option value="1">存款</option>
+                                            <option value="2">取款</option>
+
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <button class="btn btn-sm btn-outline-success search" onclick="conditionSearch()"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+
+                        <div class="col-sm-12 col-md-12" style="padding-bottom:5px; padding-top:5px; text-align:right;">
+                            <div class="btn-group" id="DateType">
+                                <button data-id="1" type="button" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-zoom-in icon-white"></i>今天
+                                </button>
+                                <button data-id="2" type="button" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-zoom-in icon-white"></i>昨天
+                                </button>
+                                <button data-id="3" type="button" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-zoom-in icon-white"></i>本周
+                                </button>
+                                <button data-id="4" type="button" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-zoom-in icon-white"></i>上周
+                                </button>
+                            </div>
+                            <a class="btn btn-danger search" href="#" onclick="window.close();">
+                                <i class="glyphicon glyphicon-off"></i>
+                                关闭
+                            </a>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    var param = getUrlParams('param')
+    var pageObj = {};
+    var postData = {};//搜索条件
+    var dataType = 0;//今天，昨天，本周，上周，默认0
+    // 使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [], table;
+    layui.use('table', function () {
+        table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url: qp_url + 'admin/Account/GetRecordInsureList' //数据接口
+            , where: {
+                token: getStorage('token'),
+                ID: param,
+                DateType: 0,
+                Type: 0
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , cellMinWidth: 120
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cols: [[ //表头
+                {field: 'CollectDate', title: '时间'}
+                , {field: 'Accounts', title: '汇款人'}
+                , {field: 'TargetUser', title: '收款人'}
+                , {field: 'TradeType', title: '交易类型'}
+                , {field: 'SourceGold', title: '汇款人现金'}
+                , {field: 'SourceBank', title: '汇款人银行'}
+                , {field: 'TargetGold', title: '收款人现金'}
+                , {field: 'TargetBank', title: '收款人银行'}
+                , {field: 'SwapScore', title: '交易游戏币'}
+                , {field: 'Revenue', title: '服务费'}
+                , {field: 'IsGamePlaza', title: '操作场所'}
+                , {field: 'AddressWithIP', title: '操作地址'}
+                , {field: 'GameKindName', title: '游戏'}
+                , {field: 'GameRoomName', title: '房间'}
+                , {field: 'CollectNote', title: '备注'}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+
+        });
+        //监听复选框选择事件
+        table.on('checkbox(test)', function (obj) {
+            var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
+            selectRows = checkStatus.data
+        });
+    });
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'datetime'
+            , theme:'#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtEndDate'
+            , type: 'datetime'
+            , theme:'#00B4E5'
+        });
+    });
+    $(document).on('click', '#DateType button', function () {
+        dataType = $(this).data().id;
+        console.log(dataType);
+        conditionSearch()
+    })
+
+    //搜索和下面的按钮组查询
+    function conditionSearch() {
+        table.reload('layTable', {
+                where: {
+                    txtStartDate:$("#txtStartDate").val(),
+                    txtEndDate:$("#txtEndDate").val(),
+                    Type:parseInt($("#ddlTradeType").val()),
+                    DateType: parseInt(dataType),
+                }
+            }
+        )
+        dataType = 0
+    }
+
+
+    function showInfo(obj) {
+        var ID = "record" + obj.id;
+        if (document.getElementById(ID).style.display == "none") {
+            document.getElementById(ID).style.display = "";
+            obj.src = "../../Content/images/up.gif"
+        } else {
+            document.getElementById(ID).style.display = "none";
+            obj.src = "../../Content/images/down.gif"
+        }
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+</script>
+
+</body>
+</html>

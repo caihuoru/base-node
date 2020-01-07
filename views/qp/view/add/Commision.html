@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>推广系统 - 佣金管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .table tbody tr th {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：推广系统 - 佣金管理</h2>
+            </div>
+            <ul class="media nav nav-tabs">
+                <li><a href="../tuiGuangGuanLi.html" title="推广管理">推广管理</a></li>
+                <li class="active"><a href="javascript:void(0)" title="分销管理">分销管理</a></li>
+            </ul>
+            <div class="tab-content">
+                <table class="table table-bordered bootstrap-datatable datatable responsive dataTable">
+                    <thead>
+                    <tr>
+                        <th>等级名称</th>
+                        <th>税收比例</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>一级税收</td>
+                        <td><input onkeyup="if(isNaN(value))execCommand('undo')"
+                                   class="form-control input-sm inline input-width-100" id="lev1">&nbsp;%
+                        </td>
+                        <td rowspan="3" style="max-width: 200px;">
+                            <img src="../../Content/images/tuiguang.png" style="background: #222E60;width: 99%;max-width: 500px">
+                            <div>
+                                <p>A：A用户</p>
+                                <p>B：A推广的好友</p>
+                                <p>C：B推广的好友</p>
+                                <p>D：C推广的好友</p>
+                            </div>
+                            <div class="wrong">A的收益 = 所有B产生的税收 * 一级税收比例 + 所有C产生的税收 * 二级税收比例 + 所有D产生的税收 * 三级税收比例</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>二级税收</td>
+                        <td><input onkeyup="if(isNaN(value))execCommand('undo')"
+                                   class="form-control input-sm inline input-width-100" id="lev2">&nbsp;%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>三级税收</td>
+                        <td><input onkeyup="if(isNaN(value))execCommand('undo')"
+                                   class="form-control input-sm inline input-width-100" id="lev3">&nbsp;%
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin: 20px">
+                <a class="btn btn-outline-success search btn-md" href="javascript:void(0)" onclick="Save();"><i
+                        class="glyphicon glyphicon-save"></i>保存</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+    })
+    $(function () {
+        $.get(qp_url + 'admin/web/configAgent?token='+getStorage('token'), function (res) {
+            if (res.status == 1) {
+                $('#lev1').val(res.data.one)
+                $('#lev2').val(res.data.two)
+                $('#lev3').val(res.data.three)
+            }
+        }, 'json')
+    })
+
+    function Save() {
+        var l1 = $('#lev1').val();
+        var l2 = $('#lev2').val();
+        var l3 = $('#lev3').val();
+        console.log(l1);
+        console.log(l2);
+        console.log(l3);
+        // console.log(expVal(l1));
+        if (!expVal(l1)) {
+            layer.alert("请正确输入税收比例，取值在0~100");
+            return false;
+        }
+        if (!expVal(l2)) {
+            layer.alert("请正确输入税收比例，取值在0~100");
+            return false;
+        }
+        if (!expVal(l3)) {
+            layer.alert("请正确输入税收比例，取值在0~100");
+            return false;
+        }
+        $.post(qp_url + 'admin/web/editConfigAgent?token='+getStorage('token'), {
+            editStr: JSON.stringify({one: l1, two: l2, three: l3})
+        }, function (res) {
+            if (res.status == 1) {
+                layer.msg(res.msg, {time: 1000, icon: 1})
+            } else {
+                layer.msg(res.msg, {time: 1000, icon: 2})
+            }
+        }, 'json')
+    }
+
+    function expVal(str) {
+        if (isNaN(str)) {
+            return false;
+        }
+        if (str == "") {
+            return false;
+        }
+        if(str > 100 || str < 0){
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</body>
+</html>

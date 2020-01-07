@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>后台管理-新增会员</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body, .main-content {
+            overflow-y: scroll !important;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content" style="display: none" v-show="add">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：后台管理-新增会员</h2>
+            </div>
+            <!--            <ul class="media nav nav-tabs margin-b-10">-->
+            <!--                <li class="active">-->
+            <!--                    <a href="javascript:void(0);" title="">基本信息</a>-->
+            <!--                </li>-->
+            <!--                <li>-->
+            <!--                    <a href="javascript:void(0);" title="">详细信息</a>-->
+            <!--                </li>-->
+            <!--                <li>-->
+            <!--                    <a href="javascript:void(0);" title="">权限信息</a>-->
+            <!--                </li>-->
+            <!--            </ul>-->
+            <div class="tab-content">
+                <div class="container tab-pane active">
+                    <form class="form-horizontal min-height-main" role="form">
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">帐号：</label>
+                            <div class="pull-left">
+                                <input id="txtAccount" class="form-control"
+                                       type="text" maxlength="31"
+                                       v-model="add.Accounts">
+                            </div>
+                            <span class="pull-left control-label"><i>*&nbsp;</i>请输入帐号,由字母、数字、下划线和汉字组成！</span>
+                        </div>
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">用户昵称：</label>
+                            <div class="pull-left">
+                                <input id="txtNickName" class="form-control"
+                                       type="text" maxlength="31"
+                                       v-model="add.NickName">
+                            </div>
+                            <span class="pull-left control-label">不填则与帐号相同 由字母、数字、下划线和汉字组成！</span>
+                        </div>
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">登录密码：</label>
+                            <div class="pull-left">
+                                <input id="txtLogonPass" class="form-control"
+                                       type="password" maxlength="32" v-model="add.LogonPass">
+                            </div>
+                            <span class="pull-left control-label"><i>*&nbsp;</i>请输入登录密码 密码长度为6-32位</span>
+                        </div>
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">确认登录密码：</label>
+                            <div class="pull-left">
+                                <input id="txtLogonPass2" class="form-control"
+                                       type="password" maxlength="32"
+                                       v-model="confirmLogonPass">
+                            </div>
+                            <span class="pull-left control-label"><i>*&nbsp;</i>请输入确认登录密码</span>
+                        </div>
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">保险柜密码：</label>
+                            <div class="pull-left">
+                                <input id="txtInsurePass" class="form-control"
+                                       type="password" maxlength="32" v-model="add.InsurePass">
+                            </div>
+                            <span class="pull-left control-label">不填则与登录密码相同</span>
+                        </div>
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">确认保险柜密码：</label>
+                            <div class="pull-left">
+                                <input id="txtInsurePass2" class="form-control"
+                                       type="password" maxlength="32" v-model="confirmInsurePass">
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">个性签名：</label>
+                            <div class="pull-left">
+                                <textarea class="form-control" id="txtUnderWrite"
+                                          rows="5" placeholder="个性签名"
+                                          v-model="add.UnderWrite"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="pull-left new-input-style" style="display: inline-block;">
+                                <label class="pull-left control-label">性别：</label>
+                                <select class="form-control" v-model="add.Gender" id="ddlGender">
+                                    <option value="1">男</option>
+                                    <option value="0">女</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--                        <div class="form-group new-input-style margin-b-0" style="display: none;">-->
+                        <!--                            <label class="pull-left control-label">头像：</label>-->
+                        <!--                            <input id="inFaceID" name="inFaceID" type="hidden" value=""/>-->
+                        <!--                            <img id="picFace" src="../Content/images/gamepic/Avatar0.png" alt="" title=""-->
+                        <!--                                 class="pull-left" style="width: 96px;height: 96px;"/>-->
+                        <!--                            <a id="btnSwitchFace" href="javascript:void(0)" title="" class="pull-left"-->
+                        <!--                               style="margin: 80px 0 0 10px;">查看更多头像</a>-->
+                        <!--                        </div>-->
+                        <div class="form-group new-input-style margin-b-0">
+                            <label class="pull-left control-label">选项：</label>
+                            <p>
+                                    <span class="checkbox-inline">
+                                        <input type="checkbox" id="ckbNullity" v-model="add.Nullity" value="1"/>
+                                        <label for="ckbNullity">冻结帐号</label>
+                                    </span>
+                                <span class="checkbox-inline">
+                                        <input type="checkbox" id="ckbStunDown" v-model="add.StunDown" value="1"/>
+                                        <label for="ckbStunDown">安全关闭</label>
+                                    </span>
+                                <span class="checkbox-inline">
+                                        <input type="checkbox" id="chkIsAndroid" v-model="add.IsAndroid" value="1"/>
+                                        <label for="chkIsAndroid">设为机器人</label>
+                                    </span>
+                            </p>
+                        </div>
+                        <div class="form-group new-input-style">
+                            <label class="pull-left control-label">锁定机器：</label>
+                            <p>
+                                    <span class="checkbox-inline" style="padding-left: 0">
+                                        <input type="radio" name="rdoMoorMachine" id="optionsRadios3"
+                                               value="0" v-model="add.MoorMachine"
+                                               checked/>
+                                        <label for="optionsRadios3">未锁定</label>
+                                    </span>
+                                <span class="checkbox-inline">
+                                        <input type="radio" name="rdoMoorMachine" id="optionsRadios4"
+                                               value="1" v-model="add.MoorMachine"/>
+                                        <label for="optionsRadios4">客户端锁定</label>
+                                    </span>
+                                <span class="checkbox-inline" style="display:none">
+                                        <input type="radio" name="rdoMoorMachine" id="optionsRadios5" value="2"/>
+                                        <label for="optionsRadios5">网页锁定</label>
+                                    </span>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <div class="pull-left new-input-style" style="display: inline-block;">
+                                <label class="pull-left control-label">用户身份：</label>
+                                <select class="form-control" id="ddlMasterOrder" v-model="add.MasterOrder">
+                                    <option value="0">普通玩家</option>
+                                    <option value="1" style="display: none;">管理员</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style" v-show="add.MasterOrder == 0">
+                            <label class="pull-left control-label">玩家权限：</label>
+                            <div class="pull-left inline" style="width: 450px;">
+                                <p class="">
+                                        <span class="">
+                                            <input type="checkbox"
+                                                   id="detailedInfoCheckboxAll"
+                                                   value=""
+                                                   onclick="SelectAll(this, 'ckbUserRight')"
+                                            >
+                                            <label for="detailedInfoCheckboxAll">全选</label>
+                                        </span>
+                                </p>
+                                <p class="checkbox-radio">
+                                    <span class="break-word" v-for="(value,key) in right.UserRightStatus">
+                                        <input :id="'ckbUserRight'+key"
+                                               type="checkbox"
+                                               name="ckbUserRight"
+                                               :value="key">
+                                        <label :for="'ckbUserRight'+key">{{value}}</label>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style" v-show="add.MasterOrder == 1">
+                            <label class="pull-left control-label">管理权限：</label>
+                            <div class="pull-left inline" style="width: 450px;">
+                                <p class="">
+                                        <span class="">
+                                            <input type="checkbox" id="adminAuthorityCheckboxAll" value=""
+                                                   onclick="SelectAll(this, 'ckbMasterRight')"/>
+                                            <label for="adminAuthorityCheckboxAll">全选</label>
+                                        </span>
+                                </p>
+                                <p class="checkbox-radio">
+                                    <span class="break-word" v-for="(value,key) in right.MasterRightStatus">
+                                        <input :id="'ckbMasterRight'+key"
+                                               type="checkbox"
+                                               name="ckbMasterRight"
+                                               :value="key">
+                                        <label :for="'ckbMasterRight'+key">{{value}}</label>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style" style="display:none">
+                            <label class="pull-left control-label">经验值：</label>
+                            <div class="pull-left">
+                                <input id="txtExperience" class="form-control" type="text" value="0" maxlength="8"
+                                       onkeyup="if (isNaN(value)) execCommand('undo');">
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style" style="display:none">
+                            <label class="pull-left control-label">魅力值：</label>
+                            <div class="pull-left">
+                                <input id="txtLoveLiness" class="form-control" type="text" value="0" maxlength="8"
+                                       onkeyup="if (isNaN(value)) execCommand('undo');">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-absolute">
+                <ul class="cursor-style clearfix new-add-btn">
+                    <li class="pull-left margin-r10">
+                        <button class="btn btn-outline-success search btn-md" @click="Add"><i
+                                class="glyphicon glyphicon-send"></i>保存
+                        </button>
+                    </li>
+                    <li class="pull-left">
+                        <button class="btn btn-danger search btn-md" @click="window.close();"><i
+                                class="glyphicon glyphicon-off"></i>关闭
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Scripts/lhgdialog/lhgdialog.min.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['layer'], function () {
+        var layer = layui.layer
+    })
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            right: {},//用户/管理员权限
+            confirmLogonPass: '',//确认登录密码
+            confirmInsurePass: '',//确认保险柜密码
+            add: {
+                Accounts: '',
+                NickName: '',
+                LogonPass: '',
+                InsurePass: '',
+                UnderWrite: '',
+                Gender: 0,
+                Nullity: 0,
+                StunDown: 0,
+                IsAndroid: 0,
+                MoorMachine: 0,
+                MasterOrder: 0,
+                UserRight: 0,
+                MasterRight: 0
+            }
+        },
+        mounted: function () {
+            var that = this;
+            //获取用户的权限信息
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Account/UserRight?token=' + getStorage('token'),
+                dataType: 'json',
+                success: function (resDate) {
+                    if (resDate.status == 1) {
+                        that.right = resDate.data
+                    }
+                }
+            })
+        },
+        methods: {
+            Add: function () {
+                var istrue = true;
+                if (this.add.Accounts != "") {
+                    switch (isValidAccountCombination(this.add.Accounts)) {
+                        case 1:
+                            layer.alert("帐号含有空格");
+                            istrue = false;
+                            break;
+                        case 2:
+                            layer.alert("帐号汉字位数不足");
+                            istrue = false;
+                            break;
+                        case 3:
+
+                            break;
+                        case 4:
+                            layer.alert("帐号位数不足");
+                            istrue = false;
+                            break;
+                        default:
+                            layer.alert("帐号格式有误");
+                            istrue = false;
+                            break;
+                    }
+
+                } else {
+                    istrue = false;
+                    layer.alert('账号不能为空！')
+                }
+                if (!istrue) {
+                    return false;
+                }
+                if (this.add.NickName == "") {
+                    this.add.NickName = this.add.Accounts;
+                } else {
+                    switch (isValidAccountCombination(this.add.NickName)) {
+                        case 1:
+                            layer.alert("用户昵称含有空格");
+                            istrue = false;
+                            break;
+                        case 2:
+                            layer.alert("用户昵称汉字位数不足");
+                            istrue = false;
+                            break;
+                        case 3:
+
+                            break;
+                        case 4:
+                            layer.alert("用户昵称位数不足");
+                            istrue = false;
+                            break;
+                        default:
+                            layer.alert("用户昵称格式有误");
+                            istrue = false;
+                            break;
+                    }
+                }
+                if (!istrue) {
+                    return false;
+                }
+                if (this.add.LogonPass == "") {
+                    return layer.alert("登录密码不能为空！");
+                }
+                if (this.add.LogonPass.length < 6 || this.add.LogonPass.length > 32) {
+                    return layer.alert("登录密码长度不合法！");
+                }
+                if (this.add.LogonPass != this.confirmLogonPass) {
+                    return layer.alert("两次输入的登录密码不一致!");
+                }
+                if (this.add.InsurePass == "") {
+                    this.add.InsurePass = this.add.LogonPass;
+                    this.confirmInsurePass = this.add.LogonPass;
+                }
+                if (this.add.InsurePass && this.confirmInsurePass != this.add.InsurePass) {
+                    return layer.alert("两次输入的保险柜密码不一致!");
+                }
+                this.add.Nullity = this.add.Nullity ? 1 : 0;
+                this.add.StunDown = this.add.StunDown ? 1 : 0;
+                this.add.IsAndroid = this.add.IsAndroid ? 1 : 0;
+                var UserRight = 0, MasterRight = 0;
+                if (this.add.MasterOrder == 0) {//普通玩家
+                    $("input[name='ckbUserRight']:checked").each(function (i, item) {
+                        UserRight += parseInt($(item).val());
+                    });
+                } else {//管理员
+                    $("input[name='ckbMasterRight']:checked").each(function (i, item) {
+                        MasterRight += parseInt($(item).val());
+                    });
+                }
+                this.add.UserRight = UserRight
+                this.add.MasterRight = MasterRight
+                this.add['token'] = getStorage('token')
+                console.log(this.add)
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + 'admin/Account/AddNewAccount',
+                    data: this.add,
+                    dataType: 'json',
+                    success: function (res) {
+                        layer.alert(res.msg)
+                    }
+                })
+            }
+        }
+    })
+    // $(document).ready(function () {
+    //     //弹出页面
+    //     // $('#btnSwitchFace').dialog({
+    //     //     id: 'winUserfaceList',
+    //     //     title: '更换头像',
+    //     //     width: 540,
+    //     //     height: 385,
+    //     //     content: 'url:/Account/UserFaceList?ModuleID=' + parseInt('0'),
+    //     //     min: false,
+    //     //     max: false,
+    //     //     fixed: true,
+    //     //     drag: false,
+    //     //     resize: false
+    //     // });
+    //     tabShow($(".nav li"), $(".tab-pane"), "active");
+    // });
+    var tabShow = function (tab, con, className) {
+        tab.click(function () {
+            var indx = tab.index(this);
+            console.log(indx)
+            tab.removeClass(className);
+            $(this).addClass(className);
+            con.hide();
+            con.eq(indx).show();
+        })
+    };
+
+    function Add() {
+        var istrue = true;
+        var Accounts = $("#txtAccount").val();
+        if (Accounts != "") {
+            switch (isValidAccountCombination(Accounts)) {
+                case 1:
+                    layer.alert("帐号含有空格");
+                    istrue = false;
+                    break;
+                case 2:
+                    layer.alert("帐号汉字位数不足");
+                    istrue = false;
+                    break;
+                case 3:
+
+                    break;
+                case 4:
+                    layer.alert("帐号位数不足");
+                    istrue = false;
+                    break;
+                default:
+                    layer.alert("帐号格式有误");
+                    istrue = false;
+                    break;
+            }
+        } else {
+            istrue = false;
+            $("#lblacount").html("请输入帐号,由字母、数字、下划线和汉字组成！");
+        }
+        var NickName = $("#txtNickName").val();
+        if (istrue) {
+            if (NickName == "") {
+                NickName = Accounts;
+            } else {
+                switch (isValidAccountCombination(NickName)) {
+                    case 1:
+                        layer.alert("用户昵称含有空格");
+                        istrue = false;
+                        break;
+                    case 2:
+                        layer.alert("用户昵称汉字位数不足");
+                        istrue = false;
+                        break;
+                    case 3:
+
+                        break;
+                    case 4:
+                        layer.alert("用户昵称位数不足");
+                        istrue = false;
+                        break;
+                    default:
+                        layer.alert("用户昵称格式有误");
+                        istrue = false;
+                        break;
+                }
+            }
+        }
+        var LogonPass = $("#txtLogonPass").val();
+        if (istrue && LogonPass == "") {
+            layer.alert("登录密码不能为空！");
+            istrue = false;
+        }
+        var LogonPass2 = $("#txtLogonPass2").val();
+        if (istrue && LogonPass2 == "") {
+            layer.alert("确认登录密码不能为空！");
+            istrue = false;
+        }
+        if (LogonPass != LogonPass2) {
+            layer.alert("两次输入的登录密码不一致!");
+            istrue = false;
+        }
+        var InsurePass = $("#txtInsurePass").val();
+        if (istrue && InsurePass == "") {
+            InsurePass = LogonPass;
+        }
+        var InsurePass2 = $("#txtInsurePass2").val();
+        if (istrue && InsurePass != InsurePass2 && $("#txtInsurePass").val() != "") {
+            layer.alert("两次输入的保险柜密码不一致!");
+            istrue = false;
+        }
+        var UnderWrite = $("#txtUnderWrite").val();
+        //if (istrue && UnderWrite == "") {
+        //    layer.alert("个性签名不能为空!");
+        //    istrue = false;
+        //}
+        var Gender = $("#ddlGender").val();
+        var FaceID = $("#inFaceID").val();
+        var Nullity = $("#ckbNullity").is(':checked') ? 1 : 0;
+        var StunDown = $("#ckbStunDown").is(':checked') ? 1 : 0;
+        var IsAndroid = $("#chkIsAndroid").is(':checked') ? 1 : 0;
+        var MoorMachine = $("input[name='rdoMoorMachine']:checked").val();
+        var Experience = $("#txtExperience").val();
+        if (Experience == "" || isNaN(Experience)) {
+            istrue = false;
+            layer.alert("经验值不能为空!");
+        }
+        var Present = $("#txtPresent").val();
+        if (Present == "" || isNaN(Present)) {
+            //istrue = false;
+            //layer.alert("礼物不能为空!");
+            Present = 0;
+        }
+        var LoveLiness = $("#txtLoveLiness").val();
+        if (LoveLiness == "" || isNaN(LoveLiness)) {
+            istrue = false;
+            layer.alert("魅力值不能为空!");
+        }
+        var MemberOrder = 0;//$("#ddlMemberOrder").val();
+        var Compellation = $("#txtCompellation").val();
+        //if (Compellation == "") {
+        //    istrue = false;
+        //    layer.alert("真实姓名不能为空!");
+        //}
+        var QQ = $("#txtQQ").val();
+        //if (QQ == "" || isNaN(QQ)) {
+        //    istrue = false;
+        //    layer.alert("QQ不能为空!");
+        //}
+        var EMail = $("#txtEMail").val();
+        //if (EMail == "") {
+        //    istrue = false;
+        //    layer.alert("EMail不能为空!");
+        //} else {
+        if (EMail != "") {
+            if (!isEmail(EMail)) {
+                istrue = false;
+                layer.alert("EMail格式不正确!");
+            }
+        }
+        var SeatPhone = $("#txtSeatPhone").val();
+        //if (SeatPhone == "") {
+        //    istrue = false;
+        //    layer.alert("固定电话不能为空!");
+        //} else {
+        if (SeatPhone != "") {
+            if (!isPhone(SeatPhone)) {
+                istrue = false;
+                layer.alert("固定电话格式不正确!");
+            }
+        }
+        var MobilePhone = $("#txtMobilePhone").val();
+        //if (MobilePhone == "") {
+        //    istrue = false;
+        //    layer.alert("手机不能为空!");
+        //} else {
+        if (MobilePhone != "") {
+            if (!isPhone(MobilePhone)) {
+                istrue = false;
+                layer.alert("手机格式不正确!");
+            }
+        }
+        var PostalCode = $("#txtPostalCode").val();
+        //if (PostalCode=="") {
+        //    istrue = false;
+        //    layer.alert("邮政编码不能为空!");
+        //}else{
+        if (PostalCode != "") {
+            if (!isPhone(MobilePhone)) {
+                istrue = false;
+                layer.alert("邮政编码不正确!");
+            }
+        }
+        var DwellingPlace = $("#txtDwellingPlace").val();
+        var UserNote = $("#txtUserNote").val();
+        var UserRight = 0, MasterRight = 0;
+        $("input[name='ckbUserRight']:checked").each(function (i, item) {
+            UserRight += parseInt($(item).val());
+        });
+        //if (UserRight == 0) {
+        //    istrue = false;
+        //    layer.alert("请选择用户权限!");
+        //}
+        $("input[name='ckbMasterRight']:checked").each(function (i, item) {
+            MasterRight += parseInt($(item).val());
+        });
+        //if (MasterRight == 0) {
+        //    istrue = false;
+        //    layer.alert("请选择管理权限!");
+        //}
+        var MasterOrder = $("#ddlMasterOrder").val();
+        if (istrue) {
+            var data = {
+                Accounts: Accounts,
+                NickName: NickName,
+                LogonPass: LogonPass,
+                InsurePass: InsurePass,
+                UnderWrite: UnderWrite,
+                Gender: Gender,
+                FaceID: FaceID,
+                Nullity: Nullity,
+                StunDown: StunDown,
+                IsAndroid: IsAndroid,
+                MoorMachine: MoorMachine,
+                Experience: Experience,
+                Present: Present,
+                LoveLiness: LoveLiness,
+                MemberOrder: MemberOrder,
+                Compellation: Compellation,
+                QQ: QQ,
+                EMail: EMail,
+                SeatPhone: SeatPhone,
+                MobilePhone: MobilePhone,
+                PostalCode: PostalCode,
+                DwellingPlace: DwellingPlace,
+                UserNote: UserNote,
+                UserRight: UserRight,
+                MasterRight: MasterRight,
+                MasterOrder: MasterOrder
+            };
+            data.ModuleID = parseInt('0');
+            AjaxSubmit("/Account/AddNewAccount", data, callBack, "add");
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        if (fname == "add") {
+            layer.alert(jsonData.Msg);
+            window.close();
+            window.opener.location.reload();
+        }
+    }
+</script>
+
+</body>
+</html>

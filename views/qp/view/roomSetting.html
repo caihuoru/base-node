@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>控制系统 - 房间配置</title>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .panel-body .row div:first-child {
+            width: 180px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<body class="backgroud">
+
+<div id="content" class="main-content" style="display: none;" v-show="curTab">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：控制系统 - 房间配置 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content">
+                    <ul class="nav nav-tabs" style="margin-top:10px;">
+                        <li :class="{active:curTab == 1 }" @click="tabBarClick(1)"><a href="javascript:void(0)">基本配置</a>
+                        </li>
+                        <li :class="{active:curTab == 2 }" @click="tabBarClick(2)"><a href="javascript:void(0)">房间选项</a>
+                        </li>
+                        <li :class="{active:curTab == 3 }" @click="tabBarClick(3)"><a href="javascript:void(0)">分组选项</a>
+                        </li>
+                        <li :class="{active:curTab == 4 }" @click="tabBarClick(4)"><a href="javascript:void(0)">服务定制</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" v-show="curTab == 1">
+                        <div class="panel panel-primary" style="border: none;">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">房间名称：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.title" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">房间等级：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">房间类型：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <select class="form-control input-sm">
+                                            <option value="1">普通房间</option>
+                                            <option value="1">普通房间</option>
+                                            <option value="1">普通房间</option>
+                                            <option value="1">普通房间</option>
+                                            <option value="1">普通房间</option>
+                                            <option value="1">普通房间</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">游戏类型：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <select class="form-control input-sm">
+                                            <option value="1">财富类型</option>
+                                            <option value="1">财富类型</option>
+                                            <option value="1">财富类型</option>
+                                            <option value="1">财富类型</option>
+                                            <option value="1">财富类型</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">服务端口：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">数据库名称：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">桌子数目：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">数据库地址：</div>
+                                    <div class="col-xs-6 col-md-4 ">
+                                        <p>
+                                            <input v-model="add.href" class="form-control input-sm inline no-bord"
+                                                   style="width: 50px;" type="text" value="">.
+                                            <input v-model="add.href" class="form-control input-sm inline no-bord"
+                                                   style="width: 50px;" type="text" value="">.
+                                            <input v-model="add.href" class="form-control input-sm inline no-bord"
+                                                   style="width: 50px;" type="text" value="">.
+                                            <input v-model="add.href" class="form-control input-sm inline no-bord"
+                                                   style="width: 50px;" type="text" value="">
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">房间人数：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">选择方式：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input type="radio" value="0" name="ratio" id="ssbl" checked>
+                                        <label for="ssbl">税收比例</label>
+                                        <input type="radio" value="1" name="ratio" id="fwfs">
+                                        <label for="fwfs">税收比例</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">税收比例：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.ssbl" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">服务费数：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.fwfs" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">每局封顶：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.maxMoney" class="form-control input-sm" type="text"
+                                               value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">游戏底分：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.minScore" class="form-control input-sm" type="text"
+                                               value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">挂接类型：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.gjType" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">挂接节点：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.gjLeaf" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">排序标识：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.sortFlag" class="form-control input-sm" type="text"
+                                               value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">最大中奖值：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.maxWinning" class="form-control input-sm" type="text"
+                                               value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">对战桌子数量：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.battleTable" class="form-control input-sm" type="text"
+                                               value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">机器人最小桌子数：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.minRobot" class="form-control input-sm" type="text"
+                                               value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">机器人最大桌子数：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.maxRobot" class="form-control input-sm" type="text"
+                                               value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline">
+                                        <li><a class="btn btn-danger search btn-md" href="#" onclick="closed()"><i
+                                                class="glyphicon glyphicon-off"></i> 关闭</a></li>
+                                        <li><a class="btn btn-outline-success search btn-md" href="#"
+                                               onclick="add();"><i
+                                                class="glyphicon glyphicon-send"></i> 保存</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content" v-show="curTab == 2">
+                        <div class="panel panel-primary" style="border: none;">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">进入房间的最低成绩：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.title" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">进入房间的最低成绩：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">进入房间的最低会员：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <select class="form-control input-sm">
+                                            <option value="1">所有用户</option>
+                                            <option value="1">VIP1</option>
+                                            <option value="1">VIP2</option>
+                                            <option value="1">VIP3</option>
+                                            <option value="1">VIP4</option>
+                                            <option value="1">VIP5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">进入房间的最高会员：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <select class="form-control input-sm">
+                                            <option value="1">所有用户</option>
+                                            <option value="1">VIP1</option>
+                                            <option value="1">VIP2</option>
+                                            <option value="1">VIP3</option>
+                                            <option value="1">VIP4</option>
+                                            <option value="1">VIP5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">坐下游戏的最低成绩：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">坐下游戏的最低成绩：</div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 lb">
+                                        <p class="">
+                                        <span class="">
+                                            <input type="checkbox"
+                                                   id="detailedInfoCheckboxAll"
+                                                   value=""
+                                                   onclick="SelectAll(this, 'ckbUserRight')"
+                                            >
+                                            <label for="detailedInfoCheckboxAll">全选</label>
+                                        </span>
+                                        </p>
+                                        <p class="checkbox-radio">
+                                    <span class="break-word" v-for="(value,key) in baseInfo.right.UserRightStatus">
+                                        <input :id="'ckbUserRight'+key"
+                                               type="checkbox"
+                                               name="ckbUserRight"
+                                               :value="key">
+                                        <label :for="'ckbUserRight'+key">{{value}}</label>
+                                    </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline">
+                                        <li><a class="btn btn-danger search btn-md" href="#" onclick="closed()"><i
+                                                class="glyphicon glyphicon-off"></i> 关闭</a></li>
+                                        <li><a class="btn btn-outline-success search btn-md" href="#"
+                                               onclick="add();"><i
+                                                class="glyphicon glyphicon-send"></i> 保存</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content" v-show="curTab == 3">
+                        <div class="panel panel-primary" style="border: none;">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">分组选项：</div>
+                                    <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 lb">
+                                        <p class="checkbox-radio">
+                                        <div>
+                                            <span class="break-word">
+                                                <input id="ckbchoose1"
+                                                       type="checkbox"
+                                                       name="fenzuxuanxiang"
+                                                       value="1">
+                                                <label for="ckbchoose1">启用分组模式与防作弊模式</label>
+                                            </span>
+                                        </div>
+                                        <div>
+                                                <span class="break-word">
+                                                    <input id="ckbchoose2"
+                                                           type="checkbox"
+                                                           name="fenzuxuanxiang"
+                                                           value="2">
+                                                    <label for="ckbchoose2">允许把上次同桌的玩家再次分组到一起</label>
+                                                </span>
+                                        </div>
+                                        <div>
+                                                <span class="break-word">
+                                                    <input id="ckbchoose3"
+                                                           type="checkbox"
+                                                           name="fenzuxuanxiang"
+                                                           value="3">
+                                                    <label for="ckbchoose3">允许把玩家客户端地址相同的分组到一起</label>
+                                                 </span>
+                                        </div>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">分组最少人数：</div>
+                                    <div class="col-xs-6 col-md-3 col-sm-4 col-xs-4">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                    <div class="col-xs-4 col-md-4" col-sm-4 col-xs-4>（默认为最少游戏开始人数）</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">分组间隔时间：</div>
+                                    <div class="col-xs-6 col-md-3 col-sm-4 col-xs-4">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                    <div class="col-xs-4 col-md-4 col-sm-4 col-xs-4">（默认为15秒）</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">分组游戏局数：</div>
+                                    <div class="col-xs-6 col-md-3 col-sm-4 col-xs-4">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                    <div class="col-xs-4 col-md-4 col-sm-4 col-xs-4">（默认为每局游戏结束后都重新分组）</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">游戏最少人数：</div>
+                                    <div class="col-xs-6 col-md-3 col-sm-4 col-xs-4">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                    <div class="col-xs-4 col-md-4 col-sm-4 col-xs-4">（默认为游戏最小开始人数）</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">游戏最多人数：</div>
+                                    <div class="col-xs-6 col-md-3 col-sm-4 col-xs-4">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                    <div class="col-xs-4 col-md-4 col-sm-4 col-xs-4">（默认为游戏最大开始人数）</div>
+                                </div>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline">
+                                        <li><a class="btn btn-danger search btn-md" href="#" onclick="closed()"><i
+                                                class="glyphicon glyphicon-off"></i> 关闭</a></li>
+                                        <li><a class="btn btn-outline-success search btn-md" href="#"
+                                               onclick="add();"><i
+                                                class="glyphicon glyphicon-send"></i> 保存</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content" v-show="curTab == 4">
+                        <div class="panel panel-primary" style="border: none;">
+                            <div class="panel-body">
+                                <div class="font-bold">机器人存储款</div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">取款最小值：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.title" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">存款最大值：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.href" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">取款最小数额：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">取款最大数额：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">存款百分比：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="font-bold">库存控制</div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">库存起始值：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">库存衰减值：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.icon" class="form-control input-sm inline input-width-100"
+                                               type="text" value="">&nbsp;&nbsp;%
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">库存封顶值：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">玩家赢分几率：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.icon" class="form-control input-sm inline input-width-100"
+                                               type="text" value="">&nbsp;&nbsp;%
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">彩金值：</div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <input v-model="add.icon" class="form-control input-sm" type="text" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <ul class="list-inline">
+                                        <li><a class="btn btn-danger search btn-md" href="#" onclick="closed()"><i
+                                                class="glyphicon glyphicon-off"></i> 关闭</a></li>
+                                        <li><a class="btn btn-outline-success search btn-md" href="#"
+                                               onclick="add();"><i
+                                                class="glyphicon glyphicon-send"></i> 保存</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<script src="../Scripts/pagination.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            curTab: 1,
+            add: {},
+            baseInfo: {
+                right: {},//权限信息
+            },
+        },
+        mounted: function () {
+            var that = this;
+            //获取用户的权限信息
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Account/UserRight?token=' + getStorage('token'),
+                dataType: 'json',
+                success: function (resDate) {
+                    if (resDate.status == 1) {
+                        that.baseInfo.right = resDate.data
+                    }
+                }
+            })
+        },
+        methods: {
+            tabBarClick: function (num) {
+                this.curTab = num
+            }
+        }
+    })
+</script>
+</body>
+</body>
+</html>

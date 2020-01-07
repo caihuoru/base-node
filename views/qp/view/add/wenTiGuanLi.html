@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>客服中心 - 问题管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/layui-v2.5.4/layui/css/layui.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+
+
+    <style type="text/css">
+        .panel-body .row {
+            margin: 15px 0;
+        }
+
+        .col-xs-2.col-md-1,.col-xs-4.col-md-2 {
+            padding: 9px 15px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right;
+        }
+        .col-xs-4.col-md-2{
+            text-align: left;}
+        [type=radio]:checked+label, [type=radio]:not(:checked)+label{
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content margin-t-10">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i> 目前操作功能：客服中心 - {{type == 'add' ? '添加' : '编辑'}}问题</h2>
+            </div>
+            <div class="tab-content">
+                <div class="panel panel-primary" style="border: none;">
+                    <div class="panel-body">
+                        <form class="layui-form" method="post" action="#" lay-filter="component-form-element">
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">问题标题：</div>
+                                <div class="col-xs-6 col-md-3">
+                                    <input v-model="add.name"
+                                           class="form-control input-sm"
+                                           type="text"
+                                           name="platName">
+                                </div>
+<!--                                <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('platName')">-->
+<!--                                    {{ errors.first('platName') }}-->
+<!--                                </div>-->
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">状态：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input name="addHide" v-model.number="add.status" type="radio" class="with-gap"
+                                       id="radio_3"
+                                       value="1"/>
+                                <label for="radio_3">开启</label>
+                                <input name="addHide" v-model.number="add.status" type="radio" id="radio_4"
+                                       class="with-gap"
+                                       value="0"/>
+                                <label for="radio_4" class="ml-30">关闭</label>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li><a class="btn btn-danger search btn-md" href="#" onclick="closed()"><i
+                                        class="glyphicon glyphicon-off"></i> 关闭</a></li>
+                                <li><a class="btn btn-outline-success search btn-md" href="#" @click="submit"><i
+                                        class="glyphicon glyphicon-send"></i> 保存</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<!--验证插件-->
+<script src="../../Content/veevalidate/vee-validate.js"></script>
+<script src="../../Content/veevalidate/zh_CN.js"></script>
+<script src="../../Content/veevalidate/config.js"></script>
+<script type="text/javascript">
+    let app;
+    $(function () {
+
+        // 获取平台列表
+
+        app = new Vue({
+            el: '#content',
+            data: {
+                type: getUrlParams('type'),
+                oneMenu:[],
+                platform: [],
+                add: {
+                    id: '',
+                    payment_type: 2,
+                    name: '',
+                    money: '',
+                    max_money: '',
+                    min_money: '',
+                    sort: 50,
+                    status: 1,
+                }
+            },
+            mounted() {
+                let that = this;
+                // 获取所属支付类型
+                $.get(qp_url+'admin/Gamecommon/paymentType',function (res) {
+                    console.log(res.data)
+                    if(res.status == 1){
+                        that.platform = res.data
+                        if (getUrlParams('type') == 'add') {
+                            that.layuiInit()
+                        } else {
+                            $.ajax({
+                                method: 'get',
+                                url: qp_url + 'admin/Filled/platformInfo',
+                                dataType: 'json',
+                                data: {
+                                    token: getStorage('token'),
+                                    id: getUrlParams('id')
+                                },
+                                success: function (res) {
+                                    let resData = res.data
+                                    console.log(resData)
+                                    if(res.status == 1){
+                                        that.add = resData
+                                        that.$nextTick(function () {
+                                            that.layuiInit()
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    }
+                },'json')
+
+
+            }
+            ,methods:{
+                layuiInit (){
+                    console.log(123)
+                    let that = this;
+                    layui.use(['layer','form'], function () {
+                        var layer = layui.layer;
+                        var form = layui.form;
+                        form.on('select(type_name)', function (data) {
+                            console.log(data)
+                            // 同步vue model的值
+                            that.add.payment_type = parseInt(data.value)
+                        });
+                    });
+                },
+                submit () {
+                    let postData = this.add;
+                    console.log(postData)
+                    this.$validator.validate().then(valid => {
+                        console.log(valid)
+                        if(valid){
+                            $.ajax({
+                                method: 'post',
+                                url: qp_url + 'admin/Filled/editPlatform?token=' + getStorage('token'),
+                                dataType: 'json',
+                                data: postData,
+                                success: function (res) {
+                                    let resData = res
+                                    if (resData.status == 1) {
+                                        layer.msg(resData.msg, {time: 1000, icon: 1});
+                                        setTimeout(function () {
+                                            closed(resData.msg)
+                                        }, 1000)
+                                    } else {
+                                        layer.msg(resData.msg, {time: 1000, icon: 2});
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }
+            }
+        })
+        $(document).on('change','select',function (e) {
+            console.log(123)
+        })
+    })
+
+
+    function closed(msg) {
+        window.close()
+        window.opener.windowClose(msg)
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>代理系统 - 下级充值记录</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+
+        .list-group-item li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：代理系统 - 下级充值记录 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+
+                    <!--查询栏开始-->
+                    <div class="alert alert-info">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline cursor-style">
+                                    <li>日期查询：</li>
+                                    <li>
+                                        <input id="txtStartDate" class="input-width-150" type="text" readonly="readonly"
+                                               placeholder="请输入开始时间"/>至
+                                        <input type="text" id="txtEndDate" class="input-width-150"
+                                               readonly="readonly"
+                                               placeholder="请输入结束时间"/>
+                                    </li>
+                                    <li><select class="form-control input-sm" id="ddlGlobalShareInfo" v-model="ShareID">
+                                        <option value="0">全部服务</option>
+                                        <option :value="key" v-for="(name,key) in ShareIDList">{{name}}</option>
+                                    </select></li>
+
+                                    <li>
+                                        用户查询：
+                                    </li>
+                                    <li>
+                                        <input type="text" id="txtSearch" class="form-control input-sm input-width-150"
+                                               placeholder="请输入用户"/>
+                                    </li>
+                                    <li>
+                                        <select id="ddlSearchType" class="form-control input-sm">
+                                            <option value="1">按用户帐号</option>
+                                            <option value="2">按游戏ID</option>
+                                            <option value="3">按订单号</option>
+
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <a id="btnQuery" class="btn btn-outline-success search"
+                                           href="javascript:void(0)"><i
+                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--查询栏结束-->
+                    <div class="row">
+                        <div class="col-md-2" style="display: none;">
+                            <div id="DataTables_Table_0_length" class="dataTables_length">
+                                <label>
+                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
+                                            id="pagecount">
+                                        <option value="10" selected="selected">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> 条/页
+                                </label>
+                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="padding-bottom:5px; padding-top:5px; text-align:right;">
+                            <div class="btn-group">
+                                <button type="button" id="btnQueryTD" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-align-left icon-white"></i>今天
+                                </button>
+                                <button type="button" id="btnQueryYD" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-align-center icon-white"></i>昨天
+                                </button>
+                                <button type="button" id="btnQueryTW" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-align-right icon-white"></i>本周
+                                </button>
+                                <button type="button" id="btnQueryYW" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-align-justify icon-white"></i>上周
+                                </button>
+                                <button type="button" id="btnQueryTM" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-indent-left icon-white"></i>本月
+                                </button>
+                                <button type="button" id="btnQueryYM" class="btn btn-outline-primary"><i
+                                        class="glyphicon glyphicon-indent-right icon-white"></i>上月
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <table id="layTable" lay-filter="test"></table>
+
+                        <table style="display: none;"
+                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                            <tr role="row">
+                                <th>订单号</th>
+                                <th>充值时间</th>
+                                <th>服务类型</th>
+                                <th>用户帐号</th>
+                                <th>游戏ID</th>
+                                <th>充值金额</th>
+                                <th>充值汇率</th>
+                                <th>实际收款</th>
+                                <th>代理是否可见</th>
+                            </tr>
+                            </thead>
+                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
+                        </table>
+                        <!--分页控件-->
+                        <div class="row">
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
+                                    <ul class="pagination" id="pagin"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            ShareIDList: {},
+            ShareID: 0
+        },
+        mounted: function () {
+            var that = this;
+            $.ajax({
+                type: 'GET',
+                url: qp_url + 'admin/Gamecommon/payType?token='+getStorage('token'),
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 1) {
+                        that.ShareIDList = res.data
+                    }
+                    console.log(that.ShareIDList);
+                }
+            })
+        }
+    })
+    var pageObj = {};
+    var postData = {};//搜索条件
+    var table;
+    $(document).ready(function () {
+        //时间选择器
+        laydate.render({
+            elem: '#txtStartDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        laydate.render({
+            elem: '#txtEndDate'
+            , type: 'datetime'
+            , theme: '#00B4E5'
+        });
+        docReady();
+    });
+    layui.use('table', function () {
+        table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            // , height: 512
+            , url: qp_url + 'admin/Daili/GetNextPayList?token='+getStorage('token') //数据接口
+            , where: postData
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data.list //解析数据列表
+                };
+            }
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 10
+            , cellMinWidth: 100
+            , cols: [[ //表头
+                {field: 'OrderID', title: '订单号'}
+                , {field: 'ApplyDate', title: '充值时间'}
+                , {field: 'ShareName', title: '服务类型'}
+                , {
+                    field: 'announcer', title: '用户帐号', templet: function (d) {
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                    }
+                }
+                , {field: 'GameID', title: '游戏ID'}
+                , {field: 'PayAmount', title: '充值金额',totalRow:true}
+                , {field: 'payrate', title: '充值汇率',totalRow:true,templet:function (d) {
+                        return d.payrate+'%'
+                    }}
+                , {field: 'PayAmount', title: '实际收款',totalRow:true,templet:function (d) {
+                        return (d.PayAmount * (100 - d.payrate )/ 100).toFixed(2)
+                    }}
+                , {
+                    field: 'AUShow', title: '代理是否可见', templet: function (d) {
+                        if (d.AUShow == 1) {
+                            return '<span class="normal">可见</span>'
+                        } else {
+                            return '<span class="wrong">不可见</span>'
+                        }
+                    }
+                }
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+
+        });
+    });
+
+
+    function docReady() {
+        //加载数据
+        // postData.pageSize = parseInt($("#pagecount").val());
+        postData.Type = 1;
+        // postData.pageIndex = 1;
+        postData.KeyWord = $("#txtSearch").val();
+        postData.SearchType = $("#ddlSearchType").val();
+        postData.agentId = getUrlParams('agentId');
+
+        // var txtStartDate = $("#txtStartDate").val();
+        // var txtEndDate = $("#txtEndDate").val();
+        postData.StartDate = Time.today().StartDate;
+        postData.EndDate = Time.today().EndDate;
+        // AjaxSearch(postData);
+        //收放事件
+        $('.btn-minimize').click(function (e) {
+            e.preventDefault();
+            var $target = $(this).parent().parent().next('.box-content');
+            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            $target.slideToggle();
+        });
+        // //选择页码
+        // $("#pagecount").change(function (e) {
+        //     postData.pageSize = parseInt($(this).val());
+        //     postData.pageIndex = 1;
+        //     AjaxSearch(postData);
+        // });
+
+        //普通搜索事件
+        $("#btnQuery").click(function (e) {
+            // postData.pageSize = parseInt($("#pagecount").val());
+            postData.Type = 1;
+            var txtStartDate = $("#txtStartDate").val();
+            var txtEndDate = $("#txtEndDate").val();
+            if (txtStartDate != "" && txtEndDate != "") {
+                if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
+                    alert("开始日期不能大于结束时间");
+                    return false;
+                }
+            }
+            postData.StartDate = txtStartDate;
+            postData.EndDate = txtEndDate;
+            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+            postData.KeyWord = $("#txtSearch").val();
+            postData.SearchType = $("#ddlSearchType").val();
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData);
+        });
+        //今天查询
+        $("#btnQueryTD").click(function (e) {
+            postData.Type = 2;
+            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData);
+        });
+        //昨天查询
+        $("#btnQueryYD").click(function (e) {
+            postData.Type = 3;
+            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData);
+        });
+        //本周查询
+        $("#btnQueryTW").click(function (e) {
+            postData.Type = 4;
+            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+            // AjaxSearch(postData);
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+        });
+        //上周查询
+        $("#btnQueryYW").click(function (e) {
+            postData.Type = 5;
+            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData);
+        });
+        //本月查询
+        $("#btnQueryTM").click(function (e) {
+            postData.Type = 6;
+            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData);
+        });
+        //上月查询
+        $("#btnQueryYM").click(function (e) {
+            postData.Type = 7;
+            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
+            table.reload('layTable', {
+                where: postData,
+                page: {
+                    curr: 1
+                }
+            })
+            // AjaxSearch(postData);
+        });
+    }
+
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
+
+    //搜索事件
+    function AjaxSearch(postData) {
+        $('#pagin').paging("/Daili/GetNextPayList", postData, CreatTableBody, postData.pageIndex);
+    }
+
+    //绑定数据
+    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, msg) {
+        var html = "";
+        var payrate = '5.00'
+        if (jsondata != null && jsondata.length > 0) {
+            $.each(jsondata, function (i, item) {
+                html += stringFormat("<tr>");
+                html += stringFormat("<td>{0}</td>", item.OrderID);
+                html += stringFormat("<td>{0}</td>", item.ApplyDate);
+                html += stringFormat("<td>{0}</td>", item.ShareName);
+                html += stringFormat("<td><a class=\"l\" href=\"javascript:void(0);\" onclick=\"openWindowOwn('/Account/AccountsInfo?param={1}','{1}',850,600);\">{0}</a></td>", item.Accounts, item.UserID);
+                html += stringFormat("<td>{0}</td>", item.GameID);
+                html += stringFormat("<td>{0}</td>", item.PayAmount);
+                html += stringFormat("<td>{0}</td>", payrate + '%');
+                html += stringFormat("<td>{0}</td>", (item.PayAmount * (1 - payrate / 100)).toFixed(2));
+                html += stringFormat("<td>{0}</td>", item.AUShow == 1 ? "<font color=green>可见</font>" : "<font color=red>不可见</font>");
+                html += "</tr>";
+            });
+        }
+        if (msg != null) {
+            html += stringFormat("<tr><td colspan=\"5\">合计：可见：{3} <font color=red>不可见：{4}</font></td><td>{0}</td><td>{1}</td><td>{2}</td><td></td></tr>", msg.PayAmount, payrate + '%', (msg.PayAmount * (1 - payrate / 100)).toFixed(2), msg.PayAmount1, msg.PayAmount - msg.PayAmount1);
+        }
+        $("#DataTables_Table_0_wrapper tbody").html(html);
+        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
+    }
+
+    //字符串格式化
+    function stringFormat() {
+        if (arguments.length == 0)
+            return null;
+        var str = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
+            str = str.replace(re, arguments[i]);
+        }
+        return str;
+    }
+</script>
+
+</body>
+</html>

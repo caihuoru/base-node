@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>管理后台-赠送金币</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../../Content/common.css" rel="stylesheet"/>
+</head>
+<body>
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：管理后台-赠送金币</h2>
+            </div>
+            <div class="tab-content">
+                <div class="container tab-pane active">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group new-input-style clearfix">
+                            <label class="pull-left control-label" style="text-align:right;"> 余额：</label>
+                            <div class="pull-left">
+                                金币：<span id="jb"></span> 银行：<span id="yh"></span>
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style margin-b-0 clearfix">
+                            <label class="pull-left control-label" style="text-align:right;">类型：</label>
+                            <div class="pull-left" style="width: 100px;">
+                                <select id="ddlType" class="form-control" style="margin-bottom: 10px;">
+                                    <option value="0">请选择类型</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group new-input-style margin-b-0 clearfix">
+                            <label class="pull-left control-label" style="text-align:right;"> 赠送数量：</label>
+                            <div class="pull-left" style="width: 140px;">
+                                <input id="txtAddGold" class="form-control" type="text" value="" maxlength="11"
+                                       placeholder="请输入赠送数量">
+                            </div>
+                            <span class="pull-left control-label"><i>*&nbsp;</i>负数为扣除</span>
+                        </div>
+
+                        <div class="form-group new-input-style margin-t-b clearfix">
+                            <label class="pull-left control-label" style="text-align:right;">赠送原因：</label>
+                            <div class="pull-left" style="width: 300px;">
+                                <textarea class="form-control" id="txtReason" rows="5" placeholder="赠送原因"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <ul class="cursor-style clearfix new-add-btn margin-t-20">
+                    <li class="pull-left" style="margin-right: 10px;">
+                        <button class="btn btn-outline-success search btn-md" onclick="Add();"><i
+                                class="glyphicon glyphicon-send"></i>保存
+                        </button>
+                    </li>
+                    <li class="pull-left">
+                        <button class="btn btn-danger search btn-md" onclick="window.close();"><i
+                                class="glyphicon glyphicon-off"></i>关闭
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../../Scripts/comm.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use('layer', function () {
+        var layer = layui.layer
+    })
+
+    var id = getUrlParams('param')
+    var jb = getUrlParams('jb')
+    var yh = getUrlParams('yh')
+    $('#jb').html(jb)
+    $('#yh').html(yh)
+    $.get(qp_url + 'admin/Gamecommon/adminSendScoreType', function (res) {
+        if (res.status == 1) {
+            var str = ""
+            for (var key in res.data) {
+                str += `<option value="${key}">${res.data[key]}</option>`
+            }
+            $('#ddlType').append(str)
+        }
+    }, 'json')
+
+    function Add() {
+        var istrue = true;
+        var Gold = $("#txtAddGold").val();
+        var type = $('#ddlType').val();
+        if (type == 0) {
+            layer.msg("请选择类型", {time: 1000, icon: 2});
+            return false;
+        }
+        if (istrue && Gold == "") {
+            layer.msg("请输入金币数目", {time: 1000, icon: 2});
+            return false;
+        }
+        if (istrue && isNaN(Gold)) {
+            layer.msg("赠送金币数目只能为数字", {time: 1000, icon: 2});
+            return false;
+        }
+
+        if (parseFloat(Gold) < -2147483648 || parseFloat(Gold) > 2147483647) {
+            layer.msg("赠送金币数目范围-2147483648至2147483647", {time: 1000, icon: 2});
+            return false;
+        }
+        var Reason = $("#txtReason").val()
+        if (istrue && Reason == "") {
+            layer.msg("赠送原因不能为空", {time: 1000, icon: 2});
+            return false;
+        }
+        if (istrue) {
+            // var data = { Type: type, Gold: Gold, Reason: Reason, Param: '121082', ModuleID: parseInt('100') };
+            // AjaxSubmit("/Account/ExcuteTreasure", data, callBack, "add");
+            //loading层
+
+            var index = layer.load(1, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+            $.ajax({
+                type: 'POST',
+                url: qp_url + 'admin/Account/ExcuteTreasure',
+                dataType: 'json',
+                data: {
+                    token: getStorage('token'),
+                    UserID: id,
+                    Type: type,
+                    Gold: Gold,
+                    Reason: Reason
+                }, success: function (res) {
+                    if (res.status == 1) {
+                        layer.msg(res.msg, {time: 1000, icon: 1})
+                        setTimeout(function () {
+                            window.close()
+                        }, 1000)
+                        window.opener.reloadTable()
+                    } else {
+                        layer.msg(res.msg, {time: 1000, icon: 2})
+                    }
+                }, complete: function () {
+                    layer.close(index);
+                }
+            })
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        if (fname == "add") {
+            alert(jsonData.Msg);
+            location.reload();
+        }
+    }
+</script>
+
+</body>
+</html>

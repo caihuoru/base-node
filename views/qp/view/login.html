@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>后台登录</title>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <style>
+        html {
+            color: #878787;
+            background: url("../Content/images/login-bg.jpg") center no-repeat;
+            font-family: Arial, 'Microsoft YaHei', '宋体';
+        }
+
+        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td, strong {
+            padding: 0;
+            margin: 0;
+            font-family: 'Microsoft YaHei', Arial, '宋体';
+        }
+
+        fieldset, img {
+            border: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00c;
+            outline: none;
+        }
+
+        var, em, strong {
+            font-style: normal;
+        }
+
+        address, caption, cite, code, dfn, em, strong, th, var, optgroup {
+            font-style: inherit;
+            font-weight: inherit;
+        }
+
+        input, button, textarea, select, optgroup, option {
+            font-family: inherit;
+            font-size: inherit;
+            font-style: inherit;
+            font-weight: inherit;
+        }
+
+        input, button, textarea, select {
+            *font-size: 100%;
+            outline: none;
+        }
+
+        html, body {
+            -webkit-text-size-adjust: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        * {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .clearfix:after {
+            content: "\200B";
+            display: block;
+            height: 0;
+            clear: both;
+        }
+
+        .clearfix {
+            *zoom: 1;
+        }
+
+        .wrap {
+            position: absolute;
+            width: 400px;
+            height: 500px;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            background: url(../Content/images/login-title.png) left top / 100% auto no-repeat;
+            border-radius: 10px;
+        }
+
+        .header {
+            width: 100%;
+            margin: 0;
+            height: 105px;
+            line-height: 105px;
+
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            color: #ffffff;
+            font-weight: 400;
+            letter-spacing: 6px;
+        }
+
+        .main {
+            width: 100%;
+            height: 427px;
+        }
+
+        .main-list {
+            position: relative;
+            text-align: center;
+        }
+
+
+        .main-list div label {
+            float: left;
+            width: 90px;
+            margin-right: 10px;
+            text-align: right;
+        }
+
+
+        .main-list p {
+            margin-left: 100px;
+            color: #676767;
+        }
+
+        .main-list a {
+            margin-left: 10px;
+        }
+
+        .code-pic {
+            position: absolute;
+            right: 59px;
+            top: 1px;
+            width: 100px;
+            height: 38px;
+            background-color: #E3E3E3;
+            line-height: 38px;
+            color: #000;
+            text-align: center;
+            border-radius: 8px 8px;
+        }
+
+        .main-list .login-btn {
+            width: 325px;
+            height: 60px;
+            border-radius: 4px;
+            background: #4378e0;
+            color: #ffffff;
+            font-size: 26px;
+            margin: 0 auto;
+            border: none;
+            margin-top: 50px;
+        }
+
+        .login-btn:hover {
+            background-position: 0 -59px;
+        }
+
+        .footer {
+            width: 1200px;
+            height: 156px;
+            background: url("../Content/images/login_main.png") no-repeat;
+            background-size: 100% 100%;
+            margin: 0 auto;
+        }
+
+        #txtLoginName, #txtLoginPass {
+            margin-top: 40px;
+            width: 270px;
+            padding-left: 55px;
+            height: 70px;
+            line-height: 70px;
+            border: none;
+            border-radius: 0;
+            border-bottom: 1px solid #d3d3d3;
+        }
+
+        #txtLoginName {
+            background: url(../Content/images/username.png) 4px center no-repeat;
+        }
+
+        #txtLoginPass {
+            background: url(../Content/images/password.png) 4px center no-repeat;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="header">
+        <h1>后台管理系统</h1>
+    </div>
+    <div class="main">
+        <div class="main-list">
+            <div>
+                <input type="text" name="" id="txtLoginName" placeholder="请输入账号"/>
+            </div>
+            <div>
+                <input type="password" name="" id="txtLoginPass" placeholder="请输入密码"/>
+            </div>
+
+
+            <input type="button" name="btnLogin" class="login-btn" id="btnLogin" value="登陆">
+        </div>
+    </div>
+    <!--    <div class="footer"></div>-->
+
+</div>
+<script type="text/javascript" src="../Scripts/axios.js"></script>
+<script type="text/javascript">
+    //横屏操作提示start
+    function orient() {
+        if (window.orientation == 0 || window.orientation == 180) {
+            alert("竖屏效果不好，建议横屏操作！");
+        }
+    }
+
+    $(function () {
+        orient();
+        //用户变化屏幕方向时调用
+        $(window).bind('orientationchange', function (e) {
+            orient();
+        });
+
+        $("#txtLoginName").focus();
+        //回车事件
+        document.onkeydown = function (e) {
+            var theEvent = window.event || e;
+            var code = theEvent.keyCode || theEvent.which;
+            if (code == 13) {
+                $("#btnLogin").click();
+            }
+        }
+        $("#btnLogin").on("click", function () {
+            var accounts = $("#txtLoginName").val();
+            var pass = $("#txtLoginPass").val();
+            //var verifyCode = $("#txtVerifyCode").val();
+            var iscan = true;
+            var msg = "";
+            if (accounts == "") {
+                msg = "请输入帐号";
+                $("#txtLoginName").focus();
+                iscan = false;
+            }
+            if (pass == "") {
+                msg = "请填写登录密码";
+                $("#txtLoginPass").focus();
+                iscan = false;
+            }
+            if (pass.length >= 100) {
+                msg = "登录密码不能超过100个字符";
+                $("#txtLoginPass").focus();
+                iscan = false;
+            }
+            //if (verifyCode == "") {
+            //    msg = "请输入验证码";
+            //    $("#txtVerifyCode").focus();
+            //    iscan = false;
+            //}
+            if (iscan) {
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/login/index",
+                    dataType: "json",
+                    data: {username: accounts, password: pass},
+                    success: function (rsp) {
+                        console.log(rsp)
+                        if (rsp.status == 1) {
+                            setStorage('token', rsp.data.token)
+                            setStorage('customerInfo', JSON.stringify(rsp.data))
+                            setStorage('admin_id', rsp.data.admin_id)
+                            if (getStorage('loginUrl')) {
+                                var url = getStorage('loginUrl');
+                                delStorage('loginUrl')
+                                window.location.href = url;
+                            } else {
+                                window.location.href = "index2.html";
+                            }
+                        } else {
+                            alert(rsp.msg);
+                        }
+                    }
+                });
+
+            } else {
+                alert(msg);
+            }
+        })
+
+        var isSend = false, ss = 30;
+        $('.code-pic').click(function () {
+            if (isSend) return;
+            var accounts = $("#txtLoginName").val();
+            if (accounts == "") {
+                msg = "请输入帐号";
+                $("#txtLoginName").focus();
+                iscan = false;
+            }
+            isSend = true;
+            ss = 30;
+            $.post("http://qq.com/Login/SendCode", {userName: accounts}, function (data) {
+                alert(data.Msg)
+                if (data.IsOk) {
+                    my_interval = setInterval(function () {
+                        if (ss > 0) {
+                            $('.code-pic').text(ss + "s后可重发");
+                            ss--;
+                        } else {
+                            clearInterval(my_interval);
+                            isSend = false;
+                            $('.code-pic').text("获取验证码");
+                        }
+                    }, 1000);
+                } else {
+                    isSend = false;
+                }
+            })
+        })
+    })
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?8ee3ec23e73c6dcda2c7c9c489c151aa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+</body>
+</html>

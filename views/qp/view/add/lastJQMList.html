@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>游戏用户 - 在线管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../../Content/common.css" rel="stylesheet"/>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
+    <script src="../../bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<body class="backgroud">
+<div id="content" class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：在线管理 - 最后登录机器码 </h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                            <i class="glyphicon glyphicon-repeat"></i>
+                        </a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow: hidden; display: block;">
+                    <!--table开始-->
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                        <div style="text-align: center;font-size: 18px;font-weight: bold;">当前机器码：<span
+                                id="jiqima"></span></div>
+                        <table id="layTable" lay-filter="test"></table>
+                    </div>
+                    <!--table结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/html" id="operate">
+    <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">冻结</span>
+</script>
+<script type="text/javascript">
+    var param = getUrlParams('param')
+    if (param) {
+        $('#jiqima').text(param)
+    }
+    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
+    var selectRows = [];
+    layui.use('table', function () {
+        var table = layui.table;
+        //第一个实例
+        table.render({
+            elem: '#layTable'
+            , id: 'layTable'
+            , url: qp_url + 'admin/Account/lastLoginIPMachine' //数据接口
+            , where: {
+                token: getStorage('token'),
+                string: getUrlParams('param'),
+                type: 2,
+                sortStr: '',
+                sortNum: 0
+            }
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
+                statusName: 'status',
+                statusCode: 1,
+                // msgName: 'msg',
+                // dataName: 'data',
+            },
+            parseData: function (res) {
+                console.log(res)
+                return {
+                    "status": res.status, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    // "count": res.data.total, //解析数据长度 ,需要数据库返回
+                    "data": res.data //解析数据列表
+                };
+            }
+            , cellMinWidth: 100
+            // , page: false
+            , cols: [[ //表头
+                {field: 'UserID', title: '玩家ID'}
+                , {field: 'NickName', title: '玩家昵称', minWidth: 125}
+                , {
+                    field: 'Accounts', title: '玩家账号', minWidth: 125, templet: function (d) {
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                    }
+                }
+                , {field: 'ChannelId', title: '推广渠道ID', minWidth: 125, sort: true}
+                , {field: 'ChannelName', title: '推广渠道账号', minWidth: 135, sort: true}
+                , {field: 'Score', title: '携带金币', sort: true, minWidth: 110}
+                , {field: 'InsureScore', title: '银行金币', sort: true, minWidth: 110}
+                , {field: 'TotalScore', title: '总金币', sort: true}
+                , {field: 'allOrderAmount', title: '充值总额', sort: true, minWidth: 110}
+                , {field: 'withdrawamount', title: '兑换总额', sort: true, minWidth: 110}
+                , {field: 'RegisterDate', title: '注册时间', sort: true,minWidth:160}
+                , {field: 'RegisterMachine', title: '注册机器码', sort: true, width: 160}
+                , {field: 'LastLogonMachine', title: '最后登录机器码', sort: true, width: 160}
+                , {field: '', title: '操作', fixed: 'right', toolbar: '#operate',width:80}
+            ]]
+            , done: function (res, curr, count) {
+                $('th').css({'text-align': 'center'});
+            }
+        });
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            if (obj.event == 'edit') {
+                layer.confirm('确定冻结用户' + data.UserID + '吗？', {
+                    icon: 3,
+                    title: '提示',
+                    btn: ['确定', '取消']
+                }, function (index) {
+                    $.post(qp_url + 'admin/Account/FreezeAccount', {
+                        token: getStorage('token'),
+                        UserID: data.UserID
+                    }, function (res) {
+                        if(res.status == 1){
+                            layer.msg(res.msg,{time:1000,icon:1})
+                        }else{
+                            layer.msg(res.msg,{time:1000,icon:2})
+                        }
+                    }, 'json')
+                    layer.close(index);
+                });
+            }
+        });
+        table.on('sort(test)', function (obj) {
+            console.log(obj);
+            table.reload('layTable', {
+                // initSort: obj, //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                    sortNum: obj.type == 'asc' ? 1 : 0,
+                    sortStr: obj.field
+                }
+                , autoSort: false
+                , page: {
+                    curr: 1
+                }
+            });
+        });
+    });
+</script>
+</body>
+</body>
+</html>

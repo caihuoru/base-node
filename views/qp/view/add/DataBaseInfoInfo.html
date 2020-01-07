@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>系统维护-机器管理</title>
+    <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
+    <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
+    <link href="../../Content/common.css" rel="stylesheet" />
+
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <style type="text/css">
+        .panel-body .row {
+            margin: 15px 0;
+        }
+
+        .panel-body .row div:first-child {
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .panel-body .row div:nth-child(2) {
+            max-width: 300px;
+        }
+
+
+        .panel-body .row input {
+            max-width: 300px;
+        }
+        body{
+            overflow-y: scroll!important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content" class="main-content">
+        <div class="">
+            <div class="carousel box-inner">
+                <div class="box-header well clearfix" data-original-title="">
+                    <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：系统维护-机器管理</h2>
+                </div>
+                <div class="tab-content">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">系统维护-机器管理</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">机器名称：</div>
+                                <div class="col-xs-6 col-md-4"><input id="txtInformation" class="form-control input-sm"
+                                        type="text" maxlength="31" value=""></div>
+                                <div class="col-xs-4 col-md-2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">地址：</div>
+                                <div class="col-xs-6 col-md-4"><input id="txtDBAddr" class="form-control input-sm"
+                                        type="text" maxlength="15" value=""></div>
+                                <div class="col-xs-4 col-md-2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">端口：</div>
+                                <div class="col-xs-6 col-md-4"><input id="txtDBPort" class="form-control input-sm"
+                                        type="text" maxlength="9" value=""></div>
+                                <div class="col-xs-4 col-md-2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">账号：</div>
+                                <div class="col-xs-6 col-md-4"><input id="txtDBUser" class="form-control input-sm"
+                                        type="text" maxlength="32" value=""></div>
+                                <div class="col-xs-4 col-md-2"></div>
+                            </div>
+                            <div class="row" id="passWord" style="display: none;">
+                                <div class="col-xs-2 col-md-1">密码：</div>
+                                <div class="col-xs-6 col-md-4">
+                                    <input id="txtDBPassword" class="form-control input-sm" type="text" maxlength="31"
+                                        value="">
+                                </div>
+                                <div class="col-xs-4 col-md-2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">机器码：</div>
+                                <div class="col-xs-6 col-md-4"><input id="txtMachineID" class="form-control input-sm"
+                                        type="text" maxlength="32" value=""></div>
+                                <div class="col-xs-4 col-md-4"></div>
+                            </div>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <ul class="list-inline">
+                                    <li><a class="btn btn-outline-primary search btn-md" href="../jiQiGuanLi.html"><i
+                                                class="glyphicon glyphicon-circle-arrow-left"></i>返回</a></li>
+                                    <li><a class="btn btn-outline-success search btn-md" href="#" onclick="add();"><i
+                                                class="glyphicon glyphicon-send"></i>保存</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var dataObj = {};
+        var data = {};
+        function getParam(paramName) {
+            paramValue = "", isFound = !1;
+            if (this.location.search.indexOf("?") == 0 && this.location.search.indexOf("=") > 1) {
+                arrSource = unescape(this.location.search).substring(1, this.location.search.length).split("&"), i = 0;
+                while (i < arrSource.length && !isFound) arrSource[i].indexOf("=") > 0 && arrSource[i].split("=")[0].toLowerCase() == paramName.toLowerCase() && (paramValue = arrSource[i].split("=")[1], isFound = !0), i++
+            }
+            return paramValue == "" && (paramValue = null), paramValue
+        }
+        if (getParam("DBInfoID") == null || getParam("DBInfoID") == "null" || !getParam("DBInfoID")) {
+            $("#passWord").show();
+        } else {
+            $.ajax({
+                url: qp_url + 'admin/App/dataBaseInfo',
+                type: "get",
+                dataType: "json",
+                data: {
+                    DBInfoID: getParam("DBInfoID"),
+                    token:getStorage('token')
+                },
+                success: function (data) {
+                    console.log(data)
+                    dataObj = data.data;
+                    $("#txtInformation").val(dataObj.Information);
+                    $("#txtDBAddr").val(dataObj.DBAddr);
+                    $("#txtDBPort").val(dataObj.DBPort);
+                    $("#txtDBUser").val(dataObj.DBUser);
+                    $("#txtDBPassword").val(dataObj.DBPassword);
+                    $("#txtMachineID").val(dataObj.MachineID);
+                }
+
+            })
+        }
+
+
+        function add() {
+
+            data.OP = 'add';
+            data.ID = parseInt('0');
+            var Information = $("#txtInformation").val();
+            if (Information == "") {
+                alert("机器名称不能为空");
+                return false;
+            }
+
+            data.Information = Information;
+            var DBAddr = $("#txtDBAddr").val();
+            if (DBAddr == "") {
+                alert("地址不能为空");
+                return false;
+            }
+
+            data.DBAddr = DBAddr;
+            var DBPort = $("#txtDBPort").val();
+            if (DBPort == "") {
+                alert("端口不能为空");
+                return false;
+            }
+            data.DBPort = DBPort;
+
+            var DBUser = $("#txtDBUser").val();
+            if (DBUser == "") {
+                alert("账号不能为空");
+                return false;
+            }
+            data.DBUser = DBUser;
+
+
+
+
+            var MachineID = $("#txtMachineID").val();
+            //if (MachineID == "") {
+            //    alert("机器码不能为空");
+            //    return false;
+            //}
+            data.MachineID = MachineID;
+            if (getParam("DBInfoID") == null || getParam("DBInfoID") == "null" || !getParam("DBInfoID")) {
+                var DBPassword = $("#txtDBPassword").val();
+                if (data.ID == 0 && DBPassword == "") {
+                    alert("密码不能为空");
+                    return false;
+                }
+                data.DBPassword = DBPassword;
+            } else {
+                var DBPassword = "";
+                data.DBPassword = DBPassword;
+                data.DBInfoID = dataObj.DBInfoID;
+            }
+
+            $.ajax({
+                url: qp_url + "admin/App/UpdateDataBaseInfo?token=" + getStorage('token'),
+                type: "post",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data)
+                    alert(data.msg);
+                }
+            })
+            // AjaxSubmit(qp_url + "admin/App/UpdateDataBaseInfo?token=" + getStorage('token'), data, "add");
+        }
+
+        //回调函数
+        function callBack(jsonData, fname) {
+            // switch (fname) {
+            //     case "add":
+            //         alert("操作成功");
+            //         // window.location.href = "/App"
+            //         break;
+            // }
+            // alert("操作成功");
+        }
+    </script>
+</body>
+
+</html>

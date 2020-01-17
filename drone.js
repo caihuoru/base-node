@@ -15,7 +15,13 @@ app.disable('etag');//解决304
 var Pay = require('cn-pay');
 var system = require('./drone-system');
 var configuration = require('./configuration.json');
-app.use(express.static(__dirname + '/views'));
+app.use(express.static(__dirname + '/views', {
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'max-age=31536000');
+    }
+}));
 var day = 86400;
 
 // https

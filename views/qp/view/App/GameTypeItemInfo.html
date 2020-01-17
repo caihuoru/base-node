@@ -9,9 +9,7 @@
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link href="../../Content/common.css" rel="stylesheet" />
 
-    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../../Scripts/comm.js"></script>
-    <script src="../../Content/laydate/laydate.js"></script>
+
     <style type="text/css">
         .panel-body .row div:first-child {
             width: 120px;
@@ -115,6 +113,9 @@
             </div>
         </div>
     </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <script src="../../Content/laydate/laydate.js"></script>
     <script type="text/javascript">
         var ID = getUrlParams("TypeID");
         var dataObj = {};
@@ -182,7 +183,7 @@
 
                 console.log(data)
             } else {
-                data.IntParam = data.TypeID;
+                data.IntParam = ID;
 
             }
             $.ajax({
@@ -192,6 +193,7 @@
                 dataType: "json",
                 success: function (data) {
                     console.log(data)
+                    ID = $("#txtTypeID").val();
                     alert(data.msg);
                 }
             })
@@ -210,7 +212,7 @@
             return dt;
         }
         $.ajax({
-            url: qp_url + 'admin/Gamecommon/GetGameList?token='+getStorage('token'),
+            url: qp_url + 'admin/Gamecommon/GetGameList?token=' + getStorage('token'),
             type: "get",
             dataType: "json",
             async: false,

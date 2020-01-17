@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
     <title>系统维护 - 后台系统配置</title>
-    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
-    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
-    <link href="../Content/common.css" rel="stylesheet" />
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
     <style type="text/css">
         .media li {
             margin-bottom: 1px;
@@ -40,152 +40,162 @@
 </head>
 
 <body>
-    <div id="content" class="main-content" style="display: none;" v-show="curTab">
-        <div class="">
-            <div class="carousel box-inner">
-                <div class="box-header well clearfix" data-original-title="">
-                    <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：系统维护 - 后台系统配置</h2>
-                    <div class="box-icon">
-                        <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
-                            <i class="glyphicon glyphicon-repeat"></i>
-                        </a>
-                        <a href="#" class="btn btn-minimize btn-round btn-default">
-                            <i class="glyphicon glyphicon-chevron-up"></i>
-                        </a>
-                    </div>
+<div id="content" class="main-content" v-cloak>
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：系统维护 - 后台系统配置</h2>
+                <div class="box-icon">
+                    <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
+                        <i class="glyphicon glyphicon-repeat"></i>
+                    </a>
+                    <a href="#" class="btn btn-minimize btn-round btn-default">
+                        <i class="glyphicon glyphicon-chevron-up"></i>
+                    </a>
                 </div>
-                <ul class="media nav nav-tabs">
-                    <li v-for="(item,index) in rightList" :class="{'active':curTab == item.id}"
-                        @click="tabChange(item.id ,index)">
-                        <a href="javascript:void(0);">{{item.title}}</a>
-                    </li>
-                </ul>
-                <div class="tab-content padding-margin-0">
-                    <div class="panel panel-info no-bord">
-                        <div class="panel-heading no-bord-radio">
-                            <h3 class="panel-title">{{curIndex.title}}</h3>
-                        </div>
+            </div>
+            <ul class="media nav nav-tabs">
+                <li v-for="(item,index) in rightList" :class="{'active':curTab == item.id}"
+                    @click="tabChange(item.id ,index)">
+                    <a href="javascript:void(0);">{{item.title}}</a>
+                </li>
+            </ul>
+            <div class="tab-content padding-margin-0">
+                <div class="panel panel-info no-bord">
+                    <div class="panel-heading no-bord-radio">
+                        <h3 class="panel-title">{{curIndex.title}}</h3>
+                    </div>
+                    <div class="panel-body">
                         <div class="panel-body">
-                            <div class="panel-body">
-                                <div class="row margin-0">
-                                    <div class="col-xs-2 col-md-1 v-center">键名：</div>
-                                    <div class="col-xs-6 col-md-3" style="width:429px;">
-                                        {{curIndex.name}}
-                                    </div>
-                                    <div class="col-xs-4 col-md-2"></div>
+                            <div class="row margin-0">
+                                <div class="col-xs-2 col-md-1 v-center">键名：</div>
+                                <div class="col-xs-6 col-md-3" style="width:429px;">
+                                    {{curIndex.name}}
                                 </div>
-                                <div class="row margin-0">
-                                    <div class="col-xs-2 col-md-1 v-center">名称：</div>
-                                    <div class="col-xs-6 col-md-3" style="width:429px;">
-                                        {{ curIndex.title}}
-                                    </div>
-                                    <div class="col-xs-4 col-md-2"></div>
+                                <div class="col-xs-4 col-md-2"></div>
+                            </div>
+                            <div class="row margin-0">
+                                <div class="col-xs-2 col-md-1 v-center">名称：</div>
+                                <div class="col-xs-6 col-md-3" style="width:429px;">
+                                    {{ curIndex.title}}
                                 </div>
-                                <section v-show="curTab == 1">
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">短信账号：</div>
-                                        <div class="col-xs-6 col-md-3" style="width:429px;">
-                                            <input id="txtUid" style="display:inline;" class="form-control input-sm"
-                                                type="text" maxlength="16" name="txtUid" v-model="curIndex.value.Uid">
-                                            <span class="clear-content" @click="clearInpt('Uid')"></span>
-                                        </div>
-                                        <div class="col-xs-4 col-md-2 wrong"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">短信接口：</div>
-                                        <div class="col-xs-6 col-md-3" style="width:429px;">
-                                            <input id="txtKey" style="display:inline;" class="form-control input-sm"
-                                                type="text" name="txtKey" maxlength="50" v-model="curIndex.value.Key">
-                                            <span class="clear-content" @click="clearInpt('Key')"></span>
-                                        </div>
-                                        <div class="col-xs-4 col-md-2 wrong"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">短信签名：</div>
-                                        <div class="col-xs-6 col-md-3" style="width:429px;">
-                                            <input id="txtSign" style="display:inline;" class="form-control input-sm"
-                                                type="text" name="txtSign" maxlength="50" value=""
-                                                v-model="curIndex.value.sign">
-                                            <span class="clear-content" @click="clearInpt('sign')"></span>
-                                        </div>
-                                        <div class="col-xs-4 col-md-2 wrong"></div>
-                                    </div>
-                                </section>
-                                <section v-show="curTab == 2">
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">一级税收比例：</div>
-                                        <div class="col-xs-6 col-md-3" style="width:429px;">
-                                            <input id="txtOne" style="display:inline;"
-                                                class="form-control input-sm input-width-100" type="text" maxlength="50"
-                                                value="" v-model="curIndex.value.one">&nbsp;%
-                                        </div>
-                                        <div class="col-xs-4 col-md-2"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">二级税收比例：</div>
-                                        <div class="col-xs-6 col-md-3" style="width:429px;">
-                                            <input id="txtTwo" style="display:inline;"
-                                                class="form-control input-sm input-width-100" type="text" maxlength="50"
-                                                value="" v-model="curIndex.value.two">&nbsp;%
-                                        </div>
-                                        <div class="col-xs-4 col-md-2"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">三级税收比例：</div>
-                                        <div class="col-xs-6 col-md-3" style="width:429px;">
-                                            <input id="txtThree" style="display:inline;"
-                                                class="form-control input-sm input-width-100" type="text" maxlength="50"
-                                                value="" v-model="curIndex.value.three">&nbsp;%
-                                        </div>
-                                        <div class="col-xs-4 col-md-2"></div>
-                                    </div>
-                                </section>
-                                <section v-show="curTab == 3">
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">普通客服地址：</div>
-                                        <div class="col-xs-6 col-md-3" style="min-width:500px;">
-                                            <input id="txtCustomer" style="display:inline;"
-                                                class="form-control input-sm" type="text" name="txtCustomer"
-                                                maxlength="150" v-model="curIndex.value.customer">
-                                            <span class="clear-content" @click="clearInpt('customer')"></span>
-                                        </div>
-                                        <div class="col-xs-4 col-md-2 wrong"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">充值客服地址：</div>
-                                        <div class="col-xs-6 col-md-3" style="min-width:500px;">
-                                            <input id="txtPay" style="display:inline;" class="form-control input-sm"
-                                                type="text" maxlength="150" name="txtPay" v-model="curIndex.value.pay">
-                                            <span class="clear-content" @click="clearInpt('pay')"></span>
-                                        </div>
-                                        <div class="col-xs-4 col-md-2 wrong"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1 v-center">充值记录地址：</div>
-                                        <div class="col-xs-6 col-md-3" style="min-width:500px;">
-                                            <input id="txtRecord" style="display:inline;" class="form-control input-sm"
-                                                type="text" maxlength="150" name="txtRecord"
-                                                v-model="curIndex.value.record">
-                                            <span class="clear-content" @click="clearInpt('record')"></span>
-                                        </div>
-                                        <div class="col-xs-4 col-md-2 wrong"></div>
-                                    </div>
-                                </section>
+                                <div class="col-xs-4 col-md-2"></div>
+                            </div>
+                            <section v-show="curTab == 1">
                                 <div class="row">
-                                    <div class="col-xs-2 col-md-1 v-center">描述：</div>
+                                    <div class="col-xs-2 col-md-1 v-center">短信账号：</div>
                                     <div class="col-xs-6 col-md-3" style="width:429px;">
-                                        {{curIndex.desc}}
+                                        <input id="txtUid" style="display:inline;" class="form-control input-sm"
+                                               type="text" maxlength="16" name="txtUid" v-model="curIndex.value.Uid">
+                                        <span class="clear-content" @click="clearInpt('Uid')"></span>
+                                    </div>
+                                    <div class="col-xs-4 col-md-2 wrong"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1 v-center">短信接口：</div>
+                                    <div class="col-xs-6 col-md-3" style="width:429px;">
+                                        <input id="txtKey" style="display:inline;" class="form-control input-sm"
+                                               type="text" name="txtKey" maxlength="50" v-model="curIndex.value.Key">
+                                        <span class="clear-content" @click="clearInpt('Key')"></span>
+                                    </div>
+                                    <div class="col-xs-4 col-md-2 wrong"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1 v-center">短信签名：</div>
+                                    <div class="col-xs-6 col-md-3" style="width:429px;">
+                                        <input id="txtSign" style="display:inline;" class="form-control input-sm"
+                                               type="text" name="txtSign" maxlength="50" value=""
+                                               v-model="curIndex.value.sign">
+                                        <span class="clear-content" @click="clearInpt('sign')"></span>
+                                    </div>
+                                    <div class="col-xs-4 col-md-2 wrong"></div>
+                                </div>
+                            </section>
+                            <section v-show="curTab == 2">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1 v-center">一级税收比例：</div>
+                                    <div class="col-xs-6 col-md-3" style="width:429px;">
+                                        <input id="txtOne" style="display:inline;"
+                                               class="form-control input-sm input-width-100" type="text" maxlength="50"
+                                               value="" v-model="curIndex.value.one">&nbsp;%
                                     </div>
                                     <div class="col-xs-4 col-md-2"></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-2 col-md-1"></div>
-                                    <div class="col-xs-6 col-md-3">
-                                        <a class="btn btn-outline-success search btn-md" href="javascript:void(0)"
-                                            @click="add"><i class="glyphicon glyphicon-save"></i>保存</a>
+                                    <div class="col-xs-2 col-md-1 v-center">二级税收比例：</div>
+                                    <div class="col-xs-6 col-md-3" style="width:429px;">
+                                        <input id="txtTwo" style="display:inline;"
+                                               class="form-control input-sm input-width-100" type="text" maxlength="50"
+                                               value="" v-model="curIndex.value.two">&nbsp;%
                                     </div>
                                     <div class="col-xs-4 col-md-2"></div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1 v-center">三级税收比例：</div>
+                                    <div class="col-xs-6 col-md-3" style="width:429px;">
+                                        <input id="txtThree" style="display:inline;"
+                                               class="form-control input-sm input-width-100" type="text" maxlength="50"
+                                               value="" v-model="curIndex.value.three">&nbsp;%
+                                    </div>
+                                    <div class="col-xs-4 col-md-2"></div>
+                                </div>
+                            </section>
+                            <section v-show="curTab == 3">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1 v-center">普通客服地址：</div>
+                                    <div class="col-xs-6 col-md-3" style="min-width:500px;">
+                                        <input id="txtCustomer" style="display:inline;"
+                                               class="form-control input-sm" type="text" name="txtCustomer"
+                                               maxlength="150" v-model="curIndex.value.customer">
+                                        <span class="clear-content" @click="clearInpt('customer')"></span>
+                                    </div>
+                                    <div class="col-xs-4 col-md-2 wrong"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1 v-center">充值客服地址：</div>
+                                    <div class="col-xs-6 col-md-3" style="min-width:500px;">
+                                        <input id="txtPay" style="display:inline;" class="form-control input-sm"
+                                               type="text" maxlength="150" name="txtPay" v-model="curIndex.value.pay">
+                                        <span class="clear-content" @click="clearInpt('pay')"></span>
+                                    </div>
+                                    <div class="col-xs-4 col-md-2 wrong"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1 v-center">充值记录地址：</div>
+                                    <div class="col-xs-6 col-md-3" style="min-width:500px;">
+                                        <input id="txtRecord" style="display:inline;" class="form-control input-sm"
+                                               type="text" maxlength="150" name="txtRecord"
+                                               v-model="curIndex.value.record">
+                                        <span class="clear-content" @click="clearInpt('record')"></span>
+                                    </div>
+                                    <div class="col-xs-4 col-md-2 wrong"></div>
+                                </div>
+                            </section>
+                            <section v-show="curTab > 3">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1 v-center">键值：</div>
+                                    <div class="col-xs-6 col-md-3" style="min-width:500px;">
+                                          <textarea id="txtDesc" v-model="curIndex.value" class="form-control" rows="3" style="display:inline;"
+                                                    maxlength="255"></textarea>
+                                        <span class="clear-content" @click="clearInpt('txtDesc')"></span>
+                                    </div>
+                                    <div class="col-xs-4 col-md-2 wrong"></div>
+                                </div>
+                            </section>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1 v-center">描述：</div>
+                                <div class="col-xs-6 col-md-3" style="width:429px;">
+                                    {{curIndex.desc}}
+                                </div>
+                                <div class="col-xs-4 col-md-2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1"></div>
+                                <div class="col-xs-6 col-md-3">
+                                    <a class="btn btn-outline-success search btn-md" href="javascript:void(0)"
+                                       @click="add"><i class="glyphicon glyphicon-save"></i>保存</a>
+                                </div>
+                                <div class="col-xs-4 col-md-2"></div>
                             </div>
                         </div>
                     </div>
@@ -193,292 +203,156 @@
             </div>
         </div>
     </div>
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Scripts/vue.min.js"></script>
-    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
-    <script type="text/javascript">
-        layui.use(['layer'], function () {
-            var layer = layui.layer
-        })
-        var myVue = new Vue({
-            el: '#content',
-            data: {
-                rightList: [],
-                curTab: 1,
-                curIndex: {
-                    id: '',
-                    name: "",
-                    value: {},
-                    desc: "",
-                    title: ""
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['layer'], function () {
+        var layer = layui.layer
+    })
+    var myVue = new Vue({
+        el: '#content',
+        data: {
+            rightList: [],
+            curTab: 1,
+            curIndex: {
+                id: '',
+                name: "",
+                value: {},
+                desc: "",
+                title: ""
+            }
+        }, mounted: function () {
+            var that = this
+            //获取nav数据
+            $.get(qp_url + 'admin/web/adminConfigList?token=' + getStorage('token'), function (res) {
+                if (res.status == 1) {
+                    that.rightList = res.data
                 }
-            }, mounted: function () {
-                var that = this
-                //获取nav数据
-                $.get(qp_url + 'admin/web/adminConfigList?token=' + getStorage('token'), function (res) {
+            }, 'json')
+            getMoreInfo(1)
+        }, methods: {
+            tabChange: function (tab) {
+                this.curTab = tab
+                getMoreInfo(tab)
+            },
+            clearInpt: function (str) {
+                switch (str) {
+                    case 'Uid':
+                        this.curIndex.value.Uid = ''
+                        break;
+                    case 'Key':
+                        this.curIndex.value.Key = ''
+                        break;
+                    case 'sign':
+                        this.curIndex.value.sign = ''
+                        break;
+                    case 'one':
+                        this.curIndex.value.one = ''
+                        break;
+                    case 'two':
+                        this.curIndex.value.two = ''
+                        break;
+                    case 'three':
+                        this.curIndex.value.three = ''
+                        break;
+                    case 'customer':
+                        this.curIndex.value.customer = ''
+                        break;
+                    case 'pay':
+                        this.curIndex.value.pay = ''
+                        break;
+                    case 'record':
+                        this.curIndex.value.record = ''
+                        break;
+                    case 'txtDesc':
+                        this.curIndex.value=''
+                }
+            },
+            add: function () {
+                var that = this;
+                if (that.curIndex.id == 1) {
+                    // if (!telExp(that.curIndex.value.Uid)) {
+                    //     layer.alert("短信账号不合法，请输入11位手机号");
+                    //     return false;
+                    // }
+                    if (that.curIndex.value.Key == "") {
+                        layer.alert("短信接口不能为空");
+                        return false;
+                    }
+                    if (that.curIndex.value.sign == "") {
+                        layer.alert("短信签名不能为空");
+                        return false;
+                    }
+                }
+                if (that.curIndex.id == 2) {
+                    if (!expVal(that.curIndex.value.one) || !expVal(that.curIndex.value.two) || !expVal(that.curIndex.value.three)) {
+                        layer.alert("请正确输入税收比例，取值在0~100");
+                        return false;
+                    }
+                }
+                if (that.curIndex.id == 3) {
+                    if (that.curIndex.value.customer == "") {
+                        layer.alert("客服地址不能为空");
+                        return false;
+                    }
+                    if (that.curIndex.value.pay == "") {
+                        layer.alert("充值客服地址不能为空");
+                        return false;
+                    }
+                    if (that.curIndex.value.record == "") {
+                        layer.alert("充值记录地址不能为空");
+                        return false;
+                    }
+                }
+                $.post(qp_url + 'admin/web/editAdminConfig?token=' + getStorage('token'), {
+                    id: that.curIndex.id,
+                    editStr: that.curTab > 3 ? that.curIndex.value : JSON.stringify(that.curIndex.value)
+                }, function (res) {
                     if (res.status == 1) {
-                        that.rightList = res.data
+                        layer.msg(res.msg, {time: 1000, icon: 1})
+                    } else {
+                        layer.msg(res.msg, {time: 1000, icon: 2})
                     }
                 }, 'json')
-                getMoreInfo(1)
-            }, methods: {
-                tabChange: function (tab) {
-                    this.curTab = tab
-                    getMoreInfo(tab)
-                },
-                clearInpt: function (str) {
-                    switch (str) {
-                        case 'Uid':
-                            this.curIndex.value.Uid = ''
-                            break;
-                        case 'Key':
-                            this.curIndex.value.Key = ''
-                            break;
-                        case 'sign':
-                            this.curIndex.value.sign = ''
-                            break;
-                        case 'one':
-                            this.curIndex.value.one = ''
-                            break;
-                        case 'two':
-                            this.curIndex.value.two = ''
-                            break;
-                        case 'three':
-                            this.curIndex.value.three = ''
-                            break;
-                        case 'customer':
-                            this.curIndex.value.customer = ''
-                            break;
-                        case 'pay':
-                            this.curIndex.value.pay = ''
-                            break;
-                        case 'record':
-                            this.curIndex.value.record = ''
-                            break;
-                    }
-                },
-                add: function () {
-                    var that = this;
-                    if (that.curIndex.id == 1) {
-                        // if (!telExp(that.curIndex.value.Uid)) {
-                        //     layer.alert("短信账号不合法，请输入11位手机号");
-                        //     return false;
-                        // }
-                        if (that.curIndex.value.Key == "") {
-                            layer.alert("短信接口不能为空");
-                            return false;
-                        }
-                        if (that.curIndex.value.sign == "") {
-                            layer.alert("短信签名不能为空");
-                            return false;
-                        }
-                    }
-                    if (that.curIndex.id == 2) {
-                        if (!expVal(that.curIndex.value.one) || !expVal(that.curIndex.value.two) || !expVal(that.curIndex.value.three)) {
-                            layer.alert("请正确输入税收比例，取值在0~100");
-                            return false;
-                        }
-                    }
-                    if (that.curIndex.id == 3) {
-                        if (that.curIndex.value.customer == "") {
-                            layer.alert("客服地址不能为空");
-                            return false;
-                        }
-                        if (that.curIndex.value.pay == "") {
-                            layer.alert("充值客服地址不能为空");
-                            return false;
-                        }
-                        if (that.curIndex.value.record == "") {
-                            layer.alert("充值记录地址不能为空");
-                            return false;
-                        }
-                    }
-                    $.post(qp_url + 'admin/web/editAdminConfig?token=' + getStorage('token'), {
-                        id: that.curIndex.id,
-                        editStr: JSON.stringify(that.curIndex.value)
-                    }, function (res) {
-                        if (res.status == 1) {
-                            layer.msg(res.msg, { time: 1000, icon: 1 })
-                        } else {
-                            layer.msg(res.msg, { time: 1000, icon: 2 })
-                        }
-                    }, 'json')
-                }
             }
-        })
-
-        function expVal(str) {
-            if (isNaN(str)) {
-                return false;
-            }
-            if (str < 0 || str > 100) {
-                return false;
-            }
-            if (str == "") {
-                return false;
-            }
-            return true;
         }
+    })
 
-        function telExp(value) {
-            return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+    function expVal(str) {
+        if (isNaN(str)) {
+            return false;
         }
+        if (str < 0 || str > 100) {
+            return false;
+        }
+        if (str == "") {
+            return false;
+        }
+        return true;
+    }
 
-        function getMoreInfo(i) {
-            $.post(qp_url + 'admin/web/adminConfigInfo', {
-                token: getStorage('token'),
-                id: i
-            }, function (res) {
-                if (res.status == 1) {
-                    myVue.curIndex = res.data
+    // function telExp(value) {
+    //     return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+    // }
+
+    function getMoreInfo(i) {
+        $.post(qp_url + 'admin/web/adminConfigInfo', {
+            token: getStorage('token'),
+            id: i
+        }, function (res) {
+            if (res.status == 1) {
+                myVue.curIndex = res.data
+                if (res.data.value.charAt(0) == '{') {
                     myVue.curIndex.value = JSON.parse(myVue.curIndex.value)
                 }
-                console.log(myVue.curIndex);
-            }, 'json')
-        }
-
-    // $.ajax({
-    //     url: qp_url + "admin/app/SystemSet",
-    //     type: "get",
-    //     dataType: "json",
-    //     success: function (data) {
-    //         data = data.data;
-    //         var html = '';
-    //         for (var i = 0; i < data.length; i++) {
-    //             html += `
-    //                 <li class="" data-StatusName='${data[i].StatusName}'>
-    //                     <a href="javascript:void(0);">${data[i].StatusTip}</a>
-    //                 </li>`
-    //         }
-    //         $(".media.nav.nav-tabs.margin-b-10").html(html);
-    //         $(".media li").eq(0).trigger("click");
-    //     }
-    // })
-
-    // // 短信设置
-    // $.ajax({
-    //     url: qp_url + "admin/Web/configSMS?token=" + getStorage('token'),
-    //     type: "post",
-    //     dataType: "json",
-    //     success: function (data) {
-    //         var data = data.data;
-    //         $("#Short_num").val(data.Uid);
-    //         $("#Short_set").val(data.Key);
-    //         $("#Short_autograph").val(data.sign);
-    //         // console.log(data)
-    //     }
-    // })
-    // $(document).ready(function () {
-    //     //收放事件
-    //     $('.btn-minimize').click(function (e) {
-    //         e.preventDefault();
-    //         var $target = $(this).parent().parent().next('.box-content');
-    //         if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-    //         else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-    //         $target.slideToggle();
-    //     });
-    // });
-    // $(document).on('click', '.media li', function () {
-    //     $('.media li').removeClass('active')
-    //     $(this).addClass('active')
-    //     $('#sign.tab-content .panel-title').html($(this).find('a').text())
-    //     var param = $(this).data("statusname");
-    //     $.ajax({
-    //         url: qp_url + "admin/Daili/getSystemSetInfo?param=EnjoinRegister",
-    //         type: "get",
-    //         data: {
-    //             param: param
-    //         },
-    //         dataType: "json",
-    //         success: function (data) {
-    //             var data = data.data;
-    //             // console.log(data)
-    //             $("#txtStatusName").val(data.StatusName);
-    //             $("#txtStatusValue").val(data.StatusValue);
-    //             $("#txtStatusTip").val(data.StatusTip);
-    //             $("#txtStatusString").val(data.StatusString);
-    //             $("#txtStatusDescription").val(data.StatusDescription);
-    //         }
-    //     })
-    // })
-    //
-    // function add() {
-    //     var data = {};
-    //     data.StrParam = '';
-    //     var StatusName = $("#txtStatusName").val();
-    //     if (StatusName == "") {
-    //         alert("键名不能为空");
-    //         return false;
-    //     }
-    //     var StatusValue = $("#txtStatusValue").val();
-    //     if (StatusValue == "") {
-    //         alert("键值不能为空");
-    //         return false;
-    //     }
-    //     var StatusTip = $("#txtStatusTip").val();
-    //     if (StatusTip == "") {
-    //         alert("名称不能为空");
-    //         return false;
-    //     }
-    //     var StatusString = $("#txtStatusString").val();
-    //     var StatusDescription = $("#txtStatusDescription").val();
-    //     data.StrParam = StatusName;
-    //     data.StatusName = StatusName;
-    //     data.StatusValue = StatusValue;
-    //     data.StatusTip = StatusTip;
-    //     data.StatusString = StatusString;
-    //     data.StatusDescription = StatusDescription;
-    //
-    //
-    //     $.ajax({
-    //         url: qp_url + "admin/Daili/DoSystemSet",
-    //         type: "post",
-    //         data: data,
-    //         dataType: "json",
-    //         success: function (data) {
-    //             console.log(data)
-    //             alert(data.msg);
-    //         }
-    //     })
-    //     // AjaxSubmit(qp_url +"admin/Daili/DoSystemSet", data, callBack, "add");
-    // }
-    //
-    // $(".clear-content").click(function () {
-    //     $(this).parent().find("input").val("");
-    //     $(this).parent().find("textarea").val("");
-    // })
-    //
-    // //回调函数
-    // function callBack(jsonData, fname) {
-    //     switch (fname) {
-    //         case "add":
-    //             alert(jsonData.Msg);
-    //             // window.location.href = "App/SystemSet.html?param=";
-    //             break;
-    //     }
-    // }
-    //
-    // // 短信提交
-    // function Short() {
-    //     $.ajax({
-    //         url: qp_url + "admin/Web/editSMS?token=" + getStorage('token'),
-    //         type: "post",
-    //         data: {
-    //             "editStr": JSON.stringify({
-    //                 "Uid": $("#Short_num").val(),
-    //                 "Key": $("#Short_set").val(),
-    //                 "sign": $("#Short_autograph").val()
-    //             })
-    //
-    //         },
-    //         dataType: "json",
-    //         success: function (data) {
-    //             alert(data.msg)
-    //         }
-    //     })
-    // }
-    </script>
+            }
+            console.log(myVue.curIndex);
+        }, 'json')
+    }
+</script>
 
 </body>
 

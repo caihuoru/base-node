@@ -74,7 +74,7 @@
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/comm.js"></script>
     <script src="../Content/laydate/laydate.js"></script>
-    <script src="../Scripts/pagination.js"></script>
+<!--    <script src="../Scripts/pagination.js"></script>-->
     <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <script src="../Scripts/echarts-all-3.js"></script>
     <script type="text/javascript">
@@ -82,9 +82,10 @@
         var pageObj = {};
         var postData = {};//搜索条件
         //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
-        var selectRows = [];
-        layui.use('table', function () {
+        var selectRows = [],layer;
+        layui.use(['table','layer'], function () {
             var table = layui.table;
+            layer = layui.layer;
 
             //第一个实例
             table.render({
@@ -118,8 +119,8 @@
                 , cellMinWidth: 130
                 , cols: [[ //表头
                     { field: 'date', title: '日期' }
-                    , { field: 'datingTotal', title: '大厅在线人数' }
-                    , { field: 'youxiTotal', title: '游戏在线用户' }
+                    , { field: 'datingTotal', title: '<span title="大厅在线人数峰值">大厅在线人数</span>' }
+                    , { field: 'youxiTotal', title: '<span title="游戏在线用户峰值">游戏在线用户</span>' }
                 ]]
                 , done: function (res, curr, count) {
                     $('th').css({ 'text-align': 'center' });
@@ -135,7 +136,7 @@
             table.on('tool(test)', function (obj) {
                 var isopen = $(this).context.dataset.isopen//看看是否已经展开，如果展开的，就将其关闭
                 var tableId = 'child' + obj.data.id
-                var current_tr = obj.tr[obj.tr.length - 1]
+                var current_tr = $(this).parents('tr')
                 if (isopen == 1) {
                     $('.' + tableId).toggle()
                     return;
@@ -183,26 +184,22 @@
             //搜索事件
             //日期查询
             $("#btnQuery").click(function (e) {
-                var istrue = true;
                 var txtStartDate = $("#txtStartDate").val();
                 var txtEndDate = $("#txtEndDate").val();
                 if (txtStartDate != "" && txtEndDate != "") {
                     if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
-                        istrue = false;
-                        alert("开始日期不能大于结束时间");
+                        layer.alert("开始日期不能大于结束时间");
                         return false;
                     }
+                }else{
+                    layer.alert("开始/结束日期不能为空!");
+                    return false;
                 }
-                if (istrue) {
-                    if (txtStartDate != "" && txtEndDate != "") {
-                        postData.StartDate = txtStartDate;
-                        postData.EndDate = txtEndDate;
-                    }
-                    postData.pageSize = 10;
-                    postData.KindID = 0;
-                    postData.DateType = 5;
-                    AjaxSearch(postData, table);
-                }
+                postData.StartDate = txtStartDate;
+                postData.EndDate = txtEndDate;
+                postData.KindID = 0;
+                postData.DateType = 5;
+                AjaxSearch(postData, table);
             });
         });
         $(document).ready(function () {

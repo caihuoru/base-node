@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>系统日志 - 操作日志</title>
     <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
@@ -139,13 +140,12 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var pageObj = {};
     var postData = {};//搜索条件
-    //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
-    var selectRows = [],table;
+    var table;
     layui.use('table', function () {
         table = layui.table;
 
@@ -196,39 +196,10 @@
             elem: '#txtEndDate'
             ,theme:'#00B4E5'
         });
-        // docReady();
     });
     $(document).on('click','#btnQuery',function () {
         AjaxSearch()
-    })
-
-    function docReady() {
-        //加载数据
-        postData.pageSize = parseInt($("#pagecount").val());
-        postData.Sort = "";
-        postData.pageIndex = 1;
-        AjaxSearch(postData);
-        //收放事件
-        $('.btn-minimize').click(function (e) {
-            e.preventDefault();
-            var $target = $(this).parent().parent().next('.box-content');
-            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-            $target.slideToggle();
-        });
-
-        //选择页码
-        $("#pagecount").change(function (e) {
-            postData.pageSize = parseInt($(this).val());
-            postData.pageIndex = 1;
-            AjaxSearch();
-        });
-
-        //普通搜索事件
-        $("#btnQuery").click(function (e) {
-            AjaxSearch();
-        });
-    }
+    });
 
     //搜索事件
     function AjaxSearch() {
@@ -239,9 +210,15 @@
         var info = $("#oinfotext").val().trim();
         var ip = $("#txtIP").val().trim();
         // postData.optype = optype;
+        if (sDate != "" && eDate != "") {
+            if (StrToDateTime(eDate) < StrToDateTime(sDate)) {
+                layer.alert("开始日期不能大于结束时间");
+                return false;
+            }
+        }
         postData.lname = lname;
-        postData.sDate = sDate + ' 00:00:00';
-        postData.eDate = eDate + ' 23:59:59';
+        postData.sDate = datetimeFormat(sDate,0);
+        postData.eDate = datetimeFormat(eDate,1);
         postData.info = info;
         postData.ip = ip;
         table.reload('layTable',{
@@ -250,44 +227,11 @@
                 curr: 1
             }
         })
-        // $('#pagin').paging("/OperationLog/GetActionLogs", postData, CreatTableBody, postData.pageIndex);
     }
 
     function StrToDateTime(timestr) {
         var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
         return dt;
-    }
-
-    //绑定数据
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex) {
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-                html += stringFormat("<tr>");
-                html += stringFormat("<td>{0}</td>", item.OperatingTime);
-                html += stringFormat("<td>{0}</td>", item.OperatingIP);
-                html += stringFormat("<td>{0}</td>", item.OperatingAccounts);
-
-                html += stringFormat("<td>{0}</td>", item.OperatingName);
-                html += stringFormat("<td>{0}</td>", item.ObjectAccounts == null ? "" : item.ObjectAccounts);
-                html += stringFormat("<td>{0}</td>", item.Remark == null ? "" : item.Remark);
-                html += "</tr>";
-            });
-        }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
     }
 </script>
 </body>

@@ -6,8 +6,6 @@
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>后台登录</title>
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
     <style>
         html {
             color: #878787;
@@ -167,12 +165,12 @@
             margin: 0 auto;
         }
 
-        #txtLoginName, #txtLoginPass {
+        #txtLoginName, #txtLoginPass, #txtgugeKey {
             margin-top: 40px;
             width: 270px;
             padding-left: 55px;
-            height: 70px;
-            line-height: 70px;
+            height: 40px;
+            line-height: 40px;
             border: none;
             border-radius: 0;
             border-bottom: 1px solid #d3d3d3;
@@ -182,8 +180,21 @@
             background: url(../Content/images/username.png) 4px center no-repeat;
         }
 
-        #txtLoginPass {
+        #txtLoginPass, #txtgugeKey {
             background: url(../Content/images/password.png) 4px center no-repeat;
+        }
+
+        .position_r {
+            position: relative;
+        }
+
+        .position_r #_ccode {
+            position: absolute;
+            bottom: 10px;
+            right: 37px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #4081FF;
         }
     </style>
 </head>
@@ -200,7 +211,10 @@
             <div>
                 <input type="password" name="" id="txtLoginPass" placeholder="请输入密码"/>
             </div>
-
+            <div id="chromeCheck" class="position_r">
+                <input type="text" name="" id="txtgugeKey" placeholder="请输入谷歌验证码" onfocus="$('#txtgugeKey').val('')"/>
+                <span id="_ccode" onclick="getChromeCode()">获取谷歌验证码</span>
+            </div>
 
             <input type="button" name="btnLogin" class="login-btn" id="btnLogin" value="登陆">
         </div>
@@ -208,16 +222,43 @@
     <!--    <div class="footer"></div>-->
 
 </div>
-<script type="text/javascript" src="../Scripts/axios.js"></script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<!--<script type="text/javascript" src="../Scripts/axios.js"></script>-->
 <script type="text/javascript">
     //横屏操作提示start
     function orient() {
+        if($(window).height() < 550){
+            var scale = $(window).height() / 550;
+            $('.wrap').css({
+                'transform': 'scale('+scale+')'
+            })
+        }
         if (window.orientation == 0 || window.orientation == 180) {
             alert("竖屏效果不好，建议横屏操作！");
         }
     }
 
+    function getChromeCode() {
+        var str = $('#txtLoginName').val();
+        if (str.length > 0) {
+            setStorage('login_obj',JSON.stringify({
+                acc:str,
+                psd:$('#txtLoginPass').val(),
+            }));
+            window.location.href = "chromeCheck.html"
+        }else{
+            alert('请输入用户账号')
+        }
+    }
+// var code;
     $(function () {
+        if(getStorage('login_obj')){
+            var obj = JSON.parse(getStorage('login_obj'));
+            $('#txtLoginName').val(obj.acc);
+            $('#txtLoginPass').val(obj.psd);
+            $('#txtgugeKey').val(obj.code);
+        }
         orient();
         //用户变化屏幕方向时调用
         $(window).bind('orientationchange', function (e) {
@@ -236,6 +277,7 @@
         $("#btnLogin").on("click", function () {
             var accounts = $("#txtLoginName").val();
             var pass = $("#txtLoginPass").val();
+            var key =$('#txtgugeKey').val()
             //var verifyCode = $("#txtVerifyCode").val();
             var iscan = true;
             var msg = "";
@@ -254,6 +296,11 @@
                 $("#txtLoginPass").focus();
                 iscan = false;
             }
+            if(key.length==0){
+                msg = "请输入谷歌验证码";
+                $("#txtgugeKey").focus();
+                iscan = false;
+            }
             //if (verifyCode == "") {
             //    msg = "请输入验证码";
             //    $("#txtVerifyCode").focus();
@@ -264,13 +311,15 @@
                     type: 'POST',
                     url: qp_url + "admin/login/index",
                     dataType: "json",
-                    data: {username: accounts, password: pass},
+                    data: {username: accounts, password: pass,gg_code:key},
                     success: function (rsp) {
                         console.log(rsp)
                         if (rsp.status == 1) {
                             setStorage('token', rsp.data.token)
-                            setStorage('customerInfo', JSON.stringify(rsp.data))
+                            //登录成功，is_index字段表示是否有查看首页的权力
+                            setStorage('customerInfo', JSON.stringify(rsp.data))//如果接口返回数据里面少了is_index字段，会导致首页空白
                             setStorage('admin_id', rsp.data.admin_id)
+                            delStorage('login_obj')
                             if (getStorage('loginUrl')) {
                                 var url = getStorage('loginUrl');
                                 delStorage('loginUrl')
@@ -278,6 +327,7 @@
                             } else {
                                 window.location.href = "index2.html";
                             }
+
                         } else {
                             alert(rsp.msg);
                         }
@@ -319,15 +369,6 @@
             })
         })
     })
-</script>
-<script>
-    var _hmt = _hmt || [];
-    (function () {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?8ee3ec23e73c6dcda2c7c9c489c151aa";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();
 </script>
 </body>
 </html>

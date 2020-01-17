@@ -2,6 +2,7 @@
 
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width"/>
     <title>推广系统 - 领取设置</title>
     <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
@@ -34,7 +35,7 @@
     </style>
 </head>
 <body>
-<div id="content" class="main-content" style="display: none;" v-show="info">
+<div id="content" class="main-content" v-cloak>
     <div class="">
         <div class="carousel box-inner">
             <div class="box-header well clearfix" data-original-title="">
@@ -53,22 +54,6 @@
                             <div class="col-xs-6 col-md-6">
                                 <input type="checkbox" class="fxk" name="checkbox" id="systemSwitch"
                                        value="1" v-model="info.IsOpen"/>开启
-                            </div>
-                        </div>
-                        <div class="row" style="display:none">
-                            <div class="col-xs-2 col-md-1">注册金币出售：</div>
-                            <div class="col-xs-6 col-md-6">
-                                <input name="regGoldCanSale" type="radio" value="1" id="cs" v-model="info.IsSale"/>
-                                <label for="cs">出售</label>
-                                <input name="regGoldCanSale" type="radio" value="0" checked="checked" id="bcs"
-                                       v-model="info.IsSale"/>
-                                <label for="bcs">不出售</label>
-                            </div>
-                        </div>
-                        <div class="layui-form-item" style="display: none">
-                            <div class="layui-form-label">限制局数：</div>
-                            <div class="layui-input-block">
-                                <input name="" class="x5" type="text" id="leastCount" v-model="info.GameCnt"/>局 &nbsp;填写玩家多少局后才可以兑换金币
                             </div>
                         </div>
                         <div class="row">
@@ -95,13 +80,6 @@
                                        v-validate="'required|numeric|min_value:0|max_value:24'"
                                 />
                                 <span class="wrong" v-show="errors.has('Shour') || errors.has('Ehour')"> 开放时段取值在：0-24</span>
-                            </div>
-                        </div>
-                        <div class="layui-form-item" style="display:none">
-                            <div class="layui-form-label">金币出售价格：</div>
-                            <div class="layui-input-block">
-                                <input name="" class="x5" type="text" id="ratio" value=""
-                                       v-model="info.BalancePrice"/>金币=1元
                             </div>
                         </div>
                         <div class="row">
@@ -181,6 +159,7 @@
                 });
                 this.info['WeekOpenDay'] = openDate
                 this.info['ID'] = 2
+                this.info.IsOpen =  this.info.IsOpen ? 1 : 0
                 this.$validator.validate().then(valid => {
                     console.log(valid)
                     if (valid) {

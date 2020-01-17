@@ -4,269 +4,291 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport"
-        content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>数据分析 - 系统统计</title>
-    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
-    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
-    <link href="../Content/common.css" rel="stylesheet" />
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
     <link href="../Content/statistics.css" rel="stylesheet">
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Scripts/echarts-all-3.js"></script>
-    <link href="../Content/system.css" rel="stylesheet" />
+    <link href="../Content/system.css" rel="stylesheet"/>
     <style type="text/css">
-        body{
-            overflow-y: scroll!important;
+        body {
+            overflow-y: scroll !important;
+        }
+
+        #content_part .part {
+            width: 25% !important;
+        }
+
+        #prog-box li span {
+            max-width: 100% !important;
+        }
+
+        #content_part .part {
+            left: -50px;
+            background: none !important;
         }
     </style>
 </head>
 
 <body>
-    <div id="content" class="main-content">
-        <div class="carousel">
-            <div class="tab-content">
-                <div class="row">
-                    <div class="home-item-title inline margin-r39">
-                        用户统计（汇总）
-                    </div>
-
-                    <div class="data">
-                        <div class="loading">
-                            正在请求数据！请稍候...
-                        </div>
-                        <!-- <div class="col-lg-5 col-md-5 col-sm-5"> -->
-                        <div class="part" id="ykrs"></div>
-                        <div class="part" id="tqyh"></div>
-                        <div class="part" id="sjzc"></div>
-                        <!-- </div> -->
-                    </div>
+<div id="content" class="main-content">
+    <div class="carousel">
+        <div class="tab-content">
+            <div class="row">
+                <div class="home-item-title inline margin-r39">
+                    用户统计（汇总）
                 </div>
-                <div class="row Statistics">
 
-                    <div class="left">
-                        <div class="home-item-title inline margin-r39">
-                            赠送统计（汇总）
-                        </div>
-                        <div class="data">
-                            <div class="padding-left-0">
-                                <div class="loading">
-                                    正在请求数据！请稍候...
-                                </div>
-                                <ul id="prog-box" style="opacity: 0;">
-                                    <li>
-                                        <span class="bar bar-login"></span>
-                                        <h3>绑定/注册：</h3>
-                                        <label>{{zsStat.bindTotal}}/{{userStat.userTotal}}</label>
-                                    </li>
-                                    <li>
-                                        <span class="bar bar-active"></span>
-                                        <h3>返还税收：</h3>
-                                        <label>{{zsStat.userRevenue}}金币</label>
-                                    </li>
-                                    <li>
-                                        <span class="bar bar-hall"></span>
-                                        <h3>签到：</h3>
-                                        <label>{{zsStat.signRevenue}}金币</label>
-                                    </li>
-                                    <li>
-                                        <span class="bar bar-game"></span>
-                                        <h3>任务奖励：</h3>
-                                        <label>{{zsStat.renwuRevenue}}金币</label>
-                                    </li>
-                                    <li>
-                                        <span class="bar bar-game"></span>
-                                        <h3>后台：</h3>
-                                        <label>{{zsStat.houtaiRevenue}}金币</label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                <!-- <div class="data" id="content_part"> -->
+                <div class="data">
+                    <div class="loading">
+                        正在请求数据！请稍候...
                     </div>
-                    <div class="right">
-                        <div class="home-item-title inline margin-r39">
-                            游戏币统计（汇总）
-                        </div>
-                        <div class="data">
+                    <!-- <div class="col-lg-5 col-md-5 col-sm-5"> -->
+                    <div class="part" id="ykrs"></div>
+                    <div class="part" id="sjzc"></div>
+                    <div class="part" id="htzc" style="display: none;"></div>
+                    <div class="part" id="tqyh"></div>
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="row Statistics">
+                <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                    <div class="home-item-title inline margin-r39">
+                        赠送统计（汇总）
+                    </div>
+                    <div class=" ">
+                        <div class="padding-left-0">
                             <div class="loading">
                                 正在请求数据！请稍候...
                             </div>
-                            <div class="part" id="yxbtj"></div>
+                            <ul id="prog-box" style="opacity: 0;">
+                                <li>
+                                    <span class="bar bar-login"></span>
+                                    <h3>绑定/总用户：</h3>
+                                    <label>{{zsStat.bindTotal}}/{{userStat.userTotal}}</label>
+                                </li>
+                                <li>
+                                    <span class="bar bar-active"></span>
+                                    <h3>返还税收：</h3>
+                                    <label>{{zsStat.userRevenue}}金币</label>
+                                </li>
+                                <li>
+                                    <span class="bar bar-hall"></span>
+                                    <h3>签到：</h3>
+                                    <label>{{zsStat.signRevenue}}金币</label>
+                                </li>
+                                <li>
+                                    <span class="bar bar-game"></span>
+                                    <h3>任务奖励：</h3>
+                                    <label>{{zsStat.renwuRevenue}}金币</label>
+                                </li>
+                                <li>
+                                    <span class="bar bar-game"></span>
+                                    <h3>后台：</h3>
+                                    <label>{{zsStat.houtaiRevenue}}金币</label>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-
                 </div>
-                <div class="row">
-                    <div class="home-item-title inline margin-r39" style="font-weight: 400;">
-                        税收/损耗统计（当日的数据不在统计之内）
+                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                    <div class="home-item-title inline margin-r39">
+                        游戏币统计（汇总）
                     </div>
-
-                    <div class="data">
+                    <div class="">
                         <div class="loading">
                             正在请求数据！请稍候...
                         </div>
-                        <!-- <div class="col-lg-5 col-md-5 col-sm-5"> -->
-                        <div class="part" id="yxzss"></div>
-                        <div class="part" id="yxtxss"></div>
-                        <div class="part" id="shzl"></div>
-                        <!-- </div> -->
+                        <div class="part" id="yxbtj"></div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="home-item-title inline margin-r39" style="font-weight: 400;">
+                    税收/损耗统计
+                </div>
 
-                <div class="row last">
-                    <div class="part_">
-                        <div class="left_">
-                            <div class="title_">游戏税收(当日的数据不在统计之内)</div>
-                            <div id="yxss" style="width: 100%; height: 400px;">
-                            </div>
-                        </div>
-                        <div class="right_">
-                            <div class="title_">游戏损耗(当日的数据不在统计之内)</div>
-                            <div id="yxsh" style="width: 100%; height: 400px;"></div>
+                <div class="data">
+                    <div class="loading">
+                        正在请求数据！请稍候...
+                    </div>
+                    <!-- <div class="col-lg-5 col-md-5 col-sm-5"> -->
+                    <div class="part" id="yxzss"></div>
+                    <div class="part" id="yxtxss"></div>
+                    <div class="part" id="shzl"></div>
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="row last">
+                <div class="part_">
+                    <div class="left_">
+                        <div class="title_">游戏税收</div>
+                        <div id="yxss" style="width: 100%; height: 400px;">
                         </div>
                     </div>
-                    <div class="part_">
-                        <div class="left_">
-                            <div class="title_">房间税收(当日的数据不在统计之内)</div>
-                            <div id="fjss" style="width: 100%; height: 400px;">
-                            </div>
+                    <div class="right_">
+                        <div class="title_">游戏损耗</div>
+                        <div id="yxsh" style="width: 100%; height: 400px;"></div>
+                    </div>
+                </div>
+                <div class="part_">
+                    <div class="left_">
+                        <div class="title_">房间税收</div>
+                        <div id="fjss" style="width: 100%; height: 400px;">
                         </div>
-                        <div class="right_">
-                            <div class="title_">房间损耗(当日的数据不在统计之内)</div>
-                            <div id="fjsh" style="width: 100%; height: 400px;">
-                            </div>
+                    </div>
+                    <div class="right_">
+                        <div class="title_">房间损耗</div>
+                        <div id="fjsh" style="width: 100%; height: 400px;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--[if lt IE 9]>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Scripts/echarts-all-3.js"></script>
+<!--[if lt IE 9]>
 <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-    <script src="../Content/laydate/laydate.js"></script>
-    <script src="../Scripts/vue.min.js"></script>
-    <script src="../Scripts/axios.js"></script>
-    <script src="../Scripts/pagination.js"></script>
-    <script type="text/javascript">
-        let that = {};
-        let echartsArray = {};
-        $.ajax({
-            type: 'GET',
-            url: qp_url + "admin/Analysis/newSystemStat?token="+getStorage('token'),
-            dataType: "json",
-            // async: false,
-            success: function (rsp) {
-                if (rsp.status == 1) {
-                    that = rsp.data
-                    echartsArray = rsp.data.four;
-                    var myVue = new Vue({
-                        el: '#content',
-                        data: that
-                    })
+<!--<script src="../Content/laydate/laydate.js"></script>-->
+<script src="../Scripts/vue.min.js"></script>
+<!--<script src="../Scripts/axios.js"></script>-->
+<!--<script src="../Scripts/pagination.js"></script>-->
+<script type="text/javascript">
+    let that = {};
+    let echartsArray = {};
+    var isMobile = false;//移动端
+    var _radius;
+    $.ajax({
+        type: 'GET',
+        url: qp_url + "admin/Analysis/newSystemStat?token=" + getStorage('token'),
+        dataType: "json",
+        // async: false,
+        success: function (rsp) {
+            if (rsp.status == 1) {
+                that = rsp.data
+                echartsArray = rsp.data.four;
+                var myVue = new Vue({
+                    el: '#content',
+                    data: that
+                })
 
-                    // 页面展示
-                    $("#prog-box").css({ "opacity": "1" });
-                    $(".loading").hide()
+                // 页面展示
+                $("#prog-box").css({"opacity": "1"});
+                $(".loading").hide()
 
-                    // 游戏税收
-                    //chart1.setOption(option(echartsArray.ServerIDStat));
-                    action("#yxss", echartsArray.gameSata, true);
-                    // 房间税收
-                    // chart2.setOption(option(echartsArray.WasteStat));
-                    action("#fjss", echartsArray.ServerIDStat, true);
-                    // 游戏损耗
-                    // chart3.setOption(option(echartsArray.ServerIDWasteStat));
-                    action("#yxsh", echartsArray.WasteStat)
-                    // 房间损耗
-                    // chart4.setOption(option(echartsArray.gameSata));
-                    action("#fjsh", echartsArray.ServerIDWasteStat)
-                    var _width = 200 / $('#ykrs').width();
+                // 游戏税收
+                //chart1.setOption(option(echartsArray.ServerIDStat));
+                action("#yxss", echartsArray.gameSata, true);
+                // 房间税收
+                // chart2.setOption(option(echartsArray.WasteStat));
+                action("#fjss", echartsArray.ServerIDStat, true);
+                // 游戏损耗
+                // chart3.setOption(option(echartsArray.ServerIDWasteStat));
+                action("#yxsh", echartsArray.WasteStat)
+                // 房间损耗
+                // chart4.setOption(option(echartsArray.gameSata));
+                action("#fjsh", echartsArray.ServerIDWasteStat)
+                var _width = 200 / $('#ykrs').width();
 
-                    // 初始化
-                    // 游客人数
-                    var ykrs = echarts.init(document.getElementById('ykrs'));
-                    // 停权用户
-                    var tqyh = echarts.init(document.getElementById('tqyh'));
-                    // 手机注册
-                    var sjzc = echarts.init(document.getElementById('sjzc'));
-                    // 游戏币统计
-                    var yxbtj = echarts.init(document.getElementById('yxbtj'));
-                    // 游戏总税收
-                    var yxzss = echarts.init(document.getElementById('yxzss'));
-                    // 游戏提现税收
-                    var yxtxss = echarts.init(document.getElementById('yxtxss'));
-                    // 损耗总量
-                    var shzl = echarts.init(document.getElementById('shzl'));
-
-
-                    // 数据
-                    // 游客人数
-                    ykrs.setOption(option("游客人数", that.userStat.youkeTotal, "#FB3D80", false, "游客人数", that.userStat.userTotal, true));
-                    // 停权用户
-                    tqyh.setOption(option("停权用户", that.userStat.tiquanTotal, "#B078FD", false, "停权用户", that.userStat.userTotal, true));
-                    // 手机注册
-                    sjzc.setOption(option("手机注册", that.userStat.shoujiTotal, "#FD851F", false, "手机注册", that.userStat.userTotal, true));
-                    // 游戏币统计
-                    yxbtj.setOption(option("游戏币统计", that.yxStat.InsureTotal, "#FD851F", true, "总金币", that.yxStat.xiedaiTotal));
-                    // 游戏总税收
-                    yxzss.setOption(option("游戏总税收", that.ssshStat.yxzss, "#FB3D80", false, "游戏总税收", that.ssshStat.yxzss));
-                    // 游戏提现税收
-                    yxtxss.setOption(option("游戏提现税收", that.ssshStat.applyorderRevenue, "#B078FD", false, "游戏提现税收", that.ssshStat.applyorderRevenue));
-                    // 损耗总量
-                    shzl.setOption(option("损耗总量", that.ssshStat.systemWaste, "#FD851F", false, "损耗总量", that.ssshStat.systemWaste));
+                // 初始化
+                // 游客人数
+                var ykrs = echarts.init(document.getElementById('ykrs'));
+                // 停权用户
+                var tqyh = echarts.init(document.getElementById('tqyh'));
+                // 手机注册
+                var sjzc = echarts.init(document.getElementById('sjzc'));
+                // 后台注册
+                var htzc = echarts.init(document.getElementById('htzc'));
+                // 游戏币统计
+                var yxbtj = echarts.init(document.getElementById('yxbtj'));
+                // 游戏总税收
+                var yxzss = echarts.init(document.getElementById('yxzss'));
+                // 游戏提现税收
+                var yxtxss = echarts.init(document.getElementById('yxtxss'));
+                // 损耗总量
+                var shzl = echarts.init(document.getElementById('shzl'));
 
 
+                // 数据
+                // 游客人数
+                ykrs.setOption(option("游客人数", that.userStat.youkeTotal, "#FB3D80", false, "游客人数", that.userStat.userTotal, true));
+                // 停权用户
+                tqyh.setOption(option("停权用户", that.userStat.tiquanTotal, "#FD851F", false, "停权用户", that.userStat.userTotal, true));
+                // 手机注册
+                sjzc.setOption(option("手机注册", that.userStat.shoujiTotal, "#B078FD", false, "手机注册", that.userStat.userTotal, true));
+                // 后台注册
+                // htzc.setOption(option("后台注册", that.userStat.userTotal - (that.userStat.shoujiTotal + that.userStat.youkeTotal + that.userStat.tiquanTotal), "#5F5DFA", false, "后台注册", that.userStat.userTotal, true));
+                htzc.setOption(option("后台注册", that.userStat.adminTotal, "#5F5DFA", false, "后台注册", that.userStat.userTotal, true));
+                // 游戏币统计
+                yxbtj.setOption(option("游戏币统计", that.yxStat.InsureTotal, "#FD851F", true, "总金币", that.yxStat.xiedaiTotal));
+                // 游戏总税收
+                yxzss.setOption(option("游戏总税收", that.ssshStat.yxzss, "#FB3D80", false, "游戏总税收", that.ssshStat.yxzss));
+                // 游戏提现税收
+                yxtxss.setOption(option("游戏提现税收", that.ssshStat.applyorderRevenue, "#B078FD", false, "游戏提现税收", that.ssshStat.applyorderRevenue));
+                // 损耗总量
+                shzl.setOption(option("损耗总量", that.ssshStat.systemWaste, "#FD851F", false, "损耗总量", that.ssshStat.systemWaste));
 
-                    // 注册绑定
-                    $("#prog-box li span").eq(0).animate({ width: that.zsStat.bindTotal / that.userStat.userTotal * 100 + "%" }, 3000)
-                    // 返还税收
-                    $("#prog-box li span").eq(1).animate({ width: that.zsStat.userRevenue / that.zsStat.systemRevenue * 100 + "%" }, 3000)
-                    // 签到
-                    $("#prog-box li span").eq(2).animate({ width: that.zsStat.signRevenue / that.zsStat.signRevenue * 100 + "%" }, 3000)
-                    // 任务奖励
-                    $("#prog-box li span").eq(3).animate({ width: that.zsStat.renwuRevenue / that.zsStat.renwuRevenue * 100 + "%" }, 3000)
-                    // 后台
-                    $("#prog-box li span").eq(4).animate({ width: that.zsStat.houtaiRevenue / that.zsStat.houtaiRevenue * 100 + "%" }, 3000)
 
-                } else {
-                    alert(rsp.msg);
-                }
+                // 注册绑定
+                $("#prog-box li span").eq(0).animate({width: that.zsStat.bindTotal / that.userStat.userTotal * 100 + "%"}, 3000)
+                // 返还税收
+                $("#prog-box li span").eq(1).animate({width: that.zsStat.userRevenue / that.zsStat.systemRevenue * 100 + "%"}, 3000)
+                // 签到
+                $("#prog-box li span").eq(2).animate({width: that.zsStat.signRevenue / that.zsStat.signRevenue * 100 + "%"}, 3000)
+                // 任务奖励
+                $("#prog-box li span").eq(3).animate({width: that.zsStat.renwuRevenue / that.zsStat.renwuRevenue * 100 + "%"}, 3000)
+                // 后台
+                $("#prog-box li span").eq(4).animate({width: that.zsStat.houtaiRevenue / that.zsStat.houtaiRevenue * 100 + "%"}, 3000)
+
+            } else {
+                alert(rsp.msg);
             }
-        })
-
-
-        $(document).ready(function () {
-            docReady();
-        });
-
-
-        function offsetW() {
-            return (50 - parseInt(_width * 100)) + '%'
         }
+    })
 
-        // 图表函数
-        function option(txt, num, color, label, DW, sum, user) {
-            return {
-                backgroundColor: '#fff',
-                legend: function () {
-                    if (label) {
+
+    $(document).ready(function () {
+        docReady();
+    });
+
+
+    function offsetW() {
+        return (50 - parseInt(_width * 100)) + '%'
+    }
+
+    // 图表函数
+    function option(txt, num, color, label, DW, sum, user) {
+        return {
+            backgroundColor: '#fff',
+            legend: function () {
+                if (label) {
+                    return {
+                        orient: 'horizontal',
+                        x: 'center',
+                        bottom: 30,
+                        data: ["携带金币", "保险柜金币"],
+                        textStyle: {
+                            color: '#959595',
+                            fontSize: '16px'
+                        }
+                    }
+                } else {
+                    if (isMobile) {
                         return [{
                             orient: 'horizontal',
-                            bottom: 30,
-                            left: 100,
-                            data: ["携带金币"],
-                            textStyle: {
-                                color: '#959595',
-                                fontSize: '16px'
-                            }
-                        }, {
-                            orient: 'horizontal',
-                            right: 100,
-                            bottom: 30,
-                            data: ["保险柜金币"],
+                            x: 'center',
+                            bottom: 0,
+                            data: [txt],
                             textStyle: {
                                 color: '#959595',
                                 fontSize: '16px'
@@ -284,227 +306,233 @@
                             }
                         }]
                     }
-
-                }(),
-                graphic: [{
-                    type: 'text',
-                    left: 'center',
-                    top: '40%',
-                    style: {
-                        text: function () {
-                            if (label) {
-
-                                return DW + '\n' + unitConvert(num + sum).num + unitConvert(num + sum).unit
-                            } else {
-                                if (user) {
-                                    return DW + '\n' + num + "人"
-                                } else {
-                                    return DW + '\n' + unitConvert(num).num + unitConvert(num).unit
-                                }
-
-                            }
-
-                        }(),
-                        textAlign: 'center',
-                        fill: '#8D8D8D', //文字的颜色
-                        width: 30,
-                        height: 40,
-                        fontSize: 16,
-                        // fontWeight: 'bold',
-                    }
-                }],
-                series: [
-                    {
-                        name: '数据',
-                        type: 'pie',
-                        radius: ['60px', '79px'],
-                        center: ['50%', '45%'],
-                        avoidLabelOverlap: true,
-                        color: [new echarts.graphic.LinearGradient(0, 0, 0, 1,
-                            [
-                                { offset: 0, color: '#FF69B7' },
-                                // {offset: 0.5, color: '#6F91DB'},
-                                { offset: 1, color: '#FB3D80' }
-                            ]
-                        ), new echarts.graphic.LinearGradient(0, 0, 0, 1,
-                            [
-                                { offset: 0, color: '#F3C3AF' },
-                                // {offset: 0.5, color: '#6F91DB'},
-                                { offset: 1, color: '#FF7800' }
-                            ]
-                        ), '#645EFA', '#F99C56'],
-                        hoverAnimation: false,
-                        legendHoverLink: false,
-                        label: {
-                            normal: {  //正常的样式
-                                show: label,
-                                position: 'outside',
-                                color: '#949494',
-                                formatter: function (params) {
-                                    if (label) {
-                                        return params.value + "金币"
-
-                                    } else {
-                                        return params.percent + "%"
-                                    }
-                                },
-                                // fontWeight: 'bold'
-
-
-                            }
-                        },  //提示文字
-                        labelLine: {
-                            normal: {
-                                show: label,
-                                length: 20,
-                                length2: 20,
-                                color: '#949494',
-                                lineStyle: {
-                                    color: '#949494'
-                                }
-                            }
-                        },
-                        data: function () {
-                            if (label) {
-                                return [
-                                    {
-                                        value: sum,
-                                        name: "携带金币",
-                                        itemStyle: {
-                                            normal: function () {
-
-                                                return new echarts.graphic.LinearGradient(0, 0, 0, 1,
-                                                    [
-                                                        { offset: 0, color: '#FF69B7' },
-                                                        // {offset: 0.5, color: '#6F91DB'},
-                                                        { offset: 1, color: '#FB3D80' }
-                                                    ]
-                                                );
-
-                                            }()
-                                        }
-                                    },
-
-                                    {
-                                        value: num,
-                                        name: "保险柜金币",
-                                        itemStyle: {
-                                            normal: function () {
-
-                                                return new echarts.graphic.LinearGradient(0, 0, 0, 1,
-                                                    [
-                                                        { offset: 0, color: '#FF69B7' },
-                                                        // {offset: 0.5, color: '#6F91DB'},
-                                                        { offset: 1, color: '#FB3D80' }
-                                                    ]
-                                                );
-
-                                            }()
-                                        }
-                                    },
-
-                                ]
-                            } else {
-                                return [
-                                    {
-                                        value: sum - num,
-                                        name: "",
-                                        itemStyle: {
-                                            normal: function () {
-
-                                                return { color: "#EDEEEE" }
-
-                                            }()
-                                        }
-                                    },
-
-                                    {
-                                        value: num,
-                                        name: txt,
-                                        itemStyle: {
-                                            normal: function () {
-
-                                                return { color: color }
-
-                                            }()
-                                        }
-                                    },
-
-                                ]
-                            }
-                        }()
-                    }
-                ]
-            };
-        }
-
-
-        // 损耗统计
-        function action(dom, Array_, shui) {
-            let color = ['#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050 ", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050 ", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050", '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050"];
-            let _arr = [new Array()];
-            for (var i = 0; i < Array_.length; i++) {
-                if (Array_[i].totalRevenue) {
-                    _arr.push(Array_[i].totalRevenue);
-                } else if (Array_[i].totalWaste) {
-                    _arr.push(Array_[i].totalWaste);
                 }
 
-            };
-            let num_max = Math.max(..._arr);
-            let num_min = Math.min(..._arr);
-            // Array_.sort(function (a, b) {
-            //     if (a.totalRevenue) {
-            //         return a.totalRevenue - b.totalRevenue;
-            //     } else {
-            //         return a.totalWaste - b.totalWaste;
-            //     }
+            }(),
+            graphic: [{
+                type: 'text',
+                left: 'center',
+                top: '40%',
+                style: {
+                    text: function () {
+                        if (label) {
 
-            // });
-            // let num_min = Array_[0].totalRevenue || Array_[0].totalWaste;
-            // let num_max = Array_[Array_.length - 1].totalRevenue || Array_[Array_.length - 1].totalWaste;
-            let html = "";
-            for (var i = 0; i < Array_.length; i++) {
-                let value = Array_[i].totalRevenue || Array_[i].totalWaste;
-                let name = Array_[i].GameKindName || Array_[i].GameRoomName;
-                let max;
-                let min;
-                let r_jindu;
-                let l_left;
-                // let
-                if (Number(value) <= 0) {
-                    if (Number(value) == 0 && Number(num_min) == 0) {
-                        r_jindu = 0;
-                        l_left = 0;
-                    } else {
-                        r_jindu = (value / num_min * 0.55) * 100;
-                        l_left = ((value / num_min * 0.55) * 100);
+                            return DW + '\n' + unitConvert(num + sum).num + unitConvert(num + sum).unit
+                        } else {
+                            if (user) {
+                                return DW + '\n' + num + "人"
+                            } else {
+                                return DW + '\n' + unitConvert(num).num + unitConvert(num).unit
+                            }
 
-                        //避免过小宽度无法展示
-                        if (l_left > 0 && l_left < 0.5) {
-                            r_jindu = 0.5;
-                            l_left = 0.5;
                         }
 
-                    }
-                    min = value;
-                    max = "0.00";
+                    }(),
+                    textAlign: 'center',
+                    fill: '#8D8D8D', //文字的颜色
+                    width: 30,
+                    height: 40,
+                    fontSize: isMobile ? 14 : 16,
+                    // fontWeight: 'bold',
+                }
+            }],
+            series: [
+                {
+                    name: '数据',
+                    type: 'pie',
+                    radius: _radius,
+                    center: ['50%', '45%'],
+                    avoidLabelOverlap: true,
+                    color: [new echarts.graphic.LinearGradient(0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#FF69B7'},
+                            // {offset: 0.5, color: '#6F91DB'},
+                            {offset: 1, color: '#FB3D80'}
+                        ]
+                    ), new echarts.graphic.LinearGradient(0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#F3C3AF'},
+                            // {offset: 0.5, color: '#6F91DB'},
+                            {offset: 1, color: '#FF7800'}
+                        ]
+                    ), '#645EFA', '#F99C56'],
+                    hoverAnimation: false,
+                    legendHoverLink: false,
+                    label: {
+                        normal: {  //正常的样式
+                            show: label,
+                            position: 'outside',
+                            color: '#949494',
+                            formatter: function (params) {
+                                if (label) {
+                                    return params.value + "金币"
 
-                } else {
-                    r_jindu = (value / num_max) * 100;
+                                } else {
+                                    return params.percent + "%"
+                                }
+                            },
+                            // fontWeight: 'bold'
+
+
+                        }
+                    },  //提示文字
+                    labelLine: {
+                        normal: {
+                            show: label,
+                            length: 20,
+                            length2: 20,
+                            color: '#949494',
+                            lineStyle: {
+                                color: '#949494'
+                            }
+                        }
+                    },
+                    data: function () {
+                        if (label) {
+                            return [
+                                {
+                                    value: sum,
+                                    name: "携带金币",
+                                    itemStyle: {
+                                        normal: function () {
+
+                                            return new echarts.graphic.LinearGradient(0, 0, 0, 1,
+                                                [
+                                                    {offset: 0, color: '#FF69B7'},
+                                                    // {offset: 0.5, color: '#6F91DB'},
+                                                    {offset: 1, color: '#FB3D80'}
+                                                ]
+                                            );
+
+                                        }()
+                                    }
+                                },
+
+                                {
+                                    value: num,
+                                    name: "保险柜金币",
+                                    itemStyle: {
+                                        normal: function () {
+
+                                            return new echarts.graphic.LinearGradient(0, 0, 0, 1,
+                                                [
+                                                    {offset: 0, color: '#FF69B7'},
+                                                    // {offset: 0.5, color: '#6F91DB'},
+                                                    {offset: 1, color: '#FB3D80'}
+                                                ]
+                                            );
+
+                                        }()
+                                    }
+                                },
+
+                            ]
+                        } else {
+                            return [
+                                {
+                                    value: sum - num,
+                                    name: "",
+                                    itemStyle: {
+                                        normal: function () {
+
+                                            return {color: "#EDEEEE"}
+
+                                        }()
+                                    }
+                                },
+
+                                {
+                                    value: num,
+                                    name: txt,
+                                    itemStyle: {
+                                        normal: function () {
+                                            if (sum == 0 && num == 0) {
+                                                return {color: "#EDEEEE"}
+                                            } else {
+                                                return {color: color}
+                                            }
+
+
+                                        }()
+                                    }
+                                },
+
+                            ]
+                        }
+                    }()
+                }
+            ]
+        };
+    }
+
+
+    // 损耗统计
+    function action(dom, Array_, shui) {
+        let color = ['#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050 ", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050 ", '#D34848', '#009F9D', '#FF8162', '#CDFFEB', '#FFAAAA', '#2B580C', '#DCB5FF', '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050", '#AFA939', '#F0D9DA', '#F7B71D', '#6d8dfd', "#2F4050"];
+        let _arr = [new Array()];
+        for (var i = 0; i < Array_.length; i++) {
+            if (Array_[i].totalRevenue) {
+                _arr.push(Array_[i].totalRevenue);
+            } else if (Array_[i].totalWaste) {
+                _arr.push(Array_[i].totalWaste);
+            }
+
+        }
+        ;
+        let num_max = Math.max(..._arr);
+        let num_min = Math.min(..._arr);
+        // Array_.sort(function (a, b) {
+        //     if (a.totalRevenue) {
+        //         return a.totalRevenue - b.totalRevenue;
+        //     } else {
+        //         return a.totalWaste - b.totalWaste;
+        //     }
+
+        // });
+        // let num_min = Array_[0].totalRevenue || Array_[0].totalWaste;
+        // let num_max = Array_[Array_.length - 1].totalRevenue || Array_[Array_.length - 1].totalWaste;
+        let html = "";
+        for (var i = 0; i < Array_.length; i++) {
+            let value = Array_[i].totalRevenue || Array_[i].totalWaste;
+            let name = Array_[i].GameKindName || Array_[i].GameRoomName;
+            let max;
+            let min;
+            let r_jindu;
+            let l_left;
+            // let
+            if (Number(value) <= 0) {
+                if (Number(value) == 0 && Number(num_min) == 0) {
+                    r_jindu = 0;
                     l_left = 0;
-                    max = value;
+                } else {
+                    r_jindu = (value / num_min * 0.55) * 100;
+                    l_left = ((value / num_min * 0.55) * 100);
 
                     //避免过小宽度无法展示
-                    if (r_jindu > 0 && r_jindu < 0.4) {
-                        r_jindu = 0.4;
+                    if (l_left > 0 && l_left < 0.5) {
+                        r_jindu = 0.5;
+                        l_left = 0.5;
                     }
-                    min = "0.00";
+
                 }
+                min = value;
+                max = "0.00";
+
+            } else {
+                r_jindu = (value / num_max) * 100;
+                l_left = 0;
+                max = value;
+
+                //避免过小宽度无法展示
+                if (r_jindu > 0 && r_jindu < 0.4) {
+                    r_jindu = 0.4;
+                }
+                min = "0.00";
+            }
 
 
-                if (shui) {
-                    html += `<div class="part">
+            if (shui) {
+                html += `<div class="part">
                     <div style="padding-left:40%;margin-bottom: 2px;font-size:13px;">${name}</div>
                         <div class="line" style='padding-left:0;' title='${value}'>
                             <div title='${min}'>${min}</div>
@@ -514,8 +542,8 @@
                         </div>
                     </div>
                 </div>`
-                } else {
-                    html += `<div class="part">
+            } else {
+                html += `<div class="part">
                     <div style="padding-left:40%;margin-bottom: 2px;font-size:13px;">${name}</div>
                         <div class="line" title='${value}'>
                             <div title='${min}'>${min}</div>
@@ -525,56 +553,57 @@
                         </div>
                     </div>
                 </div>`
-                }
             }
-
-
-            $(dom).html(html);
         }
 
 
-        function docReady() {
-            //收放事件
-            $('.btn-minimize').click(function (e) {
-                e.preventDefault();
-                var $target = $(this).parent().parent().next('.box-content');
-                if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                $target.slideToggle();
-            });
-        }
+        $(dom).html(html);
+    }
 
-        function unitConvert(num) {
-            var moneyUnits = ["元", "万", "亿", "万亿"]
-            var dividend = 10000;
-            var curentNum = num;
-            //转换数字
-            var curentUnit = moneyUnits[0];
-            //转换单位
-            for (var i = 0; i < 4; i++) {
-                curentUnit = moneyUnits[i]
-                if (strNumSize(curentNum) < 5) {
-                    break;
-                }
-                curentNum = curentNum / dividend
+
+    function docReady() {
+        //判断如果是手机设备的话，就改变图标的大小
+        if ($(window).width() <= 1000) {
+            isMobile = true
+        }
+        if (isMobile) {
+            _radius = ['44px', '58px']
+        } else {
+            _radius = ['60px', '79px']
+        }
+    }
+
+    function unitConvert(num) {
+        var moneyUnits = ["元", "万", "亿", "万亿"]
+        var dividend = 10000;
+        var curentNum = num;
+        //转换数字
+        var curentUnit = moneyUnits[0];
+        //转换单位
+        for (var i = 0; i < 4; i++) {
+            curentUnit = moneyUnits[i]
+            if (strNumSize(curentNum) < 5) {
+                break;
             }
-            var m = { num: 0, unit: "" }
-            m.num = curentNum.toFixed(2)
-            m.unit = curentUnit;
-            return m;
+            curentNum = curentNum / dividend
         }
+        var m = {num: 0, unit: ""}
+        m.num = curentNum.toFixed(2)
+        m.unit = curentUnit;
+        return m;
+    }
 
-        function strNumSize(tempNum) {
-            var stringNum = tempNum.toString()
-            var index = stringNum.indexOf(".")
-            var newNum = stringNum;
-            if (index != -1) {
-                newNum = stringNum.substring(0, index)
-            }
-            return newNum.length
+    function strNumSize(tempNum) {
+        var stringNum = tempNum.toString()
+        var index = stringNum.indexOf(".")
+        var newNum = stringNum;
+        if (index != -1) {
+            newNum = stringNum.substring(0, index)
         }
+        return newNum.length
+    }
 
-    </script>
+</script>
 </body>
 
 </html>

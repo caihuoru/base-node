@@ -159,12 +159,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">渠道ID</div>
+                            <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">推广渠道号</div>
                             <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 lb"><label>{{userInfo.ChannelId}}</label>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">渠道账号</div>
+                            <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">推广渠道昵称</div>
                             <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 lb"><label>{{userInfo.ChannelName}}</label>
                             </div>
                         </div>
@@ -249,13 +249,13 @@
                         <div class="row">
                             <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">推广人数</div>
                             <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 lb">
-                                <label>{{userInfo.InsureScore}}</label>
+                                <label>{{userInfo.ChildPeople}}</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">累计返还</div>
                             <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 lb">
-                                <label> {{userInfo.InsureScore}}</label>
+                                <label> {{userInfo.ReturnMoney}}</label>
                             </div>
                         </div>
                         <div class="row">
@@ -267,7 +267,7 @@
                         <div class="row">
                             <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">注册机器码</div>
                             <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 lb">
-                                <label> {{userInfo.InsureScore}}</label>
+                                <label> {{userInfo.RegisterMachine }}</label>
                             </div>
                         </div>
                         <div class="row">
@@ -529,7 +529,7 @@
                                 <input id="txtBankName"
                                        maxlength="25"
                                        class="form-control inline input-width-200"
-                                       type="text" v-model="userInfo.BankName">
+                                       type="text" v-model="userInfo.BankAddress">
                             </div>
                         </div>
                         <div class="row">
@@ -538,7 +538,7 @@
                                 <input id="txtBankAddress"
                                        maxlength="120"
                                        class="form-control inline input-width-200"
-                                       type="text" v-model="userInfo.BankAddress">
+                                       type="text" v-model="userInfo.BankName">
                             </div>
                         </div>
                         <div class="row">
@@ -574,6 +574,16 @@
                                        type="text" maxlength="32"
                                        v-model="userInfo.SeatPhone">
                                 <span>支付宝字符长度不可超过32个字符</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6">支付宝姓名</div>
+                            <div class="col-xs-6 col-sm-6 col-lg-6 col-md-6 lb">
+                                <input id="txtZfbRealname"
+                                       class="form-control inline input-width-200"
+                                       type="text" maxlength="32"
+                                       v-model="userInfo.ZfbRealname">
+                                <span></span>
                             </div>
                         </div>
                         <div class="row">
@@ -889,7 +899,7 @@
                                     </li>
                                     <li>
                                         <a href="javascript:void(0)" class="l"
-                                           onclick="javascript: openWindowOwn('../Trade.html?param='+param+'&account='+account, 'RecordGlodList 0', 1200, 500);">
+                                           onclick="javascript: openWindowOwn('../jinBiJiaoYiGuanLi.html?account='+account, 'RecordGlodList 0', 1200, 500);">
                                             提现记录
                                         </a>
                                     </li>
@@ -1323,7 +1333,8 @@
                     BankNO: that.userInfo.BankNO,
                     BankName: that.userInfo.BankName,
                     BankAddress: that.userInfo.BankAddress,
-                    PostalCode: that.userInfo.PostalCode
+                    PostalCode: that.userInfo.PostalCode,
+                    ZfbRealname:that.userInfo.ZfbRealname
                 }
                 console.log(postData);
                 this.$validator.validate().then(valid => {

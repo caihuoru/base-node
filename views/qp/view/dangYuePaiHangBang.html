@@ -8,11 +8,6 @@
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../Content/common.css" rel="stylesheet"/>
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Content/laydate/laydate.js"></script>
-    <script src="../Scripts/pagination.js"></script>
-    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <style type="text/css">
         body{
             overflow-y: scroll!important;
@@ -76,6 +71,11 @@
           onclick="window.open('./add/ConfineAddressInfo.html?param='+tab,'_self')" lay-event="edit">更新</span>
     <span class="layui-btn layui-btn-warm layui-btn-xs">删除</span>
 </script>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         //时间选择器
@@ -86,7 +86,7 @@
             , value: new Date()
         });
     });
-    var table, tab = 1;//tab标识是操作的IP还是手机号
+    var table, tab = 1;
     layui.use('table', function () {
         table = layui.table;
 
@@ -97,7 +97,7 @@
             // , height: 512
             , url: qp_url + 'admin/Ranking/rechangeRankingListM' //数据接口
             , where: {
-                Date: todayDateMDY(true),
+                Date: $('#txtStartDate').val(),
                 type: tab,
                 token:getStorage('token')
 

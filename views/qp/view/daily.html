@@ -103,13 +103,16 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     // $("#txtStartDate").val(timestampToTime(new Date() / 1000));
     // $("#txtEndDate").val(timestampToTime(new Date() / 1000));
     // 没分页先注释
     $(document).ready(function () {
+        layui.use('layer',function () {
+            layer = layui.layer
+        });
         //时间选择器
         laydate.render({
             elem: '#txtStartDate'
@@ -132,17 +135,19 @@
         var txtEndDate = $("#txtEndDate").val();
         if (txtStartDate != "" && txtEndDate != "") {
             if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
-                alert("开始日期不能大于结束时间");
+                layer.alert("开始日期不能大于结束时间");
                 return false;
             }
             if (StrToDateTime(txtEndDate) > StrToDateTime(timestampToTime(new Date() / 1000))) {
-                alert("结束时间不能超出今天!");
+                layer.alert("结束时间不能超出今天!");
                 return false;
             }
+        }else{
+            layer.alert("开始/结束日期不能为空!");
+            return false;
         }
         postData.StartDate = txtStartDate;
         postData.EndDate = txtEndDate;
-        // console.log(postData)
         render(postData);
     });
     var DateObj = {
@@ -192,7 +197,7 @@
                                         </div>
                                         <div>
                                             <label>总兑换人次：</label>
-                                            <div class="inline">${data[i].xtgk.namTotal}次</div>
+                                            <div class="inline">${data[i].xtgk.applyTotal}次</div>
                                         </div>
                                         <div>
                                             <label>关闭订单金额：</label>
@@ -221,15 +226,15 @@
                                     </td>
                                     <td>
                                         <div>
-                                            <label>新增注册：</label>
+                                            <label>新增用户人数：</label>
                                             <div class="inline">${data[i].yhzc.userTotal}人</div>
                                         </div>
                                         <div>
-                                            <label>新增IOS注册：</label>
+                                            <label>新增IOS用户人数：</label>
                                             <div class="inline">${data[i].yhzc.iosTotal}人</div>
                                         </div>
                                         <div>
-                                            <label>新增安卓注册：</label>
+                                            <label>新增安卓用户人数：</label>
                                             <div class="inline">${data[i].yhzc.androidTotal}人</div>
                                         </div>
                                         <div>
@@ -249,11 +254,11 @@
                                             <div class="inline">${data[i].yhzc.bindbankTotal}人</div>
                                         </div>
                                         <div>
-                                            <label>登陆用户数：</label>
+                                            <label>登陆用户（今日）：</label>
                                             <div class="inline">${data[i].yhzc.loginTotal}人</div>
                                         </div>
                                         <div>
-                                            <label>活跃用户数：</label>
+                                            <label>活跃用户数（今日）：</label>
                                             <div class="inline">${data[i].yhzc.activeTotal}人</div>
                                         </div>
 
@@ -421,7 +426,10 @@
 
 
     }
-
+    function StrToDateTime(timestr) {
+        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+        return dt;
+    }
 </script>
 </body>
 

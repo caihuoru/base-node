@@ -85,6 +85,21 @@
 
     var pageObj = {};
     var postData = {};//搜索条件
+    var publicData = {}
+    $.post(qp_url + 'admin/Account/userOrderInfo', {
+        token: getStorage('token'),
+        UserID: param
+    }, function (res) {
+        if (res.status == 1) {
+            publicData = res.data
+            // Accounts: "游客121338"
+            // ChannelId: 0
+            // NickName: "游客121338"
+            // RealName: null
+            // RegisterOrigin: 0
+            // UserID: 121338
+        }
+    }, 'json')
     var myVue = new Vue({
         el: '#content',
         data: {
@@ -130,14 +145,46 @@
             } //开启分页
             , limits: [10, 20, 30, 50, 80, 100]
             , limit: 10
+            , cellMinWidth: 100
             , cols: [[ //表头
                 {field: 'UserID', title: '用户ID'}
+                , {
+                    field: '', title: '用户账号', minWidth: 130, templet: function () {
+                        return `<span>${publicData.Accounts}</span>`
+                    }
+                }
+                , {field: '', title: '用户昵称', minWidth: 130, templet: function () {
+                        return `<span>${publicData.NickName}</span>`
+                    }}
+                , {field: '', title: '真实姓名', templet: function () {
+                        return `<span>${publicData.RealName || ''}</span>`
+                    }}
+                , {field: '', title: '推广渠道号', minWidth: 120, templet: function () {
+                        return `<span>${publicData.ChannelId}</span>`
+                    }}
+                , {field: '', title: '推广渠道昵称', minWidth: 120, templet: function () {
+                        return `<span>${publicData.ChannelName || ''}</span>`
+                    }}
+                , {
+                    field: '', title: '设备', width: 90, templet: function () {
+                        if (publicData.RegisterOrigin == 1) {
+                            return '安卓'
+                        }
+                        if (publicData.RegisterOrigin == 2) {
+                            return 'ios'
+                        }
+                        if (publicData.RegisterOrigin == 3) {
+                            return 'PC'
+                        }
+                        return '无法获取'
+                    }
+                }
                 , {field: 'GameKindName', title: '游戏名称'}
-                , {field: 'GameRoomName', title: '房间名称'}
+                , {field: 'GameRoomName', title: '房间名称', minWidth: 130}
                 , {field: 'DrawID', title: '局数标识'}
                 , {field: 'Score', title: '赢取金币数量'}
                 , {field: 'Revenue', title: '游戏税收'}
-                , {field: 'InsertTime', title: '游戏日期'}
+                , {field: 'InsertTime', title: '游戏日期', minWidth: 170}
             ]]
             , done: function (res, curr, count) {
                 $('th').css({'text-align': 'center'});

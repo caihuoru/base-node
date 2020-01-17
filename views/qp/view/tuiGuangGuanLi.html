@@ -47,7 +47,7 @@
                                     <li>
                                         <select class="form-control input-sm" name="select" id="ddlSearchType">
                                             <option value="0" selected="selected">所有</option>
-                                            <option value="1">用户ID</option>
+                                            <option value="1">用户标识</option>
                                             <option value="2">玩家账号</option>
                                         </select>
                                     </li>
@@ -63,57 +63,9 @@
                             </li>
                         </ul>
                     </div>
-                    <!--查询栏结束-->
-                    <div class="row">
-                        <div class="col-md-2" style="display: none">
-                            <div id="DataTables_Table_0_length" class="dataTables_length">
-                                <label>
-                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
-                                            id="pagecount">
-                                        <option value="10" selected="selected">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select> 条/页
-                                </label>
-                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
-                            </div>
-                        </div>
-
-                    </div>
                     <!--table开始-->
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center">
                         <table id="layTable" lay-filter="test"></table>
-
-                        <table style="display: none" class="table table-striped table-bordered">
-                            <thead>
-                            <tr role="row">
-                                <th class="sorting">玩家标识</th>
-                                <th class="sorting">玩家ID</th>
-                                <th class="sorting">玩家账号</th>
-                                <th class="sorting">真实姓名</th>
-                                <th class="sorting">金币</th>
-                                <th class="sorting">银行金币</th>
-                                <th class="sorting">总业绩</th>
-                                <th class="sorting">本周业绩</th>
-                                <th class="sorting">代理级别</th>
-                                <th class="sorting">保底佣金</th>
-                                <th class="sorting">佣金等级</th>
-                                <th class="sorting">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <!--分页控件-->
-                        <div class="row">
-                            <div class="col-md-6">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                    <ul class="pagination" id="pagin"></ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!--table结束-->
                 </div>
@@ -218,10 +170,10 @@
             , cellMinWidth: 100
             , cols: [[ //表头
                 {field: 'UserID', title: '玩家标识'}
-                , {field: 'GameID', title: '玩家ID'}
+                , {field: 'GameID', title: '玩家游戏ID'}
                 , {
                     field: 'Accounts', title: '玩家账号',minWidth:130, templet: function (d) {
-                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '00B4E5' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
                     }
                 }
                 , {field: 'NickName', title: '玩家昵称',minWidth:130}

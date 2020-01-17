@@ -188,15 +188,17 @@
                         },
                         success: function (res) {
                             // console.log(myTree)
-                            let groupArr = res.data.rules.split(',').map(Number);
-                            // console.log(groupArr)
+                            let groupArr = res.data.rules.split(',').map(Number);//权限数组
                             let del = [];
                             if(groupArr.indexOf(0) > -1){
                                 groupArr.splice(groupArr.indexOf(0),1)
                             }
                             arr[0].children.forEach(function (item,index) {
-                                if(groupArr.indexOf(item.id) > -1){
-                                    groupArr.splice(groupArr.indexOf(item.id),1)
+                                if(groupArr.indexOf(item.id) > -1){//首先查找父级
+                                    //此处需要排除那些没有下级栏目的权限，如首页等
+                                    if(item.children.length > 0){
+                                        groupArr.splice(groupArr.indexOf(item.id),1)
+                                    }
                                 }
                                 if(item.children.length > 0){
                                     item.children.forEach(function (item2,index2) {

@@ -197,38 +197,14 @@
     function conditionSearch() {
         table.reload('layTable', {
                 where: {
-                    txtStartDate:$("#txtStartDate").val(),
-                    txtEndDate:$("#txtEndDate").val(),
+                    StartDate:$("#txtStartDate").val(),
+                    EndDate:$("#txtEndDate").val(),
                     Type:parseInt($("#ddlTradeType").val()),
                     DateType: parseInt(dataType),
                 }
             }
         )
         dataType = 0
-    }
-
-
-    function showInfo(obj) {
-        var ID = "record" + obj.id;
-        if (document.getElementById(ID).style.display == "none") {
-            document.getElementById(ID).style.display = "";
-            obj.src = "../../Content/images/up.gif"
-        } else {
-            document.getElementById(ID).style.display = "none";
-            obj.src = "../../Content/images/down.gif"
-        }
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
     }
 </script>
 

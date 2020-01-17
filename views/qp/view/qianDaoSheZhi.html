@@ -4,13 +4,11 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width"/>
     <title>系统维护 - 签到设置</title>
-    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
-    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
-    <link href="../Content/common.css" rel="stylesheet" />
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
+    <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
+    <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
+    <link href="../Content/common.css" rel="stylesheet"/>
     <style type="text/css">
         body {
             overflow-y: scroll !important;
@@ -38,290 +36,300 @@
             margin: 24px 0;
             vertical-align: middle;
         }
+
+        [v-cloak] {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
-    <div id="content" class="main-content">
-        <div class="">
-            <div class="carousel box-inner">
-                <div class="box-header well clearfix" data-original-title="">
-                    <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：系统维护 - 签到设置</h2>
-                </div>
-                <div class="tab-content padding-margin-0">
+<div id="content" class="main-content">
+    <div class="">
+        <div class="carousel box-inner">
+            <div class="box-header well clearfix" data-original-title="">
+                <h2><i class="glyphicon glyphicon-hand-right"></i>目前操作功能：系统维护 - 签到设置</h2>
+            </div>
+            <div class="tab-content padding-margin-0">
 
-                    <div class="panel panel-info no-bord">
+                <div class="panel panel-info no-bord">
 
-                        <div class="panel-heading no-bord-radio">
-                            <h3 class="panel-title">签到奖励游戏币设置</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1">第一天奖励：</div>
-                                <div class="col-xs-6 col-md-3"><input id="txtGold1" class="form-control"
-                                        onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
-                                        value="0.00">
-                                    <span class="clear-content"></span></div>
-                                <div class="col-xs-4 col-md-2">
-                                    游戏币
-                                    <label id="Gold1lbl1">请输入第一天奖励</label>
-                                    <label id="Gold1lbl2">请输入正确的奖励额度，必须为整数</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1">第二天奖励：</div>
-                                <div class="col-xs-6 col-md-3">
-                                    <input id="txtGold2" class="form-control"
-                                        onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
-                                        value="0.00">
-                                    <span class="clear-content"></span>
-                                </div>
-                                <div class="col-xs-4 col-md-2">
-                                    游戏币<label id="Gold2lbl1">请输入第二天奖励</label><label
-                                        id="Gold2lbl2">请输入正确的奖励额度，必须为整数</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1">第三天奖励：</div>
-                                <div class="col-xs-6 col-md-3">
-                                    <input id="txtGold3" class="form-control"
-                                        onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
-                                        value="0.00">
-                                    <span class="clear-content"></span>
-                                </div>
-                                <div class="col-xs-4 col-md-2">游戏币<label id="Gold3lbl1">请输入第三天奖励</label><label
-                                        id="Gold3lbl2">请输入正确的奖励额度，必须为整数</label></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1">第四天奖励：</div>
-                                <div class="col-xs-6 col-md-3">
-                                    <input id="txtGold4" class="form-control"
-                                        onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
-                                        value="0.00">
-                                    <span class="clear-content"></span>
-                                </div>
-                                <div class="col-xs-4 col-md-2">
-                                    游戏币<label id="Gold4lbl1">请输入第四天奖励</label><label
-                                        id="Gold4lbl2">请输入正确的奖励额度，必须为整数</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1">第五天奖励：</div>
-                                <div class="col-xs-6 col-md-3">
-                                    <input id="txtGold5" class="form-control"
-                                        onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
-                                        value="0.00">
-                                    <span class="clear-content"></span>
-                                </div>
-                                <div class="col-xs-4 col-md-2">
-                                    游戏币<label id="Gold5lbl1">请输入第五天奖励</label><label
-                                        id="Gold5lbl2">请输入正确的奖励额度，必须为整数</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1">第六天奖励：</div>
-                                <div class="col-xs-6 col-md-3">
-                                    <input id="txtGold6" class="form-control"
-                                        onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
-                                        value="0.00">
-                                    <span class="clear-content"></span>
-                                </div>
-                                <div class="col-xs-4 col-md-2">
-                                    游戏币<label id="Gold6lbl1">请输入第六天奖励</label><label
-                                        id="Gold6lbl2">请输入正确的奖励额度，必须为整数</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1">第七天奖励：</div>
-                                <div class="col-xs-6 col-md-3">
-                                    <input id="txtGold7" class="form-control"
-                                        onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
-                                        value="0.00">
-                                    <span class="clear-content"></span>
-                                </div>
-                                <div class="col-xs-4 col-md-2">
-                                    游戏币<label id="Gold7lbl1">请输入第七天奖励</label><label
-                                        id="Gold7lbl2">请输入正确的奖励额度，必须为整数</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1"> <a class="btn btn-outline-success search btn-md"
-                                        style="width: 85px;" href="#" onclick="add();"><i
-                                            class="glyphicon glyphicon-save"></i>保存</a></div>
+                    <div class="panel-heading no-bord-radio">
+                        <h3 class="panel-title">签到奖励游戏币设置</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">第一天奖励：</div>
+                            <div class="col-xs-6 col-md-3"><input id="txtGold1" class="form-control"
+                                                                  onkeyup="if(isNaN(value))execCommand('undo');"
+                                                                  type="text" maxlength="9"
+                                                                  value="0.00">
+                                <span class="clear-content"></span></div>
+                            <div class="col-xs-4 col-md-2">
+                                游戏币
+                                <label id="Gold1lbl1">请输入第一天奖励</label>
+                                <label id="Gold1lbl2">请输入正确的奖励额度，必须为整数</label>
                             </div>
                         </div>
-                        <!--                    <ul class="list-group">-->
-                        <!--                        <li class="list-group-item">-->
-                        <!--                            <ul class="list-inline">-->
-                        <!--                                <li><a class="btn btn-outline-success search btn-md" href="#" onclick="add();"><i-->
-                        <!--                                        class="glyphicon glyphicon-save"></i>保存</a></li>-->
-                        <!--                            </ul>-->
-                        <!--                        </li>-->
-                        <!--                    </ul>-->
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">第二天奖励：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtGold2" class="form-control"
+                                       onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
+                                       value="0.00">
+                                <span class="clear-content"></span>
+                            </div>
+                            <div class="col-xs-4 col-md-2">
+                                游戏币<label id="Gold2lbl1">请输入第二天奖励</label><label
+                                    id="Gold2lbl2">请输入正确的奖励额度，必须为整数</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">第三天奖励：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtGold3" class="form-control"
+                                       onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
+                                       value="0.00">
+                                <span class="clear-content"></span>
+                            </div>
+                            <div class="col-xs-4 col-md-2">游戏币<label id="Gold3lbl1">请输入第三天奖励</label><label
+                                    id="Gold3lbl2">请输入正确的奖励额度，必须为整数</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">第四天奖励：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtGold4" class="form-control"
+                                       onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
+                                       value="0.00">
+                                <span class="clear-content"></span>
+                            </div>
+                            <div class="col-xs-4 col-md-2">
+                                游戏币<label id="Gold4lbl1">请输入第四天奖励</label><label
+                                    id="Gold4lbl2">请输入正确的奖励额度，必须为整数</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">第五天奖励：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtGold5" class="form-control"
+                                       onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
+                                       value="0.00">
+                                <span class="clear-content"></span>
+                            </div>
+                            <div class="col-xs-4 col-md-2">
+                                游戏币<label id="Gold5lbl1">请输入第五天奖励</label><label
+                                    id="Gold5lbl2">请输入正确的奖励额度，必须为整数</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">第六天奖励：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtGold6" class="form-control"
+                                       onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
+                                       value="0.00">
+                                <span class="clear-content"></span>
+                            </div>
+                            <div class="col-xs-4 col-md-2">
+                                游戏币<label id="Gold6lbl1">请输入第六天奖励</label><label
+                                    id="Gold6lbl2">请输入正确的奖励额度，必须为整数</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1">第七天奖励：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input id="txtGold7" class="form-control"
+                                       onkeyup="if(isNaN(value))execCommand('undo');" type="text" maxlength="9"
+                                       value="0.00">
+                                <span class="clear-content"></span>
+                            </div>
+                            <div class="col-xs-4 col-md-2">
+                                游戏币<label id="Gold7lbl1">请输入第七天奖励</label><label
+                                    id="Gold7lbl2">请输入正确的奖励额度，必须为整数</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1"><a class="btn btn-outline-success search btn-md"
+                                                              style="width: 85px;" href="#" onclick="add();"><i
+                                    class="glyphicon glyphicon-save"></i>保存</a></div>
+                        </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
     </div>
-
-    <script type="text/javascript">
-        $.ajax({
-            url: qp_url + "admin/app/SigninConfig?token="+getStorage('token'),
-            type: "get",
-            dataType: "json",
-            success: function (data) {
-                var data = data.data;
-                $("#txtGold1").val(data.Gold1);
-                $("#txtGold2").val(data.Gold2);
-                $("#txtGold3").val(data.Gold3);
-                $("#txtGold4").val(data.Gold4);
-                $("#txtGold5").val(data.Gold5);
-                $("#txtGold6").val(data.Gold6);
-                $("#txtGold7").val(data.Gold7);
-                console.log(data)
-            }
-        })
-        var data = {};
-        $(document).ready(function () {
-            vailate();
-        });
-
-        function vailate() {
-            var istrue = true;
-            var Gold1 = $("#txtGold1").val().trim();
-            if (Gold1 == "") {
-                $("#Gold1lbl1").show();
-                $("#Gold1lbl2").hide();
-                istrue = false;
-            } else if (isNaN(Gold1)) {
-                $("#Gold1lbl1").hide();
-                $("#Gold1lbl2").show();
-                istrue = false;
-            } else {
-                $("#Gold1lbl1").hide();
-                $("#Gold1lbl2").hide();
-                data.Gold1 = Gold1;
-            }
-            var Gold2 = $("#txtGold2").val().trim();
-            if (Gold2 == "") {
-                $("#Gold2lbl1").show();
-                $("#Gold2lbl2").hide();
-                istrue = false;
-            } else if (isNaN(Gold2)) {
-                $("#Gold2lbl1").hide();
-                $("#Gold2lbl2").show();
-                istrue = false;
-            } else {
-                $("#Gold2lbl1").hide();
-                $("#Gold2lbl2").hide();
-                data.Gold2 = Gold2;
-            }
-            var Gold3 = $("#txtGold3").val().trim();
-            if (Gold3 == "") {
-                $("#Gold3lbl1").show();
-                $("#Gold3lbl2").hide();
-                istrue = false;
-            } else if (isNaN(Gold3)) {
-                $("#Gold3lbl1").hide();
-                $("#Gold3lbl2").show();
-                istrue = false;
-            } else {
-                $("#Gold3lbl1").hide();
-                $("#Gold3lbl2").hide();
-                data.Gold3 = Gold3;
-            }
-            var Gold4 = $("#txtGold4").val().trim();
-            if (Gold4 == "") {
-                $("#Gold4lbl1").show();
-                $("#Gold4lbl2").hide();
-                istrue = false;
-            } else if (isNaN(Gold4)) {
-                $("#Gold4lbl1").hide();
-                $("#Gold4lbl2").show();
-                istrue = false;
-            } else {
-                $("#Gold4lbl1").hide();
-                $("#Gold4lbl2").hide();
-                data.Gold4 = Gold4;
-            }
-            var Gold5 = $("#txtGold5").val().trim();
-            if (Gold5 == "") {
-                $("#Gold5lbl1").show();
-                $("#Gold5lbl2").hide();
-                istrue = false;
-            } else if (isNaN(Gold5)) {
-                $("#Gold5lbl1").hide();
-                $("#Gold5lbl2").show();
-                istrue = false;
-            } else {
-                $("#Gold5lbl1").hide();
-                $("#Gold5lbl2").hide();
-                data.Gold5 = Gold5;
-            }
-            var Gold6 = $("#txtGold6").val().trim();
-            if (Gold6 == "") {
-                $("#Gold6lbl1").show();
-                $("#Gold6lbl2").hide();
-                istrue = false;
-            } else if (isNaN(Gold6)) {
-                $("#Gold6lbl1").hide();
-                $("#Gold6lbl2").show();
-                istrue = false;
-            } else {
-                $("#Gold6lbl1").hide();
-                $("#Gold6lbl2").hide();
-                data.Gold6 = Gold6;
-            }
-            var Gold7 = $("#txtGold7").val().trim();
-            if (Gold7 == "") {
-                $("#Gold7lbl1").show();
-                $("#Gold7lbl2").hide();
-                istrue = false;
-            } else if (isNaN(Gold7)) {
-                $("#Gold7lbl1").hide();
-                $("#Gold7lbl2").show();
-                istrue = false;
-            } else {
-                $("#Gold7lbl1").hide();
-                $("#Gold7lbl2").hide();
-                data.Gold7 = Gold7;
-            }
-            return istrue;
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/vue.min.js"></script>
+<script type="text/javascript">
+    layui.use(['layer'], function () {
+        var layer = layui.layer
+    })
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ctrl_type:0
         }
-        $(".clear-content").click(function () {
-            $(this).parent().find("input").val("");
-            $(this).parent().find("textarea").val("");
-        })
-
-        function add() {
-            if (vailate()) {
-                // AjaxSubmit(qp_url +"admin/app/DoSigninConfig", data, callBack, "add");
-                $.ajax({
-                    url: qp_url + "admin/app/DoSigninConfig?token="+getStorage('token'),
-                    type: "post",
-                    data: data,
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data)
-                        alert(data.msg);
-                    }
-                })
-            } else {
-                return false;
-            }
+    })
+    $.ajax({
+        url: qp_url + "admin/app/SigninConfig?token=" + getStorage('token'),
+        type: "get",
+        dataType: "json",
+        success: function (data) {
+            var data = data.data;
+            $("#txtGold1").val(data.Gold1);
+            $("#txtGold2").val(data.Gold2);
+            $("#txtGold3").val(data.Gold3);
+            $("#txtGold4").val(data.Gold4);
+            $("#txtGold5").val(data.Gold5);
+            $("#txtGold6").val(data.Gold6);
+            $("#txtGold7").val(data.Gold7);
+            console.log(data)
         }
+    })
+    var data = {};
+    $(document).ready(function () {
+        vailate();
+    });
 
-        //回调函数
-        function callBack(jsonData, fname) {
-            switch (fname) {
-                case "add":
-                    alert(jsonData.Msg);
-                    window.location.reload();
-                    break;
-            }
+    function vailate() {
+        var istrue = true;
+        var Gold1 = $("#txtGold1").val().trim();
+        if (Gold1 == "") {
+            $("#Gold1lbl1").show();
+            $("#Gold1lbl2").hide();
+            istrue = false;
+        } else if (isNaN(Gold1)) {
+            $("#Gold1lbl1").hide();
+            $("#Gold1lbl2").show();
+            istrue = false;
+        } else {
+            $("#Gold1lbl1").hide();
+            $("#Gold1lbl2").hide();
+            data.Gold1 = Gold1;
         }
-    </script>
+        var Gold2 = $("#txtGold2").val().trim();
+        if (Gold2 == "") {
+            $("#Gold2lbl1").show();
+            $("#Gold2lbl2").hide();
+            istrue = false;
+        } else if (isNaN(Gold2)) {
+            $("#Gold2lbl1").hide();
+            $("#Gold2lbl2").show();
+            istrue = false;
+        } else {
+            $("#Gold2lbl1").hide();
+            $("#Gold2lbl2").hide();
+            data.Gold2 = Gold2;
+        }
+        var Gold3 = $("#txtGold3").val().trim();
+        if (Gold3 == "") {
+            $("#Gold3lbl1").show();
+            $("#Gold3lbl2").hide();
+            istrue = false;
+        } else if (isNaN(Gold3)) {
+            $("#Gold3lbl1").hide();
+            $("#Gold3lbl2").show();
+            istrue = false;
+        } else {
+            $("#Gold3lbl1").hide();
+            $("#Gold3lbl2").hide();
+            data.Gold3 = Gold3;
+        }
+        var Gold4 = $("#txtGold4").val().trim();
+        if (Gold4 == "") {
+            $("#Gold4lbl1").show();
+            $("#Gold4lbl2").hide();
+            istrue = false;
+        } else if (isNaN(Gold4)) {
+            $("#Gold4lbl1").hide();
+            $("#Gold4lbl2").show();
+            istrue = false;
+        } else {
+            $("#Gold4lbl1").hide();
+            $("#Gold4lbl2").hide();
+            data.Gold4 = Gold4;
+        }
+        var Gold5 = $("#txtGold5").val().trim();
+        if (Gold5 == "") {
+            $("#Gold5lbl1").show();
+            $("#Gold5lbl2").hide();
+            istrue = false;
+        } else if (isNaN(Gold5)) {
+            $("#Gold5lbl1").hide();
+            $("#Gold5lbl2").show();
+            istrue = false;
+        } else {
+            $("#Gold5lbl1").hide();
+            $("#Gold5lbl2").hide();
+            data.Gold5 = Gold5;
+        }
+        var Gold6 = $("#txtGold6").val().trim();
+        if (Gold6 == "") {
+            $("#Gold6lbl1").show();
+            $("#Gold6lbl2").hide();
+            istrue = false;
+        } else if (isNaN(Gold6)) {
+            $("#Gold6lbl1").hide();
+            $("#Gold6lbl2").show();
+            istrue = false;
+        } else {
+            $("#Gold6lbl1").hide();
+            $("#Gold6lbl2").hide();
+            data.Gold6 = Gold6;
+        }
+        var Gold7 = $("#txtGold7").val().trim();
+        if (Gold7 == "") {
+            $("#Gold7lbl1").show();
+            $("#Gold7lbl2").hide();
+            istrue = false;
+        } else if (isNaN(Gold7)) {
+            $("#Gold7lbl1").hide();
+            $("#Gold7lbl2").show();
+            istrue = false;
+        } else {
+            $("#Gold7lbl1").hide();
+            $("#Gold7lbl2").hide();
+            data.Gold7 = Gold7;
+        }
+        return istrue;
+    }
+
+    $(".clear-content").click(function () {
+        $(this).parent().find("input").val("");
+        $(this).parent().find("textarea").val("");
+    })
+
+    function add() {
+        if (vailate()) {
+            // AjaxSubmit(qp_url +"admin/app/DoSigninConfig", data, callBack, "add");
+            $.ajax({
+                url: qp_url + "admin/app/DoSigninConfig?token=" + getStorage('token'),
+                type: "post",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data)
+                    layer.msg(data.msg, {time: 1000, icon: data.status ? 1 : 2});
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+
+    //回调函数
+    function callBack(jsonData, fname) {
+        switch (fname) {
+            case "add":
+                alert(jsonData.Msg);
+                window.location.reload();
+                break;
+        }
+    }
+</script>
 </body>
 
 </html>

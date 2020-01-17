@@ -13,6 +13,9 @@
         body {
             overflow-y: scroll !important;
         }
+        .list-group-item ul li {
+            margin: 5px 0;
+        }
     </style>
 </head>
 
@@ -75,7 +78,6 @@
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/comm.js"></script>
     <script src="../Content/laydate/laydate.js"></script>
-    <script src="../Scripts/pagination.js"></script>
     <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <script src="../Scripts/echarts-all-3.js"></script>
     <script type="text/javascript">
@@ -137,7 +139,7 @@
                     { field: 'dated', title: '日期' }
                     , { field: 'GameKindName', title: '游戏' }
                     , { field: 'GameRoomName', title: '房间' }
-                    , { field: 'total', title: '在线用户数' }
+                    , { field: 'total', title: '<span title="在线用户峰值">在线用户数</span>' }
                 ]]
                 , done: function (res, curr, count) {
                     $('th').css({ 'text-align': 'center' });
@@ -153,7 +155,7 @@
             table.on('tool(test)', function (obj) {
                 var isopen = $(this).context.dataset.isopen//看看是否已经展开，如果展开的，就将其关闭
                 var tableId = 'child' + obj.data.id
-                var current_tr = obj.tr[obj.tr.length - 1]
+                var current_tr = $(this).parents('tr')
                 if (isopen == 1) {
                     $('.' + tableId).toggle()
                     return;
@@ -206,21 +208,22 @@
                 if (txtStartDate != "" && txtEndDate != "") {
                     if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
                         istrue = false;
-                        alert("开始日期不能大于结束时间");
+                        layer.alert("开始日期不能大于结束时间");
                         return false;
                     }
+                }else if(txtStartDate == "" && txtEndDate != ""){
+                    layer.alert("开始日期不能为空");
+                    return false;
                 }
                 if (istrue) {
-                    if (txtStartDate != "" && txtEndDate != "") {
-                        postData.StartDate = txtStartDate;
-                        postData.EndDate = txtEndDate;
-                    }
+                    postData.StartDate = txtStartDate;
+                    postData.EndDate = txtEndDate;
                     postData.pageSize = 10;
                     postData.KindID = parseInt($("#ddlServerID").val());
                     postData.DateType = 5;
                     AjaxSearch(postData, table);
                 }
-                AjaxSearch(postData, table);
+                // AjaxSearch(postData, table);
             });
         });
         $(document).ready(function () {
@@ -249,21 +252,7 @@
                 }
             })
         }
-        function StrToDateTime(timestr) {
-            var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
-            return dt;
-        }
-        //字符串格式化
-        function stringFormat() {
-            if (arguments.length == 0)
-                return null;
-            var str = arguments[0];
-            for (var i = 1; i < arguments.length; i++) {
-                var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-                str = str.replace(re, arguments[i]);
-            }
-            return str;
-        }
+
         function option(data) {
             console.log(data)
             if(data){

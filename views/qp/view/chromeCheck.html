@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>谷歌验证</title>
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .code {
+            width: 110px;
+            height: 110px;
+        }
+
+        ._main {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            background: transparent;
+            text-align: center;
+            position: relative;
+            top: 50%;
+            margin-top: -150px;
+        }
+
+        input {
+            margin: 30px auto 10px;
+        }
+
+        .tip {
+            color: #aaa;
+        }
+
+        .btn {
+            border: none;
+            outline: none;
+        }
+
+        .btn:after {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<div class="_main">
+    <img class="code" id="_code" src="../Content/images/timg.gif" alert="加载失败">
+    <input class="form-control input-width-238" id="code" placeholder="请输入验证码">
+    <p class="tip">输入客户端得到的验证码</p>
+    <button class="btn btn-primary" onclick="toLogin()">确定</button>
+</div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script>
+    var login_obj;
+    $(function () {
+        if(getStorage('login_obj')){
+            login_obj = JSON.parse(getStorage('login_obj'));
+            $.post(qp_url + 'admin/login/getGoogleUrl', {username: login_obj.acc}, function (res) {
+                console.log(res);
+                if (res.status == 2) {
+                    $('#_code').attr('src', res.data.url)
+                }else if(res.status == 0){
+                    alert(res.msg)
+                    history.go(-1)
+                }
+            }, 'json');
+        }
+    });
+
+    $(document).keyup(function (event) {
+       if(event.keyCode == 13){
+           toLogin()
+       }
+    });
+
+    function toLogin() {
+        var code = $('#code').val();
+        Object.assign(login_obj,{
+            code: code
+        });
+        setStorage('login_obj', JSON.stringify(login_obj));
+        window.location.href = 'login.html'
+    }
+</script>
+</body>
+</html>

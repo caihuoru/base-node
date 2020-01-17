@@ -10,11 +10,6 @@
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
     <link href="../Content/common.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Content/laydate/laydate.js"></script>
-    <script src="../Scripts/pagination.js"></script>
-    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <style type="text/css">
         body{
             overflow-y: scroll!important;
@@ -45,7 +40,7 @@
                             <li class="list-group-item">
                                 <ul class="list-inline cursor-style">
                                     <li>普通查询：</li>
-                                    <li><input type="text" placeholder="用户账号/游戏ID/游戏币" id="txtSearch"
+                                    <li><input type="text" placeholder="账号/标识/昵称/游戏ID/游戏币" id="txtSearch"
                                                class="form-control input-sm input-width-200"></li>
                                     <li>
                                         <select id="ddlSearchType" class="form-control input-sm">
@@ -81,62 +76,6 @@
                     <!--table开始-->
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                         <table id="layTable" lay-filter="test"></table>
-                        <table style="display: none;"
-                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
-                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-                            <thead>
-                            <tr role="row">
-                                <th>游戏ID</th>
-                                <th>用户帐号</th>
-                                <th>用户昵称</th>
-                                <th><a href="#" onclick='OrderBy("Score")' class="l1">携带游戏币</a></th>
-                                <th><a href="#" onclick='OrderBy("InsureScore")' class="l1">保险柜游戏币</a></th>
-                                <th><a href="#" onclick='OrderBy("Score,InsureScore")' class="l1">携带+保险柜</a>
-                                </th>
-
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("Revenue")' class="l1">税收</a>
-                                </th>
-                                <th><a href="Javascript:void(0);"
-                                       onclick='OrderBy("WinCount,LostCount,DrawCount,FleeCount")'
-                                       class="l1">总局</a>
-                                </th>
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("WinCount")'
-                                       class="l1">赢局</a></th>
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("LostCount")'
-                                       class="l1">输局</a></th>
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("DrawCount")'
-                                       class="l1">和局</a></th>
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("FleeCount")'
-                                       class="l1">逃局</a></th>
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("AllLogonTimes")'
-                                       class="l1">登录次数</a>
-                                </th>
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("PlayTimeCount")'
-                                       class="l1">游戏时长</a>
-                                </th>
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("OnLineTimeCount")'
-                                       class="l1">在线时长</a></th>
-
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("LastLogonDate")'
-                                       class="l1">最后登录时间</a></th>
-                                <th><a href="Javascript:void(0);" onclick='OrderBy("LastLogonIP")'
-                                       class="l1">最后登录地址</a>
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
-                        </table>
-                        <!--分页控件-->
-                        <div class="row">
-                            <div class="col-md-6">
-
-                            </div>
-                            <div class="col-md-6">
-                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                    <ul class="pagination" id="pagin"></ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!--table结束-->
                 </div>
@@ -144,6 +83,11 @@
         </div>
     </div>
 </div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var pageObj = {};
     var postData = {};//搜索条件
@@ -204,8 +148,8 @@
                     }
                 }
                 , {field: 'NickName', title: '用户昵称' ,minWidth: 130}
-                , {field: 'ChannelId', title: '推广渠道ID',minWidth: 110}
-                , {field: 'ChannelName', title: '推广渠道账号',minWidth: 115}
+                , {field: 'ChannelId', title: '推广渠道号',minWidth: 110}
+                , {field: 'ChannelName', title: '推广渠道昵称',minWidth: 115}
                 , {field: 'RegisterOrigin', title: '设备', minWidth: 90,templet:function (d) {
                         if (d.RegisterOrigin == 1) {
                             return '安卓'
@@ -218,7 +162,7 @@
                         }
                         return '无法获取'
                     }}
-                , {field: 'withdraw', title: '提现累计总额', width: 115,templet:function (d) {
+                , {field: 'withdraw', title: '<span title="提现成功总额(含手续费)">提现累计总额</span>', width: 115,templet:function (d) {
                         return parseFloat(d.withdraw).formatMoney()
                     }}
                 , {field: 'Score', title: '携带游戏币', sort: true, width: 115,templet:function (d) {
@@ -230,33 +174,23 @@
                 , {field: 'TotalScore', title: '携带+保险柜', sort: true, width: 130,templet:function (d) {
                         return parseFloat(d.TotalScore).formatMoney()
                     }}
-                , {field: 'Revenue', title: '游戏总税收', sort: true, width: 115,templet:function (d) {
+                , {field: 'Revenue', title: '<span title="用户累计为系统提供的税收">游戏总税收</span>', sort: true, width: 115,templet:function (d) {
                         return parseFloat(d.Revenue).formatMoney()
                     }}
-                , {field: 'TotalCount', title: '总局', sort: true}
+                , {field: 'TotalCount', title: '<span title="累计游戏局数">总局</span>', sort: true}
                 , {field: 'WinCount', title: '赢局', sort: true}
                 , {field: 'LostCount', title: '输局', sort: true}
                 , {field: 'DrawCount', title: '和局', sort: true}
                 , {field: 'FleeCount', title: '逃局', sort: true}
-                , {field: 'AllLogonTimes', title: '登录次数', sort: true ,width: 110}
+                , {field: 'AllLogonTimes', title: '<span title="累计进入游戏房间的次数">登录次数</span>', sort: true ,width: 110}
                 , {field: 'PlayTimeCount', title: '游戏时长', sort: true, width: 115}
-                , {field: 'OnLineTimeCount', title: '在线时长', sort: true, width: 115}
+                // , {field: 'OnLineTimeCount', title: '在线时长', sort: true, width: 115}
                 , {field: 'LastLogonDate', title: '最后登录时间', sort: true, width: 160}
                 , {field: 'LastLogonIP', title: '最后登录地址', sort: true, width: 150}
                 , {field: 'LastLogonMachine', title: '最后登录机器码', width: 160}
             ]]
             , done: function (res, curr, count) {
                 $('th').css({'text-align': 'center'});
-                //自定义合计行
-                // if(count > 0){
-                //     $('.layui-table tbody').append(`<tr><td colspan="6">合计</td>
-                //     <td data-field="withdraw"><div class="layui-table-cell laytable-cell-1-0-6">${pageObj.allWithdraw}</div></td>
-                //     <td data-field="Score"><div class="layui-table-cell laytable-cell-1-0-7">${pageObj.allScore}</div></td>
-                //     <td data-field="InsureScore"><div class="layui-table-cell laytable-cell-1-0-8">${pageObj.allInsureScore}</div></td>
-                //     <td data-field="TotalScore"><div class="layui-table-cell laytable-cell-1-0-9">${pageObj.allTotalScore}</div></td>
-                //     <td data-field="Revenue"><div class="layui-table-cell laytable-cell-1-0-10">${pageObj.allRevenue}</div></td>
-                //     <td colspan="11"></td></tr>`)
-                // }
             }
         });
         //监听复选框选择事件
@@ -300,120 +234,6 @@
             }
         })
     })
-
-    $(document).ready(function () {
-        // docReady();
-    });
-
-    function docReady() {
-        //加载数据
-        postData.pageSize = parseInt($("#pagecount").val());
-        postData.Sort = "";
-        postData.SortDrc = 0;
-        postData.pageIndex = 1;
-        postData.ModuleID = parseInt('101');
-        postData.Type = parseInt($("#ddlSearchType").val());
-        AjaxSearch(postData);
-        //收放事件
-        $('.btn-minimize').click(function (e) {
-            e.preventDefault();
-            var $target = $(this).parent().parent().next('.box-content');
-            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-            $target.slideToggle();
-        });
-        //选择页码
-        $("#pagecount").change(function (e) {
-            postData.pageSize = parseInt($(this).val());
-            postData.pageIndex = 1;
-            AjaxSearch(postData);
-        });
-        //刷新
-        $("#btnRefresh").click(function (e) {
-            postData.KeyWord = $("#txtSearch").val();
-            postData.Type = parseInt($("#ddlSearchType").val());
-            AjaxSearch(postData);
-        });
-        // //普通搜索事件
-        // $("#btnQuery").click(function (e) {
-        //     var keyWord = $("#txtSearch").val();
-        //     if (keyWord == "") {
-        //         alert("请输入查询条件");
-        //         return false;
-        //     }
-        //     postData.pageSize = parseInt($("#pagecount").val());
-        //     postData.Type = parseInt($("#ddlSearchType").val());
-        //     postData.KeyWord = keyWord;
-        //     AjaxSearch(postData);
-        // });
-    }
-
-    //搜索事件
-    function AjaxSearch(postData) {
-        $('#pagin').paging("/Account/GetAccountsGoldList", postData, CreatTableBody, postData.pageIndex);
-    }
-
-    //排序
-    function OrderBy(field) {
-        if (field != "") {
-            postData.Sort = field;
-            if (postData.SortDrc == 0) {
-                postData.SortDrc = 1;
-            } else {
-                postData.SortDrc = 0;
-            }
-            postData.pageIndex = 1;
-            AjaxSearch(postData);
-        }
-    }
-
-    //绑定数据
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex) {
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-                html += stringFormat("<tr>");
-                html += stringFormat("<td>{0}</td>", item.GameID);
-                html += stringFormat("<td title=\"{0}\"><a class=\"l\" href=\"javascript:void(0);\" onclick=\"openWindowOwn('/Account/AccountsInfo?param={1}&tagindex=2&ModuleID={2}','{1}',850,600);\">{0}</a></td>", item.Accounts, item.UserID, parseInt('101'));
-                html += stringFormat("<td>{0}</td>", item.NickName);
-                html += stringFormat("<td>{0}</td>", item.Score);
-                html += stringFormat("<td>{0}</td>", item.InsureScore);
-                html += stringFormat("<td>{0}</td>", item.TotalScore);
-                //html += stringFormat("<td>{0}</td>", item.UserMedal);
-                //html += stringFormat("<td>{0}</td>", item.Present);
-                //html += stringFormat("<td>{0}</td>", item.LoveLiness);
-                //html += stringFormat("<td>{0}</td>", item.Experience);
-                html += stringFormat("<td>{0}</td>", item.Revenue);
-                html += stringFormat("<td>{0}</td>", item.TotalCount);
-                html += stringFormat("<td>{0}</td>", item.WinCount);
-                html += stringFormat("<td>{0}</td>", item.LostCount);
-                html += stringFormat("<td>{0}</td>", item.DrawCount);
-                html += stringFormat("<td>{0}</td>", item.FleeCount);
-                html += stringFormat("<td>{0}</td>", item.AllLogonTimes);
-                html += stringFormat("<td>{0}</td>", item.PlayTimeCount);
-                html += stringFormat("<td>{0}</td>", item.OnLineTimeCount);
-                //html += stringFormat("<td>{0}</td>", item.RoomName);
-                //html += stringFormat("<td>{0}</td>", item.GameName);
-                html += stringFormat("<td>{0}</td>", item.LastLogonDate);
-                html += stringFormat("<td title=\"{0}\">{1}</td>", item.Address, item.LastLogonIP);
-                html += "</tr>";
-            });
-        }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
-    }
 </script>
 </body>
 

@@ -136,9 +136,9 @@
             elem: '#layTable'
             ,id:'layTable'
             // , height: 512
-            , url: qp_url + 'admin/Kongzhi/GetPlayerControlLog?token=' + getStorage('token') //数据接口
-            , request: {
-                Accounts: getUrlParams('Accounts')
+            , url: qp_url + 'admin/Kongzhi/GetPlayerControlLog?token=' + getStorage('token')
+            , where: {
+                KeyWord: getUrlParams('Accounts')
             }
             , response: { //res 即为原始返回的数据
                 statusName: 'status',
@@ -239,7 +239,7 @@
         // });
         //普通搜索事件
         $("#btnQuery").click(function (e) {
-            // var keyWord = $("#txtSearch").val();
+            var keyWord = $("#txtSearch").val();
             var txtStartDate = $("#txtStartDate").val();
             var txtEndDate = $("#txtEndDate").val();
             if (txtStartDate != "" && txtEndDate != "") {

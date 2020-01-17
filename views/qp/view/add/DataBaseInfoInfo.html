@@ -4,13 +4,11 @@
 
 <head>
     <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>系统维护-机器管理</title>
     <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link href="../../Content/common.css" rel="stylesheet" />
-
-    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../../Scripts/comm.js"></script>
     <style type="text/css">
         .panel-body .row {
             margin: 15px 0;
@@ -29,8 +27,9 @@
         .panel-body .row input {
             max-width: 300px;
         }
-        body{
-            overflow-y: scroll!important;
+
+        body {
+            overflow-y: scroll !important;
         }
     </style>
 </head>
@@ -103,6 +102,8 @@
             </div>
         </div>
     </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
     <script type="text/javascript">
         var dataObj = {};
         var data = {};
@@ -123,7 +124,7 @@
                 dataType: "json",
                 data: {
                     DBInfoID: getParam("DBInfoID"),
-                    token:getStorage('token')
+                    token: getStorage('token')
                 },
                 success: function (data) {
                     console.log(data)

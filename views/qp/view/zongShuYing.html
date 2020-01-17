@@ -91,7 +91,7 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var pageObj = {};
@@ -101,13 +101,13 @@
         //时间选择器
         laydate.render({
             elem: '#txtStartDate'
-            , type: 'datetime'
+            // , type: 'datetime'
             , theme: '#00B4E5'
         });
         laydate.render({
-            elem: '#txtEndDate',
-            format: 'yyyy-MM-dd 23:59:59'
-            , type: 'datetime'
+            elem: '#txtEndDate'
+            // ,format: 'yyyy-MM-dd 23:59:59'
+            // , type: 'datetime'
             , theme: '#00B4E5'
         });
         // docReady();
@@ -155,7 +155,7 @@
             , cols: [[ //表头
                 {
                     field: 'Accounts', title: '玩家账号', minWidth: 100, templet: function (d) {
-                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '00B4E5' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
                     }
                 }
                 , {field: 'NickName', title: '玩家昵称'}
@@ -207,8 +207,11 @@
                 return false;
             }
         }
-        postData.StartDate = txtStartDate;
-        postData.EndDate = txtEndDate;
+        if( txtStartDate != "" && txtEndDate == ""){
+            return layer.alert("请选择结束时间");
+        }
+        postData.StartDate = datetimeFormat(txtStartDate,0);
+        postData.EndDate = datetimeFormat(txtEndDate,1);
         postData.DateType = 0;
         postData.KeyWord = $("#txtSearch").val();
         table.reload('layTable', {
@@ -339,37 +342,6 @@
 
     //搜索事件
     function AjaxSearch(postData) {
-    }
-
-    //绑定数据
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex) {
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-
-                html += stringFormat("<tr>", item.UserID);
-                html += stringFormat("<td title='{0}'><a class=\"l\" href=\"javascript:void(0);\" onclick=\"openWindowOwn('/Account/AccountsInfo?param={1}','账号信息',850,600);\">{0}</a></td>", item.Accounts, item.UserID);
-                html += stringFormat("<td>{0}</td>", item.NickName);
-                html += stringFormat("<td>{0}</td>", item.Score.formatMoney());
-                html += stringFormat("<td>{0}至{1}</td>", item.StartTime, item.EndTime);
-                html += stringFormat("<td title='{0}'><a class=\"l\" href=\"javascript:void(0);\" onclick=\"openWindowOwn('Abnormal/AccountScoreDetail.html?param={0}&stTime={1}&endTime={2}&account={3}&nick={4}','输赢详情',850,600);\">输赢详情</a></td>", item.UserID, item.StartTime, item.EndTime, item.Accounts, item.NickName);
-                html += "</tr>";
-            });
-        }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
     }
 </script>
 </body>

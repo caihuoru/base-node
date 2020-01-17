@@ -14,6 +14,9 @@
         body{
             overflow-y: scroll!important;
         }
+        .list-group-item ul li {
+            margin: 5px 0;
+        }
     </style>
 </head>
 
@@ -49,7 +52,9 @@
                                     <li>日期查询：</li>
                                     <li>
                                         <input id="txtStartDate" class="input-width-150" type="text"
-                                               readonly="readonly" placeholder="请输入开始时间"/>
+                                               readonly="readonly" placeholder="请输入开始时间"/>-
+                                        <input id="txtEndDate" class="input-width-150" type="text"
+                                               readonly="readonly" placeholder="请输入结束时间"/>
                                     </li>
                                     <li>
                                         <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
@@ -57,10 +62,18 @@
                                     </li>
                                 </ul>
                             </li>
-
                         </ul>
                     </div>
                     <!--查询栏结束-->
+                    <div class="row" style="margin-right: 0;">
+                        <div class="col-md-12 col-lg-12 top-tip" style="padding-bottom:5px; padding-top:5px;">
+                            <div class="btn-group btn-group">
+                                每日输赢：<span id="dayWinTotal">0</span>
+                                每日税收：<span id="RevenueTotal">0</span>
+                                每日系统输赢：<span id="mryxsyTotal">0</span>
+                            </div>
+                        </div>
+                    </div>
                     <!--table开始-->
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                         <table id="layTable" lay-filter="test"></table>
@@ -74,7 +87,7 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var pageObj = {};
@@ -89,7 +102,9 @@
         });
         laydate.render({
             elem: '#txtEndDate'
-            , type: 'datetime'
+            ,type:'date'
+            ,value: new Date()
+            , theme: '#00B4E5'
         });
         docReady()
     });
@@ -104,7 +119,8 @@
             , id: 'layTable'
             , url: qp_url + 'admin/Analysis/dayStat' //数据接口
             , where: {
-                Date: Time.today().EndDate,
+                sDate: Time.today().StartDate.substring(0,10),
+                eDate: Time.today().EndDate.substring(0,10),
                 KindID: 0,
                 token:getStorage('token')
             }
@@ -119,6 +135,20 @@
                 // dataName: 'data',
             },
             parseData: function (res) {
+                $('#dayWinTotal').html(res.data.dayWinTotal)
+                $('#RevenueTotal').html(res.data.RevenueTotal)
+                $('#mryxsyTotal').html(res.data.mryxsyTotal)
+                if(res.status == 1){
+                    res.data.list.forEach(function (item,index,array) {
+                        item.userLever = parseFloat(item.userLever);
+                        item.winPercent = parseFloat(item.winPercent);
+                        item.Revenue = parseFloat(item.Revenue);
+                        console.log(item.mryxsyPercent.charAt(item.mryxsyPercent.length-1));
+                        if(item.mryxsyPercent.charAt(item.mryxsyPercent.length-1) == '%' && item.mryxsyPercent.length > 1){
+                            item.mryxsyPercent = parseFloat(item.mryxsyPercent.substring(0,item.mryxsyPercent.length-1))
+                        }
+                    })
+                }
                 return {
                     "status": res.status, //解析接口状态
                     "msg": res.msg, //解析提示文本
@@ -131,22 +161,29 @@
             } //开启分页
             , limits: [10, 20, 30, 50, 80, 100]
             , limit: 10
-            , cellMinWidth: 120
+            , cellMinWidth: 110
             , cols: [[ //表头
                 // {type: 'checkbox'}
                 {field: 'GameKindName', title: '游戏名称'}
-                , {field: 'GameRoomName', title: '房间名称', minWidth: 180}
-                , {field: 'InsertTime', title: '日期', minWidth: 180}
-                , {field: 'winCount', title: '赢钱人数'}
-                , {field: 'userTotal', title: '总人数'}
-                , {field: 'userLever', title: '人均贡献', sort: true}
-                , {field: 'winPercent', title: '赢钱比例', sort: true}
-                , {field: 'dayWin', title: '系统每日输赢', sort: true, minWidth: 180}
-                , {field: 'systemWaste', title: '系统累计输赢', sort: true, minWidth: 180}
-                , {field: 'systemRevenue', title: '系统累计抽水', sort: true, minWidth: 180}
-                , {field: 'Revenue', title: '每日游戏抽水', sort: true, minWidth: 180}
-                , {field: 'mryxsy', title: '每日游戏收益', sort: true, minWidth: 180}
-                , {field: 'mryxsyPercent', title: '每日游戏收益占比', sort: true, minWidth: 180}
+                , {field: 'GameRoomName', title: '房间名称', minWidth: 160}
+                , {field: 'InsertTime', title: '日期', minWidth: 210}
+                , {field: 'winCount', title: '<span title="当前房间，当前游戏赢钱的人数">赢钱人数</span>'}
+                , {field: 'userTotal', title: '<span title="当前房间，当前游戏的人数">总人数</span>'}
+                , {field: 'userLever', title: '<span title="每日输赢/游戏总人数">人均贡献</span>', sort: true}
+                , {field: 'winPercent', title: '<span title="赢钱人数/游戏总人数">赢钱比例</span>', sort: true}
+                , {field: 'dayWin', title: '<span title="当前房间，当前游戏赢钱输钱之和">系统每日输赢</span>', sort: true, minWidth: 130}
+                , {field: 'systemWaste', title: '<span title="所有损耗之和">系统累计输赢</span>', sort: true, minWidth: 140,templet(d){
+                    return parseFloat(d.systemWaste).formatMoney()
+                    }}
+                , {field: 'systemRevenue', title: '<span title="所有游戏税收之和">系统累计抽水</span>', sort: true, minWidth: 140,templet(d){
+                        return parseFloat(d.systemRevenue).formatMoney()
+                    }}
+                , {field: 'Revenue', title: '<span title="当前房间，当前游戏税收之和">每日游戏抽水</span>', sort: true, minWidth: 130}
+                , {field: 'mryxsy', title: '<span title="每日输赢+每日税收">每日游戏收益</span>', sort: true, minWidth: 130}
+                , {field: 'mryxsyPercent', title: '<span title="每日游戏收益 / (系统累计输赢 + 系统累计抽水)">每日游戏收益占比</span>'
+                    , sort: true, minWidth: 160,templet:function (d) {
+                        return d.mryxsyPercent + '%'
+                    }}
             ]]
             , done: function (res, curr, count) {
                 $('th').css({'text-align': 'center'});
@@ -158,18 +195,20 @@
         //获取游戏列表
         $.get(qp_url + 'admin/Gamecommon/GetGameList?token='+getStorage('token'), function (res) {
             if (res.status == 1) {
-                var str = ''
+                var str = '';
                 for (var i = 0; i < res.data.length; i++) {
                     let item = res.data[i];
                     str += `<option value="${item.KindID}">${item.KindName}</option>`
                 }
                 $('#ddlGame').append(str)
             }
-        }, 'json')
+        }, 'json');
         //日期查询
         $("#btnQuery").click(function (e) {
             var txtStartDate = $("#txtStartDate").val();
-            postData.Date = txtStartDate;
+            var txtEndDate = $("#txtEndDate").val();
+            postData.sDate = txtStartDate;
+            postData.eDate = txtEndDate;
             postData.KindID = $('#ddlGame').val();
             table.reload('layTable', {
                 where: postData,

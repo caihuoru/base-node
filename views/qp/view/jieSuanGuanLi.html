@@ -98,40 +98,8 @@
                         </div>
                     </div>
                     <!--table开始-->
-
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                         <table id="layTable" lay-filter="test"></table>
-
-                        <table style="display: none" class="table table-striped table-bordered">
-                            <thead>
-                            <tr role="row">
-                                <th class="sorting">序号</th>
-                                <th class="sorting">订单编号</th>
-                                <th class="sorting">代理账号</th>
-                                <th class="sorting">结算金币</th>
-                                <th class="sorting">应付代理</th>
-                                <th class="sorting">银行性质</th>
-                                <th class="sorting">卡号</th>
-                                <th class="sorting">提款姓名</th>
-                                <th class="sorting">申请时间</th>
-                                <th class="sorting">交易状态</th>
-                                <th class="sorting">收款信息</th>
-                                <th class="sorting">管理操作</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <!--分页控件-->
-                        <div class="row">
-                            <div class="col-md-6">
-
-                            </div>
-                            <div class="col-md-6">
-                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                    <ul class="pagination" id="pagin"></ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!--table结束-->
                 </div>
@@ -142,7 +110,7 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
 <script type="text/javascript">
@@ -188,7 +156,7 @@
                 , {field: 'AgentAcc', title: '代理账号'}
                 , {field: 'SellScore', title: '结算金币'}
                 , {field: 'SellMoney', title: '应付代理'}
-                , {field: 'BankName', title: '银行性质'}
+                , {field: 'BankAddress', title: '银行性质'}
                 , {field: 'BankAcc', title: '卡号',minWidth:200}
                 , {field: 'RealName', title: '提款姓名'}
                 , {field: 'ApplyTime', title: '申请时间',minWidth:180}

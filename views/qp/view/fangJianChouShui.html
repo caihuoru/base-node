@@ -101,7 +101,7 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
 <script type="text/javascript">
@@ -149,7 +149,7 @@
                 , {field: 'UserCount', title: '玩家数量'}
                 , {field: 'Revenue', title: '抽水金额'}
                 , {
-                    field: 'announcer', title: '抽水详情', templet: function (d) {
+                    field: '', title: '抽水详情', templet: function (d) {
                         return `<span class="layui-btn layui-btn-xs layui-btn-normal" onclick='RoomRevenueInfo(${d.LAY_TABLE_INDEX})'>点击查看</span>`
                     }
                 }
@@ -167,13 +167,10 @@
         //时间选择器
         laydate.render({
             elem: '#txtStartDate'
-            , type: 'datetime'
             ,theme:'#00B4E5'
         });
         laydate.render({
             elem: '#txtEndDate'
-
-            , type: 'datetime'
             ,theme:'#00B4E5'
         });
         docReady();
@@ -210,8 +207,8 @@
                     return false;
                 }
             }
-            postData.StartDate = txtStartDate;
-            postData.EndDate = txtEndDate;
+            postData.StartDate = datetimeFormat(txtStartDate,0);
+            postData.EndDate = datetimeFormat(txtEndDate,1);
             // if (txtStartDate != "" && txtEndDate != "") {
             //     postData.StartDate = txtStartDate;
             //     postData.EndDate = txtEndDate;
@@ -227,26 +224,26 @@
         });
     }
 
-    //搜索事件
-    function AjaxSearch(postData) {
-        $.post("/Trade/GetGameRevenue", postData, function (data) {
-            $('#sum').html(data.Msg.Sum);
-            var rebackData = eval("(" + data.Data + ")")
-            json = rebackData;
-            var html = "";
-            $.each(rebackData, function (i, item) {
-                html += stringFormat("<tr>");
-                //html += stringFormat("<td>{0}</td>", item.ServerID);
-                html += stringFormat("<td>{0}</td>", item.ServerName);
-                html += stringFormat("<td>{0}</td>", item.UserCount);
-                html += stringFormat("<td>{0}</td>", item.Revenue.formatMoney());
-                html += stringFormat("<td><a href='javascript:void(0)' onclick='RoomRevenueInfo({0})'>点击查看</a></td>", i);
-                html += "</tr>";
-            });
-            $("#DataTables_Table_0 tbody").html(html);
-        })
-
-    }
+    // //搜索事件
+    // function AjaxSearch(postData) {
+    //     $.post("/Trade/GetGameRevenue", postData, function (data) {
+    //         $('#sum').html(data.Msg.Sum);
+    //         var rebackData = eval("(" + data.Data + ")")
+    //         json = rebackData;
+    //         var html = "";
+    //         $.each(rebackData, function (i, item) {
+    //             html += stringFormat("<tr>");
+    //             //html += stringFormat("<td>{0}</td>", item.ServerID);
+    //             html += stringFormat("<td>{0}</td>", item.ServerName);
+    //             html += stringFormat("<td>{0}</td>", item.UserCount);
+    //             html += stringFormat("<td>{0}</td>", item.Revenue.formatMoney());
+    //             html += stringFormat("<td><a href='javascript:void(0)' onclick='RoomRevenueInfo({0})'>点击查看</a></td>", i);
+    //             html += "</tr>";
+    //         });
+    //         $("#DataTables_Table_0 tbody").html(html);
+    //     })
+    //
+    // }
 
     var RoomRevenueInfo = function (i) {
         // var obj = json[i];

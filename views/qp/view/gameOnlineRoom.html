@@ -2,15 +2,13 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
     <title>数据分析 - 游戏房间在线信息</title>
     <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
-    <link href="../Content/common.css" rel="stylesheet" />
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
+    <link href="../Content/common.css" rel="stylesheet" />
     <style>
         .wrap,
         html,
@@ -19,11 +17,15 @@
             height: 100%;
             overflow-y: scroll !important;
         }
+
+        .list-group-item ul li {
+            margin: 5px 0;
+        }
     </style>
 </head>
 
 <body>
-    <div id="content" class="main-content">
+    <div id="content" class="main-content" v-cloak>
         <div class="row">
             <div class="box-inner">
                 <div class="col-md-12">
@@ -49,17 +51,40 @@
                                                 刷新时间：
                                                 <select id="selTime" name="selTime">
                                                     <option value="5">5秒</option>
-                                                    <option value="10" selected>10秒</option>
+                                                    <option value="10">10秒</option>
                                                     <option value="30">30秒</option>
-                                                    <option value="60">60秒</option>
+                                                    <option value="60" selected>60秒</option>
                                                     <option value="120">120秒</option>
                                                 </select>
                                                 倒计时:<label id="time" style="margin-left:5px;"></label>
                                                 <a href="#" class="btn btn-primary" id="btnStart">开始</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="btn btn-blue" id="reload"><i
+                                                <a href="#" class="btn btn-blue" onclick="history.go(0);"><i
                                                         class="glyphicon glyphicon-repeat"></i>刷新</a>
+                                            </li>
+                                            <li>游戏：</li>
+                                            <li>
+                                                <select class="form-control" name="select" id="ddlGame"
+                                                    v-model="KindID">
+                                                    <option :value="item.KindID" v-for="item in gameList">
+                                                        {{item.KindName}}
+                                                    </option>
+                                                </select>
+                                            </li>
+                                            <li>房间：</li>
+                                            <li>
+                                                <select class="form-control" name="select" id="ddlRoom"
+                                                    v-model="ServerID">
+                                                    <option value="0">全部房间</option>
+                                                    <option :value="item.ServerID" v-for="item in roomList">
+                                                        {{item.ServerName}}
+                                                    </option>
+                                                </select>
+                                            </li>
+                                            <li>
+                                                <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
+                                                        class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -67,6 +92,8 @@
                             </div>
                             <!--table开始-->
                             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
+                                <div id="loading" style="text-align: center;margin: 10px auto;width: 228px">正在请求页面资源……
+                                </div>
                                 <table id="layTable" lay-filter="test"></table>
                             </div>
                             <!--table结束-->
@@ -79,11 +106,76 @@
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/comm.js"></script>
     <script src="../Content/laydate/laydate.js"></script>
-    <script src="../Scripts/pagination.js"></script>
+    <!--    <script src="../Scripts/pagination.js"></script>-->
+    <script src="../Scripts/vue.min.js"></script>
     <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <script type="text/javascript">
         var pageObj = {};
         var postData = {};//搜索条件
+        var start;//计时器
+        var _count = 0;//计数器，5分钟强制刷新页面
+        var stopTime = 60;
+        var app = new Vue({
+            el: '#content',
+            data: {
+                gameList: [],
+                roomList: [],
+                KindID: 0,
+                ServerID: 0
+            },
+            mounted: function () {
+                var that = this
+                //获取游戏列表
+                $.ajax({
+                    type: 'GET',
+                    url: qp_url + 'admin/Gamecommon/GetGameList?token=' + getStorage('token'),
+                    dataType: 'json',
+                    success: function (res) {
+                        console.log(res)
+                        let otherType = [{
+                            KindID: 0,
+                            KindName: '全部游戏'
+                        }];
+                        if (res.status == 1) {
+                            that.gameList = otherType.concat(res.data)
+                        } else {
+                            that.gameList = otherType
+                        }
+                    }
+                })
+                //获取游戏房间列表
+                getRoomList(that, 0)
+            },
+            watch: {
+                KindID: function (val) {
+                    console.log(val);
+                    getRoomList(this, val)
+                }
+            }
+        });
+
+        function getRoomList(_this, kid) {
+            console.log(_this);
+            $.get(qp_url + 'admin/Gamecommon/RoomList', {
+                token: getStorage('token'),
+                kid: kid
+            }, function (res) {
+                if (res.status == 1) {
+                    _this.roomList = res.data
+                }
+            }, 'json')
+        }
+
+        //普通搜索事件
+        $(document).on('click', '#btnQuery', function () {
+            postData.KindID = $("#ddlGame").val();
+            postData.ServerID = $("#ddlRoom").val();
+            table.reload('layTable', {
+                url: qp_url + 'admin/Analysis/userOnline?token=' + getStorage('token')
+                , where: postData
+            });
+        })
+
         //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
         var selectRows = [], table, myTable;
         layui.use('table', function () {
@@ -93,7 +185,7 @@
             myTable = table.render({
                 elem: '#layTable'
                 // , height: 512
-                , url: qp_url + 'admin/Analysis/userOnline?token='+getStorage('token') //数据接口
+                , url: qp_url + 'admin/Analysis/userOnline?token=' + getStorage('token') //数据接口
                 , request: {
                     pageName: 'pageIndex' //页码的参数名称，默认：page
                     , limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -128,107 +220,37 @@
                     , { field: 'TableCount', title: '桌子数' }
                 ]]
                 , done: function (res, curr, count) {
+                    $('#loading').hide();
                     $('th').css({ 'text-align': 'center' });
+                    if (start) {
+                        console.log('计时器已存在')
+                        clearInterval(start)
+                    }
+                    stopTime = $("#selTime").val();
+                    loadTime();
                 }
             });
             $("#reload").click(function () {
                 myTable.reload()
             });
         });
-        $(document).ready(function () {
-            //时间选择器
-            laydate.render({
-                elem: '#txtStartDate'
-                , type: 'datetime'
-                , theme: '#00B4E5'
-            });
-            laydate.render({
-                elem: '#txtEndDate'
-                , type: 'datetime'
-                , theme: '#00B4E5'
-            });
-            // docReady();
-            loadTime();
+        // 默认触发
+        $("#btnStart").click(function () {
+            console.log($(this).html())
+            if ($(this).html() == "暂停") {
+                $(this).html("开始")
+                clearInterval(start);
+            } else {
+                start = setInterval(setTime, 1000);
+                $(this).html("暂停")
+            }
+            return;
         });
 
-        function docReady() {
-            //加载数据
-            postData.pageSize = parseInt($("#pagecount").val());
-            postData.pageIndex = 1;
-            postData.DateType = 5;
-            postData.StartDate = $("#txtStartDate").val();
-            postData.EndDate = $("#txtEndDate").val();
-            postData.Type = parseInt($("#ddlServerID").val());
-            AjaxSearch(postData);
-            //收放事件
-            $('.btn-minimize').click(function (e) {
-                e.preventDefault();
-                var $target = $(this).parent().parent().next('.box-content');
-                if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                $target.slideToggle();
-            });
-            //选择页码
-            $("#pagecount").change(function (e) {
-                postData.pageSize = parseInt($(this).val());
-                postData.pageIndex = 1;
-                AjaxSearch(postData);
-            });
-            //时间今天查询
-            $("#btntaday").click(function (e) {
-                postData.pageSize = parseInt($("#pagecount").val());
-                postData.Type = parseInt($("#ddlServerID").val());
-                postData.DateType = 1;
-                AjaxSearch(postData);
-            });
-            //时间昨天查询
-            $("#btnyesterday").click(function (e) {
-                postData.pageSize = parseInt($("#pagecount").val());
-                postData.Type = parseInt($("#ddlServerID").val());
-                postData.DateType = 2;
-                AjaxSearch(postData);
-            });
-            //时间本周查询
-            $("#btnweeked").click(function (e) {
-                postData.pageSize = parseInt($("#pagecount").val());
-                postData.Type = parseInt($("#ddlServerID").val());
-                postData.DateType = 3;
-                AjaxSearch(postData);
-            });
-            //时间上周查询
-            $("#btnlastweeked").click(function (e) {
-                postData.pageSize = parseInt($("#pagecount").val());
-                postData.Type = parseInt($("#ddlServerID").val());
-                postData.DateType = 4;
-                AjaxSearch(postData);
-            });
-            //日期查询
-            $("#btnQuery").click(function (e) {
-                var istrue = true;
-                var txtStartDate = $("#txtStartDate").val();
-                var txtEndDate = $("#txtEndDate").val();
-                if (txtStartDate != "" && txtEndDate != "") {
-                    if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
-                        istrue = false;
-                        alert("开始日期不能大于结束时间");
-                        return false;
-                    }
-                }
-                if (istrue) {
-                    if (txtStartDate != "" && txtEndDate != "") {
-                        postData.StartDate = txtStartDate;
-                        postData.EndDate = txtEndDate;
-                    }
-                    postData.pageSize = parseInt($("#pagecount").val());
-                    postData.Type = parseInt($("#ddlServerID").val());
-                    postData.DateType = 5;
-                    AjaxSearch(postData);
-                }
-                AjaxSearch(postData);
-            });
-        }
+
+
         function loadTime() {
-            var stopTime = 10;
+            $("#btnStart").html("暂停")
             $('#selTime').val(stopTime)
             setTime();
 
@@ -236,118 +258,29 @@
                 stopTime = $("#selTime").val();
                 setTime();
             });
-            var start;
+
             start = setInterval(setTime, 1000);
-            $("#btnStart").html("暂停")
-            $("#btnStart").click(function () {
-                if ($(this).html() == "暂停") {
-                    $(this).html("开始")
-                    clearInterval(start);
-                } else {
-                    start = setInterval(setTime, 1000);
-                    $(this).html("暂停")
-                }
-            });
-
-            function setTime() {
-                $("#time").html(stopTime);
-                stopTime--;
-                if (stopTime < 0) {
-                    table.reload('layTable');
-                    // AjaxSearch(postData);
-                    console.log($("#selTime").val());;
-                    stopTime = $("#selTime").val();
-                }
-            }
         }
-        //搜索事件
-        function AjaxSearch(postData) {
-            $('#pagin').paging("/DataAnalysis/GetGameRecord", postData, CreatTableBody, postData.pageIndex);
-        }
-
-        function StrToDateTime(timestr) {
-            var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
-            return dt;
-        }
-
-        //绑定数据
-        function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics, extObj) {
-            var html = "";
-            if (jsondata != null && jsondata.length > 0) {
-                $.each(jsondata, function (i, item) {
-                    html += stringFormat("<tr id=\"tr{0}\">", item.DrawID);
-                    html += stringFormat("<td>{1}&nbsp;<img id=\"img{0}\" src=\"/Content/images/down.gif\" style=\"cursor: pointer\" alt=\"查看同桌玩家\" title=\"查看同桌玩家\" onclick=\"ShowInfo({0})\" /></td>", item.DrawID, item.InsertTime);
-                    html += stringFormat("<td>{0}</td>", item.GameKindName);
-                    html += stringFormat("<td>{0}</td>", item.GameRoomName);
-                    html += stringFormat("<td>{0}</td>", item.TableID);
-                    html += stringFormat("<td>{0}</td>", item.UserCount);
-                    html += stringFormat("<td>{0}</td>", item.AndroidCount);
-                    html += stringFormat("<td>{0}</td>", item.Waste);
-                    html += stringFormat("<td>{0}</td>", item.Revenue);
-                    //html += stringFormat("<td>{0}</td>", item.UserMedal);
-                    html += stringFormat("<td>{0}</td>", item.StartTime);
-                    html += stringFormat("<td>{0}</td>", item.ConcludeTime);
-                    html += "</tr>";
+        function setTime() {
+            _count++;
+            $("#time").html(stopTime);
+            stopTime--;
+            console.log($("#selTime").val())
+            if (stopTime < 0) {
+                stopTime = $("#selTime").val();
+                table.reload('layTable', {
+                    done: function (res, curr, count) {
+                        if (_count >= 300) {//默认5分钟强制刷新页面
+                            window.location.reload()
+                        }
+                    }
                 });
-            }
-            $("#DataTables_Table_0_wrapper tbody").html(html);
-            $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-            $("#WasteTotal").text(extObj.WasteTotal);
-            $("#RevenueTotal").text(extObj.RevenueTotal);
-        }
-
-        function ShowInfo(Id) {
-            pageObj.drawID = Id;
-            var url = $("#img" + Id).attr("src").trim();
-            if (url == "/Content/images/down.gif") {
-                $("#img" + Id).attr("src", "/Content/images/up.gif");
-                AjaxSubmit("/DataAnalysis/GetUserGameRecord", pageObj, callBack, "del");
-            } else {
-                $("#img" + Id).attr("src", "/Content/images/down.gif");
-                $("#tr" + pageObj.drawID).next().remove();
-            }
-
-        }
-
-        //回调函数
-        function callBack(jsonData, fname) {
-            switch (fname) {
-                case "del":
-                    var html = "<tr><td colspan=\"11\"><table class=\"table table-striped table-bordered bootstrap-datatable datatable responsive dataTable\">";
-                    html += "<thead><tr role=\"row\">";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">帐号</th>";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">昵称</th>";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">游戏ID</th>";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">是否机器人</th>";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">椅子编号</th>";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">输赢积分</th>";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">税收/服务费</th>";
-                    //html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">元宝数目</th>";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">游戏时长</th>";
-                    html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">插入时间</th>";
-                    html += "</tr></thead>";
-                    html += "<tbody role=\"alert\">";
-                    $.each(jsonData, function (i, item) {
-                        html += "<tr><td>" + item.Accounts + "</td><td>" + item.NickName + "</td><td>" + item.GameID + "</td><td>" + item.IsAndroid + "</td><td>" + item.ChairID + "</td><td>" + item.Score + "</td><td>" + item.Revenue + "</td><td>" + item.PlayTimeCount + "</td><td>" + item.InsertTime + "</td></tr>";
-                    });
-                    html += "</tbody>";
-                    html += "</table></td></tr>";
-                    $("#tr" + pageObj.drawID).after(html);
-                    break;
+                clearInterval(start);
+                start = setInterval(setTime, 1000);
             }
         }
 
-        //字符串格式化
-        function stringFormat() {
-            if (arguments.length == 0)
-                return null;
-            var str = arguments[0];
-            for (var i = 1; i < arguments.length; i++) {
-                var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-                str = str.replace(re, arguments[i]);
-            }
-            return str;
-        }
+
     </script>
 </body>
 

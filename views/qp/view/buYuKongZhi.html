@@ -9,11 +9,12 @@
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
     <link rel="stylesheet" href="../Content/common.css">
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <link href="../Scripts/static/admin.css" rel="stylesheet"/>
-    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
-    <script src="../Scripts/comm.js"></script>
     <style type="text/css">
+        * {
+            box-sizing: content-box;
+        }
+
         .layui-form-label {
             width: 90px;
         }
@@ -22,16 +23,15 @@
             height: 100%;
             overflow-y: auto;
         }
-    </style>
-    <script>
-        //layui.config({
-        //    base: '/scripts/static/' //静态资源所在路径
-        //}).extend({
-        //    //wangEditor: '../../wangeditor/wangEditor',
-        //    index: 'index' //主入口模块
-        //})
 
-    </script>
+        .home-refresh {
+            width: 20px;
+            height: 20px;
+            float: right;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -39,35 +39,38 @@
     <div class="layui-card">
         <div class="layui-card-header" id="divtitle">
             游戏奖池控制
+            <img title="刷新" class="home-refresh" src="../Content/images/home-icon/refresh@2x.png"
+                 onclick="shuaxin()">
         </div>
+
         <div class="layui-card-body">
             <div class="layui-tab layui-tab-brief" lay-filter="component-tabs-reloadgame-prize"
                  style="position: relative;">
                 <ul class="layui-tab-title" id="tabgame">
-                    <li data-gameid="6" data-typeid="7" id="6">诈金花</li>
-                    <li data-gameid="16" data-typeid="2" id="16">21点</li>
-                    <li data-gameid="28" data-typeid="2" id="28">抢庄牛牛</li>
-                    <li data-gameid="36" data-typeid="2" id="36">通比牛牛</li>
-                    <li data-gameid="44" data-typeid="2" id="44">三公</li>
-                    <li data-gameid="104" data-typeid="1" id="104">百人牛牛</li>
-                    <li data-gameid="108" data-typeid="2" id="108">二八杠</li>
-                    <li data-gameid="109" data-typeid="2" id="109">百人牌九</li>
-                    <li data-gameid="111" data-typeid="1" id="111">豪车俱乐部</li>
-                    <li data-gameid="122" data-typeid="1" id="122">百家乐</li>
-                    <li data-gameid="124" data-typeid="1" id="124">飞禽走兽</li>
-                    <li data-gameid="127" data-typeid="2" id="127">百人骰宝</li>
-                    <li data-gameid="133" data-typeid="2" id="133">龙虎斗</li>
-                    <li data-gameid="202" data-typeid="2" id="202">斗地主</li>
-                    <li data-gameid="211" data-typeid="2" id="211">红黑大战</li>
-                    <li data-gameid="359" data-typeid="2" id="359">扫雷红包</li>
-                    <li data-gameid="406" data-typeid="2" id="406">水果拉霸</li>
-                    <li data-gameid="407" data-typeid="5" id="407">李逵</li>
-                    <li data-gameid="408" data-typeid="5" id="408">蛟龙出海</li>
-                    <li data-gameid="409" data-typeid="5" id="409">金蟾捕鱼</li>
-                    <li data-gameid="413" data-typeid="5" id="413">千炮捕鱼</li>
-                    <li data-gameid="465" data-typeid="2" id="465">二人吹牛</li>
-                    <li data-gameid="517" data-typeid="2" id="517">水浒传</li>
-                    <li data-gameid="9999" data-typeid="2" id="9999">视讯</li>
+                    <!--                    <li data-gameid="6" data-typeid="7" id="6">诈金花</li>-->
+                    <!--                    <li data-gameid="16" data-typeid="2" id="16">21点</li>-->
+                    <!--                    <li data-gameid="28" data-typeid="2" id="28">抢庄牛牛</li>-->
+                    <!--                    <li data-gameid="36" data-typeid="2" id="36">通比牛牛</li>-->
+                    <!--                    <li data-gameid="44" data-typeid="2" id="44">三公</li>-->
+                    <!--                    <li data-gameid="104" data-typeid="1" id="104">百人牛牛</li>-->
+                    <!--                    <li data-gameid="108" data-typeid="2" id="108">二八杠</li>-->
+                    <!--                    <li data-gameid="109" data-typeid="2" id="109">百人牌九</li>-->
+                    <!--                    <li data-gameid="111" data-typeid="1" id="111">豪车俱乐部</li>-->
+                    <!--                    <li data-gameid="122" data-typeid="1" id="122">百家乐</li>-->
+                    <!--                    <li data-gameid="124" data-typeid="1" id="124">飞禽走兽</li>-->
+                    <!--                    <li data-gameid="127" data-typeid="2" id="127">百人骰宝</li>-->
+                    <!--                    <li data-gameid="133" data-typeid="2" id="133">龙虎斗</li>-->
+                    <!--                    <li data-gameid="202" data-typeid="2" id="202">斗地主</li>-->
+                    <!--                    <li data-gameid="211" data-typeid="2" id="211">红黑大战</li>-->
+                    <!--                    <li data-gameid="359" data-typeid="2" id="359">扫雷红包</li>-->
+                    <!--                    <li data-gameid="406" data-typeid="2" id="406">水果拉霸</li>-->
+                    <!--                    <li data-gameid="407" data-typeid="5" id="407">李逵</li>-->
+                    <!--                    <li data-gameid="408" data-typeid="5" id="408">蛟龙出海</li>-->
+                    <!--                    <li data-gameid="409" data-typeid="5" id="409">金蟾捕鱼</li>-->
+                    <!--                    <li data-gameid="413" data-typeid="5" id="413">千炮捕鱼</li>-->
+                    <!--                    <li data-gameid="465" data-typeid="2" id="465">二人吹牛</li>-->
+                    <!--                    <li data-gameid="517" data-typeid="2" id="517">水浒传</li>-->
+                    <!--                    <li data-gameid="9999" data-typeid="2" id="9999">视讯</li>-->
                 </ul>
                 <div class="layui-tab-content" id="tabcontents">
                     <div class="layui-tab-item layui-show">
@@ -75,7 +78,8 @@
                             <div class="layui-col-md5 layui-col-xs12">
                                 <div class="">
                                     <div class="">
-                                        <form class="layui-form" method="post" action="" lay-filter="component-form-element">
+                                        <form class="layui-form" method="post" action=""
+                                              lay-filter="component-form-element">
 
                                             <div class="layui-form-item layui-inline" style="width:400px">
 
@@ -89,6 +93,7 @@
                                             <input type="hidden" name="gameid" value="" id="gameidvalue">
                                             <input type="hidden" name="serverid" value="" id="serveridvalue">
                                             <input type="hidden" name="typeid" value="" id="typeid">
+<!--                                           捕鱼类-->
                                             <div id="divfish">
                                                 <div class="layui-form-item">
                                                     <div class="layui-inline">
@@ -152,13 +157,15 @@
                                                             大鱼miss值：
                                                         </label>
                                                         <div class="layui-input-inline">
-                                                            <input type="text" name="StartPoint_3" autocomplete="off" class="layui-input">
+                                                            <input type="text" name="StartPoint_3" autocomplete="off"
+                                                                   class="layui-input">
                                                         </div>
                                                         <label class="layui-form-label" style="white-space: nowrap;">
                                                             大鱼概率增长：
                                                         </label>
                                                         <div class="layui-input-inline">
-                                                            <input type="text" name="AddSpeed_3" autocomplete="off" class="layui-input">
+                                                            <input type="text" name="AddSpeed_3" autocomplete="off"
+                                                                   class="layui-input">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -168,29 +175,33 @@
                                                             中鱼miss值：
                                                         </label>
                                                         <div class="layui-input-inline">
-                                                            <input type="text" name="StartPoint_2" autocomplete="off" class="layui-input">
+                                                            <input type="text" name="StartPoint_2" autocomplete="off"
+                                                                   class="layui-input">
                                                         </div>
                                                         <label class="layui-form-label" style="white-space: nowrap;">
                                                             中鱼概率增长：
                                                         </label>
                                                         <div class="layui-input-inline">
-                                                            <input type="text" name="AddSpeed_2" autocomplete="off" class="layui-input">
+                                                            <input type="text" name="AddSpeed_2" autocomplete="off"
+                                                                   class="layui-input">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="layui-form-item">
                                                     <div class="layui-inline">
                                                         <label class="layui-form-label" style="white-space: nowrap;">
-                                                            中鱼miss值：
+                                                            小鱼miss值：
                                                         </label>
                                                         <div class="layui-input-inline">
-                                                            <input type="text" name="StartPoint_1" autocomplete="off" class="layui-input">
+                                                            <input type="text" name="StartPoint_1" autocomplete="off"
+                                                                   class="layui-input">
                                                         </div>
                                                         <label class="layui-form-label" style="white-space: nowrap;">
-                                                            中鱼概率增长：
+                                                            小鱼概率增长：
                                                         </label>
                                                         <div class="layui-input-inline">
-                                                            <input type="text" name="AddSpeed_1" autocomplete="off" class="layui-input">
+                                                            <input type="text" name="AddSpeed_1" autocomplete="off"
+                                                                   class="layui-input">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -271,6 +282,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+<!--                                            其他-->
                                             <div id="divexceptfish">
                                                 <div class="layui-form-item">
                                                     <label class="layui-form-label">
@@ -310,6 +322,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+<!--                                            扎金花-->
                                             <div id="divzjh">
                                                 <div class="layui-form-item">
                                                     <div class="layui-inline">
@@ -379,6 +392,16 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="layui-form-item" id="zuidaxiazhuzhi">
+                                                <div class="layui-inline">
+                                                    <label class="layui-form-label" title="单局下注区域超过系统赔付值该区域必输">单局系统最大赔付值：</label>
+                                                    <div class="layui-input-inline">
+                                                        <input type="number" name="xiazhuValue"
+                                                               autocomplete="off" id="maxVal" class="layui-input">
+                                                    </div>
+                                                    <span class="wrong">百人游戏设置生效,0代表不限制</span>
+                                                </div>
+                                            </div>
                                             <div class="layui-form-item">
                                                 <div class="layui-input-block">
                                                     <button class="layui-btn" lay-submit=""
@@ -416,7 +439,11 @@
                                                             <col>
                                                         </colgroup>
                                                         <thead>
-                                                        <tr><td>库存等级</td><td>胜率百分比</td><td>操作</td></tr>
+                                                        <tr>
+                                                            <td>库存等级</td>
+                                                            <td>胜率百分比</td>
+                                                            <td>操作</td>
+                                                        </tr>
                                                         </thead>
                                                         <tbody></tbody>
                                                     </table>
@@ -433,6 +460,9 @@
         </div>
     </div>
 </div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
+<script src="../Scripts/comm.js"></script>
 <script type="text/javascript">
     var kindid, typeid, serverid;
     layui.use(['element', 'table', 'form'], function () {
@@ -460,6 +490,7 @@
                 }
             }
         })
+        //表单提交
         form.on('submit(component-form-element)', function (data) {
             console.log('data', data)
             var StockScore_1 = data.field.StockScore_1 || 0;
@@ -496,17 +527,22 @@
             var ToujiMaxRound = data.field.ToujiMaxRound;
             var ToujiRate = data.field.ToujiRate;
             var ToujiStock = data.field.ToujiStock;
+            var LoseLimitPerRound =$('#maxVal').val()
+            if(LoseLimitPerRound < 0){
+                 layer.msg('值不能为负数！',{icon:2,time:'1000'})
+                return false;
+            }
             // console.log('typeid', typeid)
             $.post(qp_url + "admin/Kongzhi/updatefishstock?token=" + getStorage('token'), {
                 StockScore_1: StockScore_1,
                 StockScore_2: StockScore_2,
                 StockScore_3: StockScore_3,
-                StartPoint_1:StartPoint_1,
-                StartPoint_2:StartPoint_2,
-                StartPoint_3:StartPoint_3,
-                AddSpeed_1:AddSpeed_1,
-                AddSpeed_2:AddSpeed_2,
-                AddSpeed_3:AddSpeed_3,
+                StartPoint_1: StartPoint_1,
+                StartPoint_2: StartPoint_2,
+                StartPoint_3: StartPoint_3,
+                AddSpeed_1: AddSpeed_1,
+                AddSpeed_2: AddSpeed_2,
+                AddSpeed_3: AddSpeed_3,
                 TotalCatchRate: TotalCatchRate,
                 TotalReturnPermillage: TotalReturnPermillage,
                 EasyModeRate: EasyModeRate,
@@ -527,7 +563,8 @@
                 ToujiMaxRound: ToujiMaxRound,
                 ToujiRate: ToujiRate,
                 StockScore2: StockScore2,
-                ToujiStock: ToujiStock
+                ToujiStock: ToujiStock,
+                LoseLimitPerRound:LoseLimitPerRound
             }, function (resData) {
                 console.log(resData)
                 if (resData.status == 1) {
@@ -548,11 +585,14 @@
             //    alert("请先保存库存数据");
             //    return false;
             //}
-            // console.log(obj)
             kindid = $("#tabgame>li.layui-this").eq(0).data("gameid");
             typeid = $("#tabgame>li.layui-this").eq(0).data("typeid");
-            // console.log('kindid', kindid)
-            // console.log('typeid', typeid)
+            //无下注游戏不显示最大下注值
+            if(typeid == 5 || typeid == 7){
+                showSetting(false)
+            }else{
+                showSetting(true)
+            }
             $("#typeid").val(typeid);
             refresh_game_prize(kindid, typeid);
             refresh_GameStockScore(kindid, typeid);
@@ -564,7 +604,7 @@
             //}
             serverid = $("#stocklisttitle>li.layui-this").eq(0).data("serverid");
             typeid = $("#tabgame>li.layui-this").eq(0).data("typeid");
-            refresh_gamestock(serverid,typeid);
+            refresh_gamestock(serverid, typeid);
         });
 
         $('#GameStockList').on('click', '.deletestock', function () {
@@ -573,10 +613,10 @@
         });
 
         $("#btnAdd").click(function () {
-            console.log($("#GameStockList tbody tr").length,typeid)
+            console.log($("#GameStockList tbody tr").length, typeid)
             if ($("#GameStockList tbody tr").length > 9) return layer.msg('最多只能10个等级', {icon: 2, time: 2000})
             var h;
-            if(typeid == '5'){
+            if (typeid == '5') {
                 h = "<tr>" +
                     "<td><input type='text' name='StockScore_1' lay-verify='number' placeholder='小鱼库存等级' value='' autocomplete='off' class='layui-input'></td>" +
                     "<td><input type='text' name='CatchFishRate_1' lay-verify='number' placeholder='小鱼捕鱼概率' value='' autocomplete='off' class='layui-input'></td>" +
@@ -586,8 +626,8 @@
                     "<td><input type='text' name='CatchFishRate_3' lay-verify='number' placeholder='大鱼捕鱼概率' value='' autocomplete='off' class='layui-input'></td>" +
                     "<td><a href='javascript:void(0)' class='deletestock' data-serverid='" + serverid + "' style='text-decoration: underline;font-size: 12px;color: #007DDB'>删除</a></td>" +
                     "</tr>";
-            }else{
-                h= " <tr><td><input type='text' name='StockScore' lay-verify='number' placeholder='库存等级' value='' autocomplete='off' class='layui-input'></td><td><input type='text' name='StockPercentage' lay-verify='number' placeholder='胜率百分比' value='' autocomplete='off' class='layui-input'></td><td><span class='deletestock layui-btn layui-btn-warm layui-btn-xs'>删除</span></td></tr>";
+            } else {
+                h = " <tr><td><input type='text' name='StockScore' lay-verify='number' placeholder='库存等级' value='' autocomplete='off' class='layui-input'></td><td><input type='text' name='StockPercentage' lay-verify='number' placeholder='胜率百分比' value='' autocomplete='off' class='layui-input'></td><td><span class='deletestock layui-btn layui-btn-warm layui-btn-xs'>删除</span></td></tr>";
             }
             $("#GameStockList tbody").append($(h));
             element.init();
@@ -604,15 +644,15 @@
             var serverid = $("#stocklisttitle>li.layui-this").eq(0).data("serverid");
             var flag = true;
             console.log(typeid)
-            if(typeid == '5'){
+            if (typeid == '5') {
                 $.each(d, function (i, t) {
                     var item = {};
                     item.StockScore_1 = $(t).find("input[name='StockScore_1']").val();
                     item.StockScore_2 = $(t).find("input[name='StockScore_2']").val();
                     item.StockScore_3 = $(t).find("input[name='StockScore_3']").val();
                     item.CatchFishRate_1 = $(t).find("input[name='CatchFishRate_1']").val();
-                    item.CatchFishRate_2 = $(t).find("input[name='CatchFishRate_1']").val();
-                    item.CatchFishRate_3 = $(t).find("input[name='CatchFishRate_1']").val();
+                    item.CatchFishRate_2 = $(t).find("input[name='CatchFishRate_2']").val();
+                    item.CatchFishRate_3 = $(t).find("input[name='CatchFishRate_3']").val();
                     item.ID = "";
                     item.ServerID = serverid;
                     flag = true;
@@ -668,14 +708,14 @@
                     ServerID: serverid
                 }, function (json) {
                     if (json.status == 1) {
-                        layer.msg('操作成功',function () {
+                        layer.msg('操作成功', function () {
                             $('#stocklisttitle li.layui-this').click()
                         });
                     } else {
                         layer.msg(json.msg);
                     }
                 }, 'json')
-            }else{
+            } else {
                 $.each(d, function (i, t) {
                     var item = {};
                     item.StockScore = $(t).find("input[name='StockScore']").val();
@@ -744,7 +784,7 @@
         function GetFishGameStockScoreInfo(serverid) {
             var typeid = $("#typeid").val();
             console.log('serverid', serverid, typeid)
-            if (typeid == '7') {
+            if (typeid == '7') {//炸金花
                 $.ajax({
                     type: 'POST',
                     url: qp_url + "admin/Kongzhi/GetZJHStockScoreInfo?token=" + getStorage('token'),
@@ -753,6 +793,7 @@
                     success: function (resData) {
                         console.log(resData)
                         if (resData.status == 1) {
+                            layer.msg('查询成功', {time: 1000, icon: 1})
                             var d = resData.data;
                             if (d.length > 0) {
                                 var data = d[0];
@@ -781,6 +822,7 @@
                     success: function (resData) {
                         console.log(resData)
                         if (resData.status == 1) {
+                            layer.msg('查询成功', {time: 1000, icon: 1})
                             var d = resData.data;
                             if (d.length > 0) {
                                 var data = d[0];
@@ -791,6 +833,7 @@
                                 //$("#ddlStockOpen1").val(data.StockOpen);
                                 $("#serveridvalue").val(data.serverid);
                                 $("#typeid").val(data.typeid);
+                                $('#maxVal').val(data.LoseLimitPerRound)
                                 form.render();
                             }
                         }
@@ -805,6 +848,7 @@
                     success: function (resData) {
                         console.log(resData)
                         if (resData.status == 1) {
+                            layer.msg('查询成功', {time: 1000, icon: 1})
                             var d = resData.data;
                             if (d.length > 0) {
                                 var data = d[0];
@@ -846,6 +890,7 @@
                     success: function (resData) {
                         console.log(resData)
                         if (resData.status == 1) {
+                            layer.msg('查询成功', {time: 1000, icon: 1})
                             var d = resData.data;
                             if (d.length > 0) {
                                 var data = d[0];
@@ -856,6 +901,7 @@
                                 //$("#ddlStockOpen1").val(data.StockOpen);
                                 $("#serveridvalue").val(data.serverid);
                                 $("#typeid").val(data.typeid);
+                                $('#maxVal').val(data.LoseLimitPerRound)
                                 form.render();
                             }
                         }
@@ -866,15 +912,15 @@
 
         function refresh_game_prize(kindid, typeid) {
             // console.log(kindid, typeid)
-            if (typeid == "5") {
+            if (typeid == "5") {//捕鱼
                 $("#divfish").show();
                 $("#divexceptfish").hide();
                 $("#divzjh").hide();
-            } else if (typeid == "7") {
+            } else if (typeid == "7") {//扎金花
                 $("#divzjh").show();
                 $("#divfish").hide();
                 $("#divexceptfish").hide();
-            } else {
+            } else {//其他
                 $("#divfish").hide();
                 $("#divexceptfish").show();
                 $("#divzjh").hide();
@@ -887,6 +933,7 @@
                 success: function (resData) {
                     console.log(resData)
                     if (resData.status == 1) {
+                        // layer.msg('查询成功', {time: 1000, icon: 1})
                         $("#tabcontents>div").addClass("layui-show");
                         var h = "";
                         var h1 = "";
@@ -905,7 +952,7 @@
                         $("#stocklisttitle").html(h1);
                         serverid = $("#stocklisttitle>li.layui-this").eq(0).data("serverid");
                         typeid = $("#tabgame>li.layui-this").eq(0).data("typeid");
-                        refresh_gamestock(serverid,typeid);
+                        refresh_gamestock(serverid, typeid);
                         GetFishGameStockScoreInfo(resData.data[0].ServerID)
                         form.render('select'); //刷新select选择框渲染
                     } else {
@@ -971,10 +1018,10 @@
             //}
         }
 
-        function refresh_gamestock(serverid,typeid) {
+        function refresh_gamestock(serverid, typeid) {
             console.log(typeid)
             $("#serveridvalue").val(serverid);
-            if(typeid == '5'){
+            if (typeid == '5') {
                 $.ajax({
                     type: 'POST',
                     url: qp_url + "admin/Kongzhi/GetFishStockLevelListSimple?token=" + getStorage('token'),
@@ -995,7 +1042,7 @@
                                         "<td><input type='text' name='StockScore_3' lay-verify='number' placeholder='大鱼库存等级' value='" + item.StockScore_3 + "' autocomplete='off' class='layui-input'></td>" +
                                         "<td><input type='text' name='CatchFishRate_3' lay-verify='number' placeholder='大鱼捕鱼概率' value='" + item.CatchFishRate_3 + "' autocomplete='off' class='layui-input'></td>" +
                                         "<td><a href='javascript:void(0)' class='deletestock' data-serverid='" + serverid + "' style='text-decoration: underline;font-size: 12px;color: #007DDB'>删除</a></td>" +
-                                    "</tr>";
+                                        "</tr>";
                                 });
                             }
                             $("#GameStockList thead").html('<tr><td width="60">小鱼库存等级</td><td>小鱼捕鱼概率</td><td>中鱼库存等级</td><td>中鱼捕鱼概率</td><td>大鱼库存等级</td><td>大鱼捕鱼概率</td><td>操作</td></tr>');
@@ -1004,7 +1051,7 @@
                         }
                     }
                 })
-            }else{
+            } else {
                 $.ajax({
                     type: 'POST',
                     url: qp_url + "admin/Kongzhi/GetStockLevelListSimple?token=" + getStorage('token'),
@@ -1050,7 +1097,20 @@
 
         //refresh_game_prize(15, 5);
         //refresh_game_prize(15, 6);
+
     });
+
+    function shuaxin() {
+        $(".layui-form .layui-this,#stocklisttitle .layui-this").click();
+    }
+    //控制最大下注值显示
+    function showSetting(flag) {
+        if(flag){
+            $('#zuidaxiazhuzhi').show()
+        }else{
+            $('#zuidaxiazhuzhi').hide()
+        }
+    }
 </script>
 </body>
 </html>

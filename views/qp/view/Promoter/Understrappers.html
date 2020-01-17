@@ -9,11 +9,6 @@
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link href="../../Content/common.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
-    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../../Scripts/comm.js"></script>
-    <script src="../../Content/laydate/laydate.js"></script>
-    <script src="../../Scripts/pagination.js"></script>
-    <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
 <style type="text/css">
     body{
         overflow-y: scroll!important;
@@ -78,6 +73,11 @@
             </div>
         </div>
     </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+<!--    <script src="../../Content/laydate/laydate.js"></script>-->
+<!--    <script src="../../Scripts/pagination.js"></script>-->
+    <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
     <script type="text/javascript">
         var postData = {};//搜索条件
         $(document).ready(function () {
@@ -123,7 +123,7 @@
                     , { field: 'GameID', title: '玩家ID' }
                     , {
                         field: 'Accounts', title: '玩家账号',minWidth:125, templet: function (d) {
-                            return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('../Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                            return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '00B4E5' : colors[d.UserType - 1]}" onclick="openWindowOwn('../Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
                         }
                     }
                     , { field: 'NickName', title: '玩家昵称',minWidth:125 }

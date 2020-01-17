@@ -2,16 +2,14 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>游戏系统 - 游戏管理</title>
     <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link href="../../Content/common.css" rel="stylesheet" />
 
-    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../../Scripts/comm.js"></script>
-    <script src="../../Content/laydate/laydate.js"></script>
+
     <style type="text/css">
         .panel-body .row div:first-child {
             width: 120px;
@@ -155,6 +153,9 @@
             </div>
         </div>
     </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <script src="../../Content/laydate/laydate.js"></script>
     <script type="text/javascript">
         var ID = getUrlParams("KindID");
         var array_cblKindMark = [];
@@ -274,7 +275,7 @@
 
                 console.log(data)
             } else {
-                data.IntParam = data.KindID;
+                data.IntParam = ID;
 
             }
             console.log(data.ClientVersion)
@@ -284,7 +285,8 @@
                 data: data,
                 dataType: "json",
                 success: function (data) {
-                    console.log(data)
+                    console.log(data);
+                    ID = $("#txtKindID").val();
                     alert(data.msg);
                 }
             })

@@ -60,7 +60,7 @@
     <input type="checkbox" name="menustatus" value="{{d.id}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="menustatus" {{ d.menustatus == 1 ? 'checked' : '' }}>
 </script>
 <script type="text/html" id="order">
-    <input name="{{d.id}}" data-id="{{d.id}}" class="list_order layui-input" style="height: 28px;" value=" {{d.sort}}" size="10"/>
+    <input name="{{d.id}}" data-id="{{d.id}}" class="list_order layui-input" style="height: 28px;" value="{{d.sort}}" size="10"/>
 </script>
 <script type="text/html" id="icon">
     <span class="icon" style="display: inline-block;width: 30px;height: 30px;background: url(../Content/images/{{d.icon}}) left top;background-size: auto 100%"></span>
@@ -77,7 +77,7 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var editObj=null,ptable=null,treeGrid=null,tableId='treeTable',layer=null;
@@ -172,16 +172,16 @@
         $('body').on('blur','.list_order',function() {
             var id = $(this).attr('data-id');
             var sort = $(this).val();
-            $.post('{:url("ruleOrder")}',{id:id,sort:sort},function(res){
-                if(res.code==1){
-                    layer.msg(res.msg,{time:1000,icon:1},function(){
-                        location.href = res.url;
-                    });
+            console.log(id);
+            console.log(sort);
+            $.post(qp_url + 'admin/auth/ruleOrder?token='+getStorage('token'),{id:id,sort:sort},function(res){
+                if(res.status == 1){
+                    layer.msg(res.msg,{time:1000,icon:1});
+                    treeGrid.render;
                 }else{
                     layer.msg(res.msg,{time:1000,icon:2});
-                    treeGrid.render;
                 }
-            })
+            },'json')
         })
 
     });
@@ -189,14 +189,6 @@
         var treedata=treeGrid.getDataTreeList(tableId);
         treeGrid.treeOpenAll(tableId,!treedata[0][treeGrid.config.cols.isOpen]);
     }
-    //收放事件
-    $('.btn-minimize').click(function (e) {
-        e.preventDefault();
-        var $target = $(this).parent().parent().next('.box-content');
-        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        $target.slideToggle();
-    });
 
     function windowClose(msg) {
         console.log(123)

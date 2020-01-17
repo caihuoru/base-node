@@ -127,7 +127,7 @@
                                        :class="{'form-error-tip':errors.has('mobile')}"
                                        type="text"
                                        name="mobile"
-                                       v-validate="'required|mobile'">
+                                       v-validate="'mobile'">
                             </div>
                             <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('mobile')">
                                 {{errors.first('mobile')}}
@@ -297,7 +297,7 @@
                 //获取管理员详细信息
                 $.ajax({
                     method: 'get',
-                    url: qp_url + 'admin/auth/adminInfo?admin_id=' + admin_id,
+                    url: qp_url + 'admin/auth/adminInfo?admin_id=' + admin_id + '&token=' + getStorage('token'),
                     dataType: 'json',
                     success: function (res) {
                         let resData = res.data

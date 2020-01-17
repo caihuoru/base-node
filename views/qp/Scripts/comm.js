@@ -1,19 +1,11 @@
-/****************************************************************/
-/* <p>网站公用JavaScript Document</p>						    */
-/* 数据持久的一些js方法,主要涉及浏览器,常规函数及字符串操作方面 */
-/* @Author:Summer. Guo											*/
-/* @Version: Debug												*/
-/****************************************************************/
-
-/***************************************************************/
-/*				以下是浏览器相关函数区						   */
-/***************************************************************/
 var fieldname;
 var grandchilds;
 var defaultValue;
-var qp_url = "http://www.qpgame.com:8080/";
+var qp_url = "http://192.168.1.115:8080/";
+// var qp_url = "http://192.168.1.71:8080/";
+// var qp_url = "http://192.168.1.115/";
 var request_url2 = "//192.168.1.115:9001/";   // 客服接口
-var serverPath = '//192.168.1.115:8080/customerService/';   // 图片上传接口
+var serverPath = '//192.168.1.115:8088/customerService/';   // 图片上传接口
 var _storage = 'qpGame';
 //用户类型的颜色
 
@@ -38,7 +30,7 @@ var colors = ["0000ff", "009944", "b38850", "ff00ff", "ff0000", "00fff6", "00ff5
 
 (function ($) {
     OpeIframeWindow = function (url, mtitle, opt, isDiv) {
-        var mopt = opt || {autoOpen: true, modal: true, height: 650, width: 1000};
+        var mopt = opt || { autoOpen: true, modal: true, height: 650, width: 1000 };
         mopt.title = mtitle;
         var mDialog;
         if (isDiv)
@@ -212,21 +204,21 @@ function isIE() {  //ie?
 
 if (!isIE()) { //firefox  innerText define ,xurun
     HTMLElement.prototype.__defineGetter__
-    (
-        "innerText",
-        function () {
-            var anyString = "";
+        (
+            "innerText",
+            function () {
+                var anyString = "";
 
-            var childS = this.childNodes;
-            for (var i = 0; i < childS.length; i++) {
-                if (childS[i].nodeType == 1)
-                    anyString += childS[i].tagName == "BR" ? '\n' : childS[i].innerText;
-                else if (childS[i].nodeType == 3)
-                    anyString += childS[i].nodeValue;
+                var childS = this.childNodes;
+                for (var i = 0; i < childS.length; i++) {
+                    if (childS[i].nodeType == 1)
+                        anyString += childS[i].tagName == "BR" ? '\n' : childS[i].innerText;
+                    else if (childS[i].nodeType == 3)
+                        anyString += childS[i].nodeValue;
+                }
+                return anyString;
             }
-            return anyString;
-        }
-    );
+        );
 }
 
 /***************************************************************/
@@ -573,24 +565,24 @@ function initArray() {
 function writeDate() {
     today = new Date();
     var d = new initArray
-    (
-        "星期日",
-        "星期一",
-        "星期二",
-        "星期三",
-        "星期四",
-        "星期五",
-        "星期六"
-    );
+        (
+            "星期日",
+            "星期一",
+            "星期二",
+            "星期三",
+            "星期四",
+            "星期五",
+            "星期六"
+        );
     document.write
-    (
-        "<font color=##000000 style='font-size:9pt;font-family: 宋体'> ",
-        today.getYear(), "年",
-        today.getMonth() + 1, "月",
-        today.getDate(), "日&nbsp;",
-        d[today.getDay() + 1],
-        "</font>"
-    );
+        (
+            "<font color=##000000 style='font-size:9pt;font-family: 宋体'> ",
+            today.getYear(), "年",
+            today.getMonth() + 1, "月",
+            today.getDate(), "日&nbsp;",
+            d[today.getDay() + 1],
+            "</font>"
+        );
 }
 
 /***************************************************************/
@@ -629,6 +621,14 @@ function todayDateMDY(type) {
     }
     return vMon + "-" + vDay + "-" + vYear;
 
+}
+
+function todayDate() {
+    var date = new Date()
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    return y + '-' + m < 10 ? ('0' + m) : m + '-' + d < 10 ? ('0' + d) : d
 }
 
 /***************************************************************/
@@ -1834,7 +1834,7 @@ function UploadFile(fileId, action, txtID) {
     oForm.append("file", $("#" + fileId)[0].files[0]);
     //oForm.append("op", op);
     if ($("#" + fileId)[0].files[0].type != 'text/plain') {
-        return layer.alert('请上传.txt文件', {icon: 2})
+        return layer.alert('请上传.txt文件', { icon: 2 })
     }
     request.open("POST", qp_url + action, true);
     request.send(oForm);
@@ -1925,7 +1925,7 @@ var tableOptions = {
     , limit: 10
     , cellMinWidth: 100
     , done: function (res, curr, count) {
-        $('th').css({'text-align': 'center'});
+        $('th').css({ 'text-align': 'center' });
     }
 }
 
@@ -2081,3 +2081,17 @@ var ConverTimeToDHMS = function (seconds) {
     return str;
 };
 
+//将2019-11-06格式化为2019-11-06 00:00:00或者2019-11-06 23:59:59,n决定后面的小时
+function datetimeFormat(dateStr, n) {
+    if (dateStr) {
+        return n ? dateStr + ' 23:59:59' : dateStr + ' 00:00:00'
+    }
+    return ''
+}
+function StrToDateTime(timestr) {
+    var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
+    return dt;
+}
+// console.log = function () {
+
+// }

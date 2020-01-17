@@ -93,7 +93,13 @@ a:visited,
 a:active {
     text-decoration: none;
 }
-
+/*.ke-toolbar span[data-name="image"],*/
+/*.ke-toolbar span[data-name="multiimage"],*/
+/*.ke-toolbar span[data-name="flash"],*/
+/*.ke-toolbar span[data-name="media"],*/
+/*.ke-toolbar span[data-name="insertfile"]{*/
+/*    display: none !important;*/
+/*}*/
 .wrap,
 html, body {
     width: 100%;
@@ -117,7 +123,7 @@ body .padding-margin-0 {
 
 .main-content {
     width: 98%;
-    padding-bottom: 100px;
+    padding-bottom: 20px;
     background-color: #f4f3f9;
     margin: 0 auto;
 }
@@ -501,7 +507,7 @@ body .input-width-238 {
 }
 
 .table-center td a {
-    color: #005ce5;
+    color: #00B4E5;
 }
 
 .btn-off-section {
@@ -780,7 +786,8 @@ body .main-min-height {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #0e142f;
+    /*color: #0e142f;*/
+    color: #fff;
 }
 
 .head-right div {
@@ -1279,6 +1286,20 @@ input.form-control,.layui-form-select .layui-input{
     display: block;
     white-space: nowrap;
     font-size: 0;}
+.cards.column{
+
+}
+.cards.column span{
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 50px;
+    }
+.cards.column .row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
 .cards img{
     display: inline-block;
     width: 70px;
@@ -1286,3 +1307,39 @@ input.form-control,.layui-form-select .layui-input{
 }
 .cards img:first-child{
     margin-left: 0;}
+.mahjong{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;}
+.ke-dialog-body>div{
+    height: 100%;}
+.ke-dialog-body .tab1,.ke-dialog-body .tab2{
+    float: none;
+    width: 100%;
+    height: 100%;
+    background: none;
+    color: #000000;
+    text-align: left;
+}
+span.showCards{
+    color: #00B4E5;
+    cursor: pointer;
+}
+.layui-table .layui-table-view{
+    margin: 10px;}
+.maxWidth600{
+    max-width: 600px;
+}
+@media screen and (max-width: 1000px) {
+    body .input-width-150 {
+        width: 100px;
+        height: 28px;
+    }
+}
+.layui-table-body{
+    max-height: 70vh;
+}
+[v-cloak]{
+    display: none;
+}

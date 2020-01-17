@@ -3,15 +3,13 @@
 <html>
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title></title>
     <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../Content/common.css" rel="stylesheet" />
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <style type="text/css">
         tbody tr td {
             height: 50px;
@@ -39,6 +37,23 @@
             width: 100%;
             height: 100%;
             overflow-y: scroll !important;
+        }
+
+        .layui-table-cell,
+        .layui-table-tool-panel li {
+            overflow-y: auto !important;
+        }
+
+        [data-field="IsIOSShop"] .layui-form-select {
+            display: none;
+        }
+
+        [data-field="IsIOSShop"] select {
+            display: inline-block;
+        }
+
+        .layui-table {
+            width: 100% !important;
         }
     </style>
 </head>
@@ -299,10 +314,13 @@
     <script type="text/html" id="radiobtn">
     <input type="checkbox" name="sex" lay-skin="switch" lay-text="是|否" lay-filter="isIos">
 </script>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <script type="text/javascript">
         var dataArray = [];
         $.ajax({
-            url: qp_url + "admin/web/ConfigInfo?token="+getStorage('token'),
+            url: qp_url + "admin/web/ConfigInfo?token=" + getStorage('token'),
             type: "get",
             dataType: "json",
             async: false,
@@ -330,7 +348,7 @@
             table.render({
                 elem: '#layTable'
                 // , height: 512
-                , url: qp_url + "admin/web/GetIOSConfigs?token="+getStorage('token') //数据接口
+                , url: qp_url + "admin/web/GetIOSConfigs?token=" + getStorage('token') //数据接口
                 , request: {
                     pageName: 'pageIndex' //页码的参数名称，默认：page
                     , limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -365,7 +383,33 @@
                     , { field: 'AgentName', title: '代理名称', edit: 'text' }
                     , { field: 'SrcVersionNo', title: '主版本号', edit: 'text' }
                     , { field: 'VersionNo', title: '资源版本号', edit: 'text' }
-                    , { field: 'IsIOSShop', title: '是否苹果内购', edit: 'text' }
+                    , {
+                        field: 'IsIOSShop', title: '是否苹果内购', templet: function (d) {
+                            if (d.IsIOSShop == 0) {
+                                return `<select>
+                                        <option value=""></option>
+                                        <option value="0" selected="selected">是</option>
+                                        <option value="1">否</option>
+                                    </select>`;
+                            } else if (d.IsIOSShop == 1) {
+
+                                return `<select>
+                                        <option value=""></option>
+                                        <option value="0">是</option>
+                                        <option value="1"  selected="selected">否</option>
+                                    </select>`;
+
+
+                            } else {
+                                return `<select>
+                                        <option value="" selected="selected"></option>
+                                        <option value="0">是</option>
+                                        <option value="1">否</option>
+                                    </select>`;
+                            }
+
+                        }
+                    }
                     , { field: 'AppKey', title: '极光推送Key', edit: 'text' }
                     , { field: 'AppSecret', title: '极光推送Secret', edit: 'text' }
                     , { field: 'AppUrl', title: 'IOS下载地址', edit: 'text' }
@@ -444,7 +488,7 @@
                     SrcVersionNo: $(this).parent().parent().parent().find("[data-field=SrcVersionNo] div").html(),
                     AgentAcc: $(this).parent().parent().parent().find("[data-field=AgentAcc] div").html(),
                     VersionNo: $(this).parent().parent().parent().find("[data-field=VersionNo] div").html(),
-                    IsIOSShop: $(this).parent().parent().parent().find("[data-field=IsIOSShop] div").html(),
+                    IsIOSShop: $(this).parent().parent().parent().find("[data-field=IsIOSShop] select").val(),
                     AppKey: $(this).parent().parent().parent().find("[data-field=AppKey] div").html(),
                     AppSecret: $(this).parent().parent().parent().find("[data-field=AppSecret] div").html(),
                     AppUrl: $(this).parent().parent().parent().find("[data-field=AppUrl] div").html(),
@@ -453,7 +497,7 @@
                 if (!obj.AgentID || obj.AgentID == "undefined") {
                     delete obj.AgentID;
                     $.ajax({
-                        url: qp_url + "admin/web/AddIOSConfig?token="+getStorage('token'),
+                        url: qp_url + "admin/web/AddIOSConfig?token=" + getStorage('token'),
                         type: "post",
                         dataType: "json",
                         data: obj,
@@ -464,7 +508,7 @@
                     })
                 } else {
                     $.ajax({
-                        url: qp_url + "admin/web/ModifyIOSConfig?token="+getStorage('token'),
+                        url: qp_url + "admin/web/ModifyIOSConfig?token=" + getStorage('token'),
                         type: "post",
                         dataType: "json",
                         data: obj,
@@ -501,7 +545,7 @@
                 if (confirm("确定删除吗？")) {
                     $.ajax({
                         type: 'POST',
-                        url: qp_url + "admin/web/DelIOSConfig?token="+getStorage('token'),
+                        url: qp_url + "admin/web/DelIOSConfig?token=" + getStorage('token'),
                         dataType: 'json',
                         data: data,
                         success: function (resData) {
@@ -597,7 +641,7 @@
 
         $("#btn").click(function () {
             $.ajax({
-                url: qp_url + "admin/web/DoSiteConfig?token="+getStorage('token'),
+                url: qp_url + "admin/web/DoSiteConfig?token=" + getStorage('token'),
                 type: "post",
                 dataType: "json",
                 data: {
@@ -617,7 +661,7 @@
                 success: function (data) {
                     alert(data.msg);
                     $.ajax({
-                        url: qp_url + "admin/web/ConfigInfo?token="+getStorage('token'),
+                        url: qp_url + "admin/web/ConfigInfo?token=" + getStorage('token'),
                         type: "get",
                         dataType: "json",
                         async: false,

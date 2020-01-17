@@ -13,6 +13,10 @@
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/comm.js"></script>
     <style type="text/css">
+        body{
+            height: 100%;
+            overflow-y: scroll!important;
+        }
     </style>
 </head>
 <body>
@@ -33,29 +37,7 @@
                 </div>
                 <div class="box-content" style="overflow: hidden; display: block;">
                     <!--查询栏开始-->
-                    <div class="alert alert-info">
-                        <form class="layui-form" method="post" action="#" lay-filter="component-form-element">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-1">充值问候语：</div>
-                                    <div class="col-xs-3">
-                                        <textarea id="payment" class="form-control"  rows="5"
-                                              maxlength="256"></textarea>
-                                    </div>
-                                    <div class="col-xs-1">充值提示语：</div>
-                                    <div class="col-xs-3">
-                                        <textarea id="payList" class="form-control"  rows="5"
-                                                  maxlength="256"></textarea>
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <a id="save" class="btn btn-outline-success" style="margin-top: 5px;"> <i class="glyphicon glyphicon-floppy-save icon-white"></i> 保存 </a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        </form>
-                    </div>
+
                     <!--查询栏结束-->
                     <div class="row">
                         <div class="col-md-10" style="padding-bottom:5px; padding-top:5px; ">
@@ -75,6 +57,45 @@
                         <table id="layTable" lay-filter="test"></table>
                     </div>
                     <!--table结束-->
+                    <div class="alert alert-info">
+                        <form class="layui-form" method="post" action="#" lay-filter="component-form-element">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <div class="row margin-b-10">
+                                        <div class="col-xs-2">客服问候语：</div>
+                                        <div class="col-xs-6">
+                                            <textarea id="customerBody" class="form-control input-sm" rows="20"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-b-10">
+                                        <div class="col-xs-2">客服提示语：</div>
+                                        <div class="col-xs-4">
+                                        <textarea id="relevant" class="form-control"  rows="5"
+                                                  maxlength="256"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-b-10">
+                                        <div class="col-xs-2">充值问候语：</div>
+                                        <div class="col-xs-6">
+                                            <textarea id="paymentBody" class="form-control input-sm" rows="20"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-b-10">
+                                        <div class="col-xs-2">充值提示语：</div>
+                                        <div class="col-xs-4">
+                                        <textarea id="payList" class="form-control"  rows="5"
+                                                  maxlength="256"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-2">
+                                            <a id="save" class="btn btn-outline-success" style="margin-top: 5px;"> <i class="glyphicon glyphicon-floppy-save icon-white"></i> 保存 </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -93,12 +114,73 @@
           onclick="openWindowOwn('add/shouKuanFangShi.html?type=edit&id={{d.id}}', '', 800, 600)">编辑</span>&nbsp;&nbsp;
     <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del">删除</span>&nbsp;&nbsp;
 </script>
+<script charset="utf-8" src="../Scripts/kindeditor-4.1.10/kindeditor-min.js"></script>
+<script charset="utf-8" src="../Scripts/kindeditor-4.1.10/lang/zh_CN.js"></script>
+<script charset="utf-8" src="../Scripts/axios.js"></script>
 <script type="text/javascript">
     var pageObj = {};
     var type = 0;
     var myTable;
     //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
     var selectRows = [];
+    $.post(request_url2 + 'verification',{token: getStorage('token')},function (resData) {
+        console.log(resData)
+        if(resData.code != 0){
+            console.log(window.location.href)
+            alert('token失效，请重新登陆')
+            setStorage('loginUrl',window.location.href)
+            window.location.href = 'login.html'
+        }
+    },'json')
+    var customerObj = {};
+    var paymentObj = {};
+    var customerBody,paymentBody;
+    KindEditor.ready(function (K) {
+        customerBody = K.create('#customerBody', {
+            minHeight: '300px',
+            allowFileManager: true,
+            uploadJson: qp_url + 'admin/web/uploadJson?token=' + getStorage('token'),
+            afterUpload: function () { this.sync(); }, //图片上传后，将上传内容同步到textarea中
+            afterBlur: function () { this.sync(); },   ////失去焦点时，将上传内容同步到textarea中
+        })
+        customerBody.html(customerObj.content)
+
+        paymentBody = K.create('#paymentBody', {
+            minHeight: '300px',
+            allowFileManager: true,
+            uploadJson: qp_url + 'admin/web/uploadJson?token=' + getStorage('token'),
+            afterUpload: function () { this.sync(); }, //图片上传后，将上传内容同步到textarea中
+            afterBlur: function () { this.sync(); },   ////失去焦点时，将上传内容同步到textarea中
+        })
+        paymentBody.html(paymentObj.content)
+    })
+    $('#save').click(function () {
+        console.log(customerBody.html())
+        console.log(paymentBody.html())
+        let postData = {
+            doing: 'greeting',
+            token: getStorage('token'),
+            body: {
+                customer: customerBody.html(),
+                payment: paymentBody.html(),
+                payList: $('#payList').val(),
+                relevant: $('#relevant').val(),
+            }
+        }
+        axios({
+            method: 'post',
+            url: request_url2 + 'systemSet',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            data: postData
+        }).then(function (resData) {
+            console.log(resData)
+            if(resData.data.code == 0){
+                layer.msg('编辑成功',{icon: 1,time: 2000})
+            }
+        })
+    })
     layui.use(['table','form'], function () {
         var table = layui.table;
         var form = layui.form;
@@ -124,8 +206,10 @@
             },
             parseData: function (res) {
                 console.log(res)
-                $('#payment').val(res.greeting.payment)
+                customerBody.html(res.greeting.customer)
+                paymentBody.html(res.greeting.payment)
                 $('#payList').val(res.greeting.payList)
+                $('#relevant').val(res.greeting.relevant)
                 return {
                     "status": res.status, //解析接口状态
                     "msg": res.msg, //解析提示文本
@@ -162,6 +246,7 @@
             $.post(request_url2 + 'systemSet', {
                 id: id,
                 sort: sort,
+                token: getStorage('token'),
                 doing: 'paymentSort'
             }, function (res) {
                 console.log(res)
@@ -183,6 +268,7 @@
             $.post(request_url2 + 'systemSet', {
                 id: id,
                 status: is_open,
+                token: getStorage('token'),
                 doing: 'paymentStatus'
             }, function (res) {
                 layer.close(loading);
@@ -208,6 +294,7 @@
                         dataType: "json",
                         data: {
                             doing: 'deletePayment',
+                            token: getStorage('token'),
                             id: data.id
                         },
                         success: function (res) {
@@ -222,14 +309,6 @@
                 });
             }
         });
-    });
-    //收放事件
-    $('.btn-minimize').click(function (e) {
-        e.preventDefault();
-        var $target = $(this).parent().parent().next('.box-content');
-        if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        $target.slideToggle();
     });
     function windowClose(msg) {
         myTable.reload()

@@ -78,6 +78,20 @@
                             </div>
                             <!--                                <div class="col-xs-4 col-md-2"></div>-->
                         </div>
+                        <div class="row layui-form">
+                            <div class="col-xs-2 col-md-1">是否首页：</div>
+                            <div class="col-xs-6 col-md-3">
+                                <input name="is_index" v-model.number="add.is_index" type="radio" class="with-gap"
+                                       id="radio_11"
+                                       value="0"/>
+                                <label for="radio_11">否</label>
+                                <input name="is_index" v-model.number="add.is_index" type="radio" id="radio_12"
+                                       class="with-gap"
+                                       value="1"/>
+                                <label for="radio_12" class="ml-30">是</label>
+                            </div>
+                            <!--                                <div class="col-xs-4 col-md-2"></div>-->
+                        </div>
                         <div class="row">
                             <div class="col-xs-2 col-md-1">排序：</div>
                             <div class="col-xs-6 col-md-3">
@@ -133,7 +147,7 @@
                     sort: 50,
                     title: "",
                     pid:0,
-
+                    is_index: 1,
                 }
             },
             mounted() {

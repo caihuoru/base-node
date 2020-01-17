@@ -165,7 +165,7 @@
             , cols: [[ //表头
                 {field: 'UserID', title: 'ID'}
                 , {field: 'Accounts', title: '玩家账号',templet:function (d) {
-                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '00B4E5' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
                     }
                 }
                 , {field: 'Compellation', title: '真实姓名'}

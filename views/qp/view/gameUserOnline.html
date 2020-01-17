@@ -16,7 +16,7 @@
     </style>
 </head>
 <body class="backgroud">
-<div id="content" class="main-content" style="display: none;" v-show="gameList">
+<div id="content" class="main-content" v-cloak>
     <div class="row">
         <div class="col-md-12">
             <div class="box-inner">
@@ -83,38 +83,6 @@
                     <!--table开始-->
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                         <table id="layTable" lay-filter="test"></table>
-                        <table style="display: none" class="table table-striped table-bordered">
-                            <thead>
-                            <tr role="row">
-                                <th><input name="ckall" type="checkbox" value="" onclick="SelectAll(this,'cid')"/></th>
-                                <th class="sorting">玩家ID</th>
-                                <th class="sorting">玩家账号</th>
-                                <th class="sorting">携带金币</th>
-                                <th class="sorting">银行金币</th>
-                                <th class="sorting">总输赢</th>
-                                <th class="sorting">所在游戏</th>
-                                <td class="sorting">所在房间</td>
-                                <td class="sorting">最后登录IP</td>
-                                <td class="sorting">IP归属地</td>
-                                <td class="sorting">最后登录时间</td>
-                                <td class="sorting">游戏时长</td>
-                                <td class="sorting">状态</td>
-
-                            </tr>
-                            </thead>
-                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
-                        </table>
-                        <!--分页控件-->
-                        <div class="row">
-                            <div class="col-md-6">
-
-                            </div>
-                            <div class="col-md-6">
-                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                    <ul class="pagination" id="pagin"></ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!--table结束-->
                 </div>
@@ -125,7 +93,7 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script src="../Scripts/vue.min.js"></script>
 <script type="text/javascript">
@@ -167,7 +135,6 @@
                     }
                 }
             })
-            // docReady()
         },
         methods: {
             btnQuery: function () {
@@ -225,7 +192,7 @@
                 , {field: 'GameID', title: '玩家ID'}
                 , {
                     field: 'Accounts', title: '玩家帐号', minWidth: 130, templet: function (d) {
-                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '00B4E5' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
                     }
                 }
                 , {field: 'Score', title: '携带金币',minWidth:120,templet:function (d) {
@@ -272,128 +239,7 @@
             selectRows = checkStatus.data
         });
     });
-    // $(document).ready(function () {
-    //     //loadTime();
-    //     getGameList();
-    //     docReady();
-    // });
-    // function loadTime() {
-    //     var stopTime = 10;
-    //     $('#selTime').val(stopTime)
-    //     setTime();
-    //
-    //     $("#selTime").change(function () {
-    //         stopTime = $("#selTime").val();
-    //         setTime();
-    //     });
-    //     var start;
-    //     start = setInterval(setTime, 1000);
-    //     $("#btnStart").html("暂停")
-    //     $("#btnStart").click(function () {
-    //         if ($(this).html() == "暂停") {
-    //             $(this).html("开始")
-    //             clearInterval(start);
-    //         } else {
-    //             start = setInterval(setTime, 1000);
-    //             $(this).html("暂停")
-    //         }
-    //     });
-    //
-    //     function setTime() {
-    //         $("#time").html(stopTime);
-    //         stopTime--;
-    //         if (stopTime < 0) {
-    //             AjaxSearch(postData);
-    //             stopTime = $("#selTime").val();
-    //         }
-    //     }
-    // }
 
-    //
-    // function getGameList() {
-    //         var optHTML = new String();
-    //         var data = $.parseJSON(data);
-    //         $.each(data, function (i, o) {
-    //             optHTML += "<option value='" + o.KindID + "'>" + o.KindName + "</option>";
-    //         });
-    //         // $("#ddlGame").append("<option value='-1'>全部</option><option value='-2'>游戏</option><option value='0'>大厅</option>" + optHTML);
-    //     })
-    // }
-
-    function docReady() {
-        //
-        //     //加载数据
-        //     postData.pageSize = parseInt($("#pagecount").val());
-        //     postData.Sort = "";
-        //     postData.pageIndex = 1;
-        //     //postData.Type = $("#ddlSearchType").val();
-        //     postData.kindID = parseInt($("#ddlGame").val());
-        //     AjaxSearch(postData);
-        //     //收放事件
-        //     $('.btn-minimize').click(function (e) {
-        //         e.preventDefault();
-        //         var $target = $(this).parent().parent().next('.box-content');
-        //         if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        //         else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        //         $target.slideToggle();
-        //     });
-        //     //选择页码
-        //     $("#pagecount").change(function (e) {
-        //         postData.pageSize = parseInt($(this).val());
-        //         postData.pageIndex = 1;
-        //         postData.Type = $("#ddlSearchType").val();
-        //         postData.kindID = parseInt($("#ddlGame").val());
-        //         AjaxSearch(postData);
-        //     });
-        //     //刷新
-        //     $("#btnRefresh").click(function (e) {
-        //         postData.KeyWord = $("#txtSearch").val();
-        //         postData.Type = $("#ddlSearchType").val();
-        //         postData.kindID = parseInt($("#ddlGame").val());
-        //         AjaxSearch(postData);
-        //     });
-        //     //普通搜索事件
-        //     // $("#btnQuery").click(function (e) {
-        //     //     postData.pageSize = parseInt($("#pagecount").val());
-        //     //     postData.wType = $("#ddlSearchType").val();
-        //     //     postData.wValue = $("#txtSearch").val();
-        //     //     postData.kindID = parseInt($("#ddlGame").val());
-        //     //
-        //     //     AjaxSearch(postData);
-        //     // });
-    }
-
-    // //搜索事件
-    // function AjaxSearch(postData) {
-    // }
-    //
-    // //绑定数据
-    // function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics) {
-    //     var html = "";
-    //     if (jsondata != null && jsondata.length > 0) {
-    //         $.each(jsondata, function (i, item) {
-    //             html += stringFormat("<tr>");
-    //             html += stringFormat("<td style=\"width: 30px;\"><input name='cid' type='checkbox' value='{0}'/></td>", item.UserID);
-    //             html += stringFormat("<td>{0}</td>", item.GameID);
-    //             html += stringFormat("<td>{0}</td>", G_AddUserNameLink(item.Accounts, item.UserID, item.UserType));
-    //             html += stringFormat("<td>{0}</td>", item.Score.formatMoney());
-    //             html += stringFormat("<td>{0}</td>", item.InsureScore.formatMoney());
-    //             html += stringFormat("<td>{0}</td>", item.TotalScore.formatMoney());
-    //             html += stringFormat("<td>{0}</td>", item.KindName == null ? "大厅" : item.KindName);
-    //             html += stringFormat("<td>{0}</td>", item.ServerName == null ? "大厅" : item.ServerName);
-    //             html += stringFormat("<td>{0}</td>", item.LastLogonIP);
-    //             html += stringFormat("<td>{0}</td>", item.LastLogonIPAddress);
-    //             html += stringFormat("<td>{0}</td>", item.LastLogonDate);
-    //             html += stringFormat("<td>{0}</td>", ConverTimeToDHMS(item.PlayTimeCount));
-    //             html += stringFormat("<td>{0}</td>", item.Nullity == 0 ? "<font style='color:green'>正常</font>" : "<font style='color:red'>停权</font>");
-    //             //html += stringFormat("<td><a href='javascript:void(0);' onclick='Unlock({0});'>玩家解锁</a>&nbsp;&nbsp;</td>", item.UserID);
-    //             //<a href='javascript:void(0);' onclick='Kick({0});' >冻结</a>
-    //             html += "</tr>";
-    //         });
-    //     }
-    //     $("#DataTables_Table_0_wrapper tbody").html(html);
-    //     $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    // }
 
     var ConverTimeToDHMS = function (seconds) {
         if (seconds <= 0)
@@ -420,42 +266,9 @@
         return str;
     };
 
-    // //字符串格式化
-    // function stringFormat() {
-    //     if (arguments.length == 0)
-    //         return null;
-    //     var str = arguments[0];
-    //     for (var i = 1; i < arguments.length; i++) {
-    //         var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-    //         str = str.replace(re, arguments[i]);
-    //     }
-    //     return str;
-    // }
-    //
-    // //解锁
-    // function Unlock(uid) {
-    //     if (confirm("是否解锁？")) {
-    //         var data = {cid: uid};
-    //     }
-    // }
-    //
-    // //踢出
-    // function Kick(uid) {
-    //     if (confirm("是否冻结？")) {
-    //         var data = {cid: uid}
-    //     }
-    // }
-    //
-    // //回调函数
-    // function callBack(jsonData, fname) {
-    //     alert(jsonData.Msg);
-    //     AjaxSearch(postData);
-    // }
-
     function GrantManager(opType) {
         // var cidStr = GetSelectValues();
         var cidStr = GetSelectedDatas(selectRows, 'UserID');
-        console.log(cidStr);
         if (cidStr.length > 0) {
             if (cidStr == "") {
                 layer.alert('未选中任何数据', {

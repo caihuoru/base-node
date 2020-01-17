@@ -8,11 +8,11 @@
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../Content/common.css" rel="stylesheet"/>
-  <style type="text/css">
-      body{
-          overflow-y: scroll!important;
-      }
-  </style>
+    <style type="text/css">
+        body {
+            overflow-y: scroll !important;
+        }
+    </style>
 
 </head>
 <body class="backgroud">
@@ -34,21 +34,22 @@
                     </div>
                     <div class="box-content" style="overflow: hidden; display: block;">
                         <!--查询栏开始-->
-                        <div class="alert alert-info" style="display:none;">
+                        <div class="alert alert-info">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    <ul class="list-inline cursor-style">
-                                        <li>日期查询：</li>
+                                    <ul class="list-inline">
+                                        <li>搜索：</li>
                                         <li>
-
-                                            <input id="txtStartDate" class="input-width-150" type="text"
-                                                   readonly="readonly" value=""/>至
-                                            <input type="text" id="txtEndDate" class="input-width-150"
-                                                   readonly="readonly" value=""/>
+                                            <input id="txtKey" class="form-control input-width-150" type="text"
+                                                   placeholder="渠道昵称"/>
                                         </li>
                                         <li>
                                             <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
                                                     class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="btn btn-blue" onclick="history.go(0);"><i
+                                                    class="glyphicon glyphicon-repeat"></i>刷新</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -58,7 +59,7 @@
                         <div class="row">
                             <div class="col-md-12 margin-t-10">
                                 <a class="btn btn-outline-success search" href="#"
-                                   onclick="openWindowOwn('add/tianJiaQuDao.html?admin_id=0','PlayerControlInfo',800, 500)">
+                                   onclick="openWindowOwn('add/tianJiaQuDao.html?admin_id=0','PlayerControlInfo',800, 700)">
                                     <i class="glyphicon glyphicon-plus"></i>
                                     添加渠道
                                 </a>
@@ -67,25 +68,6 @@
                         <!--table开始-->
                         <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                             <table id="layTable" lay-filter="test"></table>
-
-                            <table style="display:none;"
-                                   class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
-                                   id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-                                <thead>
-
-                                </thead>
-                                <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
-                            </table>
-                            <!--分页控件-->
-                            <div class="row">
-                                <div class="col-md-6">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                        <ul class="pagination" id="pagin"></ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!--table结束-->
                     </div>
@@ -94,45 +76,62 @@
         </div>
     </div>
 </div>
-<!--<span class="layui-btn layui-btn-xs" onclick="openWindowOwn('add/userGroupPermission.html?group_id={{d.group_id}}', '', 800, 800)">数据展示</span>-->
+<div id="openCont" style="display: none;">
+    <div style="padding: 10px;">
+        <table id="child" lay-filter="opener"></table>
+    </div>
+</div>
+<script id="isLogin" type="text/html">
+    <input type="checkbox" name="loginLimit" value="{{d.admin_id}}" lay-skin="switch" lay-text="允许|禁止"
+           lay-filter="loginLimit" {{ d.loginLimit== 1 ? 'checked' : '' }}>
+</script>
+<script id="ykregister" type="text/html">
+    <input type="checkbox" name="YKLimit" value="{{d.admin_id}}" lay-skin="switch" lay-text="允许|禁止"
+           lay-filter="YKLimit" {{ d.YKLimit== 1 ? 'checked' : '' }}>
+</script>
+<script id="mobileregister" type="text/html">
+    <input type="checkbox" name="phoneLimit" value="{{d.admin_id}}" lay-skin="switch" lay-text="允许|禁止"
+           lay-filter="phoneLimit" {{ d.phoneLimit== 1 ? 'checked' : '' }}>
+</script>
 
 <script type="text/html" id="operateMenu">
     <span class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</span>
     <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del">删除</span>
+    <span class="layui-btn layui-btn-xs" lay-event="add_child">添加子渠道</span>
+</script>
+<script type="text/html" id="operateMenu_child">
+    <span class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit_child">编辑</span>
+    <span class="layui-btn layui-btn-warm layui-btn-xs" lay-event="del_child">删除</span>
+    <span class="layui-btn  layui-btn-xs" lay-event="change">更换</span>
+</script>
+<script type="text/html" id="operate">
+    {{# if(d.channel_num_str!=""){}}
+    <div>
+        <a href="javascript:void(0)" data-isopen="0" lay-event="showinfo{{d.admin_id}}">查看</a>
+    </div>
+    {{# } }}
 </script>
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
-    var pageObj = {};
+    var pageData = {};
     var postData = {};//搜索条件
     //使用layui的数据表格，需要定义一个全局变量存储选中行的数据
-    var selectRows = [], table;
-    $(document).ready(function () {
-        //时间选择器
-        laydate.render({
-            elem: '#txtStartDate'
-            , type: 'datetime'
-            , theme: '#00B4E5'
-        });
-        laydate.render({
-            elem: '#txtEndDate'
-            , type: 'datetime'
-            , theme: '#00B4E5'
-        });
-        docReady();
-    });
-    layui.use(['table', 'layer'], function () {
+    var selectRows = [], table, table_child, form, childTable;
+    layui.use(['table', 'form', 'layer'], function () {
         table = layui.table;
+        table_child = layui.table;
+        form = layui.form;
+        childTable = layui.table;
         var layer = layui.layer
         //第一个实例
         table.render({
             elem: '#layTable'
             , id: 'layTable'
-            // , height: 512
-            , url: qp_url + 'admin/web/channelList?token='+getStorage('token') //数据接口
+            , url: qp_url + 'admin/web/channelList?token=' + getStorage('token') //数据接口
             , request: {
                 pageName: 'pageIndex' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -140,11 +139,8 @@
             , response: { //res 即为原始返回的数据
                 statusName: 'status',
                 statusCode: 1,
-                // msgName: 'msg',
-                // dataName: 'data',
             },
             parseData: function (res) {
-                console.log(res)
                 return {
                     "status": res.status, //解析接口状态
                     "msg": res.msg, //解析提示文本
@@ -157,13 +153,14 @@
             } //开启分页
             , limits: [10, 20, 30, 50, 80, 100]
             , limit: 10
-            , cellMinWidth: 130
+            , cellMinWidth: 100
             , cols: [[ //表头
-                {type:'numbers',title:'序号'}
-                ,{field: 'channel_num', title: '渠道ID'}
-                , {field: 'username', title: '帐号'}
-                , {field: 'channel_addr', title: '渠道地址'}
-                , {field: null, title: '操作', minWidth: 200, fixed: 'right', toolbar: '#operateMenu'}
+                {type: 'numbers', title: '编号'}
+                , {field: 'realname', title: '渠道昵称'}
+                , {field: 'channel_num_str', title: '渠道号'}
+                , {field: 'username', title: '账号'}
+                , {field: '', title: '子渠道', toolbar: '#operate'}
+                , {field: null, title: '操作', toolbar: '#operateMenu'}
             ]]
             , done: function (res, curr, count) {
                 $('th').css({'text-align': 'center'});
@@ -171,34 +168,198 @@
         });
         //监听工具条点击事件
         table.on('tool(test)', function (obj) {
+            //删除渠道账号,子渠道
             if (obj.event == 'del') {
-                if(getStorage('admin_id')!=1){
-                    return layer.msg('您不是超级管理员，没有操作权限',{time:1000,icon:2})
+                delChannel(obj)
+            }
+            //编辑
+            if (obj.event == 'edit') {
+                editChannel(obj)
+            }
+            if (obj.event == 'add_child') {
+                // if (getStorage('admin_id') != 1) {
+                //     return layer.msg('您不是超级管理员，没有操作权限', {time: 1000, icon: 2})
+                // }
+                openWindowOwn('add/tianJiaQuDao.html?admin_id=0&pid=' + obj.data.admin_id + '', 'PlayerControlInfo', 800, 700)
+            }
+            //绑定渠道，1.0.0版本，从1.0.1之后就不要了
+            if (obj.event == 'band') {
+                if (getStorage('admin_id') != 1) {
+                    return layer.msg('您不是超级管理员，没有操作权限', {time: 1000, icon: 2})
                 }
-                layer.confirm('确定要删除渠道'+obj.data.username+'吗？,删除会影响绑定用户的归属，请慎用！', {
-                    btn: ['确定', '取消']
-                }, function () {
-                    $.post(qp_url + 'admin/web/delChannel',{
-                        token:getStorage('token'),
-                        admin_id:obj.data.admin_id
-                    },function (res) {
-                        if(res.status == 1){
-                            layer.msg(res.msg,{time:1000,icon:1})
-                            obj.del();
-                        }else{
-                            layer.msg(res.msg,{time:1000,icon:2})
+                childTable.render({
+                    elem: '#child'
+                    , id: 'child'
+                    , url: qp_url + 'admin/web/channelList?token=' + getStorage('token') //数据接口
+                    , request: {
+                        pageName: 'pageIndex' //页码的参数名称，默认：page
+                        , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                    }
+                    , response: { //res 即为原始返回的数据
+                        statusName: 'status',
+                        statusCode: 1,
+                        // msgName: 'msg',
+                        // dataName: 'data',
+                    },
+                    parseData: function (res) {
+                        console.log(res)
+                        for (var i = 0; i < res.data.data.length; i++) {
+                            if (res.data.data[i].admin_id == obj.data.admin_id) {
+                                res.data.data.splice(i, 1)
+                            }
                         }
-                    },'json')
+                        return {
+                            "status": res.status, //解析接口状态
+                            "msg": res.msg, //解析提示文本
+                            "count": res.data.total - 1, //解析数据长度 ,需要数据库返回
+                            "data": res.data.data //解析数据列表
+                        };
+                    }
+                    , page: {
+                        'theme': '#2D2D3C',
+                        layout: ['count'],
+                        count: pageData.total - 1
+                    } //开启分页
+                    , limit: 2000
+                    , cellMinWidth: 130
+                    , cols: [[ //表头
+                        {type: 'checkbox', fixed: 'left'}
+                        // ,  {type: 'numbers', title:'序号',fixed: 'left'}
+                        , {field: 'channel_num', title: '渠道号'}
+                        , {field: 'username', title: '渠道昵称'}
+                        , {field: 'channel_addr', title: '渠道地址'}
+                    ]]
+                    , done: function (res, curr, count) {
+                        $('th').css({'text-align': 'center'});
+                    }
+                })
+                childTable.on('checkbox(opener)', function (obj) {
+                    var checkStatus = childTable.checkStatus('child'); //idTest 即为基础参数 id 对应的值
+                    selectRows = checkStatus.data
+                });
+                layer.open({
+                    type: 1,
+                    title: '绑定渠道',
+                    area: ['800px', '600px'], //宽高
+                    content: $('#openCont'),
+                    btn: ['确定', '取消'],
+                    yes: function (index, lay) {
+                        var cid = GetSelectedDatas(selectRows, 'admin_id');
+                        if (cid == "") {
+                            layer.alert('未选中任何数据', {
+                                icon: 7,
+                                skin: 'layer-ext-moon'
+                            })
+                            return;
+                        }
+                        var data = {
+                            token: getStorage('token'),
+                            admin_id: obj.data.admin_id,
+                            bind_channel: cid
+                        };
+                        if (data.bind_channel != null) {
+                            $.post(qp_url + 'admin/web/bindChannel', data, function (res) {
+                                if (res.status == 1) {
+                                    layer.msg(res.msg, {time: 1000, icon: 1})
+                                    table.reload('layTable')
+                                } else {
+                                    layer.msg(res.msg, {time: 1000, icon: 2})
+                                }
+                            }, 'json')
+                            layer.close(index);
+                        }
+                    }
                 })
             }
-            if(obj.event == 'edit'){
-                if(getStorage('admin_id')!=1){
-                    return layer.msg('您不是超级管理员，没有操作权限',{time:1000,icon:2})
+            //查看子渠道
+            if (obj.event == 'showinfo' + obj.data.admin_id) {
+                var isopen = $(this).context.dataset.isopen//看看是否已经展开，如果展开的，就将其关闭  0未展开，1展开
+                if ($(this).text() == '查看') {
+                    $(this).text('收起')
+                } else {
+                    $(this).text('查看')
                 }
-                openWindowOwn('add/tianJiaQuDao.html?admin_id='+obj.data.admin_id,'',800,500)
+                var tableId = 'child' + obj.data.admin_id
+                var current_tr = $(this).parents('tr')
+                if (isopen == 1) {
+                    $('.' + tableId).toggle()
+                    return;
+                }
+                $(this).context.dataset.isopen = 1
+                var _html = '<tr><td class="' + tableId + '" colspan="' + obj.tr.find('td').length + '"><table id="' + tableId + '" lay-filter="' + tableId + '"></table></td></tr>'
+                $(current_tr).after(_html);
+
+                table_child.render({
+                    elem: '#' + tableId
+                    , url: qp_url + '/admin/web/getChannelListByAdminId?token=' + getStorage('token') //数据接口
+                    , where: {
+                        admin_id: obj.data.admin_id,
+                    }
+                    , response: { //res 即为原始返回的数据
+                        statusName: 'status',
+                        statusCode: 1,
+                    },
+                    parseData: function (res) {
+                        return {
+                            "status": res.status, //解析接口状态
+                            "msg": res.msg, //解析提示文本
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    , cols: [[ //表头
+                        {type: 'numbers', title: '序号'}
+                        , {field: 'channel_num', title: '渠道号', width: 100}
+                        , {field: 'realname', title: '渠道昵称'}
+                        , {field: 'channel_addr', title: '渠道地址'}
+                        , {field: 'loginLimit', title: '登录限制', toolbar: '#isLogin'}
+                        , {field: 'YKLimit', title: '游客注册', toolbar: '#ykregister'}
+                        , {field: 'phoneLimit', title: '手机号注册', toolbar: '#mobileregister'}
+                        , {field: null, title: '操作', minWidth: 200, toolbar: '#operateMenu_child'}
+                    ]]
+                    , done: function (res, curr, count) {
+                        $('th').css({'text-align': 'center'});
+                    }
+                })
+                table_child.on('tool(' + tableId + ')', function (obj1) {
+                    console.log(obj1);
+                    if (obj1.event == 'del_child') {
+                        delChannel(obj1)
+                    }
+                    if (obj1.event == 'edit_child') {
+                        editChannel(obj1)
+                    }
+                    //更换父渠道
+                    if (obj1.event == 'change') {
+                        changeChannel(obj1)
+                    }
+                })
+                form.on('switch(loginLimit)', function (obj1) {
+                    changeStatus(obj1, 1, this.value);
+                });
+                form.on('switch(YKLimit)', function (obj1) {
+                    changeStatus(obj1, 2, this.value);
+                });
+                form.on('switch(phoneLimit)', function (obj1) {
+                    changeStatus(obj1, 3, this.value);
+                });
             }
-        });
-    });
+        })
+    })
+
+    $(document).on('click', '#btnQuery', function () {
+        let val = $('#txtKey').val()
+        if (val == "") {
+            return layer.msg('请输入搜索条件')
+        }
+        table.reload('layTable', {
+            where: {
+                username: val
+            },
+            page: {
+                curr: 1
+            }
+        })
+    })
 
     function reloadTable() {
         var curPage = $(".layui-laypage-em").next().html(); //当前页码值
@@ -208,118 +369,96 @@
         })
     }
 
-    function docReady() {
-        //加载数据
-        postData.StartDate = $("#txtStartDate").val();
-        postData.EndDate = $("#txtEndDate").val();
-        //日期查询
-        $("#btnQuery").click(function (e) {
-            var txtStartDate = $("#txtStartDate").val();
-            var txtEndDate = $("#txtEndDate").val();
-            if (txtStartDate != "" && txtEndDate != "") {
-                if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
-                    layer.alert("开始日期不能大于结束时间");
-                    return false;
-                }
-            }
-            postData.StartDate = txtStartDate;
-            postData.EndDate = txtEndDate;
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
+    //删除渠道
+    function delChannel(obj) {
+        if (getStorage('admin_id') != 1) {
+            return layer.msg('您不是超级管理员，没有操作权限', {time: 1000, icon: 2})
+        }
+        layer.alert('删除渠道会影响其下的用户归属，请慎用！！！', {
+            icon: 7
+        }, function () {
+            layer.confirm('确定要删除渠道【' + obj.data.realname + '】吗？,删除后其下的所有子渠道也将被删除，请慎用！', {
+                btn: ['确定', '取消'],
+                icon: 2
+            }, function () {
+                $.post(qp_url + 'admin/web/delChannel', {
+                    token: getStorage('token'),
+                    admin_id: obj.data.admin_id
+                }, function (res) {
+                    if (res.status == 1) {
+                        layer.msg(res.msg, {time: 1000, icon: 1})
+                        // obj.del();
+                        reloadTable()
+                    } else {
+                        layer.msg(res.msg, {time: 1000, icon: 2})
+                    }
+                }, 'json')
             })
         });
     }
 
-    //搜索事件
-    function AjaxSearch(postData) {
-        $('#pagin').paging("/DataAnalysis/GetGameRecord", postData, CreatTableBody, postData.pageIndex);
-    }
-
-    function StrToDateTime(timestr) {
-        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
-        return dt;
-    }
-
-    //绑定数据
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics, extObj) {
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-                html += stringFormat("<tr id=\"tr{0}\">", item.DrawID);
-                html += stringFormat("<td>{1}&nbsp;<img id=\"img{0}\" src=\"/Content/images/down.gif\" style=\"cursor: pointer\" alt=\"查看同桌玩家\" title=\"查看同桌玩家\" onclick=\"ShowInfo({0})\" /></td>", item.DrawID, item.InsertTime);
-                html += stringFormat("<td>{0}</td>", item.GameKindName);
-                html += stringFormat("<td>{0}</td>", item.GameRoomName);
-                html += stringFormat("<td>{0}</td>", item.TableID);
-                html += stringFormat("<td>{0}</td>", item.UserCount);
-                html += stringFormat("<td>{0}</td>", item.AndroidCount);
-                html += stringFormat("<td>{0}</td>", item.Waste);
-                html += stringFormat("<td>{0}</td>", item.Revenue);
-                //html += stringFormat("<td>{0}</td>", item.UserMedal);
-                html += stringFormat("<td>{0}</td>", item.StartTime);
-                html += stringFormat("<td>{0}</td>", item.ConcludeTime);
-                html += "</tr>";
-            });
+    //编辑渠道
+    function editChannel(obj) {
+        if (getStorage('admin_id') != 1) {
+            return layer.msg('您不是超级管理员，没有操作权限', {time: 1000, icon: 2})
         }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-        $("#WasteTotal").text(extObj.WasteTotal);
-        $("#RevenueTotal").text(extObj.RevenueTotal);
+        openWindowOwn('add/tianJiaQuDao.html?admin_id=' + obj.data.admin_id, '', 800, 700)
     }
 
-    function ShowInfo(Id) {
-        pageObj.drawID = Id;
-        var url = $("#img" + Id).attr("src").trim();
-        if (url == "/Content/images/down.gif") {
-            $("#img" + Id).attr("src", "/Content/images/up.gif");
-            AjaxSubmit("/DataAnalysis/GetUserGameRecord", pageObj, callBack, "del");
-        } else {
-            $("#img" + Id).attr("src", "/Content/images/down.gif");
-            $("#tr" + pageObj.drawID).next().remove();
+    function changeChannel(obj) {
+        if (getStorage('admin_id') != 1) {
+            return layer.msg('您不是超级管理员，没有操作权限', {time: 1000, icon: 2})
         }
-
+        var index = layer.open({
+            type: 1
+            , title: '更换父级渠道'
+            , content: `
+                        <div style="padding: 20px 30px">
+                            <label class="margin-r10">父级渠道:</label>
+                            <input id="parentId" required class="form-control inline input-width-200 " placeholder="请输入父级账号" >
+                        </div>
+            `
+            , area: ['400px', '200px']
+            , btn: ['保存', '返回']
+            , yes: function (index, layero) {
+                if ($('#parentId').val() == "") {
+                    return layer.msg('请输入父级账号', {time: 1000, icon: 2})
+                }
+                $.post(qp_url + 'admin/web/changeParentAccount?token=' + getStorage('token'), {
+                    username: $('#parentId').val(),
+                    admin_id: obj.data.admin_id
+                }, function (res) {
+                    layer.msg(res.msg, {time: 1500, icon: res.status ? 1 : 2})
+                    layer.close(index)
+                    if (res.status == 1) {
+                        reloadTable()
+                    }
+                }, 'json')
+            }
+        });
     }
 
-    //回调函数
-    function callBack(jsonData, fname) {
-        switch (fname) {
-            case "del":
-                var html = "<tr><td colspan=\"11\"><table class=\"table table-striped table-bordered bootstrap-datatable datatable responsive dataTable\">";
-                html += "<thead><tr role=\"row\">";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">帐号</th>";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">昵称</th>";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">游戏ID</th>";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">是否机器人</th>";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">椅子编号</th>";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">输赢积分</th>";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">税收/服务费</th>";
-                //html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">元宝数目</th>";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">游戏时长</th>";
-                html += " <th class=\"sorting\" role=\"columnheader\" rowspan=\"1\" colspan=\"1\">插入时间</th>";
-                html += "</tr></thead>";
-                html += "<tbody role=\"alert\">";
-                $.each(jsonData, function (i, item) {
-                    html += "<tr><td>" + item.Accounts + "</td><td>" + item.NickName + "</td><td>" + item.GameID + "</td><td>" + item.IsAndroid + "</td><td>" + item.ChairID + "</td><td>" + item.Score + "</td><td>" + item.Revenue + "</td><td>" + item.PlayTimeCount + "</td><td>" + item.InsertTime + "</td></tr>";
-                });
-                html += "</tbody>";
-                html += "</table></td></tr>";
-                $("#tr" + pageObj.drawID).after(html);
-                break;
+    function changeStatus(obj1, type, admin_id) {
+        var btnDom = obj1.othis;//获取美化后的DOM对象
+        var is_checked = obj1.elem.checked //获取开关的状态
+        let status = obj1.elem.checked === true ? 1 : 0;
+        if (getStorage('admin_id') != 1) {
+            if (is_checked) {
+                btnDom.find("em").text('禁止')
+            } else {
+                btnDom.find("em").text('允许')
+            }
+            btnDom.toggleClass('layui-form-onswitch')
+            return layer.msg('您不是超级管理员，没有操作权限', {time: 1000, icon: 2})
         }
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
+        $.post(qp_url + 'admin/web/changeStatus', {
+            token: getStorage('token'),
+            type: type,
+            status: status,
+            admin_id: admin_id
+        }, function (res) {
+            layer.msg(res.msg, {time: 1000, icon: res.status ? 1 : 2})
+        }, 'json')
     }
 </script>
 </body>

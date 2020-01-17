@@ -7,12 +7,8 @@
     <title>游戏系统 - 游戏管理</title>
     <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
-    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../../Scripts/comm.js"></script>
-    <script src="../../Scripts/pagination.js"></script>
     <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../../Content/common.css" rel="stylesheet" />
-    <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
     <style type="text/css">
         body{
             overflow-y: scroll!important;
@@ -110,6 +106,10 @@
             </div>
         </div>
     </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+<!--    <script src="../../Scripts/pagination.js"></script>-->
+    <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
     <script type="text/javascript">
         var pageObj = {};
         var postData = {};//搜索条件
@@ -164,7 +164,13 @@
                     , { field: 'GameRuleUrl', title: '规则路径' }
                     , { field: 'DownLoadUrl', title: '下载路径' }
                     , { field: 'RecommendName', title: '是否推荐' }
-                    , { field: 'NullityStatus', title: '禁用状态' }
+                    , { field: 'NullityStatus', title: '禁用状态',templet:function (d) {
+                           if(d.Nullity == 0){
+                               return `<span>${d.NullityStatus}</span>`
+                           }else{
+                               return `<span class="wrong">${d.NullityStatus}</span>`
+                           }
+                        } }
                 ]]
                 , done: function (res, curr, count) {
                     $('th').css({ 'text-align': 'center' });

@@ -1,0 +1,52 @@
+@media (max-width: 1000px) {
+    .menu,.main,.head-right{
+        transition: All .5s;
+    }
+    .menu{
+        width: 50px;
+    }
+    .main{
+        width: calc(100% - 50px);
+        margin-left: 50px;
+    }
+    .open .main{
+        margin-left: 220px;}
+    .one-menu, .show-box{
+        padding-left: 3px;}
+    .open .one-menu,.open .show-box{
+        padding-left: 12px;
+    }
+    .head-right .icon{
+        width: 44px;
+        height: 44px;
+        margin-bottom: 0;
+    }
+    .open .head-right .icon{
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
+    }
+    .head-right .row{
+        display: none;}
+    .open .head-right .row{
+        display: block;}
+    .head-right{
+        height: 60px;
+    }
+    .open .head-right{
+        height: 120px;
+    }
+    .open #selectbox .scroll-box{
+        height: calc(100% - 120px);
+    }
+    #selectbox .scroll-box{
+        height: calc(100% - 60px);
+    }
+
+    .open .menu-close{
+        display: block;
+    }
+    .open .menu{
+        width: 220px;
+    }
+}

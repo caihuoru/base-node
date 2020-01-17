@@ -30,7 +30,7 @@
 
 </head>
 <body>
-<div id="content" class="main-content" style="display: none;" v-show="userID">
+<div id="content" class="main-content" v-cloak>
     <div class="row">
         <div class="col-md-12">
             <div class="box-inner">
@@ -160,7 +160,7 @@
 <script src="../../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../../Scripts/comm.js"></script>
 <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
-<script src="../../Scripts/pagination.js"></script>
+<!--<script src="../../Scripts/pagination.js"></script>-->
 <script src="../../Scripts/vue.min.js"></script>
 <script type="text/html" id="operate">
     <div>
@@ -175,7 +175,7 @@
     function getUserCards(totalStr) {
         //牌局信息
         var info = totalStr;
-        let cards = [[],[],[],[]];
+        let cards = [[], [], [], []];
         let value = 14;
         for (var i = 0; i < 54; i++) {
             let char = parseInt(info.charAt(i));
@@ -185,14 +185,14 @@
                 name: i,
                 value: value,
             };
-            if(char)cards[char].push(obj)
+            if (char) cards[char].push(obj)
             value++
         }
         return cards
     }
 
-    $("#txtStartDate").val(Time.today().StartDate);
-    $("#txtEndDate").val(Time.today().NowDate);
+    $("#txtStartDate").val();
+    $("#txtEndDate").val();
     var param = getUrlParams('param')
     var pageObj = {};
     var postData = {};//搜索条件
@@ -208,12 +208,14 @@
         //时间选择器
         laydate.render({
             elem: '#txtStartDate'
-            , type: 'datetime'
+            // , type: 'datetime'
+            // , value: new Date()
             , theme: '#00B4E5'
         });
         laydate.render({
-            elem: '#txtEndDate', format: 'yyyy-MM-dd 23:59:59'
-            , type: 'datetime'
+            elem: '#txtEndDate'
+            // , value: new Date()
+            // , type: 'datetime'
             , theme: '#00B4E5'
         });
         docReady();
@@ -247,29 +249,30 @@
                 };
             }
             , cellMinWidth: 100
-            , height: 600
             , page: {
                 'theme': '#2D2D3C'
             } //开启分页
             , limits: [10, 20, 30, 50, 80, 100]
-            , limit: 10
+            , limit: 20
             , cols: [[ //表头
                 {field: 'UserID', title: '用户ID'}
                 , {field: 'NickName', title: '用户昵称'}
                 , {field: 'GameKindName', title: '游戏名称'}
                 , {field: 'GameRoomName', title: '房间名称', minWidth: 145}
                 , {field: 'DrawID', title: '局数标识'}
-                , {field: 'PlayTimeCount', title: '游戏时间',templet:function (d) {
+                , {
+                    field: 'PlayTimeCount', title: '游戏时间', templet: function (d) {
                         return ConverTimeToDHMS(d.PlayTimeCount)
-                    }}
+                    }
+                }
                 , {field: '', title: '牌局信息', minWidth: 120, toolbar: '#operate'}
-                , {field: 'PreScore', title: '变化前金币'}
+                // , {field: 'PreScore', title: '变化前金币'}
                 , {field: 'Score', title: '用户金币变化', minWidth: 120}
-                , {field: 'afterScore', title: '变化后金币'}
+                // , {field: 'afterScore', title: '变化后金币'}
                 , {field: 'TableID', title: '桌子'}
                 , {field: 'UserCount', title: '用户数目'}
-                , {field: 'AndroidCount', title: '机器人数'}
-                , {field: 'Waste', title: '损耗'}
+                // , {field: 'AndroidCount', title: '机器人数'}
+                , {field: 'Waste', title: '<span title="用户金币变化+税收">损耗</span>'}
                 , {field: 'Revenue', title: '税收/服务费', minWidth: 120}
                 , {field: 'InsertTime', title: '游戏日期', width: 170}
                 , {field: 'StartTime', title: '开始时间', width: 170}
@@ -289,11 +292,13 @@
                 $(this).attr('src', '../../Content/images/up.gif')
             }
             var tableId = 'child' + obj.data.DrawID
-            var current_tr = obj.tr[obj.tr.length - 1]
+            var current_tr = $(this).parents('tr')
             if (isopen == 1) {
                 $('.' + tableId).toggle()
                 return;
             }
+            console.log(obj)
+            console.log(tableId)
             $(this).context.dataset.isopen = 1
             if (obj.event == 'showinfo' + obj.data.DrawID) {
                 var _html = '<tr><td class="' + tableId + '" colspan="' + obj.tr.find('td').length + '"><table id="' + tableId + '" lay-filter="' + tableId + '"></table></td></tr>'
@@ -315,15 +320,37 @@
                         // dataName: 'data',
                     },
                     parseData: function (res) {
-                        var data = res.data
+                        let data = res.data
+                        let chairNum = getChairNum(objData.TableCardInfo, objData.GameKindName);
+
+                        function getChairNum(chair) {
+                            let arr = [];
+                            for (let i in chair.split('')) {
+                                let item = chair[i]
+                                if (item && arr.indexOf(item) < 0 && item != '0' && i < 55) {
+                                    arr.push(item)
+                                }
+                            }
+                            // console.log(arr)
+                            return arr
+                        }
+
+                        data.forEach(function (item, index) {
+                            chairNum = chairNum.filter(function (num) {
+                                // console.log(num,(item.ChairID + 1).toString())
+                                return num != (item.ChairID + 1).toString()
+                            });
+                        })
+                        console.log(objData)
                         console.log(res)
-                        if(objData.GameKindName == '斗地主'){
-                            if(data.length < 3){
-                                for(var i = data.length; i < 3; i++){
+                        // console.log(chairNum)
+                        if (getGameType(objData.GameKindName) == 'pk') {
+                            if (chairNum.length > 0) {
+                                for (let i = 0; i < chairNum.length; i++) {
                                     let obj = {};
-                                    let ChairID = data[0].ChairID + i
-                                    console.log(ChairID)
-                                    ChairID > 2 ? ChairID = 0 : ''
+                                    // console.log(chairNum[i])
+                                    let ChairID = parseInt(chairNum[i]) - 1
+                                    // console.log(ChairID)
                                     obj.NickName = '机器人'
                                     obj.ChairID = ChairID
                                     data.push(obj)
@@ -349,34 +376,185 @@
                             }
                         }
                         , {
-                            field: 'PlayTimeCount', title: '游戏时长',width:120, templet: function (d) {
+                            field: 'PlayTimeCount', title: '游戏时长', width: 120, templet: function (d) {
                                 return ConverTimeToDHMS(d.PlayTimeCount)
                             }
                         }
                         , {
-                            field: 'TableCardInfo', title: '牌型', minWidth:350, templet: function (d) {
-                                if(objData.GameKindName == '斗地主') {
-                                    var res = getUserCards(objData.TableCardInfo)
-                                    let card = res[d.ChairID+1];
-                                    let html = '<div class="cards">'
-                                    card.sort(function (a, b) {
-                                        return b.value - a.value
-                                    })
-                                    for(let i in card){
-                                        let item = card[i];
-                                        html += '<img src="../../Content/images/pk/'+item.name+'.jpg" data-value="'+item.value+'">'
+                            field: 'TableCardInfo',
+                            title: '牌型',
+                            width: objData.GameKindName == '斗地主' ? 515 : objData.GameKindName == '通比牛牛' ? 250 : 200,
+                            templet: function (d) {
+                                // console.log(this)
+                                // console.log($(this))
+                                if (getGameType(objData.GameKindName) == 'pk') {
+                                    let res = getUserCards(objData.TableCardInfo, objData.GameKindName)
+                                    // console.log(res)
+                                    let html = '<div class="cards column">'
+                                    let card = res[d.ChairID + 1];
+                                    if (objData.GameKindName == '斗地主') {
+                                        card.sort(function (a, b) {
+                                            return b.value - a.value
+                                        })
+                                    }
+                                    if (card && card.length > 0) {
+                                        html += '<div class="row">'
+                                        for (let i in card) {
+                                            let item = card[i];
+                                            html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                        }
+                                        html += '</div>'
                                     }
                                     html += '</div>'
                                     return html
-                                }else{
+                                } else if (objData.GameKindName == '百家乐') {
+                                    let res = getUserCards(objData.TableCardInfo, objData.GameKindName)
+                                    let html = '<div class="cards column">'
+                                    html += '<div class="row"><span>闲：</span>'
+                                    for (let i in res[1]) {
+                                        let item = res[1][i];
+                                        html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                    }
+                                    html += '</div><div class="row"><span>庄：</span>'
+                                    for (let i in res[2]) {
+                                        let item = res[2][i];
+                                        html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                    }
+                                    html += '</div>'
+                                    return html
+                                } else if (objData.GameKindName == '红黑大战') {
+                                    let res = getUserCards(objData.TableCardInfo, objData.GameKindName)
+                                    let html = '<div class="cards column">'
+                                    html += '<div class="row"><span>黑：</span>'
+                                    for (let i in res[1]) {
+                                        let item = res[1][i];
+                                        html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                    }
+                                    html += '</div><div class="row"><span>红：</span>'
+                                    for (let i in res[2]) {
+                                        let item = res[2][i];
+                                        html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                    }
+                                    html += '</div>'
+                                    return html
+                                } else if (objData.GameKindName == '龙虎斗') {
+                                    let res = getUserCards(objData.TableCardInfo, objData.GameKindName)
+                                    let html = '<div class="cards column">'
+                                    html += '<div class="row"><span>龙：</span>'
+                                    for (let i in res[1]) {
+                                        let item = res[1][i];
+                                        html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                    }
+                                    html += '</div><div class="row"><span>虎：</span>'
+                                    for (let i in res[2]) {
+                                        let item = res[2][i];
+                                        html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                    }
+                                    html += '</div>'
+                                    return html
+                                }else if (objData.GameKindName == '豪车俱乐部') {
+                                    let html = '<div class="cards column">'
+                                    html += '<img src="../../Content/images/hc/' + objData.TableCardInfo + '.png">'
+                                    html += '</div>'
+                                    return html
+                                }else if (objData.GameKindName == '飞禽走兽') {
+                                    let html = '<div class="cards column">'
+                                    html += '<img src="../../Content/images/dw/' + (parseInt(objData.TableCardInfo.substring(0,1)) + 1) + '.png">'
+                                    html += '</div>'
+                                    return html
+                                } else if (objData.GameKindName == '百人牛牛') {
+                                    let res = getUserCards(objData.TableCardInfo, objData.GameKindName)
+                                    let html = '<div class="cards column">'
+                                    html += '<div class="row"><span>庄：</span>'
+                                    for (let i in res[1]) {
+                                        let item = res[1][i];
+                                        html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                    }
+                                    let arr = ['天', '地', '玄', '黄']
+                                    for (let i = 2; i < res.length; i++) {
+                                        html += '</div><div class="row"><span>' + arr[i - 2] + '：</span>'
+                                        for (let o in res[i]) {
+                                            let item = res[i][o];
+                                            html += '<img src="../../Content/images/pk/' + item.name + '.jpg" data-value="' + item.value + '">'
+                                        }
+                                    }
+                                    html += '</div>'
+                                    return html
+                                } else if (objData.GameKindName == '百人骰宝') {
+                                    let arr = objData.TableCardInfo.split('')
+                                    let html = '<div class="cards column">'
+                                    for (let i in arr) {
+                                        let item = arr[i];
+                                        html += '<img src="../../Content/images/tz/' + item + '.png" style="margin-left: 0;width: 50px;" data-value="' + item + '">'
+                                    }
+                                    html += '</div>'
+                                    return html
+                                } else if (getGameType(objData.GameKindName) == 'mj') {
+                                    let res = getUserMahjong(objData.TableCardInfo, objData.GameKindName)
+                                    let html = '<div class="mahjong">'
+                                    html += '<div class="row"><span>中：</span>'
+                                    for (let i in res[1]) {
+                                        let item = res[1][i];
+                                        html += '<img src="../../Content/images/mj/' + item.name + '.png" data-value="' + item.value + '">'
+                                    }
+                                    html += '</div><div class="row"><span>白：</span>'
+                                    for (let i in res[2]) {
+                                        let item = res[2][i];
+                                        html += '<img src="../../Content/images/mj/' + item.name + '.png" data-value="' + item.value + '">'
+                                    }
+                                    html += '</div>'
+                                    return html
+                                } else {
                                     return ``
                                 }
                             }
                         }
-                        , {field: 'Score', title: '输赢积分',width: 120}
-                        , {field: 'Revenue', title: '税收/服务费',width: 120}
+                        , {
+                            field: 'recordDrawBet', title: '下注区域', width: 200, templet: function (d) {
+                                // console.log(objData)
+                                // console.log(d)
+                                // console.log('开奖结果',objData.TableCardInfo)
+                                // console.log('下注区域',d.recordDrawBet)
+                                let html = '<div class="DrawBet">'
+                                if (DrawBet[objData.GameKindName]) {
+                                    if(objData.GameKindName == '豪车俱乐部'){
+                                        for(let i=0; i< d.recordDrawBet.length; i++){
+                                            let item = d.recordDrawBet[i];
+                                            let str = '<img src="../../Content/images/hc/'+DrawBet[objData.GameKindName][item.BetArea].name+'.png">'+'：'+item.BetScore+'<br>'
+                                            // console.log(str)
+                                            html += str
+                                        }
+                                    }else if(objData.GameKindName == '飞禽走兽'){
+                                        for(let i=0; i< d.recordDrawBet.length; i++){
+                                            let item = d.recordDrawBet[i];
+                                            let str;
+                                            if(item.BetArea < 10){
+                                                str = '<img src="../../Content/images/dw/'+DrawBet[objData.GameKindName][item.BetArea].name+'.png">'+'：'+item.BetScore+'<br>'
+                                            }else {
+                                                str = DrawBet[objData.GameKindName][item.BetArea].name+'：'+item.BetScore+'<br>'
+                                            }
+                                            // console.log(str)
+                                            html += str
+                                        }
+                                    }else{
+                                        for(let i=0; i< d.recordDrawBet.length; i++){
+                                            let item = d.recordDrawBet[i];
+                                            let str = DrawBet[objData.GameKindName][item.BetArea].name+'：'+item.BetScore+'<br>'
+                                            // console.log(str)
+                                            html += str
+                                        }
+                                    }
+                                    html += '</div>'
+                                    return html
+                                } else {
+                                    return '对战游戏无下注'
+                                }
+                            }
+                        }
+                        , {field: 'Score', title: '输赢金币', width: 120}
+                        , {field: 'Revenue', title: '税收/服务费', width: 120}
 
-                        , {field: 'InsertTime', title: '插入时间',width: 120}
+                        , {field: 'InsertTime', title: '插入时间', width: 120}
                         , {field: '', title: ''}
                     ]]
                     , done: function (res, curr, count) {
@@ -386,11 +564,190 @@
             }
         });
     });
+    // 获取下注区域
+    let DrawBet = {
+        '豪车俱乐部': [
+            { name: '0'},
+            { name: '1'},
+            { name: '2'},
+            { name: '3'},
+            { name: '4'},
+            { name: '5'},
+            { name: '6'},
+            { name: '7'},
+        ],
+        '飞禽走兽': [
+            { name: '0'},
+            { name: '1'},
+            { name: '2'},
+            { name: '3'},
+            { name: '4'},
+            { name: '5'},
+            { name: '6'},
+            { name: '7'},
+            { name: '8'},
+            { name: '9'},
+            { name: '飞禽'},
+            { name: '走兽'},
+        ],
+        '中发白': [
+            {name: '中赢'},
+            {name: '平局'},
+            {name: '白赢'},
+            {name: '0点'},
+            {name: '1点'},
+            {name: '2点'},
+            {name: '3点'},
+            {name: '4点'},
+            {name: '5点'},
+            {name: '6点'},
+            {name: '7点'},
+            {name: '8点'},
+            {name: '9点'},
+            {name: '豹子'},
+            {name: '天杠'},
+        ],
+        '百人骰宝': [
+            {name: '押小'},
+            {name: '双骰1点'},
+            {name: '双骰2点'},
+            {name: '双骰3点'},
+            {name: '围骰1点'},
+            {name: '围骰2点'},
+            {name: '围骰3点'},
+            {name: '全围'},
+            {name: '围骰4点'},
+            {name: '围骰5点'},
+            {name: '围骰6点'},
+            {name: '双骰4点'},
+            {name: '双骰5点'},
+            {name: '双骰6点'},
+            {name: '押大'},
+            {name: '4点'},
+            {name: '5点'},
+            {name: '6点'},
+            {name: '7点'},
+            {name: '8点'},
+            {name: '9点'},
+            {name: '10点'},
+            {name: '11点'},
+            {name: '12点'},
+            {name: '13点'},
+            {name: '14点'},
+            {name: '15点'},
+            {name: '16点'},
+            {name: '17点'},
+            {name: '单个1点'},
+            {name: '单个2点'},
+            {name: '单个3点'},
+            {name: '单个4点'},
+            {name: '单个5点'},
+            {name: '单个6点'},
+        ],
+        '百人牛牛': [
+            {name: '庄'},
+            {name: '天'},
+            {name: '地'},
+            {name: '玄'},
+            {name: '黄'},
+        ],
+        '百家乐': [
+            {name: '闲赢'},
+            {name: '平局'},
+            {name: '庄赢'},
+            {name: '闲天王'},
+            {name: '庄天王'},
+            {name: '平局'},
+            {name: '闲对子'},
+            {name: '庄对子'},
+        ],
+        '龙虎斗': [
+            {name: '龙'},
+            {name: '平'},
+            {name: '虎'},
+        ],
+        '红黑大战': [
+            {name: '黑'},
+            {name: '幸运一击'},
+            {name: '红'},
+        ],
+    }
 
+    // 获取游戏类型
+    function getGameType(name) {
+        // 扑克游戏
+        if (name == '斗地主' || name == '通比牛牛' || name == '抢庄牛牛' || name == '诈金花' || name == '炸金花') {
+            return 'pk'
+        }
+        if (name == '中发白') {
+            return 'mj'
+        }
+    }
+
+    //获取牌局信息和当前用户的牌
+    //参数totalStr：从服务端得到的字符串
+    function getUserCards(totalStr, name) {
+        //牌局信息
+        var info = totalStr;
+        let cards = [[], [], [], []];
+        let value = 14;
+        let max = 54;
+        if (name != '斗地主') {
+            max = 52
+        }
+        for (var i = 0; i < max; i++) {
+            let char = parseInt(info.charAt(i));
+            value > 15 ? value -= 13 : ''
+            i == 52 ? value = 16 : i == 53 ? value = 17 : ''
+            let obj = {
+                name: i,
+                value: value,
+            };
+            if (char) {
+                if (cards[char]) {
+                    cards[char].push(obj)
+                } else {
+                    cards[char] = [obj]
+                }
+            }
+            value++
+        }
+        return cards
+    }
+
+    function getUserMahjong(totalStr, name) {
+        //牌局信息
+        console.log(totalStr.length)
+        var info = totalStr;
+        let cards = [[], [], []];
+        let value = 0;
+        let max = totalStr.length;
+        // if(name != '斗地主'){
+        //     max = 52
+        // }
+        for (var i = 0; i < max; i++) {
+            let char = parseInt(info.charAt(i));
+            value > 11 ? value -= 12 : ''
+            let obj = {
+                name: value,
+                value: value,
+            };
+            if (char) {
+                if (cards[char]) {
+                    cards[char].push(obj)
+                } else {
+                    cards[char] = [obj]
+                }
+            }
+            value++
+        }
+        // console.log(cards)
+        return cards
+    }
 
     function docReady() {
-        postData.StartDate = Time.today().StartDate;
-        postData.EndDate = Time.today().NowDate;
+        // postData.StartDate = "";
+        // postData.EndDate = "";
         postData.UserID = param;
 
         $("#btnquery").click(function (e) {
@@ -403,10 +760,8 @@
                     return false;
                 }
             }
-            if (txtStartDate != "" && txtEndDate != "") {
-                postData.StartDate = txtStartDate;
-                postData.EndDate = txtEndDate;
-            }
+            postData.StartDate = datetimeFormat(txtStartDate, 0);
+            postData.EndDate = datetimeFormat(txtEndDate, 1);
             table.reload('layTable', {
                 where: postData
                 , page: {

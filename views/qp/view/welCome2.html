@@ -13,9 +13,6 @@
     <link href="../Content/common.css" rel="stylesheet" />
     <link href="../Content/statistics.css" rel="stylesheet">
     <link rel="stylesheet" href="../Content/home.css">
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Scripts/echarts-all-3.js"></script>
     <style type="text/css">
         body {
             overflow-y: scroll !important;
@@ -53,7 +50,7 @@
         <div class="">
             <div class="carousel">
                 <div>
-                    <select class="form-control inline" style="width: 105px" v-model="showtype" @change="btnQuery(1)">
+                    <select class="form-control  inline" style="width: 105px" v-model="showtype" @change="btnQuery(1)">
                         <option value="0">今日</option>
                         <option value="1">汇总</option>
                         <option value="2">历史汇总</option>
@@ -72,13 +69,13 @@
                         </div>
                         <img class="home-refresh" src="../Content/images/home-icon/refresh@2x.png"
                             onclick="history.go(0);">
-                        <span class="home-tip">实时在线人数：{{userOnlineNum}}人</span>
+                        <span class="home-tip">实时在线人数：<span id="userOnlineNum"></span>人</span>
                     </div>
                     <div class="row bg-white margin-t36 col5" style="padding-bottom: 40px;">
                         <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
                             <img src="../Content/images/home-icon/qiandai@2x.png" class="home-section-icon">
                             <div class="inline" style="vertical-align: middle">
-                                <div>{{allWithdrawAmount}}元</div>
+                                <div>{{allWithdrawAmount || 0}}元</div>
                                 <div>{{date}}总兑换金额</div>
                             </div>
                         </div>
@@ -113,7 +110,6 @@
                         <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
                             <img src="../Content/images/home-icon/dhbl@2x.png" class="home-section-icon">
                             <div class="inline" style="vertical-align: middle">
-                                <!-- <div>{{withdrawPoint}}%</div> -->
                                 <div>{{withdrawPoint}}</div>
                                 <div>{{date}}兑换比率</div>
                             </div>
@@ -150,21 +146,21 @@
                             <img src="../Content/images/home-icon/xz@2x.png" class="home-section-icon">
                             <div class="inline" style="vertical-align: middle">
                                 <div>{{newRegisterUser}}人</div>
-                                <div>新增注册</div>
+                                <div>新增用户人数</div>
                             </div>
                         </div>
                         <div class="home-section-sty1  col-lg-2 col-md-3 col-sm-4 col-xs-4">
                             <img src="../Content/images/home-icon/ios@2x.png" class="home-section-icon">
                             <div class="inline" style="vertical-align: middle">
                                 <div>{{newRegisterIosUser}}人</div>
-                                <div>新增IOS注册</div>
+                                <div>新增IOS用户人数</div>
                             </div>
                         </div>
                         <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
                             <img src="../Content/images/home-icon/az@2x.png" class="home-section-icon">
                             <div class="inline" style="vertical-align: middle">
                                 <div>{{newRegisterAandroidUser}}人</div>
-                                <div>新增安卓注册</div>
+                                <div>新增安卓用户人数</div>
                             </div>
                         </div>
                         <div class="home-section-sty1 col-lg-2 col-md-3 col-sm-4 col-xs-4">
@@ -204,33 +200,33 @@
                                     <p class="bar-box" id="prog-val1">
                                         <span class="bar bar-login"></span>
                                     </p>
-                                    <h3>用户登录数：</h3>
+                                    <h3>今日用户登录数：</h3>
                                     <label>{{todayLoginUserNum}}人</label>
                                 </li>
                                 <li>
                                     <p class="bar-box" id="prog-val2">
                                         <span class="bar bar-active"></span>
                                     </p>
-                                    <h3>活跃用户数：</h3>
+                                    <h3>今日活跃用户数：</h3>
                                     <label>{{todayGameUserNum}}人</label>
                                 </li>
                                 <li>
                                     <p class="bar-box" id="prog-val3">
                                         <span class="bar bar-hall"></span>
                                     </p>
-                                    <h3>最高在线人数（大厅）：</h3>
+                                    <h3>今日最高在线人数（大厅）：</h3>
                                     <label>{{todayClientUserMax}}人</label>
                                 </li>
                                 <li>
                                     <p class="bar-box" id="prog-val4">
                                         <span class="bar bar-game"></span>
                                     </p>
-                                    <h3>最高在线人数（游戏中）：</h3>
+                                    <h3>今日最高在线人数（游戏中）：</h3>
                                     <label>{{todayGameUserMax}}人</label>
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-lg-5 col-md-5 col-sm-5">
+                        <div class="col-lg-5 col-md-5 col-sm-5 no-lr-padding">
                             <!--                            用户注册统计图-->
                             <div id="echarts1"></div>
                         </div>
@@ -244,7 +240,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 padding-left-0 ">
                             <div id="echarts2" class=""></div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6 ">
+                        <div class="col-lg-6 col-md-6 col-sm-6 phone-media">
                             <div id="echarts3" class=""></div>
                         </div>
                     </div>
@@ -252,7 +248,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 padding-left-0 ">
                             <div id="echarts4"></div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="col-lg-6 col-md-6 col-sm-6 phone-media">
                             <div id="echarts5"></div>
                         </div>
                     </div>
@@ -264,18 +260,18 @@
                     <div class="row margin-t36 bg-white padd">
                         <table id="tab" cellpadding="1" cellspacing="1" border="1">
                             <tr class="tab-h-title">
-                                <th class="tab-head"><span>老用户</span><span>新用户</span></th>
+                                <th class="tab-head" width="120"><span id="lyh">老用户</span><span id="xyh">新用户</span></th>
                                 <th colspan="2">充值（金额/元）</th>
                                 <th colspan="2">充值（人数）</th>
                                 <th colspan="2">充值（人次）</th>
                             </tr>
                             <tr>
                                 <th>三方通道</th>
-                                <th>{{oldUserPayAmountThird}}</th>
-                                <th>{{newUserPayAmountThird}}</th>
-                                <th>{{oldUserPayNumThird}}</th>
-                                <th>{{newUserPayNumThird}}</th>
-                                <th>{{oldUserPayTimesThird}}</th>
+                                <th width="15%">{{oldUserPayAmountThird}}</th>
+                                <th width="15%">{{newUserPayAmountThird}}</th>
+                                <th width="15%">{{oldUserPayNumThird}}</th>
+                                <th width="15%">{{newUserPayNumThird}}</th>
+                                <th width="15%">{{oldUserPayTimesThird}}</th>
                                 <th>{{newUserPayTimesThird}}</th>
                             </tr>
                             <tr>
@@ -302,17 +298,31 @@
             </div>
         </div>
     </div>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Scripts/echarts-all-3.js"></script>
     <!--[if lt IE 9]>
 <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
     <script src="../Content/laydate/laydate.js"></script>
     <script src="../Scripts/vue.min.js"></script>
-    <script src="../Scripts/axios.js"></script>
-    <script src="../Scripts/pagination.js"></script>
+<!--    <script src="../Scripts/axios.js"></script>-->
+<!--    <script src="../Scripts/pagination.js"></script>-->
     <script type="text/javascript">
         let that = {};
         var _width = 150 / $('#echarts1').width();
+
+        function max100(num) {
+            return num > 100 ? 100 : num
+        }
+
+        $.get(qp_url + 'admin/Analysis/indexOnlineNum?token=' + getStorage('token'), function (res) {
+            if (res.status == 1) {
+                $('#userOnlineNum').text(res.data.userOnlineNum)
+            }
+        }, 'json')
+
         $.ajax({
             type: 'GET',
             url: qp_url + "admin/Analysis/systemStatistics?token=" + getStorage('token'),
@@ -323,10 +333,10 @@
                     that = rsp.data
                     that.date = "今日";
                     that.showtype = 0
-                    $('#prog-val1').css({ 'width': (that.todayLoginUserNum / that.allUserNum) * 100 + '%' })
-                    $('#prog-val2').css({ 'width': (that.todayGameUserNum / that.allUserNum) * 100 + '%' })
-                    $('#prog-val3').css({ 'width': (that.todayClientUserMax / that.allUserNum) * 100 + '%' })
-                    $('#prog-val4').css({ 'width': (that.todayGameUserMax / that.allUserNum) * 100 + '%' })
+                    $('#prog-val1').css({ 'width': max100((that.todayLoginUserNum / that.allUserNum) * 100) + '%' })
+                    $('#prog-val2').css({ 'width': max100((that.todayGameUserNum / that.allUserNum) * 100) + '%' })
+                    $('#prog-val3').css({ 'width': max100((that.todayClientUserMax / that.allUserNum) * 100) + '%' })
+                    $('#prog-val4').css({ 'width': max100((that.todayGameUserMax / that.allUserNum) * 100) + '%' })
                     var myVue = new Vue({
                         el: '#content',
                         data: that,
@@ -416,13 +426,13 @@
             // 注册充值比例
             that.userReg = []
             let v1 = (that.registerUserPayNum / that.newRegisterUser) * 100 || 0
-            that.userReg.push(v1.toFixed(2))
+            that.userReg.push(v1 % 1 === 0 ? v1 : v1.toFixed(2))
             let v2 = (that.bindPhoneNum / that.newRegisterUser) * 100 || 0
-            that.userReg.push(v2.toFixed(2))
+            that.userReg.push(v2 % 1 === 0 ? v2 : v2.toFixed(2))
             let v3 = (that.bindZfbNum / that.newRegisterUser) * 100 || 0
-            that.userReg.push(v3.toFixed(2))
+            that.userReg.push(v3 % 1 === 0 ? v3 : v3.toFixed(2))
             let v4 = (that.bindBankNum / that.newRegisterUser) * 100 || 0
-            that.userReg.push(v4.toFixed(2))
+            that.userReg.push(v4 % 1 === 0 ? v4 : v4.toFixed(2))
 
             // 初始化
             var chart1 = echarts.init(document.getElementById('echarts1'));
@@ -615,7 +625,7 @@
                                 for (var i = 0; i < ArrAy_.length; i++) {
                                     sum += Number(ArrAy_[i].value <= 0 ? 0 : ArrAy_[i].value);
                                 }
-                                console.log(sum);
+                                // console.log(sum);
                                 // if(sum)
                                 return style_txt + '\n' + sum;//值为负的就归0
                             }
@@ -647,32 +657,32 @@
                         }().sort(function (a, b) {
                             return a.value - b.value;
                         }),
-                        roseType: 'radius',
+                        // roseType: 'radius',
                         label: {
                             normal: {
                                 formatter: function (params) {
                                     if (Percentage) {
-                                        console.log(params.percent)
-                                        return (params.percent <= 0 ? "" : params.percent + "%")
+                                        // console.log(params.percent)
+                                        return (params.percent <= 0 ? "0" : params.percent + "%")
                                     } else {
-                                        if (isshow) {
-                                            return "";
-                                        } else {
-                                            return (params.value <= 0 ? "" : style_txt + ":" + params.value)
-                                        }
+                                        // if (isshow) {
+                                        //     return "";
+                                        // } else {
+                                        return (params.value <= 0 ? "0" : style_txt + ":" + params.value)
+                                        // }
 
                                     }
                                 },
                                 textStyle: {
-                                    color: '#8E8E8E',
-                                    fontSize: 16,
-                                    fontWeight: 'bold'
+                                    // color: '#8E8E8E',
+                                    fontSize: 14,
+                                    // fontWeight: 'bold'
                                 }
                             }
                         },
                         labelLine: {
                             normal: {
-                                show: false
+                                show: true
                             }
                         },
                         animationType: 'scale',

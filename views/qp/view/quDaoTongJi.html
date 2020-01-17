@@ -48,7 +48,7 @@
                                         <li>
                                             <select id="gameChannel" class="form-control input-sm">
                                                 <option value="0">全渠道</option>
-                                                <option :value="item.id" v-for="item in gameChannel">{{item.username}}
+                                                <option :value="item.id" v-for="item in gameChannel">{{item.realname}}
                                                 </option>
                                             </select>
                                         </li>
@@ -200,7 +200,7 @@
             , cols: [[ //表头
                 {field: 'now_date', title: '日期'}
                 , {field: 'channel', title: '渠道昵称'}
-                , {field: 'channel_id', title: '渠道ID'}
+                , {field: 'channel_id', title: '渠道号'}
                 , {field: 'crlcl', title: '次日留存率'}
                 , {field: 'appur', title: 'APPRU值'}
                 , {field: 'srlcl', title: '3日留存率'}

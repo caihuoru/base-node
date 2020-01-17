@@ -106,8 +106,8 @@
 </script>
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
-<script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Content/laydate/laydate.js"></script>-->
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     let loading;
@@ -128,8 +128,12 @@
         tableIn = table.render({
             elem: '#list',
             url: qp_url + 'admin/Filled/payChannelList?token=' + getStorage('token'),
-            method: 'post',
-            response: { //res 即为原始返回的数据
+            method: 'post'
+            , request: {
+                pageName: 'pageIndex' //页码的参数名称，默认：page
+                , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+            }
+            , response: { //res 即为原始返回的数据
                 statusName: 'status',
                 statusCode: 1,
                 // msgName: 'msg',
@@ -144,8 +148,13 @@
                     "data": res.data.data //解析数据列表
                 };
             },
-            title: '管理员列表',
-            cols: [[
+            title: '管理员列表'
+            , page: {
+                'theme': '#2D2D3C'
+            } //开启分页
+            , limits: [10, 20, 30, 50, 80, 100]
+            , limit: 20
+            , cols: [[
                 {field: 'id', title: '编号', width: 60, fixed: true}
                 , {field: 'platform_name', title: '支付平台',minWidth: 100}
                 , {field: 'pay_channel', title: '支付渠道', width: 200}

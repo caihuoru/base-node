@@ -8,11 +8,11 @@
     <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
-    <link href="../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
+<!--    <link href="../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>-->
     <link href="../Content/common.css" rel="stylesheet"/>
     <style type="text/css">
-        body{
-            overflow-y: scroll!important;
+        body {
+            overflow-y: scroll !important;
         }
     </style>
 </head>
@@ -57,24 +57,6 @@
                     <!--table开始-->
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                         <table style="display: none" id="layTable" lay-filter="test"></table>
-
-                        <table style="display: none"
-                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
-                            <thead>
-                            <tr role="row">
-
-                                <th>玩家ID</th>
-                                <th>玩家账号</th>
-                                <th>总输赢<img class="sort" src="../../Content/images/down.gif" style="cursor: pointer"
-                                            title="点击进行排序查询" data-sort="desc" data-order="TotalScore"/></th>
-                                <th>涨幅金额<img class="sort" src="../../Content/images/up.gif" style="cursor: pointer"
-                                             title="点击进行排序查询" data-sort="asc" data-order="ScoreSort"/></th>
-                                <th>详细金币变化</th>
-                            </tr>
-                            </thead>
-                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
-                        </table>
-
                     </div>
                     <!--table结束-->
                 </div>
@@ -83,33 +65,32 @@
     </div>
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/comm.js"></script>
-    <script src="../Scripts/pagination.js"></script>
+    <!--    <script src="../Scripts/pagination.js"></script>-->
     <script src="../Content/laydate/laydate.js"></script>
     <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
-    <script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+<!--    <script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>-->
     <script type="text/javascript">
         var pageObj = {};
         var postData = {};//搜索条件
-        var table;
+        var table,layer;
         $(document).ready(function () {
             laydate.render({
                 elem: '#txtStartDate'
-                ,type:'datetime'
+                , type: 'datetime'
                 , value: new Date(Time.today().StartDate)
                 , format: 'yyyy-MM-dd'
                 , theme: '#00B4E5'
             });
             laydate.render({
                 elem: '#txtEndDate'
-                ,type:'datetime'
+                , type: 'datetime'
                 , value: new Date(Time.today().EndDate)
-
                 , theme: '#00B4E5'
             });
-            docReady()
         });
-        layui.use('table', function () {
+        layui.use(['table','layer'], function () {
             table = layui.table;
+            layer = layui.layer;
             //第一个实例
             table.render({
                 elem: '#layTable'
@@ -121,7 +102,7 @@
                     EndDate: Time.today().EndDate,//默认当天的数据
                     order: '',
                     sort: '',
-                    token:getStorage('token')
+                    token: getStorage('token')
                 }
                 , request: {
                     pageName: 'pageIndex' //页码的参数名称，默认：page
@@ -140,7 +121,7 @@
                         "data": res.data //解析数据列表
                     };
                 }
-                // , page: false
+                , page: false
                 , cellMinWidth: 120
                 , cols: [[ //表头
                     {field: 'GameID', title: '玩家ID'}
@@ -153,8 +134,7 @@
                     , {field: 'ScoreSort', title: '涨幅金额', sort: true}
                     , {
                         field: '', title: '详细金币变化', templet: function (d) {
-                            return `<span class="layui-btn layui-btn-xs layui-btn-normal" onclick="openWindowOwn('Abnormal/AccountScoreDetail.html?param={0}&stTime='+$(\'#txtStartDate\').val()+'&endTime='+$(\'#txtEndDate\').val()+'&account=${d.Accounts}&nick=${d.NickName}&userid=${d.UserID}','详细金币变化',850,600);">详细金币变化</span>`
-                            return `<!--<span class="layui-btn layui-btn-xs layui-btn-normal" onclick="openWindowOwn('Abnormal/AccountScoreDetail.html?param={0}&stTime='+$(\'#txtStartDate\').val()+'&endTime='+$(\'#txtEndDate\').val()+'&account=${d.Accounts}&nick=${d.NickName}&userid=${d.UserID}','输赢详情',850,600);">输赢详情</span>-->`
+                            return `<span class="layui-btn layui-btn-xs layui-btn-normal" onclick="openWindowOwn('Abnormal/AccountScoreDetail.html?stTime='+$(\'#txtStartDate\').val()+'&endTime='+$(\'#txtEndDate\').val()+'&account=${d.Accounts}&nick=${d.NickName}&userid=${d.UserID}','详细金币变化',850,600);">详细金币变化</span>`
                         }
                     }
                 ]]
@@ -174,9 +154,6 @@
                         order: obj.field
                     }
                     , autoSort: false
-                    , page: {
-                        curr: 1
-                    }
                 });
             });
         });
@@ -186,9 +163,12 @@
             var txtEndDate = $("#txtEndDate").val();
             if (txtStartDate != "" && txtEndDate != "") {
                 if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
-                    alert("开始日期不能大于结束时间");
+                    layer.alert("开始日期不能大于结束时间");
                     return false;
                 }
+            }else{
+                layer.alert("开始/结束日期不能为空！");
+                return false;
             }
             postData.StartDate = txtStartDate;
             postData.EndDate = txtEndDate;
@@ -196,78 +176,8 @@
             postData.order = '';
             table.reload('layTable', {
                 where: postData
-                , page: {
-                    curr: 1
-                }
             })
         })
-
-        function docReady() {
-            //     //加载数据
-            //     AjaxSearch(postData);
-            //     //收放事件
-            // $('.btn-minimize').click(function (e) {
-            //     e.preventDefault();
-            //     var $target = $(this).parent().parent().next('.box-content');
-            //     if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-            //     else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-            //     $target.slideToggle();
-            // });
-            //     $("#btnquery").click(function (e) {
-            //         AjaxSearch(postData);
-            //     });
-            // }
-            //
-            // //搜索事件
-            // function AjaxSearch(postData) {
-            //     var txtStartDate = $("#txtStartDate").val();
-            //     var txtEndDate = $("#txtEndDate").val();
-            //     if (txtStartDate != "" && txtEndDate != "") {
-            //         if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
-            //             alert("开始日期不能大于结束时间");
-            //             return false;
-            //         }
-            //     }
-            //     postData.StartDate = txtStartDate;
-            //     postData.EndDate = txtEndDate;
-            //
-            //     $.post("/Abnormal/GetExceptionList", postData, function (data) {
-            //         var html = "";
-            //         if (data.IsOk) {
-            //             var jsondata = $.parseJSON(data.Data);
-            //             if (jsondata != null && jsondata.length > 0) {
-            //                 $.each(jsondata, function (i, item) {
-            //                     html += stringFormat("<tr>");
-            //                     //html += stringFormat("<td>{0}</td>", item.NickName);
-            //                     html += stringFormat("<td>{0}</td>", item.GameID);
-            //                     html += stringFormat("<td>{0}</td>", G_AddUserNameLink(item.Accounts, item.UserID, item.UserType));
-            //                     html += stringFormat("<td>{0}</td>", item.TotalScore.formatMoney());
-            //                     html += stringFormat("<td>{0}</td>", item.ScoreSort.formatMoney());
-            //                     html += stringFormat("<td><a class=\"l\" href=\"javascript:void(0);\" onclick=\"openWindowOwn('/Abnormal/AccountScoreDetail?param={0}&stTime={1}&endTime={2}&account={3}&nick={4}','详细金币变化',850,600);\">详细金币变化</a></td>", item.UserID, $("#txtStartDate").val(), $("#txtEndDate").val(), item.Accounts, item.NickName);
-            //                     html += "</tr>";
-            //                 });
-            //             }
-            //             $("#DataTables_Table_0_wrapper tbody").html(html);
-            //         } else {
-            //             alert(data.Msg)
-            //         }
-            //     })
-        }
-
-        //
-        // //字符串格式化
-        // function stringFormat() {
-        //     if (arguments.length == 0)
-        //         return null;
-        //     var str = arguments[0];
-        //     for (var i = 1; i < arguments.length; i++) {
-        //         var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-        //         str = str.replace(re, arguments[i]);
-        //     }
-        //     return str;
-        // }
-
-
     </script>
 </div>
 </body>

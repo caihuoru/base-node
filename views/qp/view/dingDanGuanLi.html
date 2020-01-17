@@ -12,6 +12,9 @@
         body {
             overflow-y: scroll !important;
         }
+        .list-group-item ul li {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body class="backgroud">
@@ -47,34 +50,16 @@
                                                    type="text" readonly="readonly"
                                                    placeholder="请输入结束时间" value=""/>
                                         </li>
-                                        <li><select class="form-control input-sm" id="ddlGlobalShareInfo">
-                                            <option value="0">全部服务</option>
-                                            <option value="1">网银充值</option>
-                                            <option value="2">支付宝wap</option>
-                                            <option value="3">微信wap</option>
-                                            <option value="4">支付宝扫码</option>
-                                            <option value="5">微信扫码</option>
-                                            <option value="6">QQ钱包</option>
-                                            <option value="7">快捷支付</option>
-                                            <option value="8">QQ扫码</option>
-                                            <option value="9">京东</option>
-                                            <option value="10">百度</option>
-                                            <option value="13">京东扫码</option>
-                                            <option value="24">离线付</option>
-                                            <option value="27">闪现付</option>
-                                            <option value="28">掌讯支付</option>
-                                            <option value="100">苹果内购</option>
-                                            <option value="200">网猫充值</option>
-                                            <option value="201">乐支付</option>
-                                            <option value="202">有益支付</option>
-                                            <option value="99996">后台测试银行金币</option>
-                                            <option value="99997">后台测试金币</option>
-                                            <option value="99998">后台充值金币</option>
-                                            <option value="99999">线下充值</option>
-                                        </select></li>
+                                        <li>订单状态：</li>
                                         <li>
-                                            查询：
+                                            <select id="payStatus" class="form-control input-sm">
+                                                <option value="">所有订单状态</option>
+                                            </select>
                                         </li>
+                                        <li>
+                                            <select class="form-control input-sm" id="ddlGlobalShareInfo"></select>
+                                        </li>
+                                        <li>查询：</li>
                                         <li>
                                             <input type="text" id="txtSearch"
                                                    class="form-control input-sm input-width-150"
@@ -100,8 +85,17 @@
                     <!--查询栏结束-->
                     <div class="row">
                         <div class="col-md-6 top-tip">
-                            <p>成功订单总额<span id="sumSuccess">0</span> 成功<span id="successCount">0</span>笔 失败订单总额<span
-                                    id="sumFail">0</span> 失败<span id="failCount">0</span>笔</p>
+                            <p>
+                                成功订单总额<span id="sumSuccess">0</span>元&nbsp;&nbsp;&nbsp;&nbsp;
+                                成功<span id="successCount">0</span>笔&nbsp;&nbsp;&nbsp;&nbsp;
+                                失败订单总额<span id="sumFail">0</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                失败<span id="failCount">0</span>笔</p>
+                            <p>
+                                当前页支付成功金额<span id="pageSuccessPayNum">0</span>元&nbsp;&nbsp;&nbsp;&nbsp;
+                                支付成功单数<span id="pageSuccessPayCount">0</span>单&nbsp;&nbsp;&nbsp;&nbsp;
+                                未支付金额<span id="pageFailPayNum">0</span>元&nbsp;&nbsp;&nbsp;&nbsp;
+                                未支付单数<span id="pageFailPayCount">0</span>单
+                            </p>
                         </div>
                         <div class="col-md-6" style="padding-bottom:5px; padding-top:5px; text-align:right;">
                             <div class="btn-group btn-group">
@@ -169,7 +163,7 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var pageObj = {};
@@ -190,13 +184,14 @@
             }
             form.render()
         }, 'json')
+
         //第一个实例
         table.render({
             elem: '#layTable'
             // , height: 512
             , id: 'myTable'
             , method: 'post'
-            , where: {}
+            , where: postData
             , url: qp_url + 'admin/Filled/GetOnLineOrderList?token=' + getStorage('token') //数据接口
             , request: {
                 pageName: 'pageIndex' //页码的参数名称，默认：page
@@ -209,14 +204,23 @@
                 // dataName: 'data',
             },
             parseData: function (res) {
-                console.log(res)
-                if (!first) {
-                    $('#sumSuccess').text(res.data.sumSuccess)
-                    $('#successCount').text(res.data.successCount)
-                    $('#sumFail').text(res.data.sumFail)
-                    $('#failCount').text(res.data.failCount)
-                    first = true
-                }
+                // console.log(res)
+                // if (!first) {
+                //     $('#sumSuccess').text(res.data.sumSuccess)
+                //     $('#successCount').text(res.data.successCount)
+                //     $('#sumFail').text(res.data.sumFail)
+                //     $('#failCount').text(res.data.failCount)
+                //     first = true
+                // }
+                $('#sumSuccess').text(parseFloat(res.data.sumSuccess).formatMoney())
+                $('#successCount').text(res.data.successCount)
+                $('#sumFail').text(parseFloat(res.data.sumFail).formatMoney())
+                $('#failCount').text(res.data.failCount)
+
+                $('#pageSuccessPayNum').text(parseFloat(res.data.pageSuccessPayNum).formatMoney())
+                $('#pageSuccessPayCount').text(res.data.pageSuccessPayCount)
+                $('#pageFailPayNum').text(parseFloat(res.data.pageFailPayNum).formatMoney())
+                $('#pageFailPayCount').text(res.data.pageFailPayCount)
                 return {
                     "status": res.status, //解析接口状态
                     "msg": res.msg, //解析提示文本
@@ -232,13 +236,10 @@
             , cellMinWidth: 110
             , cols: [[ //表头
                 {type: 'checkbox'}
-                , {field: 'ApplyDate', title: '订单日期', width: 160}
+                , {field: 'ApplyDate', title: '订单日期', width: 170}
                 , {field: 'OrderID', title: '订单号码', width: 200}
-                , {
-                    field: 'ShareID', title: '服务类别', templet: function (d) {
-                        return $('#ddlGlobalShareInfo option[value=' + d.ShareID + ']').text()
-                    }
-                }
+                , {field: 'ThirdOrder', title: '第三方订单号', width: 200}
+                , {field: 'ShareName', title: '服务类别'}
                 , {
                     field: 'Accounts', title: '用户帐号', templet: function (d) {
                         return `<a href="javascript:void(0);" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','{1}',850,600);">${d.Accounts}</a>`
@@ -246,9 +247,12 @@
                 }
                 , {field: 'NickName', title: '用户昵称'}
                 , {field: 'GameID', title: '游戏ID'}
-                , {field: 'ChannelId', title: '推广渠道ID'}
-                , {field: 'ChannelName', title: '推广渠道昵称'}
-                , {field: 'RegisterOrigin', title: '设备',width:90,templet:function (d) {
+                , {field: 'ChannelId', title: '推广渠道号'}
+                , {field: 'ChannelName', title: '推广渠道昵称', minWidth: 120}
+                , {field: 'PayChannelID', title: '充值渠道ID', minWidth: 120}
+                , {field: 'PayChannelName', title: '充值渠道昵称', minWidth: 120}
+                , {
+                    field: 'RegisterOrigin', title: '设备', width: 90, templet: function (d) {
                         if (d.RegisterOrigin == 1) {
                             return '安卓'
                         }
@@ -259,23 +263,30 @@
                             return 'PC'
                         }
                         return '无法获取'
-                    }}
-                , {field: 'Spreader', title: '上级代理'}
-                , {field: 'OrderAmount', title: '订单金额'}
+                    }
+                }
+                , {field: 'Spreader', title: '上级推广员'}
+                , {field: 'OrderAmount', title: '<span title="实付金额+充值赠送">订单金额</span>'}
                 , {field: 'PayAmount', title: '实付金额'}
+                , {field: 'IPAddress', title: '客户端地址', minWidth: 150}
                 , {
                     field: 'OrderStatus', title: '订单状态', templet: function (d) {
-                        if (d.OrderStatus == '1') {
-                            return '<span class="normal">完成</span>'
-                        } else {
+                        if (d.OrderStatus == 0) {
                             return '<span class="wrong">未完成</span>'
-
+                        } else if (d.OrderStatus == 1) {
+                            return '<span class="">完成未处理</span>'
+                        } else if (d.OrderStatus == 2) {
+                            return '<span class="normal">已完成</span>'
                         }
                     }
                 }
                 , {
-                    field: '', title: '操作', fixed: 'right', event: 'delete', templet: function (d) {
-                        return `<button class="layui-btn layui-btn-xs layui-btn-danger">删除</button><button class="layui-btn layui-btn-xs ">补单</button>`
+                    field: '', title: '操作', fixed: 'right', templet: function (d) {
+                        if (d.OrderStatus == 2) {
+                            return `<button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</button>`
+                        } else {
+                            return `<button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</button><button class="layui-btn layui-btn-xs"  lay-event="budan">补单</button>`
+                        }
                     }
                 }
             ]]
@@ -316,11 +327,19 @@
                                     }, 1500)
                                 } else {
                                     layer.msg(res.msg, {time: 1000, icon: 2});
-
                                     return false;
                                 }
                             }
                         });
+                    }, function () {
+
+                    })
+                    break;
+                case 'budan':
+                    layer.confirm('确定对'+obj.data.OrderID+'补单？', {
+                        btn: ['确定', '取消']
+                    }, function () {
+
                     }, function () {
 
                     })
@@ -333,39 +352,37 @@
         //时间选择器
         laydate.render({
             elem: '#txtStartDate'
-            , type: 'datetime'
+            , theme: '#00B4E5'
+            , value: new Date()
         });
         laydate.render({
             elem: '#txtEndDate'
-            , type: 'datetime'
-
+            , theme: '#00B4E5'
+            , value: new Date()
         });
         docReady();
     });
 
     function docReady() {
         //加载数据
-        postData.pageSize = parseInt($("#pagecount").val());
         postData.Sort = "";
+        postData.KeyWord = "";
+        postData.SearchType = 1;
         postData.Type = 1;
-        postData.pageIndex = 1;
-        postData.StartDate = $("#txtStartDate").val();
-        postData.EndDate = $("#txtEndDate").val();
-        // AjaxSearch(postData);
-        // //收放事件
-        // $('.btn-minimize').click(function (e) {
-        //     e.preventDefault();
-        //     var $target = $(this).parent().parent().next('.box-content');
-        //     if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        //     else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        //     $target.slideToggle();
-        // });
-        //选择页码
-        $("#pagecount").change(function (e) {
-            postData.pageSize = parseInt($(this).val());
-            postData.pageIndex = 1;
-            AjaxSearch(postData);
-        });
+        postData.ShareID = 0;
+        postData.StartDate = Time.today().StartDate;
+        postData.EndDate = Time.today().EndDate;
+        // postData.OrderStatus = $('#payStatus').val();
+        //获取支付订单状态
+        $.get(qp_url + 'admin/Gamecommon/payStatus?token=' + getStorage('token'), function (res) {
+            if (res.status == 1) {
+                var str = ""
+                for (var i = 0, len = res.data.length; i < len; i++) {
+                    str += '<option value="' + res.data[i].id + '">' + res.data[i].name + '</option>'
+                }
+                $('#payStatus').append(str)
+            }
+        }, 'json')
     }
 
     //普通搜索事件
@@ -376,16 +393,17 @@
         var txtEndDate = $("#txtEndDate").val();
         if (txtStartDate != "" && txtEndDate != "") {
             if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
-                alert("开始日期不能大于结束时间");
+                layer.alert("开始日期不能大于结束时间");
                 return false;
             }
         }
+        postData.StartDate = datetimeFormat(txtStartDate, 0);
+        postData.EndDate = datetimeFormat(txtEndDate, 1);
         postData.pageIndex = 1;
-        postData.StartDate = txtStartDate;
-        postData.EndDate = txtEndDate;
         postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
         postData.KeyWord = $("#txtSearch").val();
         postData.SearchType = $("#ddlSearchType").val();
+        postData.OrderStatus = $('#payStatus').val();
         AjaxSearch(postData);
     });
     //今天查询
@@ -458,88 +476,19 @@
         })
     })
 
-    //回调函数
-    function callBack(jsonData, fname) {
-        switch (fname) {
-            case "del":
-                alert(jsonData.Msg);
-                window.location.reload();
-                //window.opener.location.reload();
-                break;
-        }
-    }
-
     //搜索事件
     function AjaxSearch(postData) {
         delete postData.pageSize
         delete postData.pageIndex
         console.log('AjaxSearch', postData)
         table.reload('myTable', {
-            where: postData
+            where: postData,
+            page: {
+                curr: 1
+            }
         })
     }
 
-    function StrToDateTime(timestr) {
-        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
-        return dt;
-    }
-
-    //绑定数据
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, msg) {
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-                html += stringFormat("<tr class=\"odd\">");
-                html += stringFormat("<td>{0}</td>", (item.OnLineID != "" ? "<input name='cid' type='checkbox' value='" + item.OnLineID + "'/>" : ""));
-                html += stringFormat("<td>{0}</td>", item.ApplyDate);
-                html += stringFormat("<td>{0}</td>", item.OrderID);
-                html += stringFormat("<td>{0}</td>", item.ShareName);
-                html += stringFormat("<td><a class=\"l\" href=\"javascript:void(0);\" onclick=\"openWindowOwn('/Account/AccountsInfo?param={1}','{1}',850,600);\">{0}</a></td>", item.Accounts, item.UserID);
-                html += stringFormat("<td>{0}</td>", item.GameID);
-                html += stringFormat("<td>{0}</td>", item.AgentAcc);
-                html += stringFormat("<td>{0}</td>", item.OrderAmount);
-                html += stringFormat("<td>{0}</td>", item.PayAmount);
-                //html += stringFormat("<td>{0}</td>", item.Currency);
-                //html += stringFormat("<td>{0}</td>", item.Rate);
-                html += stringFormat("<td>{0}</td>", OrderStatus(item.OrderStatus));
-                //html += stringFormat("<td title=\"{0}\">{1}</td>", item.IPAddress, item.IPAddress);
-                //html += stringFormat("<td>{0}</td>", item.Account);
-                html += "</tr>";
-
-            });
-        }
-        if (msg != "") {
-            $('#sumSuccess').html(msg.SumSuccess);
-            $('#sumFail').html(msg.SumFail);
-            $('#successCount').html(msg.SuccessCount);
-            $('#failCount').html(pageTotal - msg.SuccessCount);
-        }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    }
-
-    function OrderStatus(status) {
-        switch (status) {
-            case 0:
-                return '<font color="red">未付款</font>';
-            case 1:
-                return '<font>待处理</font>';
-            case 2:
-                return '<font color="green">完成</font>';
-        }
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
-    }
 </script>
 </body>
 </html>

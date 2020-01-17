@@ -3,15 +3,13 @@
 <html>
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>网站系统 - 新闻编辑</title>
     <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link href="../../Content/common.css" rel="stylesheet" />
-    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../../Scripts/comm.js"></script>
-    <script charset="utf-8" src="../../Scripts/kindeditor-4.1.10/kindeditor-min.js"></script>
-    <script charset="utf-8" src="../../Scripts/kindeditor-4.1.10/lang/zh_CN.js"></script>
+
     <style type="text/css">
         input {
             color: black;
@@ -82,6 +80,14 @@
             height: 100%;
             overflow-y: scroll !important;
         }
+
+        .ke-toolbar span[data-name="image"],
+        .ke-toolbar span[data-name="multiimage"],
+        .ke-toolbar span[data-name="flash"],
+        .ke-toolbar span[data-name="media"],
+        .ke-toolbar span[data-name="insertfile"] {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -118,17 +124,17 @@
                             </div>
                         </div>
                         <!-- <div class="row">
-                            <div class="col-xs-2 col-md-2" style="text-align:right">类别：</div>
-                            <div class="col-xs-6 col-md-3">
-                                <select id="ddlClassID" class="form-control input-sm input-width-150">
-                                    <option value="1">新闻公告</option>
-                                    <option value="3">移动版公告</option>
-                                </select>
-                            </div>
-                            <div class="col-xs-3 col-md-2" style="text-align:left">
+                        <div class="col-xs-2 col-md-2" style="text-align:right">类别：</div>
+                        <div class="col-xs-6 col-md-3">
+                            <select id="ddlClassID" class="form-control input-sm input-width-150">
+                                <option value="1">新闻公告</option>
+                                <option value="3">移动版公告</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-3 col-md-2" style="text-align:left">
 
-                            </div>
-                        </div> -->
+                        </div>
+                    </div> -->
 
                         <div class="row">
                             <div class="col-xs-2 col-md-2" style="text-align:right">禁用或启用：</div>
@@ -177,7 +183,7 @@
 
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" id="wenben">
                             <div class="col-xs-2 col-md-2" style="text-align:right">文本选择：</div>
                             <div class="col-xs-6 col-md-3">
                                 <select id="text_pick" class="form-control input-sm input-width-150">
@@ -217,7 +223,7 @@
                     <ul class="list-group">
                         <li class="list-group-item">
                             <ul class="list-inline">
-                                <li><a class="btn btn-outline-primary search btn-md" href="../xinWenGuanLi.html"><i
+                                <li><a id="back" class="btn btn-outline-primary search btn-md" href=""><i
                                             class="glyphicon glyphicon-arrow-left"></i>返回</a></li>
                                 <li><a class="btn btn-outline-success search btn-md" href="#" id="btn"><i
                                             class="glyphicon glyphicon-save"></i>保存</a></li>
@@ -230,8 +236,24 @@
         </div>
 
     </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+    <script charset="utf-8" src="../../Scripts/kindeditor-4.1.10/kindeditor-min.js"></script>
+    <script charset="utf-8" src="../../Scripts/kindeditor-4.1.10/lang/zh_CN.js"></script>
     <script type="text/javascript">
         var ID = getUrlParams("id");
+        if (getUrlParams("type") == "2") {//移动公告
+            $('#back').attr('href', 'MobileNoticeList.html')
+            $("#wenben").hide();
+        } else {//新闻公告
+            $('#back').attr('href', '../xinWenGuanLi.html')
+        }
+        if (ID) {//编辑
+            $('.panel-title').text('编辑新闻')
+        } else {
+            $('.panel-title').text('新增新闻')
+        }
+
         var dataObj = {};
         if (ID == null || ID == "null" || !ID) {
 
@@ -263,9 +285,13 @@
             editor = K.create('#txtBody', {
                 minHeight: '350px',
                 allowFileManager: true,
-                uploadJson: qp_url + 'admin/web/uploadJson?token='+getStorage('token'),
-                afterUpload: function () { this.sync(); }, //图片上传后，将上传内容同步到textarea中
-                afterBlur: function () { this.sync(); },   ////失去焦点时，将上传内容同步到textarea中
+                uploadJson: qp_url + 'admin/web/uploadJson?token=' + getStorage('token'),
+                afterUpload: function () {
+                    this.sync();
+                }, //图片上传后，将上传内容同步到textarea中
+                afterBlur: function () {
+                    this.sync();
+                },   ////失去焦点时，将上传内容同步到textarea中
             })
 
 
@@ -284,7 +310,7 @@
                             // 限宽760
                             if ($('#loadImg').width() == 760) {
                                 $.ajax({
-                                    url: qp_url + "admin/web/upload?token="+getStorage('token'),
+                                    url: qp_url + "admin/web/upload?token=" + getStorage('token'),
                                     type: "POST",
                                     data: formData,
                                     dataType: "json",
@@ -312,12 +338,14 @@
         $(document).ready(function () {
             docReady();
         });
+
         function docReady() {
             $("#btn").click(function (e) {
                 e.preventDefault();
                 add();
             });
         }
+
         function add() {
             var data = {};
             var body = editor.html();
@@ -352,9 +380,16 @@
                 success: function (data) {
                     console.log(data)
                     alert(data.msg)
+                    window.history.back(-1)
+                    if (getUrlParams("type") == "2") {
+                        window.location.href = 'MobileNoticeList.html'
+                    } else {
+                        window.location.href = '../xinWenGuanLi.html'
+                    }
                 }
             })
         }
+
         //回调函数
         function callBack(jsonData, fname) {
             switch (fname) {
@@ -365,14 +400,17 @@
                     break;
             }
         }
+
         $("#text_pick").change(function () {
             var index = Number($(this).val());
             if (index == 1) {
                 $(".text_pick").addClass("picture_");
                 $("#addpicture").show();
+                $(".ke-toolbar").css({ "height": "100px" })
             } else {
                 $(".text_pick").removeClass("picture_");
                 $("#addpicture").hide();
+                $(".ke-toolbar").css({ "height": "auto" })
             }
         })
 

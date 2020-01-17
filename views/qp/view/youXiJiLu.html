@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" charset="utf-8"/>
-    <title>游戏记录 - 记录</title>
+    <title>游戏用户 - 游戏记录</title>
     <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
     <link href="../Content/common.css" rel="stylesheet"/>
@@ -19,12 +19,12 @@
     </style>
 </head>
 <body class="backgroud">
-<div id="content" class="main-content" style="display: none" v-show="roomList">
+<div id="content" class="main-content" v-cloak>
     <div class="row">
         <div class="col-md-12">
             <div class="box-inner">
                 <div class="box-header well" data-original-title="">
-                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：游戏记录 - 记录 </h2>
+                    <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：游戏用户 - 游戏记录 </h2>
                     <div class="box-icon">
                         <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
                             <i class="glyphicon glyphicon-repeat"></i>
@@ -85,20 +85,6 @@
                     </div>
                     <!--查询栏结束-->
                     <div class="row">
-                        <div class="col-md-2" style="display: none">
-                            <div id="DataTables_Table_0_length" class="dataTables_length">
-                                <label>
-                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
-                                            id="pagecount">
-                                        <option value="10" selected="selected">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select> 条/页
-                                </label>
-                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
-                            </div>
-                        </div>
                         <div class="col-md-12" style="padding-bottom:5px; padding-top:5px; text-align:right;">
                             <div class="btn-group btn-group">
                                 <button type="button" id="btnQueryTD" class="btn btn-outline-primary"><i
@@ -125,34 +111,6 @@
                     <!--table开始-->
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                         <table id="layTable" lay-filter="test"></table>
-                        <table style="display: none"
-                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
-                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-                            <thead>
-                            <tr role="row">
-                                <th>游戏ID</th>
-                                <th>用户帐号</th>
-                                <th>输赢金币</th>
-                                <th>税收</th>
-                                <th>游戏</th>
-                                <th>房间</th>
-                                <th>游戏时长</th>
-                                <th>游戏时间</th>
-                            </tr>
-                            </thead>
-                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
-                        </table>
-                        <!--分页控件-->
-                        <div class="row">
-                            <div class="col-md-6">
-
-                            </div>
-                            <div class="col-md-6">
-                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                    <ul class="pagination" id="pagin"></ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!--table结束-->
                 </div>
@@ -163,7 +121,7 @@
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script src="../Scripts/vue.min.js"></script>
 <script type="text/javascript">
@@ -199,21 +157,15 @@
         //时间选择器
         laydate.render({
             elem: '#txtStartDate'
-            , type: 'datetime'
+            // , type: 'datetime'
             , theme: '#00B4E5'
         });
         laydate.render({
             elem: '#txtEndDate'
-            , type: 'datetime'
+            // , type: 'datetime'
             , theme: '#00B4E5'
         });
 
-        // var agent = '';
-        // if (agent != "") {
-        //     $("#txtSearch").val(agent);
-        //     $("#ddlSearchType").val(5);
-        // }
-        // getGameList();
         docReady();
     });
     var pageObj = {};
@@ -264,7 +216,7 @@
                 {field: 'GameID', title: '游戏ID'}
                 , {
                     field: 'Accounts', title: '用户帐号', minWidth: 140, templet: function (d) {
-                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '555555' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '00B4E5' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
                     }
                 }
                 , {field: 'Score', title: '输赢金币'}
@@ -333,9 +285,8 @@
                     return false;
                 }
             }
-            postData.StartDate = txtStartDate;
-            postData.EndDate = txtEndDate;
-            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.StartDate = datetimeFormat(txtStartDate,0);
+            postData.EndDate = datetimeFormat(txtEndDate,1);
             postData.ServerID = parseInt($("#ddlRoom").val());
             postData.KeyWord = $("#txtSearch").val();
             postData.SearchType = $("#ddlSearchType").val();
@@ -424,71 +375,6 @@
     //搜索事件
     function AjaxSearch(postData) {
         $('#pagin').paging("/Record/GetRecordGameList", postData, CreatTableBody, postData.pageIndex);
-    }
-
-    function StrToDateTime(timestr) {
-        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
-        return dt;
-    }
-
-    //绑定数据
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, msg) {
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-                html += stringFormat("<tr class=\"odd\">");
-                html += stringFormat("<td>{0}</td>", item.GameID);
-                html += stringFormat("<td><a class=\"l\" href=\"javascript:void(0);\" onclick=\"openWindowOwn('/Account/AccountsInfo?param={1}','{1}',850,600);\">{0}</a></td>", item.Accounts, item.UserID);
-                //html += stringFormat("<td>{0}</td>", item.AgentAcc);
-                html += stringFormat("<td>{0}</td>", item.Score);
-                html += stringFormat("<td>{0}</td>", item.Revenue);
-                html += stringFormat("<td>{0}</td>", gameList[item.KindID]);
-                html += stringFormat("<td>{0}</td>", roomList[item.ServerID]);
-                html += stringFormat("<td>{0}</td>", item.PlayTimeCount);
-                html += stringFormat("<td>{0}</td>", item.InsertTime);
-                html += "</tr>";
-            });
-        }
-        if (msg != null) {
-            html += stringFormat("<tr><td colspan=\"2\">合计：</td><td>{0}</td><td>{1}</td><td colspan=\"4\"></td></tr>", typeof (msg.SumWinScore) == "undefined" ? "0.00" : msg.SumWinScore, typeof (msg.SumRevenue) == "undefined" ? "0.00" : msg.SumRevenue);
-        }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
-    }
-
-    // var roomList = new Array(), gameList = new Array()
-
-    function getGameList() {
-        $.ajaxSetup({async: false})
-        $.post("/Account/GetGameList", {}, function (data) {
-            var optHTML = new String();
-            var data = $.parseJSON(data);
-            $.each(data, function () {
-                gameList[this.KindID] = this.KindName
-            });
-        })
-
-        $.post("/Android/RoomList", {kid: 0}, function (data) {
-            var roomJson = $.parseJSON(data);
-            var optHTML = "";
-            $.each(roomJson, function () {
-                roomList[this.ServerID] = this.ServerName
-                optHTML += "<option value='" + this.ServerID + "'>" + this.ServerName + "</option>";
-            });
-            $("#ddlRoom").append("<option value='0'>全部</option>" + optHTML);
-        })
     }
 
     var ConverTimeToDHMS = function (seconds) {

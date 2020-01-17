@@ -1,24 +1,19 @@
-
-
-
-
 <!DOCTYPE html>
-
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>后台系统 - 管理员管理</title>
     <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link href="../../Content/common.css" rel="stylesheet" />
-    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../../Scripts/comm.js"></script>
     <style type="text/css">
-        body{
-            overflow-y: scroll!important;
+        body {
+            overflow-y: scroll !important;
         }
     </style>
 </head>
+
 <body>
     <div id="content" class="main-content">
         <div class="row">
@@ -52,12 +47,17 @@
                             <div class="panel-body">
                                 <div class="row" style="padding-top:5px;">
                                     <div class="col-md-1" style="text-align:right;">角色名称：</div>
-                                    <div class="col-md-4" style="text-align:left;"><input type="text" class="form-control input-sm" id="txtRoleName" value="" placeholder="请输入角色名称" /></div>
-                                    <div class="col-md-4" style="text-align:left;"><label style="color:red;">请输入角色名称</label></div>
+                                    <div class="col-md-4" style="text-align:left;"><input type="text"
+                                            class="form-control input-sm" id="txtRoleName" value=""
+                                            placeholder="请输入角色名称" /></div>
+                                    <div class="col-md-4" style="text-align:left;"><label
+                                            style="color:red;">请输入角色名称</label></div>
                                 </div>
                                 <div class="row" style="padding-top:5px;">
                                     <div class="col-md-1" style="text-align:right;">备注：</div>
-                                    <div class="col-md-4" style="text-align:left;"><textarea class="form-control input-sm" id="txtDescription" rows="10" placeholder="请输入备注"></textarea></div>
+                                    <div class="col-md-4" style="text-align:left;"><textarea
+                                            class="form-control input-sm" id="txtDescription" rows="10"
+                                            placeholder="请输入备注"></textarea></div>
                                     <div class="col-md-4" style="text-align:left;"></div>
                                 </div>
                             </div>
@@ -69,7 +69,8 @@
                                             <i class="glyphicon glyphicon-fast-backward icon-white"></i>返回
                                         </a>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <button type="button" class="btn btn-outline-success" onclick="Del()"> <i class="glyphicon glyphicon-send"></i>保存 </button>
+                                        <button type="button" class="btn btn-outline-success" onclick="Del()"> <i
+                                                class="glyphicon glyphicon-send"></i>保存 </button>
                                     </div>
                                     <div class="col-md-4" style="text-align:left;"></div>
                                 </div>
@@ -80,6 +81,8 @@
             </div>
         </div>
     </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
     <script type="text/javascript">
         var pageObj = {};
         var postData = {};//搜索条件
@@ -100,7 +103,7 @@
             var data = {};
             data.RoleID = parseInt('0');
             var RoleName = $("#txtRoleName").val();
-            if(RoleName==""){
+            if (RoleName == "") {
                 alert("角色名称不能为空");
                 return false;
             }
@@ -119,4 +122,5 @@
         }
     </script>
 </body>
+
 </html>

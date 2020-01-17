@@ -3,12 +3,18 @@ $(function () {
 })
 
 function init() {
+
     $(".J_menuItem").each(function (k) {
         if (!$(this).attr("data-index")) {
             $(this).attr("data-index", k)
         }
     });
     $(".J_menuItem").click(function () {
+        if($(window).width() < 1000) {
+            $('.main-list').removeClass('open')
+            $('.two-menu').hide();
+            $('.one-menu').removeClass('menuActive');
+        }
         fresh($(this), 'c');
         $(".J_menuItem").removeClass('active');
         $(this).addClass('active');
@@ -36,6 +42,7 @@ function init() {
             }
         });
         if (k) {
+
             let myH=$(window).height() - 50;
             console.log(myH);
             var p = '<a href="javascript:;" class="active J_menuTab" data-id="' + o + '">' + l + ' <i class="glyphicon glyphicon-remove-circle"></i></a>';

@@ -9,7 +9,7 @@
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../Content/common.css" rel="stylesheet"/>
-    <link href="../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
+<!--    <link href="../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>-->
     <style type="text/css">
         body {
             overflow-y: scroll !important;
@@ -45,20 +45,19 @@
 </div>
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
-<script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Content/laydate/laydate.js"></script>-->
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
-<script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+<!--<script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>-->
 <script type="text/javascript">
     layui.use('table', function () {
         var table = layui.table;
         //第一个实例
         table.render({
             elem: '#layTable'
-            // , height: 512
             , url: qp_url + 'admin/Ranking/RankingList' //数据接口
             , where: {
-                Date: todayDateMDY(true),
+                Date: Time.today().StartDate,
                 type: 1,
                 token:getStorage('token')
             }

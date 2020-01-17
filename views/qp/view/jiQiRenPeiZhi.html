@@ -9,13 +9,7 @@
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../Content/common.css" rel="stylesheet"/>
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Scripts/pagination.js"></script>
-
     <link href="../Content/jquery-ui-1.10.3.custom.min.css" rel="stylesheet"/>
-    <script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <style type="text/css">
         .panel-body .row {
             margin: 15px 0;
@@ -30,10 +24,13 @@
             width: 100px;
             display: inline-block;
         }
-        .layui-form-checkbox i{
-            height: 30px;}
-        body{
-            overflow-y: scroll!important;
+
+        .layui-form-checkbox i {
+            height: 30px;
+        }
+
+        body {
+            overflow-y: scroll !important;
         }
     </style>
 
@@ -60,39 +57,25 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <form class="layui-form" method="post" action="#" lay-filter="component-form-element">
-                                <ul class="list-inline cursor-style">
-                                    <li>房间：</li>
-                                    <li>
-                                        <select name="select" id="ddlRoom" class="form-control input-sm"
-                                                lay-filter="roomid">
-                                            <option value="0" selected="selected">全部类型</option>
-                                        </select>
-                                    </li>
-                                    <li>
-                                        <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
-                                                class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
-                                    </li>
-                                </ul>
+                                    <ul class="list-inline cursor-style">
+                                        <li>房间：</li>
+                                        <li>
+                                            <select name="select" id="ddlRoom" class="form-control input-sm"
+                                                    lay-filter="roomid">
+                                                <option value="0" selected="selected">全部类型</option>
+                                            </select>
+                                        </li>
+                                        <li>
+                                            <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
+                                                    class="glyphicon glyphicon-zoom-in icon-white"></i>查询</a>
+                                        </li>
+                                    </ul>
                                 </form>
                             </li>
                         </ul>
                     </div>
                     <!--查询栏结束-->
                     <div class="row">
-                        <div class="col-md-2" style="display: none">
-                            <div id="DataTables_Table_0_length" class="dataTables_length">
-                                <label>
-                                    <select size="1" name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
-                                            id="pagecount">
-                                        <option value="10" selected="selected">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select> 条/页
-                                </label>
-                                <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
-                            </div>
-                        </div>
                         <div class="col-md-12" style="padding-bottom:5px; padding-top:5px; text-align:right;">
                             <a class="btn btn-outline-success" href='#' onclick="ShowUpdateAndroid()">
                                 <i class="glyphicon glyphicon-plus icon-white"></i>新增
@@ -105,41 +88,6 @@
                     <!--table开始-->
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                         <table id="layTable" lay-filter="test"></table>
-                        <table style="display: none"
-                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
-                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-                            <thead>
-                            <tr role="row">
-                                <th><input name="ckall" type="checkbox" value="" onclick="SelectAll(this,'cid')"/></th>
-                                <th>房间</th>
-                                <th>机器数目</th>
-                                <th>服务模式</th>
-                                <th>进入时间</th>
-                                <th>离开时间</th>
-                                <th>携带最少分数</th>
-                                <th>携带最大分数</th>
-                                <th>进入最小间隔</th>
-                                <th>进入最大间隔</th>
-                                <th>离开最小间隔</th>
-                                <th>离开最大间隔</th>
-                                <th>换桌最小局数</th>
-                                <th>换桌最大局数</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
-                        </table>
-                        <!--分页控件-->
-                        <div class="row">
-                            <div class="col-md-6">
-
-                            </div>
-                            <div class="col-md-6">
-                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                    <ul class="pagination" id="pagin"></ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!--table结束-->
                 </div>
@@ -156,88 +104,90 @@
         <div class="panel panel-primary">
             <div class="panel-body">
                 <form class="layui-form" method="post" action="#" lay-filter="component-form-element">
-                <div class="row ">
-                    <div class="col-xs-2 col-md-2 layui-form-label">房间类型：</div>
-                    <div class="col-xs-6 col-md-3">
-                        <select name="select" class="form-control input-sm input-width-200" lay-filter="roomtype" id="ddlDataBaseAddr">
-                            <option value="0" selected="selected">全部类型</option>
-                        </select>
+                    <div class="row ">
+                        <div class="col-xs-2 col-md-2 layui-form-label">房间类型：</div>
+                        <div class="col-xs-6 col-md-3">
+                            <select name="select" class="form-control input-sm input-width-200" lay-filter="roomtype"
+                                    id="ddlDataBaseAddr">
+                                <option value="0" selected="selected">全部类型</option>
+                            </select>
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
-                <div class="row">
-                    <div class="col-xs-2 col-md-2 layui-form-label">机器数目：</div>
-                    <div class="col-xs-8 col-md-6">
-                        <input id="txtGameID" class="form-control input-sm" style="width: 200px;display: inline-block;" type="text" maxlength="9">&nbsp;&nbsp;人
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 layui-form-label">机器数目：</div>
+                        <div class="col-xs-8 col-md-6">
+                            <input id="txtGameID" class="form-control input-sm"
+                                   style="width: 200px;display: inline-block;" type="text" maxlength="9">&nbsp;&nbsp;人
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
-                <div class="row">
-                    <div class="col-xs-2 col-md-2 layui-form-label">服务模式：</div>
-                    <div class="col-xs-8 col-md-10" id="ServiceMode">
-                        <input id="ckbSupporType1" type="checkbox" name="ckbSupporType" title="相互模拟型" value="1"/>
-                        <input id="ckbSupporType2" type="checkbox" name="ckbSupporType" title="被动陪打" value="2"/>
-                        <input id="ckbSupporType3" type="checkbox" name="ckbSupporType" title="主动陪打" value="4"/>
-                        <input id="ckbSupporType4" type="checkbox" name="ckbSupporType" title="串场模式" value="8"/>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 layui-form-label">服务模式：</div>
+                        <div class="col-xs-8 col-md-10" id="ServiceMode">
+                            <input id="ckbSupporType1" type="checkbox" name="ckbSupporType" title="相互模拟型" value="1"/>
+                            <input id="ckbSupporType2" type="checkbox" name="ckbSupporType" title="被动陪打" value="2"/>
+                            <input id="ckbSupporType3" type="checkbox" name="ckbSupporType" title="主动陪打" value="4"/>
+                            <input id="ckbSupporType4" type="checkbox" name="ckbSupporType" title="串场模式" value="8"/>
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
-                <div class="row">
-                    <div class="col-xs-2 col-md-2 layui-form-label">进入时间：</div>
-                    <div class="col-xs-6 col-md-3">
-                        <input id="inTime" class="form-control input-sm"
-                               type="text" maxlength="31" value="">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 layui-form-label">进入时间：</div>
+                        <div class="col-xs-6 col-md-3">
+                            <input id="inTime" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
-                <div class="row">
-                    <div class="col-xs-2 col-md-2 layui-form-label">离开时间：</div>
-                    <div class="col-xs-6 col-md-3">
-                        <input id="outTime" class="form-control input-sm"
-                               type="text" maxlength="31" value="">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 layui-form-label">离开时间：</div>
+                        <div class="col-xs-6 col-md-3">
+                            <input id="outTime" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
-                <div class="row double">
-                    <div class="col-xs-2 col-md-2 layui-form-label">携带分数：</div>
-                    <div class="col-xs-8 col-md-8">
-                        <input id="txtTakeMinScore" class="form-control input-sm"
-                               type="text" maxlength="31" value="">&nbsp;&nbsp;-&nbsp;&nbsp;
-                        <input id="txtTakeMaxScore" class="form-control input-sm"
-                               type="text" maxlength="31" value="">&nbsp;&nbsp;分
+                    <div class="row double">
+                        <div class="col-xs-2 col-md-2 layui-form-label">携带分数：</div>
+                        <div class="col-xs-8 col-md-8">
+                            <input id="txtTakeMinScore" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">&nbsp;&nbsp;-&nbsp;&nbsp;
+                            <input id="txtTakeMaxScore" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">&nbsp;&nbsp;分
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
-                <div class="row double">
-                    <div class="col-xs-2 col-md-2 layui-form-label">进入间隔：</div>
-                    <div class="col-xs-8 col-md-8">
-                        <input id="txtEnterMinInterval" class="form-control input-sm"
-                               type="text" maxlength="31" value="">&nbsp;&nbsp;-&nbsp;&nbsp;
-                        <input id="txtEnterMaxInterval" class="form-control input-sm"
-                               type="text" maxlength="31" value="">&nbsp;&nbsp;秒
+                    <div class="row double">
+                        <div class="col-xs-2 col-md-2 layui-form-label">进入间隔：</div>
+                        <div class="col-xs-8 col-md-8">
+                            <input id="txtEnterMinInterval" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">&nbsp;&nbsp;-&nbsp;&nbsp;
+                            <input id="txtEnterMaxInterval" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">&nbsp;&nbsp;秒
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
-                <div class="row double">
-                    <div class="col-xs-2 col-md-2 layui-form-label">离开间隔：</div>
-                    <div class="col-xs-8 col-md-8">
-                        <input id="txtLeaveMinInterval" class="form-control input-sm"
-                               type="text" maxlength="31" value="">&nbsp;&nbsp;-&nbsp;&nbsp;
-                        <input id="txtLeaveMaxInterval" class="form-control input-sm"
-                               type="text" maxlength="31" value="">&nbsp;&nbsp;秒
+                    <div class="row double">
+                        <div class="col-xs-2 col-md-2 layui-form-label">离开间隔：</div>
+                        <div class="col-xs-8 col-md-8">
+                            <input id="txtLeaveMinInterval" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">&nbsp;&nbsp;-&nbsp;&nbsp;
+                            <input id="txtLeaveMaxInterval" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">&nbsp;&nbsp;秒
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
-                <div class="row double">
-                    <div class="col-xs-2 col-md-2 layui-form-label">换桌局数：</div>
-                    <div class="col-xs-8 col-md-8">
-                        <input id="txtSwitchMinInnings" class="form-control input-sm"
-                               type="text" maxlength="31" value="">&nbsp;&nbsp;-&nbsp;&nbsp;
-                        <input id="txtSwitchMaxInnings" class="form-control input-sm"
-                               type="text" maxlength="31" value="">&nbsp;&nbsp;局
+                    <div class="row double">
+                        <div class="col-xs-2 col-md-2 layui-form-label">换桌局数：</div>
+                        <div class="col-xs-8 col-md-8">
+                            <input id="txtSwitchMinInnings" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">&nbsp;&nbsp;-&nbsp;&nbsp;
+                            <input id="txtSwitchMaxInnings" class="form-control input-sm"
+                                   type="text" maxlength="31" value="">&nbsp;&nbsp;局
+                        </div>
+                        <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
                     </div>
-                    <!--                <div class="col-xs-4 col-md-2" style="text-align:left"></div>-->
-                </div>
                 </form>
             </div>
             <ul class="list-group">
@@ -250,8 +200,10 @@
         </div>
     </div>
 </div>
-
-
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var pageObj = {};
     var postData = {};//搜索条件
@@ -361,7 +313,7 @@
         //普通搜索事件
         $("#btnQuery").click(function (e) {
             var ServerID = $("#ddlRoom").val();
-            table.reload('myTable',{
+            table.reload('myTable', {
                 where: {
                     ServerID: ServerID,
                 },
@@ -370,9 +322,11 @@
                 }
             })
         });
+
         function Time(s) {
             return parseInt(s / 3600) + "时" + parseInt(s % 3600 / 60) + "分" + parseInt(s % 3600 % 60) + "秒"
         }
+
         ShowUpdateAndroid = function (i) {
             layer.open({
                 type: 1,
@@ -380,7 +334,7 @@
                 skin: 'layui-layer-qian', //加上边框
                 area: ['800px', '650px'], //宽高
                 content: $('#updateAndroid'),
-                success: function(layero, index){
+                success: function (layero, index) {
                     // console.log(layero, index);
                     form.render()
                 }
@@ -392,7 +346,7 @@
                     , type: 'time'
                     , theme: '#333'
                     , format: 'H时m分s秒'
-                    ,change: function(value, date, endDate){
+                    , change: function (value, date, endDate) {
                         console.log(value); //得到日期生成的值，如：2017-08-18
                         console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
                         console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
@@ -403,7 +357,7 @@
                     , type: 'time'
                     , theme: '#333'
                     , format: 'H时m分s秒'
-                    ,change: function(value, date, endDate){
+                    , change: function (value, date, endDate) {
                         console.log(value); //得到日期生成的值，如：2017-08-18
                         console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
                         console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
@@ -418,12 +372,12 @@
             // }
             var obj;
             AndroidConfigureList.forEach(function (item) {
-                if(item.BatchID == i){
+                if (item.BatchID == i) {
                     obj = item
                 }
             })
             console.log(obj)
-            if(obj){
+            if (obj) {
                 $('#hdID').val(obj.BatchID)
                 $('#ddlServerID').val(obj.ServerID)
                 $("#txtAndroidCount,#txtGameID").val(obj.AndroidCount);
@@ -432,7 +386,7 @@
                 for (var i = 0; i < 4; i++) {
                     console.log(obj.ServiceMode & Math.pow(2, i))
                     if ((obj.ServiceMode & Math.pow(2, i)) > 0) {
-                        $("#ServiceMode").children().eq(i*2).prop("checked", true);
+                        $("#ServiceMode").children().eq(i * 2).prop("checked", true);
                     }
                 }
 
@@ -450,7 +404,7 @@
                 $("#txtLeaveMaxInterval").val(obj.LeaveMaxInterval);
                 $("#txtSwitchMinInnings").val(obj.SwitchMinInnings);
                 $("#txtSwitchMaxInnings").val(obj.SwitchMaxInnings);
-            }else{
+            } else {
                 $("#ServiceMode").children().prop("checked", false);
                 $('#updateAndroid input[type=text],#ddlDataBaseAddr').val('')
                 $('#hdID,#ddlServerID,#txtAndroidCount,#ddlDataBaseAddr').val(0)
@@ -461,51 +415,14 @@
         }
 
     });
-    $(document).ready(function () {
-        docReady();
-    });
 
-
-    function docReady() {
-        //加载数据
-        postData.pageSize = parseInt($("#pagecount").val());
-        postData.pageIndex = 1;
-        AjaxSearch(postData);
-
-        //收放事件
-        $('.btn-minimize').click(function (e) {
-            e.preventDefault();
-            var $target = $(this).parent().parent().next('.box-content');
-            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-            $target.slideToggle();
-        });
-
-        //选择页码
-        $("#pagecount").change(function (e) {
-            postData.pageSize = parseInt($(this).val());
-            postData.pageIndex = 1;
-            AjaxSearch(postData);
-        });
-        //刷新
-        $("#btnRefresh").click(function (e) {
-            postData.KeyWord = $("#txtSearch").val();
-            AjaxSearch(postData);
-        });
-
-    }
-
-    //搜索事件
-    function AjaxSearch(postData) {
-        // $('#pagin').paging("/Android/GetAndroidConfigureList", postData, CreatTableBody, postData.pageIndex);
-    }
 
     function Del(id) {
         console.log(id)
         var data = {};
         if (id == 0) {
             // var cid = GetSelectValues();
-            var cid = GetSelectedDatas(selectRows,'BatchID');
+            var cid = GetSelectedDatas(selectRows, 'BatchID');
             if (cid == "") {
                 layer.alert('未选中任何数据', {
                     icon: 7,
@@ -526,12 +443,12 @@
                     data: data,
                     success: function (resData) {
                         console.log(resData)
-                        if(resData.status == 1){
+                        if (resData.status == 1) {
                             layer.msg(resData.msg, {time: 2000, icon: 1});
                             setTimeout(function () {
                                 window.history.go(0)
-                            },1500)
-                        }else{
+                            }, 1500)
+                        } else {
                             layer.msg(resData.msg, {time: 2000, icon: 2});
                         }
                     }
@@ -540,37 +457,7 @@
         }
     }
 
-    //回调函数
-    function callBack(jsonData, fname) {
-        switch (fname) {
-            case "del":
-                alert(jsonData.Msg);
-                AjaxSearch(postData);
-                break;
-            case "do":
-                alert("操作成功");
-                UpAnroidWindow.Close();
-                AjaxSearch(postData);
-                break;
-        }
-    }
 
-    function StrToDateTime(timestr) {
-        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
-        return dt;
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
-    }
 
     function Time(s) {
         return parseInt(s / 3600) + "时" + parseInt(s % 3600 / 60) + "分" + parseInt(s % 3600 % 60) + "秒"
@@ -614,7 +501,7 @@
         var ServiceMode = 0;
         $("#ServiceMode").children().each(function (i) {
             var _this = $(this);
-            if (_this.prop("checked")){
+            if (_this.prop("checked")) {
                 ServiceMode |= _this.val()
             }
         });
@@ -625,12 +512,12 @@
         var inTime = {
             hour: parseInt($('#inTime').val().split('时')[0]),
             minute: parseInt($('#inTime').val().split('时')[1].split('分')[0]),
-            second: parseInt($('#inTime').val().split('分')[1].replace('秒',''))
+            second: parseInt($('#inTime').val().split('分')[1].replace('秒', ''))
         }
         var outTime = {
             hour: parseInt($('#outTime').val().split('时')[0]),
             minute: parseInt($('#outTime').val().split('时')[1].split('分')[0]),
-            second: parseInt($('#outTime').val().split('分')[1].replace('秒',''))
+            second: parseInt($('#outTime').val().split('分')[1].replace('秒', ''))
         }
         var EnterTime = inTime.hour * 3600 + inTime.minute * 60 + inTime.second;
         var LeaveTime = outTime.hour * 3600 + outTime.minute * 60 + outTime.second;
@@ -663,17 +550,17 @@
             android.EnterTime = EnterTime;
             android.LeaveTime = LeaveTime;
             console.log(android)
-            $.post(qp_url + 'admin/Android/DoConfigure?token=' + getStorage('token'),android ,function (res) {
+            $.post(qp_url + 'admin/Android/DoConfigure?token=' + getStorage('token'), android, function (res) {
                 if (res.status == 1) {
                     layer.msg(res.msg, {time: 1000, icon: 1});
                     setTimeout(function () {
                         window.history.go(0)
-                    },1500)
+                    }, 1500)
                 } else {
                     layer.msg(res.msg, {time: 3000, icon: 2});
                     return false;
                 }
-            },'json')
+            }, 'json')
         }
     }
 

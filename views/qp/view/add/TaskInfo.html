@@ -309,6 +309,9 @@
                         $.post(qp_url + 'admin/task/DoTaskInfo?token='+getStorage('token'), postData, function (res) {
                             if (res.status == 1) {
                                 layer.msg(res.msg, {time: 1000, icon: 1});
+                                setTimeout(function () {
+                                    window.location.href = '../renWuGuanLi.html'
+                                },1000)
                             } else {
                                 layer.msg(res.msg, {time: 1000, icon: 2});
                             }

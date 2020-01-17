@@ -16,7 +16,7 @@
     </style>
 </head>
 <body class="backgroud">
-<div id="content" class="main-content" style="display: none;" v-show="payTypeList">
+<div id="content" class="main-content" v-cloak>
     <div class="row">
         <div class="col-md-12">
             <div class="box-inner">
@@ -86,21 +86,17 @@
                                     <li>
                                         <select id="gameChannel" class="form-control input-sm">
                                             <option value="0">请选择渠道</option>
-                                            <option :value="item.id" v-for="item in gameChannel">{{item.username}}
+                                            <option :value="item.id" v-for="item in gameChannel">{{item.realname}}
                                             </option>
                                         </select>
                                     </li>
-                                    <li>订单状态：</li>
-                                    <li>
-                                        <select id="payStatus" class="form-control input-sm">
-                                            <option value="0">请选择订单状态</option>
-                                            <option :value="item.id" v-for="item in payStatus">{{item.name}}</option>
-                                            <!--                                            <option value="1">待支付</option>-->
-                                            <!--                                            <option value="2">已支付</option>-->
-                                            <!--                                            <option value="3">已取消</option>-->
-                                            <!--                                            <option value="4">已完成</option>-->
-                                        </select>
-                                    </li>
+                                    <!--                                    <li>订单状态：</li>-->
+                                    <!--                                    <li>-->
+                                    <!--                                        <select id="payStatus" class="form-control input-sm">-->
+                                    <!--                                            <option value="0">请选择订单状态</option>-->
+                                    <!--                                            <option :value="item.id" v-for="item in payStatus">{{item.name}}</option>-->
+                                    <!--                                        </select>-->
+                                    <!--                                    </li>-->
                                     <li>用户状态：</li>
                                     <li>
                                         <select id="userStatus" class="form-control input-sm">
@@ -141,16 +137,16 @@
                             <div class="top-tip">
                                 <p>统计：当前查询总支付金额<span id="searchAllOrderAmount"></span> 元&nbsp;&nbsp;&nbsp;&nbsp;
                                     当前页已支付金额<span id="pageSuccessOrderAmount"></span>元&nbsp;&nbsp;&nbsp;&nbsp;
-                                    当前页待支付金额<span id="pageFailOrderAmount"></span> 元
+                                    <!--                                    当前页待支付金额<span id="pageFailOrderAmount"></span> 元-->
                                 </p>
                             </div>
                             <div class="top-tip">
                                 <p>今日数据：订单总金额<span id="todayAllOrderAmount"></span>元&nbsp;&nbsp;&nbsp;&nbsp;
                                     支付金额<span id="todaySuccessOrderAmount"></span>元&nbsp;&nbsp;&nbsp;&nbsp;
-                                    未支付金额<span id="todayFailOrderAmount"></span>元&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <!--                                    未支付金额<span id="todayFailOrderAmount"></span>元&nbsp;&nbsp;&nbsp;&nbsp;-->
                                     总订单数量<span id="todayAllOrderNum"></span>笔&nbsp;&nbsp;&nbsp;&nbsp;
                                     已付订单数<span id="todaySuccessOrderNum"></span>单&nbsp;&nbsp;&nbsp;&nbsp;
-                                    待付订单数<span id="todayFailOrderNum"></span>单
+                                    <!--                                    待付订单数<span id="todayFailOrderNum"></span>单-->
                                 </p>
                             </div>
                         </div>
@@ -211,8 +207,6 @@
 </div>
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
-<script src="../bootstrap/js/bootstrap.min.js"></script>
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script src="../Scripts/vue.min.js"></script>
 <script src="../Scripts/comm.js"></script>
@@ -278,22 +272,14 @@
         //时间选择器
         laydate.render({
             elem: '#txtStartDate'
-            , type: 'datetime'
             , theme: '#00B4E5'
-            // ,value:Time.today().StartDate
+            , value: new Date()
         });
         laydate.render({
             elem: '#txtEndDate'
-            , type: 'datetime'
+            , value: new Date()
             , theme: '#00B4E5'
-            // ,value:Time.today().EndDate
         });
-
-        // var agent = '';
-        // if (agent != "") {
-        //     $("#txtSearch").val(agent);
-        //     $("#ddlSearchType").val(5);
-        // }
         docReady();
     });
     layui.use('table', function () {
@@ -315,19 +301,21 @@
                 // dataName: 'data',
             },
             parseData: function (res) {
-                console.log(res)
                 if (res.status == 1) {//统计
-                    $('#searchAllOrderAmount').text(res.data.searchAllOrderAmount);
-                    $('#pageSuccessOrderAmount').text(res.data.pageSuccessOrderAmount);
+                    $('#searchAllOrderAmount').text(parseFloat(res.data.searchAllOrderAmount).formatMoney());
+                    $('#pageSuccessOrderAmount').text(parseFloat(res.data.pageSuccessOrderAmount).formatMoney());
                     $('#pageFailOrderAmount').text(res.data.pageFailOrderAmount);
 
-                    $('#todayAllOrderAmount').text(res.data.todayAllOrderAmount);
-                    $('#todaySuccessOrderAmount').text(res.data.todaySuccessOrderAmount);
+                    $('#todayAllOrderAmount').text(parseFloat(res.data.todayAllOrderAmount).formatMoney());
+                    $('#todaySuccessOrderAmount').text(parseFloat(res.data.todaySuccessOrderAmount).formatMoney());
                     $('#todayFailOrderAmount').text(res.data.todayFailOrderAmount);
                     $('#todayAllOrderNum').text(res.data.todayAllOrderNum);
                     $('#todaySuccessOrderNum').text(res.data.todaySuccessOrderNum);
                     $('#todayFailOrderNum').text(res.data.todayFailOrderNum);
-
+                    res.data.data.forEach(function (item,index,array) {
+                        item.OrderAmount = parseFloat(item.OrderAmount)
+                        item.PayAmount = parseFloat(item.PayAmount)
+                    })
                 }
                 return {
                     "status": res.status, //解析接口状态
@@ -343,29 +331,32 @@
             , limit: 10
             , cellMinWidth: 120
             , cols: [[ //表头
-                {field: 'OrderID', title: '订单号', minWidth: 200}
-                , {field: 'ThirdOrder', title: '第三方订单号', minWidth: 200}
+                {field: 'OrderID', title: '订单号', minWidth: 180}
+                , {field: 'ThirdOrder', title: '第三方订单号', minWidth: 180}
                 , {field: 'UserID', title: '用户ID'}
                 , {
                     field: 'Accounts', title: '用户帐号', templet: function (d) {
-                        return `<a href="javascript:void(0);" onclick="openWindowOwn('Account/AccountsInfo.html?param={1}&tagindex=2&ModuleID={2}','{1}',850,600);">${d.Accounts}</a>`
+                        return `<a  href='javascript:void(0);' style="color:#${d.UserType == 0 ? '00B4E5' : colors[d.UserType - 1]}" onclick="openWindowOwn('Account/AccountsInfo.html?param=${d.UserID}','账号信息',1000,800);">${d.Accounts}</a>`
                     }
                 }
                 , {field: 'NickName', title: '用户昵称'}
-                , {field: 'ChannelId', title: '推广渠道ID'}
+                , {field: 'ChannelId', title: '推广渠道号'}
                 , {field: 'ChannelName', title: '推广渠道昵称'}
                 , {field: 'PayChannelID', title: '充值渠道ID'}
                 , {field: 'PayChannelName', title: '充值渠道'}
-                , {field: 'OrderStatus', title: '订单状态',templet:function (d) {
+                , {
+                    field: 'OrderStatus', title: '订单状态', templet: function (d) {
                         return orderStatus(d.OrderStatus)
-                    }}
+                    }
+                }
                 , {field: 'ShareName', title: '支付方式'}
-                , {field: 'OrderAmount', title: '订单金额',sort:true}
-                , {field: 'PayAmount', title: '实付金额',sort:true}
-                , {field: 'ApplyDate', title: '创建时间',sort:true, minWidth: 200}
-                , {field: 'PayDate', title: '支付时间',sort:true, minWidth: 200}
-                , {field: 'LastLogonIP', title: '客户端地址', minWidth: 200}
-                , {field: 'RegisterOrigin', title: '设备',minWidth:90, templet: function (d) {
+                , {field: 'OrderAmount', title: '<span title="实付金额+充值赠送">订单金额</span>', sort: true}
+                , {field: 'PayAmount', title: '实付金额', sort: true}
+                , {field: 'ApplyDate', title: '创建时间', sort: true, minWidth: 170}
+                , {field: 'PayDate', title: '支付时间', sort: true, minWidth: 170}
+                , {field: 'LastLogonIP', title: '客户端地址', minWidth: 150}
+                , {
+                    field: 'RegisterOrigin', title: '设备', minWidth: 90, templet: function (d) {
                         if (d.RegisterOrigin == 1) {
                             return '安卓'
                         }
@@ -376,54 +367,20 @@
                             return 'PC'
                         }
                         return '无法获取'
-                    }}
-                , {field: 'Spreader', title: '推广人'}
-                , {
-                    field: '', title: '操作', fixed: 'right', event: 'budan', templet: function (d) {
-                        return `<button class="layui-btn layui-btn-xs">补单</button>`
                     }
                 }
+                , {field: 'Spreader', title: '推广人'}
             ]]
             , done: function (res, curr, count) {
                 $('th').css({'text-align': 'center'});
             }
 
         });
-        table.on('tool(test)', function (obj) {
-            console.log(obj.tr) //得到当前行元素对象
-            console.log(obj.data) //得到当前行数据
-            //obj.del(); //删除当前行
-            //obj.update(fields) //修改当前行数据
-            console.log(obj.event)
-            switch (obj.event) {
-                case 'budan':
-                    layer.confirm('确定要对XXX进行补单？', {
-                        btn: ['确定', '取消']
-                    }, function () {
-                        // $.ajax({
-                        //     type: 'POST',
-                        //     url: "?s=/Achievements/SetPerformStandard/ConfirmTOpConfigEditorAjax",
-                        //     data: {
-                        //         'PerId': perid,
-                        //         'start_time': start_time,
-                        //         'end_time': end_time,
-                        //     },
-                        //     success:function () {
-                        //         layer.close(layer.index);
-                        //     }
-                        // });
-                    }, function () {
-
-                    })
-                    break;
-            }
-
-        });
     });
 
-    function  orderStatus(num) {
-        for(var i=0;i<myVue.payStatus.length;i++){
-            if(num == myVue.payStatus[i].id ){
+    function orderStatus(num) {
+        for (var i = 0; i < myVue.payStatus.length; i++) {
+            if (num == myVue.payStatus[i].id) {
                 return myVue.payStatus[i].name
             }
         }
@@ -431,38 +388,17 @@
     }
 
     function docReady() {
-        //加载数据
-        // postData.pageSize = parseInt($("#pagecount").val());
+        //初始化数据
         postData.Sort = "";
         postData.Type = 1;
-        // postData.pageIndex = 1;
         postData.KeyWord = $("#txtSearch").val();
         postData.SearchType = $("#ddlSearchType").val();
-        // var txtStartDate = $("#txtStartDate").val();
-        // var txtEndDate = $("#txtEndDate").val();
-        // postData.StartDate = Time.today().StartDate;
-        // postData.EndDate = Time.today().EndDate;
+        postData.StartDate = Time.today().StartDate;
+        postData.EndDate = Time.today().EndDate;
         postData.token = getStorage('token');
-        // AjaxSearch(postData);
-        //收放事件
-        $('.btn-minimize').click(function (e) {
-            e.preventDefault();
-            var $target = $(this).parent().parent().next('.box-content');
-            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-            $target.slideToggle();
-        });
-        //选择页码
-        $("#pagecount").change(function (e) {
-            postData.pageSize = parseInt($(this).val());
-            postData.pageIndex = 1;
-            AjaxSearch(postData);
-        });
 
         //普通搜索事件
         $("#btnQuery").click(function (e) {
-
-            // postData.pageSize = parseInt($("#pagecount").val());
             postData.Type = 1;
             var txtStartDate = $("#txtStartDate").val();
             var txtEndDate = $("#txtEndDate").val();
@@ -472,109 +408,62 @@
                     return false;
                 }
             }
-            postData.StartDate = txtStartDate;
-            postData.EndDate = txtEndDate;
-            //postData.CardTypeID = parseInt($("#ddlCardType").val());
+            postData.StartDate = datetimeFormat(txtStartDate,0);
+            postData.EndDate = datetimeFormat(txtEndDate,1);
             postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
             postData.KeyWord = $("#txtSearch").val();
-            // postData.SearchType = $("#ddlSearchType").val();//去掉原先的搜索类型
             postData.ChannelId = $("#gameChannel").val();// 所属渠道ID
-            postData.OrderStatus = $("#payStatus").val();//订单状态
             postData.Nullity = $("#userStatus").val();//用户状态
             postData.ShareID = $("#ddlGlobalShareInfo").val();//充值方式
             postData.PayChannelID = $("#payChannel").val();//充值渠道id
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            })
-            // postData.pageIndex = 1;
-            // AjaxSearch(postData);
+            AjaxSearch(postData);
         });
         //今天查询
         $("#btnQueryTD").click(function (e) {
             postData.Type = 2;
-            //postData.CardTypeID = parseInt($("#ddlCardType").val());
             postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            })
-            // AjaxSearch(postData);
+            AjaxSearch(postData);
         });
         //昨天查询
         $("#btnQueryYD").click(function (e) {
             postData.Type = 3;
-            //postData.CardTypeID = parseInt($("#ddlCardType").val());
             postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            })
-            // AjaxSearch(postData);
+            AjaxSearch(postData);
         });
         //本周查询
         $("#btnQueryTW").click(function (e) {
             postData.Type = 4;
-            //postData.CardTypeID = parseInt($("#ddlCardType").val());
             postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            })
-            // AjaxSearch(postData);
+            AjaxSearch(postData);
         });
         //上周查询
         $("#btnQueryYW").click(function (e) {
             postData.Type = 5;
-            //postData.CardTypeID = parseInt($("#ddlCardType").val());
             postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            })
-            // AjaxSearch(postData);
+            AjaxSearch(postData);
         });
         //本月查询
         $("#btnQueryTM").click(function (e) {
             postData.Type = 6;
-            //postData.CardTypeID = parseInt($("#ddlCardType").val());
             postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            })
-            // AjaxSearch(postData);
+            AjaxSearch(postData);
         });
         //上月查询
         $("#btnQueryYM").click(function (e) {
             postData.Type = 7;
-            //postData.CardTypeID = parseInt($("#ddlCardType").val());
             postData.ShareID = parseInt($("#ddlGlobalShareInfo").val());
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            })
-            // AjaxSearch(postData);
+            AjaxSearch(postData);
         });
     }
 
     //搜索事件
     function AjaxSearch(postData) {
-        $('#pagin').paging("/Filled/GetShareInfoList", postData, CreatTableBody, postData.pageIndex);
+        table.reload('layTable', {
+            where: postData,
+            page: {
+                curr: 1
+            }
+        })
     }
 
     function StrToDateTime(timestr) {
@@ -582,66 +471,21 @@
         return dt;
     }
 
-    function view(gameid, applydate) {
-        console.log(gameid)
-        if (gameid) {
-            // var applydate = applydate.replace("T", " ");
-            // var applydate = applydate.substring(0, applydate.indexOf("."));
-
-            $("#iframedetail").attr("src", "Trade/LotteryBetDraw.html?gameid=" + gameid + "&StartDate=" + applydate);
-            // alert($(window).width());
-            $("#iframedetail").width($(window).width() - 80);
-            $("#iframedetail").height($(window).height() - 240);
-            $(".modal-dialog").width($(window).width() - 50);
-            $(".modal-dialog").height($(window).height() - 220);
-            $('#myModal').modal('show');
-        }
-    }
-
-    //绑定数据
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, msg) {
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-                html += stringFormat("<tr class=\"odd\">");
-                html += stringFormat("<td onclick='view({0},\"{1}\")'>查看</td>", item.GameID, item.ApplyDate);
-                html += stringFormat("<td>{0}</td>", item.ApplyDate);
-                html += stringFormat("<td>{0}</td>", item.ShareName);
-                html += stringFormat("<td>{0}</td>", G_AddUserNameLink(item.Accounts, item.UserID, item.UserType));
-                html += stringFormat("<td>{0}</td>", item.rechargeaccount);
-                html += stringFormat("<td>{0}</td>", item.AgentAcc);
-                html += stringFormat("<td>{0}</td>", item.Spreader);
-                html += stringFormat("<td>{0}</td>", item.GameID);
-                //html += stringFormat("<td>{0}</td>", item.SerialID);
-                html += stringFormat("<td>{0}</td>", item.OrderID);
-                html += stringFormat("<td>{0}</td>", item.OrderAmount);
-                html += stringFormat("<td>{0}</td>", item.PayAmount);
-                //html += stringFormat("<td>{0}</td>", item.CardTypeName);
-                html += stringFormat("<td>{0}</td>", item.Gold);
-                html += stringFormat("<td>{0}</td>", item.BeforeGold);
-                html += stringFormat("<td title=\"{0}\">{1}</td>", item.IPAddress, item.IPAddress);
-                //html += stringFormat("<td>{0}</td>", item.Account);
-                html += "</tr>";
-            });
-        }
-        if (msg != null) {
-            html += stringFormat("<tr><td colspan=\"8\">合计：</td><td><lable id=\"ltOrderAmounts\">{0}</lable></td><td><lable id=\"ltPayAmounts\">{1}</lable></td><td><lable id=\"ltGrantCurrency\">{2}</lable></td><td colspan=\"3\"></td></tr>", typeof (msg.OrderAmount) == "undefined" ? "0.00" : msg.OrderAmount, typeof (msg.PayAmount) == "undefined" ? "0.00" : msg.PayAmount, typeof (msg.Currency) == "undefined" ? "0.00" : msg.Currency);
-        }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
-    }
+    // function view(gameid, applydate) {
+    //     console.log(gameid)
+    //     if (gameid) {
+    //         // var applydate = applydate.replace("T", " ");
+    //         // var applydate = applydate.substring(0, applydate.indexOf("."));
+    //
+    //         $("#iframedetail").attr("src", "Trade/LotteryBetDraw.html?gameid=" + gameid + "&StartDate=" + applydate);
+    //         // alert($(window).width());
+    //         $("#iframedetail").width($(window).width() - 80);
+    //         $("#iframedetail").height($(window).height() - 240);
+    //         $(".modal-dialog").width($(window).width() - 50);
+    //         $(".modal-dialog").height($(window).height() - 220);
+    //         $('#myModal').modal('show');
+    //     }
+    // }
 </script>
 </body>
 </html>

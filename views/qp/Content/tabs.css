@@ -143,3 +143,10 @@ nav.page-tabs {
 
 body{
     background: #ffffff;}
+.menu-close{
+    position: absolute;
+    cursor: pointer;
+    display: none;
+    width: 20px;
+    right: 10px;
+    top: 10px;}

@@ -2,14 +2,16 @@
 <html lang="zh">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>后台管理系统</title>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="../Content/common.css" rel="stylesheet" />
-    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../Content/tabs.css" rel="stylesheet" />
+    <link href="../Content/common.css" rel="stylesheet"/>
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../Content/tabs.css?v=2019-12-16" rel="stylesheet"/>
+    <link href="../Content/tabs@mobile.css" rel="stylesheet"/>
     <style type="text/css">
         #rbox {
             display: none;
@@ -44,15 +46,15 @@
     </style>
 </head>
 <body class="warper">
-<audio src="../Content/images/star.mp3" id="unread"></audio>
-<div class="wrap" id="myVue" style="display:none;" v-show="tabs">
+<audio src="" id="unread"></audio>
+<div class="wrap" id="myVue" v-cloak>
     <!-- 主体内容start -->
     <div class="main-list clearfix ">
         <div class="menu" id="selectbox">
             <div class="head-right">
-                <img id="avatar"
+                <img id="headImg"
                      :src=" JSON.parse(getStorage('customerInfo')).avatar || '../Content/images/headImg.png'"
-                     class="icon" onclick="popList()">
+                     class="icon avatar" onclick="popList()">
                 <div class="row">
                     <span onclick="popList()">欢迎您,<span
                             id="realname">{{JSON.parse(getStorage('customerInfo')).realname}}</span></span>
@@ -62,10 +64,11 @@
                     <ul>
                         <li><a href="index2.html">后台首页</a></li>
                         <li id="editInfo"><a href="userInfo.html">修改个人资料</a></li>
-                        <li onclick='BindIp(0);'>绑定IP</li>
+<!--                        <li onclick='BindIp(0);'>绑定IP</li>-->
                         <li onclick='loginOut();'>安全退出</li>
                     </ul>
                 </div>
+                <img src="../Content/images/menu-close.png" alt="" class="menu-close">
             </div>
             <div class="scroll-box">
                 <ul v-for="(item,index) in tabs" class="menulist">
@@ -108,40 +111,51 @@
                     <button class="dropdown J_tabClose" data-toggle="dropdown">
                         关闭操作<span class="caret"></span>
 
-                        </button>
-                        <ul role="menu" class="dropdown-menu dropdown-menu-right">
-                            <li class="J_tabShowActive">
-                                <a>定位当前选项卡</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li class="J_tabCloseAll">
-                                <a>关闭全部选项卡</a>
-                            </li>
-                            <li class="J_tabCloseOther">
-                                <a>关闭其他选项卡</a>
-                            </li>
-                        </ul>
-                    </div>
+                    </button>
+                    <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                        <li class="J_tabShowActive">
+                            <a>定位当前选项卡</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="J_tabCloseAll">
+                            <a>关闭全部选项卡</a>
+                        </li>
+                        <li class="J_tabCloseOther">
+                            <a>关闭其他选项卡</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="row J_mainContent" id="content-main">
-                    <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="Welcome2.html"
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="Welcome2.html"
                         frameborder="0" data-id="Home/Welcome" seamless></iframe>
-                </div>
-
-
-            </div>
-            <!-- 右边主体内容end -->
-            <!--提示框-->
-            <div id="pop" class="popstyle clearfix">
-                <div class="alert-header">
-                    <h1>信息提示</h1>
-                    <img  src="../Content/images/close.png">
-                </div>
-                <div id="popContent" class="pop-content">
-                    有新的未读客服消息
-                </div>
             </div>
 
+
+        </div>
+        <!-- 右边主体内容end -->
+        <!--提示框，此处将客服消息和金币交易消息分开显示-->
+<!--        客服-->
+        <div id="pop" class="popstyle clearfix">
+            <div class="alert-header">
+                <h1>信息提示</h1>
+                <img src="../Content/images/close.png">
+            </div>
+            <div id="popContent" class="pop-content">
+                有新的未读客服消息
+            </div>
+        </div>
+
+<!--金币交易-->
+        <div id="pop_1" class="popstyle clearfix">
+            <div class="alert-header">
+                <h1>信息提示</h1>
+                <img src="../Content/images/close.png">
+            </div>
+            <div id="popContent_1" class="pop-content">
+                有新的未读客服消息
+            </div>
+        </div>
     </div>
 </div>
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
@@ -152,10 +166,10 @@
 <script src="../Scripts/axios.js"></script>
 <script src="../Scripts/socket.io.js"></script>
 <script type="text/javascript">
-    if(!JSON.parse(getStorage('customerInfo'))) {
+    if (!JSON.parse(getStorage('customerInfo'))) {
         window.location.href = 'login.html'
     }
-    let myH=$(window).height() - 50;
+    let myH = $(window).height() - 50;
     $('.J_iframe').height(myH)
     var socket
     var nickname, avatar = JSON.parse(getStorage('customerInfo')).avatar || '../img/kf_default@2x.png';
@@ -164,10 +178,10 @@
         socket.on('connect', function () {
             socket.emit('login', {
                 identity: 'notice',
-                    name: JSON.parse(getStorage('customerInfo')).nickName,
+                name: JSON.parse(getStorage('customerInfo')).nickName,
                 img: avatar
             });  // 触发登录事件
-            });
+        });
         socket.on('loginSuc', (data) => {
             console.log('loginSuc', data)
             $('.name').hide();
@@ -179,9 +193,16 @@
         socket.on('notice', (data) => {
             console.log('notice', data)
             if (notice[data.type]) {
+                if(data.type == "gold"){//金币的交易信息
+                    $('#unread').attr('src','../Content/images/lingqu.mp3');
+                    $('#popContent_1').text(data.msg + '，点击查看').data('index', notice[data.type])
+                    $('#pop_1').css('transform', 'translateY(-110px)')
+                }else{//客服
+                    $('#unread').attr('src','../Content/images/star.mp3');
+                    $('#popContent').text(data.msg + '，点击查看').data('index', notice[data.type])
+                    $('#pop').css('transform', 'translateY(0)')
+                }
                 $('#unread')[0].play()
-                $('#popContent').text(data.msg+'，点击查看').data('index',notice[data.type])
-                $('#pop').css('transform','translateY(0)')
             }
         })
         // setTimeout(function () {
@@ -196,10 +217,13 @@
         $('#pop .alert-header img').click(function () {
             $('#pop').css('transform', 'translateY(calc(100% + 60px))')
         })
+        $('#pop_1 .alert-header img').click(function () {
+            $('#pop_1').css('transform', 'translateY(calc(100% + 60px))')
+        })
         $('#popContent').click(function () {
             var m = $(this).data('index');
-            var o = $('.J_menuItem[data-index='+m+']').attr('href');
-            var l = $('.J_menuItem[data-index='+m+']').text()
+            var o = $('.J_menuItem[data-index=' + m + ']').attr('href');
+            var l = $('.J_menuItem[data-index=' + m + ']').text()
             $('#pop').css('transform', 'translateY(calc(100% + 60px))')
             $('.J_menuItem').removeClass('active')
             $('.J_menuItem[data-index="' + m + '"]').addClass('active')
@@ -215,7 +239,33 @@
             })
             if ($('.J_menuTab[data-id="' + o + '"]').length < 1) {
                 var p = '<a href="javascript:;" class="active J_menuTab" data-id="' + o + '">' + l + ' <i class="glyphicon glyphicon-remove-circle"></i></a>';
-                var n = '<iframe class="J_iframe" name="iframe' + m + '" width="100%" height="'+myH+'" src="' + o + '" frameborder="0" data-id="' + o + '" seamless></iframe>';
+                var n = '<iframe class="J_iframe" name="iframe' + m + '" width="100%" height="' + myH + '" src="' + o + '" frameborder="0" data-id="' + o + '" seamless></iframe>';
+                $('.page-tabs-content a').removeClass('active')
+                $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(n);
+                $(".J_menuTabs .page-tabs-content").append(p);
+                $('.glyphicon').removeClass('glyphicon-triangle-top')
+            }
+        })
+        $('#popContent_1').click(function () {
+            var m = $(this).data('index');
+            var o = $('.J_menuItem[data-index=' + m + ']').attr('href');
+            var l = $('.J_menuItem[data-index=' + m + ']').text()
+            $('#pop_1').css('transform', 'translateY(calc(100% + 60px))')
+            $('.J_menuItem').removeClass('active')
+            $('.J_menuItem[data-index="' + m + '"]').addClass('active')
+            $(".J_mainContent .J_iframe").each(function () {
+                console.log($(this).data("id"), o)
+                if ($(this).data("id") == o) {
+                    $(this).show().siblings(".J_iframe").hide();
+                    $('.J_menuTab').removeClass('active')
+                    $('.J_menuTab[data-id="' + o + '"]').addClass('active')
+                    $(this)[0].contentWindow.location.reload(true);
+                    return false
+                }
+            })
+            if ($('.J_menuTab[data-id="' + o + '"]').length < 1) {
+                var p = '<a href="javascript:;" class="active J_menuTab" data-id="' + o + '">' + l + ' <i class="glyphicon glyphicon-remove-circle"></i></a>';
+                var n = '<iframe class="J_iframe" name="iframe' + m + '" width="100%" height="' + myH + '" src="' + o + '" frameborder="0" data-id="' + o + '" seamless></iframe>';
                 $('.page-tabs-content a').removeClass('active')
                 $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(n);
                 $(".J_menuTabs .page-tabs-content").append(p);
@@ -261,6 +311,10 @@
                                 notice['gold'] = index
                             }
                         })
+                        if(JSON.parse(getStorage('customerInfo')).is_index != 1){//如果接口返回数据里面少了is_index字段，所以可能会导致首页空白，
+                            $(".page-tabs-content .active,#poplist li:eq(0)").remove()
+                            $(".J_mainContent .J_iframe").hide().attr('src','')
+                        }
                     })
                 }
             })
@@ -268,42 +322,59 @@
         methods: {}
     })
     $('#editInfo a').click(function (e) {
-            e.preventDefault()
-            var o = $(this).attr('href');
-            var l = $(this).text()
-            var m = 99;
-            $(".J_mainContent .J_iframe").each(function () {
-                console.log($(this).data("id"), o)
-                if ($(this).data("id") == o) {
-                    $(this).show().siblings(".J_iframe").hide();
-                    $('.J_menuTab').removeClass('active')
-                    $('.J_menuTab[data-id="' + o + '"]').addClass('active')
-                    return false
-                }
-            })
-            if ($('.J_menuTab[data-id="' + o + '"]').length < 1) {
-                var p = '<a href="javascript:;" class="active J_menuTab" data-id="' + o + '">' + l + ' <i class="glyphicon glyphicon-remove-circle"></i></a>';
-                var n = '<iframe class="J_iframe" name="iframe' + m + '" width="100%" height="'+myH+'" src="' + o + '" frameborder="0" data-id="' + o + '" seamless></iframe>';
-                $('.page-tabs-content a').removeClass('active')
-                $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(n);
-                $(".J_menuTabs .page-tabs-content").append(p);
-                $('#poplist').toggle()
-                $('.glyphicon').removeClass('glyphicon-triangle-top')
+        e.preventDefault()
+        var o = $(this).attr('href');
+        var l = $(this).text()
+        var m = 99;
+        $(".J_mainContent .J_iframe").each(function () {
+            console.log($(this).data("id"), o)
+            if ($(this).data("id") == o) {
+                $(this).show().siblings(".J_iframe").hide();
+                $('.J_menuTab').removeClass('active')
+                $('.J_menuTab[data-id="' + o + '"]').addClass('active')
+                return false
             }
         })
-        $(document).on('click', '.one-menu', function () {
-        console.log("$('#selectbox .scroll-box')[0].scrollTop", $('#selectbox .scroll-box')[0].scrollTop)
+        if ($('.J_menuTab[data-id="' + o + '"]').length < 1) {
+            var p = '<a href="javascript:;" class="active J_menuTab" data-id="' + o + '">' + l + ' <i class="glyphicon glyphicon-remove-circle"></i></a>';
+            var n = '<iframe class="J_iframe" name="iframe' + m + '" width="100%" height="' + myH + '" src="' + o + '" frameborder="0" data-id="' + o + '" seamless></iframe>';
+            $('.page-tabs-content a').removeClass('active')
+            $(".J_mainContent").find("iframe.J_iframe").hide().parents(".J_mainContent").append(n);
+            $(".J_menuTabs .page-tabs-content").append(p);
+            $('#poplist').toggle()
+            $('.glyphicon').removeClass('glyphicon-triangle-top')
+        }
+    })
+    $(document).on('click', '.one-menu', function () {
         $(this).parents('.menulist').siblings().find('.two-menu').hide();
         $(this).toggleClass('menuActive')
         $(this).parents('.menulist').siblings().find('.one-menu').removeClass('menuActive')
         $(this).next().slideToggle()
-        if ($(this).next().offset().top + $(this).next().find('.J_menuItem').length * 60 > _height) {
-            $('#selectbox .scroll-box').animate({scrollTop: $(this).offset().top - 185 + 'px'}, 500)
-        } else {
-            $('#selectbox .scroll-box').animate({scrollTop: 0 + 'px'}, 500)
+
+        if($(window).width() < 1000){
+            var $this = $(this)
+            // console.log($this)
+            $('#selectbox .scroll-box').animate({scrollTop: $this[0].offsetTop - 60 + 'px'}, 500)
+        }else{
+            if ($(this).next().offset().top + $(this).next().find('.J_menuItem').length * 60 > _height) {
+                $('#selectbox .scroll-box').animate({scrollTop: $(this).offset().top - 185 + 'px'}, 500)
+            } else {
+                $('#selectbox .scroll-box').animate({scrollTop: 0 + 'px'}, 100)
+            }
         }
     })
-
+    $('#selectbox').click(function () {
+        // 手机端显示隐藏
+        if($(window).width() < 1000 && !$('.main-list').hasClass('open')) {
+            $('.main-list').addClass('open')
+        }
+    })
+    $('.menu-close').click(function (e) {
+        $('.main-list').removeClass('open');
+        $('.two-menu,#poplist').hide();
+        $('.one-menu').removeClass('menuActive');
+        e.stopPropagation()
+    })
     function loginOut() {
         $.ajax({
             type: 'GET',
@@ -314,6 +385,8 @@
                 if (rsp.status == 1) {
                     window.location.href = 'login.html'
                     delStorage('token')
+                } else if (rsp.status == -1) {//该账号在别的设备上登录了
+                    window.location.href = 'login.html'
                 } else {
                     alert(rsp.msg);
                 }
@@ -331,6 +404,7 @@
         $('#poplist').toggle()
         $('.hdicon').toggleClass('glyphicon-triangle-top')
     }
+
     //绑定IP
     function BindIp(id) {
         var data = {};
@@ -389,7 +463,6 @@
         $(li).find(".two-menu a").removeClass("active");
         var a = $(li).find(".two-menu a:eq(" + snub + ")").addClass("active");
     }
-
 
     $(function () {
         // 一级菜单栏的切换效果
@@ -504,24 +577,24 @@
         this.sportX = e.clientX - this.lenX;
         this.sportY = e.clientY - this.lenY;
 
-            if (this.sportX <= 0) {
-                this.sportX = 0;
-            }
-            if (this.sportX >= this.limitX) {
-                this.sportX = this.limitX;
-            }
-            if (this.sportY <= 0) {
-                this.sportY = 0;
-            }
-            if (this.sportY >= this.limitY) {
-                this.sportY = this.limitY;
-            }
-            this.drag.style.left = this.sportX + "px";
-            this.drag.style.top = this.sportY + "px";
+        if (this.sportX <= 0) {
+            this.sportX = 0;
         }
-        //new Drag("#frm_main_content", "#pop");
-        //弹窗拖动效果end
-        // $.ajax({
+        if (this.sportX >= this.limitX) {
+            this.sportX = this.limitX;
+        }
+        if (this.sportY <= 0) {
+            this.sportY = 0;
+        }
+        if (this.sportY >= this.limitY) {
+            this.sportY = this.limitY;
+        }
+        this.drag.style.left = this.sportX + "px";
+        this.drag.style.top = this.sportY + "px";
+    }
+    //new Drag("#frm_main_content", "#pop");
+    //弹窗拖动效果end
+    // $.ajax({
     //     type: "post",
     //     headers: {"auth": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjExMTEiLCJpYXQiOjE1NjMzNDgxMDAsImV4cCI6MTU2MzM1NTMwMH0.NBUGhXbb-3ykDg9E-RjqmuhIt16uq4p_-nYgTvHZKPw"},
     //     // data:{

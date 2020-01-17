@@ -23,7 +23,7 @@
 <div id="content" class="main-content" style="padding-bottom: 0;">
     <div class="row">
         <div class="col-md-12">
-            <div class="box-inner ">
+            <div class="box-inner">
                 <div class="box-header well" data-original-title="">
                     <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：修改个人资料 </h2>
                     <div class="box-icon">
@@ -119,7 +119,7 @@
 <script src="../Scripts/comm.js"></script>
 <script src="../Scripts/socket.io.js"></script>
 <script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <!--验证插件-->
 <script src="../Content/veevalidate/vee-validate.js"></script>
@@ -129,7 +129,7 @@
     //收放事件
     $('.btn-minimize').click(function (e) {
         e.preventDefault();
-        var $target = $(this).parent().parent().next('.box-content');
+        var $target = $(this).parent().parent().next('.tab-content');
         if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
         else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
         $target.slideToggle();
@@ -195,7 +195,7 @@
                     this.$validator.validate().then(valid => {
                         console.log(valid)
                         if (valid) {
-                            postData['body']['pass_word'] = this.pass_word
+                            postData['body']['pwd'] = this.pass_word
                             this.submit(postData)
                         }
                     })
@@ -212,14 +212,12 @@
                     },
                     data: postData,
                 }).then(function (res) {
-                    console.log(res)
+                    // console.log(res)
                     var data = res.data
                     if (data.code == 0) {
                         layer.msg(data.msg,{icon: 1, time: 2000})
-                        console.log($(parent.avatar))
-                        console.log(postData.body.avatar)
-                        $(parent.avatar).attr('src',postData.body.avatar)
-                        $(parent.realname).text(postData.body.realname)
+                        window.parent.document.getElementById("headImg").src=postData.body.avatar;
+                        window.parent.document.getElementById("realname").innerHTML =postData.body.realname;
                         setStorage('customerInfo', JSON.stringify(postData.body))
                     } else {
                         layer.msg(data.msg,{icon: 2, time: 2000})

@@ -8,7 +8,6 @@
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../../Content/common.css" rel="stylesheet"/>
-    <script src="../../Content/laydate/laydate.js"></script>
     <style type="text/css">
         body {
             overflow-y: scroll !important;
@@ -91,7 +90,7 @@
                                     <li>
                                         <select class="form-control input-sm" id="ddlGameType"
                                                 v-model="postData.KindID">
-                                            <option :value="item.KindID" v-for="item in gameList">{{item.KindName}}
+                                            <option :value="item.ServerID" v-for="item in gameList">{{item.ServerName}}
                                             </option>
                                         </select>
                                     </li>
@@ -183,12 +182,13 @@
         </div>
     </div>
 </div>
-<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
 <script src="../../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../../Scripts/comm.js"></script>
+<script src="../../Content/laydate/laydate.js"></script>
+<script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
 <script src="../../Scripts/vue.min.js"></script>
 <script type="text/javascript">
-    var param = getUrlParams('param')
+    var param = getUrlParams('param');
     if (getUrlParams('account')) {
         $('#txtSearch').val(getUrlParams('account'));
     }
@@ -226,8 +226,9 @@
             changeType: [],//默认的游戏类型
             // TypeID: 0,
             // Scorce:'',
-            statistic:{},//统计信息
+            statistic: {},//统计信息
             postData: {
+                UserID: param,
                 KindID: -1,//默认的游戏类型
                 TypeID: 0,//默认的变化类型
                 Scorce: '',
@@ -242,13 +243,13 @@
             //获取游戏列表
             $.ajax({
                 type: 'GET',
-                url: qp_url + 'admin/Gamecommon/GetGameList?token=' + getStorage('token'),
+                url: qp_url + 'admin/Gamecommon/RoomList?kid=0&token=' + getStorage('token'),
                 dataType: 'json',
                 success: function (res) {
                     console.log(res)
                     let otherType = [{
-                        KindID: -1,
-                        KindName: '全部'
+                        ServerID: -1,
+                        ServerName: '全部'
                     }];
                     if (res.status == 1) {
                         that.gameList = otherType.concat(res.data)
@@ -272,17 +273,16 @@
             //获取统计信息
             $.ajax({
                 method: 'get',
-                url: qp_url+ 'admin/Account/GetRecordGlodTotal?token='+getStorage('token'),
+                url: qp_url + 'admin/Account/GetRecordGlodTotal?token=' + getStorage('token'),
                 dataType: 'json',
                 data: {
-                    token: getStorage('token'),
                     UserID: param,
                     StartDate: '',
                     EndDate: '',
                     Account: getUrlParams('account') || '',
                 },
                 success: function (res) {
-                    if(res.status == 1){
+                    if (res.status == 1) {
                         res.data.sum = parseFloat(res.data.sum).formatMoney()
                         res.data.registerScore = parseFloat(res.data.registerScore).formatMoney()
                         res.data.bindScore = parseFloat(res.data.bindScore).formatMoney()
@@ -303,22 +303,12 @@
                     layer.alert("开始日期不能大于结束时间");
                     return false;
                 }
-                table.reload('layTable', {
-                    where: this.postData
-                    , page: {
-                        curr: 1
-                    }
-                })
+                AjaxSearch(this.postData)
             },
             //按钮组查询
             TypeQuery: function (num) {
                 this.postData.Type = num;
-                table.reload('layTable', {
-                    where: this.postData
-                    , page: {
-                        curr: 1
-                    }
-                })
+                AjaxSearch(this.postData)
             }
         }
     })
@@ -329,9 +319,8 @@
             elem: '#layTable'
             , id: 'layTable'
             // , height: 512
-            , url: qp_url + 'admin/Account/GetRecordGlodList' //数据接口
+            , url: qp_url + 'admin/Account/GetRecordGlodList?token=' + getStorage('token') //数据接口
             , where: {
-                token: getStorage('token'),
                 UserID: param,
                 StartDate: '',
                 EndDate: '',
@@ -397,127 +386,30 @@
         return dt;
     }
 
-    function docReady() {
-        // //加载数据
-        // postData.pageSize = parseInt($("#pagecount").val());
-        // postData.pageIndex = 1;
-        // postData.UserID = parseInt('0');
-        // AjaxSearch(postData);
-        //收放事件
-        // $('.btn-minimize').click(function (e) {
-        //     e.preventDefault();
-        //     var $target = $(this).parent().parent().next('.box-content');
-        //     if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        //     else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        //     $target.slideToggle();
-        // });
-        // $("#btnquery").click(function (e) {
-        //     e.preventDefault();
-        //     var TypeID = parseInt($("#ddlRecordType").val());
-        //     if (TypeID > 0) {
-        //         postData.TypeID = TypeID;
-        //     } else {
-        //         postData.TypeID = 0;
-        //     }
-        //
-        //     var scorce = $("#scorce").val().trim();
-        //     if (scorce != "") {
-        //         postData.Scorce = scorce;
-        //     }
-        //     var Account = $("#txtAccount").val();
-        //     if (Account != "") {
-        //         postData.Account = Account;
-        //     }
-        //     postData.pageSize = parseInt($("#pagecount").val());
-        //     AjaxSearch(postData);
-        // });
-
-        // //选择页码
-        // $("#pagecount").change(function (e) {
-        //     postData.pageSize = parseInt($(this).val());
-        //     postData.pageIndex = 1;
-        //     AjaxSearch(postData);
-        // });
-
-        // //今天查询
-        // $("#btnQueryTD").click(function (e) {
-        //     postData.Type = 2;
-        //     AjaxSearch(postData);
-        // });
-        // //昨天查询
-        // $("#btnQueryYD").click(function (e) {
-        //     postData.Type = 3;
-        //     AjaxSearch(postData);
-        // });
-        // //本周查询
-        // $("#btnQueryTW").click(function (e) {
-        //     postData.Type = 4;
-        //     AjaxSearch(postData);
-        // });
-        // //上周查询
-        // $("#btnQueryYW").click(function (e) {
-        //     postData.Type = 5;
-        //     AjaxSearch(postData);
-        // });
-        // //本月查询
-        // $("#btnQueryTM").click(function (e) {
-        //     postData.Type = 6;
-        //     AjaxSearch(postData);
-        // });
-        // //上月查询
-        // $("#btnQueryYM").click(function (e) {
-        //     postData.Type = 7;
-        //     AjaxSearch(postData);
-        // });
-
-    }
-
     function AjaxSearch(postData) {
-        var txtStartDate = $("#txtStartDate").val().trim();
-        var txtEndDate = $("#txtEndDate").val().trim();
-        if (txtStartDate != "" && txtEndDate != "") {
-            if (StrToDateTime(txtEndDate) < StrToDateTime(txtStartDate)) {
-                alert("开始日期不能大于结束时间");
-                return false;
+        //获取统计信息
+        $.ajax({
+            method: 'get',
+            url: qp_url + 'admin/Account/GetRecordGlodTotal?token=' + getStorage('token'),
+            dataType: 'json',
+            data: postData,
+            success: function (res) {
+                if (res.status == 1) {
+                    res.data.sum = parseFloat(res.data.sum).formatMoney();
+                    res.data.registerScore = parseFloat(res.data.registerScore).formatMoney();
+                    res.data.bindScore = parseFloat(res.data.bindScore).formatMoney();
+                    res.data.signInScore = parseFloat(res.data.signInScore).formatMoney();
+                    res.data.taskScore = parseFloat(res.data.taskScore).formatMoney();
+                    myVue.statistic = res.data
+                }
             }
-        }
-        postData.StartDate = txtStartDate;
-        postData.EndDate = txtEndDate;
-        $('#pagin').paging("/Account/GetRecordGlodList", postData, CreatTableBody, postData.pageIndex);
-    }
-
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, statistics) {
-        $("#lbltotal").html(statistics.Sum);
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-                html += stringFormat("<tr>");
-                html += (postData.UserID == 0 ? "<td>" + item.Account + "</td>" : "");
-                html += stringFormat("<td>{0}</td>", item.PreScore);
-                //html += stringFormat("<td>{0}</td>", item.LastScore);
-                html += stringFormat("<td>{0}</td>", item.PreInsureScore);
-                //html += stringFormat("<td>{0}</td>", item.LastInsureScore);
-                html += stringFormat("<td>{0}</td>", item.PresentScore);
-                html += stringFormat("<td>{0}</td>", item.TypeName);
-                html += stringFormat("<td>{0}</td>", item.CollectDate);
-                html += stringFormat("<td>{0}</td>", item.IPAddress);
-                html += "</tr>";
-            });
-        }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
+        });
+        table.reload('layTable', {
+            where: postData
+            , page: {
+                curr: 1
+            }
+        })
     }
 </script>
 

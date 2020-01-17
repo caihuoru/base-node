@@ -9,11 +9,6 @@
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link href="../Content/common.css" rel="stylesheet" />
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Content/laydate/laydate.js"></script>
-    <script src="../Scripts/pagination.js"></script>
-    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <style type="text/css">
         body{
             overflow-y: scroll!important;
@@ -37,7 +32,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="box-content tab-content" style="overflow: hidden; display: block;">
+                    <div class="box-content tab-content" style="overflow: hidden; display: block;padding: 10px;">
                         <!--查询栏开始-->
                         <div class="alert alert-info">
                             <ul class="list-group">
@@ -71,6 +66,11 @@
         </div>
     </div>
 </div>
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script src="../Scripts/comm.js"></script>
+<script src="../Content/laydate/laydate.js"></script>
+<!--<script src="../Scripts/pagination.js"></script>-->
+<script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var pageObj = {};
     var postData = {};//搜索条件
@@ -86,8 +86,8 @@
             // , height: 512
             , url: qp_url + 'admin/Filled/daySummary' //数据接口
             , where: {
-                StartDate: '2018-10-15',
-                EndDate: '',
+                StartDate: Time.today().StartDate,
+                EndDate: Time.today().EndDate,
                 token:getStorage('token')
             }
             , request: {
@@ -116,7 +116,7 @@
             , limit: 10
             , cellMinWidth: 130
             , cols: [[ //表头
-                {field: 'ApplyDate', width: 150, title: '日期'}
+                {field: 'ApplyDate', width: 170, title: '日期'}
                 , {field: 'orderCount', title: '充值订单数量'}
                 , {field: 'amountTotal', title: '充值金额'}
                 , {field: 'ZFB', title: '支付宝充值金额'}
@@ -126,7 +126,7 @@
                 , {field: 'shanxianfu', title: '专享闪付充值金额'}
                 , {field: 'applyOrderCount', title: '兑换订单数'}
                 , {field: 'applyTotal', title: '兑换订单金额'}
-                , {field: 'successTotal', title: '成功兑换金额'}
+                , {field: 'successTotal', title: '<span title="含手续费">成功兑换金额</span>'}
                 , {field: 'Revenue', title: '游戏税收'}
             ]]
             , done: function (res, curr, count) {
@@ -139,29 +139,28 @@
         //时间选择器
         laydate.render({
             elem: '#txtStartDate'
-            , type: 'datetime'
+            ,value: new Date()
             ,theme:'#00B4E5'
         });
         laydate.render({
             elem: '#txtEndDate'
-            , type: 'datetime'
+            ,value: new Date()
             ,theme:'#00B4E5'
-
         });
         docReady();
     });
     function docReady() {
-        //加载数据
-
-        //收放事件
-        $('.btn-minimize').click(function (e) {
-            e.preventDefault();
-            var $target = $(this).parent().parent().next('.box-content');
-            if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-            else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-            $target.slideToggle();
-        });
-        var postData = {}
+        // //加载数据
+        //
+        // //收放事件
+        // $('.btn-minimize').click(function (e) {
+        //     e.preventDefault();
+        //     var $target = $(this).parent().parent().next('.box-content');
+        //     if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        //     else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        //     $target.slideToggle();
+        // });
+        // var postData = {}
         //日期查询
         $("#btnQuery").click(function (e) {
             var istrue = true;
@@ -179,8 +178,8 @@
             }
             if (istrue) {
                 if (txtStartDate != "" && txtEndDate != "") {
-                    postData.StartDate = txtStartDate;
-                    postData.EndDate = txtEndDate;
+                    postData.StartDate = txtStartDate + ' 00:00:00';
+                    postData.EndDate = txtEndDate + ' 23:59:59';
                 }
                 postData.DateType = 5;
                 AjaxSearch(postData);

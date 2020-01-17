@@ -15,24 +15,30 @@
         /*body{*/
         /*    overflow-y: scroll!important;*/
         /*}*/
+        #content{
+            height: 100%;
+        }
     </style>
 </head>
 <body>
-<div id="content" class="main-content">
-    <div id="echarts1" style="height: 500px;border-radius: 10px;"></div>
+<div id="content" class="">
+    <div id="echarts1" style="width:98%;height: 98%;border-radius: 10px;margin: 1% auto auto; "></div>
 </div>
 <script src="../../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../../Scripts/comm.js"></script>
 <script src="../../Scripts/echarts-all-3.js"></script>
 <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
+    var layer,loading;
+    var _width = $(window).width();
+    $(document).ready(function () {
+        layui.use('layer',function () {
+            layer = layui.layer;
+            // loading = layer.load(1, {shade: [0.1, '#fff']});
+        })
+    });
     var chart1 = echarts.init(document.getElementById('echarts1'));
     var yData = [], xData = [];
-    var layer,loading;
-    layui.use('layer',function () {
-        layer = layui.layer;
-        loading = layer.load(1, {shade: [0.1, '#fff']});
-    })
     $.ajax({
         type: 'get',
         url: qp_url + 'admin/abnormal/ScoreTimeList?uid=' + getUrlParams('uid')+'&token='+getStorage('token'),
@@ -75,7 +81,7 @@
                         type: 'value',
                         name: '金币',
                         nameLocation:'middle',
-                        nameGap:60,
+                        nameGap:_width <850?40:60,//如果是移动端的话，坐标名称和刻度之间间隔小一点
                         nameTextStyle:{
                             color:'#999',
                             fontWeight:'bold',
@@ -123,7 +129,7 @@
                 chart1.setOption(option);
             }
         },complete:function () {
-            layer.close(loading)
+            // layer.close(loading)
         }
     })
 </script>

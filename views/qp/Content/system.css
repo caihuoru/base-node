@@ -237,7 +237,7 @@ body #tab tr th:first-child {
     padding: 51px 44px;
 }
 
- 
+
  body {
             overflow-y: scroll !important;
             background: #F3F6FF;
@@ -402,3 +402,44 @@ body #tab tr th:first-child {
             text-align: center;
             font-size: 19px;
         }
+ @media screen and (max-width: 1000px) {
+     .home-item-title {
+         border-left: 5px solid #58585C;
+         padding-left: 10px;
+         font-size: 18px;
+         color: #58585C;
+         font-weight: bold;
+         line-height: 1;
+     }
+     .data {
+         padding:  0;
+         width: 100%;
+         background: #fff;
+         height: 230px;
+         /*padding-top:50px;*/
+     }
+     .data .part {
+         width: 30%;
+         height: 200px;
+         margin-left: 2.5%;
+         float: left;
+         position: relative;
+     }
+     .part_ .left_{
+         width: 100%;
+         /*float: left;*/
+         /*background:rgba(255,255,255,1);*/
+         /*padding-top: 20px;*/
+     }
+     .part_ .title_{
+         padding-left: 0px;
+         text-align: center;
+     }
+     .part_ .right_{
+         width: 100%;
+         margin-top: 20px;
+         /*float: right;*/
+         /*background:rgba(255,255,255,1);*/
+         /*padding-top: 20px;*/
+     }
+ }

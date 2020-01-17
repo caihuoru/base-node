@@ -2,6 +2,7 @@
 
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width"/>
     <title>后台管理-限制字符</title>
     <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet"/>
@@ -41,7 +42,8 @@
                                         <input type="text" placeholder="" id="txtSearch"
                                                class="form-control input-sm input-width-238">
                                     </li>
-                                    <li style="display: none"><input class="margin-5" name="ckitem" type="checkbox" value="0" id="ckbIsLike"/><label
+                                    <li style="display: none"><input class="margin-5" name="ckitem" type="checkbox"
+                                                                     value="0" id="ckbIsLike"/><label
                                             for="ckbIsLike">模糊查询</label></li>
                                     <li>
                                         <a id="btnQuery" class="btn btn-outline-success search" href="#"><i
@@ -70,32 +72,6 @@
                     <!--table开始-->
                     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                         <table id="layTable" lay-filter="test"></table>
-                        <table style="display: none"
-                               class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
-                               id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-                            <thead>
-                            <tr role="row">
-                                <th><input name="ckall" type="checkbox" value="" onclick="SelectAll(this,'cid')"/></th>
-                                <th>序号</th>
-                                <th>管理</th>
-                                <th>限制字符</th>
-                                <th>失效时间</th>
-                                <th>录入时间</th>
-                            </tr>
-                            </thead>
-                            <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
-                        </table>
-                        <!--分页控件-->
-                        <div class="row">
-                            <div class="col-md-6">
-
-                            </div>
-                            <div class="col-md-6">
-                                <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                    <ul class="pagination" id="pagin"></ul>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!--table结束-->
                 </div>
@@ -104,14 +80,15 @@
     </div>
 </div>
 <script type="text/html" id="barDemo">
-    <span class="layui-btn layui-btn-normal layui-btn-xs" onclick="window.open('add/ConfineContenInfo.html?param=edit&str={{d.String}}&date={{d.EnjoinOverDate}}&id={{d.ContentID}}','_self')"
+    <span class="layui-btn layui-btn-normal layui-btn-xs"
+          onclick="window.open('add/ConfineContenInfo.html?param=edit&str={{d.String}}&date={{d.EnjoinOverDate}}&id={{d.ContentID}}','_self')"
           lay-event="edit">更新</span>
     <span class="layui-btn layui-btn-warm layui-btn-xs" onclick="Del({{d.ContentID}})">删除</span>
 </script>
 <script src="../Scripts/jquery-1.10.2.min.js"></script>
 <script src="../Scripts/comm.js"></script>
-<script src="../Content/laydate/laydate.js"></script>
-<script src="../Scripts/pagination.js"></script>
+<!--<script src="../Content/laydate/laydate.js"></script>-->
+<!--<script src="../Scripts/pagination.js"></script>-->
 <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
 <script type="text/javascript">
     var pageObj = {};
@@ -128,7 +105,7 @@
             elem: '#layTable'
             , id: 'layTable'
             // , height: 512
-            , url: qp_url + 'admin/Account/GetConfineContentList?token='+getStorage('token') //数据接口
+            , url: qp_url + 'admin/Account/GetConfineContentList?token=' + getStorage('token') //数据接口
             , request: {
                 pageName: 'pageIndex' //页码的参数名称，默认：page
                 , limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -175,31 +152,8 @@
 
     function docReady() {
         //加载数据
-        // postData.pageSize = parseInt($("#pagecount").val());
         postData.Sort = "";
-        // postData.pageIndex = 1;
         postData.token = getUrlParams('token')
-        // AjaxSearch(postData);
-        // //收放事件
-        // $('.btn-minimize').click(function (e) {
-        //     e.preventDefault();
-        //     var $target = $(this).parent().parent().next('.box-content');
-        //     if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        //     else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        //     $target.slideToggle();
-        // });
-        //选择页码
-        // $("#pagecount").change(function (e) {
-        //     postData.pageSize = parseInt($(this).val());
-        //     postData.pageIndex = 1;
-        //     AjaxSearch(postData);
-        // });
-        // //刷新
-        // $("#btnRefresh").click(function (e) {
-        //     postData.KeyWord = $("#txtSearch").val();
-        //     postData.IsLike = $('#ckbIsLike').is(':checked') ? 1 : 0;
-        //     AjaxSearch(postData);
-        // });
         //普通搜索事件
         $("#btnQuery").click(function (e) {
             var keyWord = $("#txtSearch").val();
@@ -207,23 +161,20 @@
                 layer.alert("请输入查询条件");
                 return false;
             }
-            // postData.pageSize = parseInt($("#pagecount").val());
-            // postData.IsLike = $('#ckbIsLike').is(':checked') ? 1 : 0;
             postData.IsLike = 1;
             postData.KeyWord = keyWord;
-            table.reload('layTable', {
-                where: postData,
-                page: {
-                    curr: 1
-                }
-            })
-            // AjaxSearch(postData);
+            AjaxSearch(postData);
         });
     }
 
     //搜索事件
     function AjaxSearch(postData) {
-        $('#pagin').paging("/Account/GetConfineContentList", postData, CreatTableBody, postData.pageIndex);
+        table.reload('layTable', {
+            where: postData,
+            page: {
+                curr: 1
+            }
+        })
     }
 
     function Del(id) {
@@ -260,7 +211,7 @@
                         if (res.status == 1) {
                             layer.msg(res.msg, {time: 1000, icon: 1})
                             table.reload('layTable')
-                        }else{
+                        } else {
                             layer.msg(res.msg, {time: 1000, icon: 2})
                         }
                     }
@@ -268,51 +219,6 @@
                 layer.close(index);
             });
         }
-    }
-
-    //回调函数
-    function callBack(jsonData, fname) {
-        switch (fname) {
-            case "del":
-                alert(jsonData.Msg);
-                location.reload();
-                break;
-        }
-    }
-
-    function StrToDateTime(timestr) {
-        var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
-        return dt;
-    }
-
-    //绑定数据
-    function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex) {
-        var html = "";
-        if (jsondata != null && jsondata.length > 0) {
-            $.each(jsondata, function (i, item) {
-                html += stringFormat("<tr id=\"tr{0}\" class=\"odd\">", item.ContentID);
-                html += stringFormat("<td style=\"width: 30px;\"><input name='cid' type='checkbox' value='{0}'/></td>", item.ContentID);
-                html += stringFormat("<td>{0}</td>", item.SNO);
-                html += stringFormat("<td>{0}</td>", item.String);
-                html += stringFormat("<td>{0}</td>", item.EnjoinOverDate);
-                html += stringFormat("<td>{0}</td>", item.CollectDate);
-                html += "</tr>";
-            });
-        }
-        $("#DataTables_Table_0_wrapper tbody").html(html);
-        $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-    }
-
-    //字符串格式化
-    function stringFormat() {
-        if (arguments.length == 0)
-            return null;
-        var str = arguments[0];
-        for (var i = 1; i < arguments.length; i++) {
-            var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-            str = str.replace(re, arguments[i]);
-        }
-        return str;
     }
 </script>
 </body>

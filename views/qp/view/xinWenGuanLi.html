@@ -2,19 +2,16 @@
 <html>
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>网站系统 - 新闻管理</title>
+    <title>网站系统 - 新闻公告</title>
     <link href="../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../Content/Admin/css/charisma-app.css" rel="stylesheet" />
     <link rel="stylesheet" href="../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../Content/common.css" rel="stylesheet" />
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../Scripts/comm.js"></script>
-    <script src="../Scripts/pagination.js"></script>
-    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <style type="text/css">
-        body{
-            overflow-y: scroll!important;
+        body {
+            overflow-y: scroll !important;
         }
     </style>
 </head>
@@ -25,7 +22,7 @@
             <div class="col-md-12">
                 <div class="box-inner">
                     <div class="box-header well" data-original-title="">
-                        <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：网站系统 - 新闻管理 </h2>
+                        <h2><i class="glyphicon glyphicon-hand-right"></i> 你当前位置：网站系统 - 新闻公告 </h2>
                         <div class="box-icon">
                             <a href="#" class="btn btn-round btn-default" onclick="history.go(0);">
                                 <i class="glyphicon glyphicon-repeat"></i>
@@ -45,20 +42,6 @@
                     </ul>
                     <div class="box-content" style="overflow: hidden; display: block;">
                         <div class="row">
-                            <div class="col-md-2" style="display: none">
-                                <div id="DataTables_Table_0_length" class="dataTables_length">
-                                    <label>
-                                        <select size="1" name="DataTables_Table_0_length"
-                                            aria-controls="DataTables_Table_0" id="pagecount">
-                                            <option value="10" selected="selected">10</option>
-                                            <option value="25">25</option>
-                                            <option value="50">50</option>
-                                            <option value="100">100</option>
-                                        </select> 条/页
-                                    </label>
-                                    <div class="dataTables_info" id="DataTables_Table_0_info">显示 1 至 10 共 10 条</div>
-                                </div>
-                            </div>
                             <div class="col-md-12" style="padding-bottom:5px; padding-top:5px; text-align:right;">
                                 <a href="./add/NewsInfo.html" class="btn btn-outline-success"> <i
                                         class="glyphicon glyphicon-plus-sign icon-white"></i>新增 </a>
@@ -69,34 +52,6 @@
                         <!--table开始-->
                         <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper table-center" role="grid">
                             <table id="layTable" lay-filter="test"></table>
-                            <table style="display: none"
-                                class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
-                                id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-                                <thead>
-                                    <tr role="row">
-                                        <th><input name="ckall" type="checkbox" value=""
-                                                onclick="SelectAll(this,'cid')" /></th>
-                                        <th>管理</th>
-                                        <th>标题</th>
-                                        <th>类别</th>
-
-                                        <th>状态</th>
-                                        <th>时间</th>
-                                    </tr>
-                                </thead>
-                                <tbody role="alert" aria-live="polite" aria-relevant="all"></tbody>
-                            </table>
-                            <!--分页控件-->
-                            <div class="row">
-                                <div class="col-md-6">
-
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="dataTables_paginate paging_bootstrap pagination" style="float:right;">
-                                        <ul class="pagination" id="pagin"></ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!--table结束-->
                     </div>
@@ -104,6 +59,9 @@
             </div>
         </div>
     </div>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/comm.js"></script>
+    <script src="../Content/layui-v2.5.4/layui/layui.js"></script>
     <script type="text/javascript">
         var pageObj = {};
         var postData = {};//搜索条件
@@ -141,7 +99,7 @@
                     'theme': '#2D2D3C'
                 } //开启分页
                 , limits: [10, 20, 30, 50, 80, 100]
-                , limit: 10
+                , limit: 50
                 , cols: [[ //表头
                     { type: 'checkbox' }
                     , { field: 'title', title: '标题' }
@@ -152,6 +110,11 @@
                             } else {
                                 return `<span >移动版公告</span>`
                             }
+                        }
+                    }
+                    , {
+                        field: 'sort', title: '排序权重', templet: function (d) {
+                            return `<div data-id=${d.id} contenteditable="true" class="sort">${d.sort}</div>`
                         }
                     }
                     , {
@@ -186,33 +149,33 @@
                 var checkStatus = table.checkStatus('layTable'); //idTest 即为基础参数 id 对应的值
                 selectRows = checkStatus.data
             });
+            $(document).on("blur", ".sort", function () {
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/Web/editNoticeSort?token=" + getStorage('token'),
+                    dataType: 'json',
+                    data: {
+                        id: Number($(this).data("id")),
+                        sort: Number($(this).html())
+                    },
+                    success: function (resData) {
+                        if (resData.status == 1) {
+                            layer.msg(resData.msg, { time: 2000, icon: 1 });
+                            table.reload('layTable', {
+                                page: {
+                                    curr: 1
+                                }
+                            })
+                        } else {
+                            layer.msg(resData.msg, { time: 2000, icon: 2 });
+                        }
+
+                    }
+                })
+            })
         });
-        $(document).ready(function () {
-            docReady();
-        });
-        function docReady() {
-            //加载数据
-            postData.pageSize = parseInt($("#pagecount").val());
-            postData.Sort = "";
-            postData.pageIndex = 1;
-            AjaxSearch(postData);
-            //收放事件
-            $('.btn-minimize').click(function (e) {
-                e.preventDefault();
-                var $target = $(this).parent().parent().next('.box-content');
-                if ($target.is(':visible')) $('i', $(this)).removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                $target.slideToggle();
-            });
-            //选择页码
-            $("#pagecount").change(function (e) {
-                postData.pageSize = parseInt($(this).val());
-                postData.pageIndex = 1;
-                AjaxSearch(postData);
-            });
-        }
+
         function Del(o) {
-            console.log(o)
             var data = {};
             if (o == 0) {
                 // var cid = GetSelectValues();
@@ -228,7 +191,6 @@
             } else {
                 data.ids = o;
             }
-            console.log(data.ids)
             if (confirm("确定删除吗？")) {
                 $.ajax({
                     type: 'POST',
@@ -236,7 +198,6 @@
                     dataType: 'json',
                     data: data,
                     success: function (resData) {
-                        console.log(resData)
                         if (resData.status == 1) {
                             layer.msg(resData.msg, { time: 2000, icon: 1 });
                             setTimeout(function () {
@@ -250,72 +211,7 @@
             }
         }
 
-        //回调函数
-        function callBack(jsonData, fname) {
-            switch (fname) {
-                case "tj":
-                    alert(jsonData.Msg);
-                    window.location.reload();
-                    //window.opener.location.reload();
-                    break;
-                case "jinyong":
-                    window.location.reload();
-                    break;
-            }
-        }
-        //搜索事件
-        function AjaxSearch(postData) {
-
-            $('#pagin').paging("/Web/GetNewsList", postData, CreatTableBody, postData.pageIndex);
-        }
-        function StrToDateTime(timestr) {
-            var dt = new Date(timestr.replace("-", "/").replace("-", "/"));
-            return dt;
-        }
-        //绑定数据
-        function CreatTableBody(jsondata, pageTotal, pageCount, pageIndex, msg) {
-            var html = "";
-            if (jsondata != null && jsondata.length > 0) {
-                var str = "";
-                $.each(jsondata, function (i, item) {
-                    html += stringFormat("<tr>");
-                    html += stringFormat("<td><input name='cid' type='checkbox' value='{0}'/></td>", item.NewsID);
-                    str = item.IsDelete == 0 ? "<a class=\"l\" href='javascript:void(0)' onclick='jinyong({0},1)'>禁用</a>" : "<a class=\"l\" href='javascript:void(0)'  onclick='jinyong({0},0)'>启用</a>";
-                    html += stringFormat("<td><a class=\"l\" href=\"/Web/NewsInfo?cmd=edit&param={0}\">更新</a>  " + str + "</td>", item.NewsID);
-                    html += stringFormat("<td>{0}</td>", item.Subject);
-                    html += stringFormat("<td>{0}</td>", item.ClassName);
-                    //html += stringFormat("<td>{0}</td>", item.IsLinks);
-                    //html += stringFormat("<td>{0}</td>", item.IsLock);
-                    //html += stringFormat("<td>{0}</td>", item.OnTopAll);
-                    //html += stringFormat("<td>{0}</td>", item.OnTop);
-                    //html += stringFormat("<td>{0}</td>", item.IsElite);
-                    //html += stringFormat("<td>{0}</td>", item.IsHot);
-                    //html += stringFormat("<td>{0}</td>", item.MasterName);
-                    html += stringFormat("<td>{0}</td>", item.IsDelete == 0 ? "<font color=green>启用</font>" : "<font color=red>禁用</font>");
-                    html += stringFormat("<td>{0}</td>", item.IssueDate);
-                    html += "</tr>";
-                });
-            }
-            $("#DataTables_Table_0_wrapper tbody").html(html);
-            $("#DataTables_Table_0_info").html(stringFormat("显示 {0} 至 {1} 共 {2} 条", ((pageIndex - 1) * postData.pageSize + 1), ((pageIndex * postData.pageSize) < pageTotal ? (pageIndex * postData.pageSize) : pageTotal), pageTotal));
-        }
-
-        function jinyong(id, value) {
-            // AjaxSubmit("/Web/JinyongNews", { id: id, value: value }, callBack, "jinyong");
-        }
-        //字符串格式化
-        function stringFormat() {
-            if (arguments.length == 0)
-                return null;
-            var str = arguments[0];
-            for (var i = 1; i < arguments.length; i++) {
-                var re = new RegExp('\\{' + (i - 1) + '\\}', 'gm');
-                str = str.replace(re, arguments[i]);
-            }
-            return str;
-        }
         function editStatus(id, status) {
-            console.log(status)
             if (status == 1) {
                 status = 0;
             } else {

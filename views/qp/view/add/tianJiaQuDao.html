@@ -14,14 +14,22 @@
             margin: 15px 0;
         }
 
+        .panel-body .row div:first-child {
+            min-width: 130px;
+        }
+
         .col-xs-2.col-md-1 {
             padding-top: 3px;
             text-align: right;
         }
+
+        body {
+            overflow-y: scroll !important;
+        }
     </style>
 </head>
 <body>
-<div id="content" class="main-content margin-t-10">
+<div id="content" class="main-content margin-t-10" style="display: none;" v-show="add">
     <div class="">
         <div class="carousel box-inner">
             <div class="box-header well clearfix" data-original-title="">
@@ -30,46 +38,160 @@
             <div class="tab-content">
                 <div class="panel panel-primary" style="border: none;">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-2 col-md-1">渠道ID：</div>
-                            <div class="col-xs-6 col-md-3">
-                                <input v-model="add.channel_num" name="admin_id"
-                                       v-validate="'required|numeric'"
-                                       class="form-control input-sm" type="text" value="">
+                        <div class="row" v-if="add.admin_id == 0">
+                            <div class="col-xs-2 col-md-1">父级渠道：</div>
+                            <div class="col-xs-5 col-md-3">
+                                <select id="parentChannelId" class="form-control input-sm" v-model="add.parentChannelId"
+                                        @change="getSelectedPid" :disabled="pid!=undefined">
+                                    <option value="0">请选择</option>
+                                    <option :value="item.admin_id" v-for="item in gameChannel">{{item.username}}
+                                    </option>
+                                </select>
                             </div>
-                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('admin_id')">渠道ID只能输入数字</div>
                         </div>
+
                         <div class="row">
-                            <div class="col-xs-2 col-md-1">渠道账号：</div>
-                            <div class="col-xs-6 col-md-3">
-                                <input v-model="add.username" class="form-control input-sm" type="text"
+                            <div class="col-xs-2 col-md-1">渠道昵称：</div>
+                            <div class="col-xs-5 col-md-3">
+                                <input v-model="add.realname" class="form-control input-sm" type="text"
                                        name="qdname"
-                                       v-validate="'required'"
+                                       maxlength="10"
+                                       v-validate="'required|max:10'"
                                        value="">
                             </div>
-                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('qdname')">请输入渠道账号</div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('qdname')">请输入渠道昵称,最多10个字符</div>
                         </div>
-                        <div class="row">
+                        <div class="row" v-if="add.parentChannelId==0">
+                            <div class="col-xs-2 col-md-1">账号：</div>
+                            <div class="col-xs-5 col-md-3">
+                                <input v-model="add.username" class="form-control input-sm"
+                                       name="account"
+                                       v-validate="'required'"
+                                       type="text" value="">
+                            </div>
+                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('account')">请输入账号</div>
+                        </div>
+                        <div class="row" v-if="add.parentChannelId==0">
                             <div class="col-xs-2 col-md-1">密码：</div>
-                            <div class="col-xs-6 col-md-3">
-                                <input v-model="add.show_pwd" class="form-control input-sm"
+                            <div class="col-xs-5 col-md-3">
+                                <input v-model="add.pwd" class="form-control input-sm"
                                        name="show_pwd"
                                        v-validate="'required|min:6'"
                                        type="password" value="">
                             </div>
                             <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('show_pwd')">密码长度不能低于6位</div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-2 col-md-1">渠道地址：</div>
-                            <div class="col-xs-6 col-md-3">
-                                <input v-model="add.channel_addr"
-                                       name="channel_addr"
-                                       v-validate="'required'"
-                                       class="form-control input-sm"
-                                       type="text" value="">
+                        <section v-if="add.parentChannelId!=0 && add.parentChannelId">
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">渠道号：</div>
+                                <div class="col-xs-5 col-md-3">
+                                    <input v-model="add.channel_num" name="channel_num"
+                                           v-validate="'required|numeric'" maxlength="10"
+                                           class="form-control input-sm" type="text" value="">
+                                </div>
+                                <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('channel_num')">渠道号只能输入数字</div>
                             </div>
-                            <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('channel_addr')">请输入渠道地址</div>
-                        </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">渠道地址：</div>
+                                <div class="col-xs-5 col-md-3">
+                                    <input v-model="add.channel_addr"
+                                           name="channel_addr"
+                                           v-validate="'required'"
+                                           class="form-control input-sm"
+                                           type="text" value="">
+                                </div>
+                                <div class="col-xs-4 col-md-2 wrong" v-show="errors.has('channel_addr')">请输入渠道地址</div>
+                            </div>
+                            <div class="row layui-form">
+                                <div class="col-xs-2 col-md-1">登录限制：</div>
+                                <div class="col-xs-5 col-md-3">
+                                    <input name="loginlimit" v-model.number="add.loginLimit" type="radio"
+                                           class="with-gap"
+                                           id="radio_3"
+                                           value="0"/>
+                                    <label for="radio_3">禁止</label>
+                                    <input name="loginlimit" v-model.number="add.loginLimit" type="radio" id="radio_4"
+                                           class="with-gap"
+                                           value="1"/>
+                                    <label for="radio_4" class="ml-30">允许</label>
+                                </div>
+                            </div>
+                            <div class="row layui-form">
+                                <div class="col-xs-2 col-md-1">游客注册：</div>
+                                <div class="col-xs-5 col-md-3">
+                                    <input name="yk_registe" v-model.number="add.YKLimit" type="radio"
+                                           class="with-gap"
+                                           id="radio_11"
+                                           value="0"/>
+                                    <label for="radio_11">禁止</label>
+                                    <input name="yk_registe" v-model.number="add.YKLimit" type="radio"
+                                           id="radio_12"
+                                           class="with-gap"
+                                           value="1"/>
+                                    <label for="radio_12" class="ml-30">允许</label>
+                                </div>
+                            </div>
+                            <div class="row layui-form">
+                                <div class="col-xs-2 col-md-1">手机号注册：</div>
+                                <div class="col-xs-5 col-md-3">
+                                    <input name="mobile_registe" v-model.number="add.phoneLimit" type="radio"
+                                           class="with-gap"
+                                           id="radio_13"
+                                           value="0"/>
+                                    <label for="radio_13">禁止</label>
+                                    <input name="mobile_registe" v-model.number="add.phoneLimit" type="radio"
+                                           id="radio_14"
+                                           class="with-gap"
+                                           value="1"/>
+                                    <label for="radio_14" class="ml-30">允许</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1 v-center" style="text-align:right;">绑定手机赠送：</div>
+                                <div class="col-xs-5 col-md-3">
+                                    <input id="txtMobileBind" style="display:inline;"
+                                           class="form-control input-sm inline input-width-238"
+                                           type="text" maxlength="50" v-model="add.bindSend"
+                                           name="txtMobileBind"
+                                           v-validate="'numeric|max_value:9|min_value:0'"
+                                    >&nbsp;&nbsp;金币
+                                </div>
+                                <div class="col-xs-4 col-md-2 wrong" v-if="errors.has('txtMobileBind')">赠送值只能是个位数0-9
+                                </div>
+                                <div class="col-xs-4 col-md-2" v-else>不设置表示是系统默认赠送</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1 v-center" style="text-align:right">游客注册赠送：</div>
+                                <div class="col-xs-5 col-md-3">
+                                    <input id="txtVisitorRegister" style="display:inline;"
+                                           class="form-control input-sm inline input-width-238"
+                                           type="text" maxlength="50" v-model="add.YKRegSend"
+                                           name="txtVisitorRegister"
+                                           v-validate="'numeric|min_value:0'"
+                                    >&nbsp;&nbsp;金币
+                                </div>
+                                <div class="col-xs-4 col-md-2 wrong" v-if="errors.has('txtVisitorRegister')">
+                                    赠送值不能低于0,只能输入整数
+                                </div>
+                                <div class="col-xs-4 col-md-2" v-else>不设置表示是系统默认赠送</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1 v-center" style="text-align:right">手机注册赠送：</div>
+                                <div class="col-xs-5 col-md-3">
+                                    <input id="txtMobileRegister" style="display:inline;"
+                                           class="form-control input-sm inline input-width-238"
+                                           type="text" maxlength="50" v-model="add.phoneRegSend"
+                                           name="txtMobileRegister"
+                                           v-validate="'numeric|min_value:0'"
+                                    >&nbsp;&nbsp;金币
+                                </div>
+                                <div class="col-xs-4 col-md-2 wrong" v-if="errors.has('txtMobileRegister')">
+                                    赠送值不能低于0,只能输入整数
+                                </div>
+                                <div class="col-xs-4 col-md-2" v-else>不设置表示是系统默认赠送</div>
+                            </div>
+                        </section>
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item">
@@ -105,11 +227,23 @@
             data: {
                 add: {
                     admin_id: getUrlParams('admin_id'),
-                    channel_num: '',
                     username: "",
+                    realname: "",//渠道昵称
                     channel_addr: "",
-                    show_pwd: ""
+                    channel_num: '',
+                    pwd: '',//密码
+                    parentChannelId: 0,//父级id
+                    loginLimit: 1,//登录限制
+                    YKLimit: 1,//游客注册限制
+                    phoneLimit: 1,//手机注册限制
+                    bindSend: '',//绑定手机赠送
+                    YKRegSend: '',//游客注册赠送
+                    phoneRegSend: '',//手机注册赠送
                 }
+                , parentInfo: null
+                , pid: getUrlParams('pid')
+                , gameChannel: []//渠道列表
+                , parentIndx: -1
             },
             mounted() {
                 let that = this;
@@ -123,26 +257,59 @@
                         }
                     }, 'json')
                 }
+                if (getUrlParams('pid')) {
+                    that.add.parentChannelId = getUrlParams('pid')
+                    $.get(qp_url + 'admin/web/channelInfo', {
+                        token: getStorage('token'),
+                        admin_id: getUrlParams('pid')
+                    }, function (res) {
+                        if (res.status == 1) {
+                            that.parentInfo = res.data
+                        }
+                    }, 'json')
+                }
+
+                //查询渠道列表
+                $.post(qp_url + 'admin/web/channelList', {
+                    token: getStorage('token'),
+                    pageIndex: 1,
+                    pageSize: 9999
+                }, function (res) {
+                    if (res.status == 1) {
+                        console.log('success');
+                        that.gameChannel = res.data.data
+                    }
+                }, 'json')
             }
             , methods: {
+                getSelectedPid: function (e) {
+                    this.parentIndx = e.target.selectedIndex//当前父级渠道的下标
+                },
+                //编辑 或 保存,根据admin_id区分
                 EditInfo: function () {
                     var that = this;
-                    console.log(that.add.admin_id);
-                    if(getUrlParams('admin_id')!=0){//编辑
-                        if(getStorage('admin_id')!=1){
-                            return layer.msg('您不是超级管理员，没有操作权限',{time:1000,icon:2})
+                    if (getUrlParams('admin_id') != 0) {//编辑
+                        if (getStorage('admin_id') != 1) {
+                            return layer.msg('您不是超级管理员，没有操作权限', {time: 1000, icon: 2})
                         }
                     }
+
                     this.$validator.validate().then(valid => {
                         if (valid) {
-                            $.post(qp_url + 'admin/web/editChannel', {
-                                token: getStorage('token'),
-                                admin_id: that.add.admin_id ? that.add.admin_id : 0,
-                                username: that.add.username,
-                                channel_addr: that.add.channel_addr,
-                                channel_num: that.add.channel_num,
-                                pwd: that.add.show_pwd
-                            }, function (res) {
+                            // if(getUrlParams('pid')){//通过添加子渠道按钮来的
+                            //     // that.add.admin_id = getUrlParams('pid')
+                            //     that.add.username =  that.parentInfo.username
+                            //     that.add.pwd =  that.parentInfo.pwd
+                            // }
+                            // if (that.parentIndx > 0) {//说明选择了父级
+                            //     that.add.username =  that.gameChannel[that.parentIndx].username
+                            //     that.add.pwd =  that.gameChannel[that.parentIndx].show_pwd
+                            // }
+                            if (that.add.parentChannelId) {
+                                that.add.username = '';
+                                that.add.pwd = ''
+                            }
+                            $.post(qp_url + 'admin/web/editChannel?token=' + getStorage('token'), that.add, function (res) {
                                 if (res.status == 1) {
                                     layer.msg(res.msg, {time: 1000, icon: 1})
                                     setTimeout(function () {

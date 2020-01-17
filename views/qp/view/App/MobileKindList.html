@@ -7,12 +7,8 @@
     <title>游戏系统 - 手游管理</title>
     <link href="../../Content/Admin/css/bootstrap-cerulean.min.css" rel="stylesheet" />
     <link href="../../Content/Admin/css/charisma-app.css" rel="stylesheet" />
-    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="../../Scripts/comm.js"></script>
-    <script src="../../Scripts/pagination.js"></script>
     <link rel="stylesheet" href="../../Content/layui-v2.5.4/layui/css/layui.css">
     <link href="../../Content/common.css" rel="stylesheet" />
-    <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
     <style type="text/css">
         body{
             overflow-y: scroll!important;
@@ -107,6 +103,10 @@
             </div>
         </div>
     </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../../Scripts/comm.js"></script>
+<!--    <script src="../../Scripts/pagination.js"></script>-->
+    <script src="../../Content/layui-v2.5.4/layui/layui.js"></script>
     <script type="text/javascript">
         var pageObj = {};
         var postData = {};//搜索条件
@@ -144,6 +144,7 @@
                 } //开启分页
                 , limits: [10, 20, 30, 50, 80, 100]
                 , limit: 10
+                , cellMinWidth: 100
                 , cols: [[ //表头
                     { type: 'checkbox' }
                     , {

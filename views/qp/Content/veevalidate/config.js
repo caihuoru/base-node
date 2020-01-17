@@ -123,7 +123,7 @@ VeeValidate.Validator.extend('mobile', {
     en: field => field + '必须是11位手机号码',
   },
   validate: value => {
-    return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+    return value.length == 11 && /^((13|14|15|17|18|19|16)[0-9]{1}\d{8})$/.test(value)
   }
 });
 VeeValidate.Validator.extend('money', {

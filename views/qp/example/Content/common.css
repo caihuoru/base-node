@@ -25,7 +25,7 @@ em, strong {
     font-style: normal;
 }
 
-em, strong, {
+em, strong {
     font-style: inherit;
     font-weight: inherit;
 }

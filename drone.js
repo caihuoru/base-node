@@ -14,6 +14,7 @@ var fs = require("fs");
 app.disable('etag');//解决304
 var Pay = require('cn-pay');
 var system = require('./drone-system');
+var wrj_post = require('./drone-post');
 var configuration = require('./configuration.json');
 app.use(express.static(__dirname + '/views', {
     etag: true,
@@ -162,8 +163,8 @@ router.all('*', function (req, res, next) {
 
 // 管理系统新区
 system(app, connection, fs, path, jwt);
-
-
+// 社区接口
+wrj_post(app, connection, fs, path, jwt);
 
 // 打酱油
 app.get('/', function (req, res, next) {

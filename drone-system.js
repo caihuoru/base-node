@@ -1,4 +1,45 @@
 module.exports = function (app, connection, fs, path, jwt) {
+
+    app.get('/situation/data', (req, res) => {
+        var sql = `select * from link_url `;
+    
+        //查
+        connection.query(sql, function (err, result) {
+            if (err) {
+                console.log('[UPDATE ERROR] - ', err.message);
+                res.json({
+                    code: 0,
+                })
+                return;
+            }
+            res.json({
+                code: 1,
+                data: result,
+            })
+        })
+    
+    })
+    app.post('/edit/situation', (req, res) => {
+        var modSql = 'UPDATE link_url SET newLink = ?,status=? WHERE id= 1';
+        var modSqlParams = [req.body.newLink, Number(req.body.status)];
+        //添加vip
+        connection.query(modSql, modSqlParams, function (err, UPdata) {
+            if (err) {
+                console.log('[UPDATE ERROR] - ', err.message);
+                res.json({
+                    code: 0,
+                    msg: "失败"
+                })
+                return;
+            }
+            res.json({
+                code: 1,
+                data: UPdata,
+                msg: "成功"
+            })
+        })
+    
+    })
     // 后台用户查询
     app.get('/system/user', function (req, res, next) {
         var sql = "select * from wrj_user";
@@ -107,7 +148,7 @@ module.exports = function (app, connection, fs, path, jwt) {
                 return false;
             }
             var day = 86400;
-
+            console.log(iosOrder[0].userId)
             // 初次购买
             if (req.body.notification_type === "INITIAL_BUY") {
                 // var info = latest_receipt_info.expires_date

@@ -350,7 +350,7 @@ for (var i = 0; i < jsonArr.length; i++) {
 
 
 // request({
-//     url: `http://v.juhe.cn/toutiao/index?type=${req.query.type}&key=5d8e56169c03c28faca50a266b3b4188`,
+//     url: `https://restapi.amap.com/v3/geocode/geo?key=03068365dcc9ca7ec6db154941fe9327&address=中国 浙江 宁海县科技园区科二路195号`,
 //     timeout: 30000
 
 // }, function (error, response, body) {
@@ -409,6 +409,29 @@ let server = app.listen(port, function () {
 });
 
 
-// const fxp = require("fast-xml-parser");
+// https://picman.1688.com/open/ajax/RecommendAlbumDetailList.json?memberId=ivansolar2010&jsResponseDataName=albumList1583489062883&hasRecAlbums=true&hasAlbums=true&start=1&end=200&recommendAlbumIds=14492547%2C13802970%2C153335375%2C161758230
 
 
+var jsonArr = ["top", "shehui", "guonei", "yule", "tiyu", "junshi", "keji", "caijing"]
+
+for (var i = 0; i < jsonArr.length; i++) {
+
+    (function (i) {
+        request({
+            url: `https://restapi.amap.com/v3/geocode/geo?key=03068365dcc9ca7ec6db154941fe9327&address=中国 浙江 宁海县科技园区科二路195号`,
+            timeout: 30000
+
+        }, function (error, response, idbody) {
+            var file = path.join(__dirname, `data/${jsonArr[i]}.json`);
+
+            //写入文件
+            fs.writeFile(file, JSON.stringify(idbody), function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log('文件创建成功，地址：' + file);
+            });
+
+        })
+    }(i))
+}

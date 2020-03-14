@@ -5,7 +5,7 @@ var fs = require('fs');
 // var bodyParser = require('body-parser');
 // app.use(express.bodyParser({ uploadDir: './public/upload' }));
 app.use(express.static(__dirname + '/'));
-var port = 8092;
+var port = 8088;
 var formidable = require('formidable');
 
 app.all('*', function (req, res, next) {
@@ -38,7 +38,6 @@ app.post('/uploadImg', function (req, res, next) {
         //fields存放的为json数据
         //files存放的是文件信息
         //更改文件目录,并且显示上传之前的名字
-        // console.log(files.file)
         fs.rename(files.file.path, __dirname + '/public/upload/' + files.file.name, function (a, b) {
 
         });

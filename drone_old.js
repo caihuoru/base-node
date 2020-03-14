@@ -589,32 +589,19 @@ app.get('/add/news', function (req, res, next) {
 })
 // 查询新闻
 app.get('/select/news_old', function (req, res, next) {
-    var COUNT = `SELECT COUNT(*) as total FROM wrj_news`;
-    req.query.size = req.query.size || 10;
-    if (req.query.index) {
-        if (req.query.id) {
-            var sql = `select * from wrj_news where id = ${parseInt(req.query.id)} limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
-            COUNT = `SELECT COUNT(*) as total FROM wrj_news where id = ${parseInt(req.query.id)}`;
-        } else if (req.query.city) {
-            var sql = `select * from wrj_news where region =  '${req.query.city}' order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
-            COUNT = `SELECT COUNT(*) as total FROM wrj_news where region = '${req.query.city}'`;
-            // console.log(sql)
-        } else {
-            var sql = `select * from wrj_news order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
-        }
-    } else {
-        if (req.query.id) {
-            var sql = "select * from wrj_news where id = " + parseInt(req.query.id);
-        } else if (req.query.city) {
-            var sql = "select * from wrj_news where region = '" + req.query.city + "'" + " order by id desc";
-            // console.log(sql)
-        } else {
-            var sql = "select * from wrj_news" + " order by id desc";
-        }
-    }
     // console.log(req.query)
+    if (req.query.id) {
+        var sql = "select * from wrj_news where id = " + parseInt(req.query.id);
+    } else if (req.query.city) {
+        var sql = "select * from wrj_news where region = '" + req.query.city + "'" + " order by id desc";
+        // console.log(sql)
+    } else {
+        var sql = "select * from wrj_news" + " order by id desc";
+    }
+
+
     //查
-    connection.query(COUNT, function (err, total) {
+    connection.query(sql, function (err, userData) {
         if (err) {
             res.json({
                 code: 0,
@@ -623,35 +610,53 @@ app.get('/select/news_old', function (req, res, next) {
             console.log('[select ERROR] - ', err.message);
             return;
         }
-        connection.query(sql, function (err, userData) {
-            if (err) {
-                res.json({
-                    code: 0,
-                    msg: "无法查询新闻列表"
-                })
-                console.log('[select ERROR] - ', err.message);
-                return;
-            }
-            if (userData.length === 0) {
-                res.json({
-                    code: 0,
-                    data: userData,
-                    msg: "无数据"
-                })
-                return;
-            }
-            //可分页数
-            total = Math.ceil(total[0].total / req.query.size);
+        if (userData.length === 0) {
+            res.json({
+                code: 0,
+                data: userData,
+                msg: "无数据"
+            })
+            return;
+        }
+        //总数
+        var length = userData.length;
+        //可分页数
+        var total = Math.ceil(userData.length / 10);
 
+        var backData = [];
+        //10==每页条数
+        var num = (req.query.index - 1) * 10;
+        for (var i = 0; i < 10; i++) {
+            if (userData[num + i]) {
+                backData.push(userData[num + i])
+            } else {
+                break;
+            }
+        }
+        // if(req.query.index){
+        //     var index=2*parseInt(req.query.index);
+        //     var  sql = "select * from wrj_news limit "+parseInt(index-2)+",2";
+        // }
+        if (req.query.index) {
+
+            res.json({
+                code: 1,
+                data: backData,
+                total: total,
+                msg: "查询成功"
+            })
+        } else {
             res.json({
                 code: 1,
                 data: userData,
                 total: total,
-                msg: "成功"
+                msg: "查询成功"
             })
-        })
-    })
+        }
 
+
+
+    })
 
 })
 
@@ -854,48 +859,27 @@ app.get('/add/message', function (req, res, next) {
 // 查询消息
 // app.get('/select/message', function (req, res, next) {
 app.get('/select/news', function (req, res, next) {
+    // console.log(req.query)
     var timestamp = Date.parse(new Date());
     timestamp = ((timestamp / 1000) - 86400) * 1000;
-    var COUNT = `SELECT COUNT(*) as total FROM wrj_message  where (UNIX_TIMESTAMP(validityPeriod)*1000) > ${timestamp}`;
-    req.query.size = req.query.size || 10;
-    if (req.query.index) {
-        if (req.query.id) {
-            var sql = `select * from wrj_message where id = ${parseInt(req.query.id)} limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
-            COUNT = `SELECT COUNT(*) as total FROM wrj_message where id = ${parseInt(req.query.id)}`;
-        } else if (req.query.city) {
-            if (req.query.hot) {
-                var sql = "select * from wrj_message where region = '" + req.query.city + "' and hot = " + req.query.hot + " and (UNIX_TIMESTAMP(validityPeriod)*1000) >" + timestamp + " order by id desc " + `limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
-                console.log(sql)
-            } else {
-                var sql = "select * from wrj_message where region = '" + req.query.city + "' and (UNIX_TIMESTAMP(validityPeriod)*1000) >" + timestamp + " order by id desc " + `limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
-            }
-            COUNT = `SELECT COUNT(*) as total FROM wrj_message where region = '${req.query.city}'`;
-            // console.log(sql)
+    if (req.query.id) {
+        var sql = "select * from wrj_message where id = " + parseInt(req.query.id);
+    } else if (req.query.city) {
+        if (req.query.hot) {
+            var sql = "select * from wrj_message where region = '" + req.query.city + "' and hot = " + req.query.hot + " and (UNIX_TIMESTAMP(validityPeriod)*1000) >" + timestamp + " order by id desc";
+            console.log(sql)
         } else {
-            var sql = `select * from wrj_message where (UNIX_TIMESTAMP(validityPeriod)*1000) > ${timestamp} order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
+            var sql = "select * from wrj_message where region = '" + req.query.city + "' and (UNIX_TIMESTAMP(validityPeriod)*1000) >" + timestamp + " order by id desc";
         }
+
+        // console.log(sql)
     } else {
-        if (req.query.id) {
-            var sql = "select * from wrj_message where id = " + parseInt(req.query.id);
-        } else if (req.query.city) {
-            if (req.query.hot) {
-                var sql = "select * from wrj_message where region = '" + req.query.city + "' and hot = " + req.query.hot + " and (UNIX_TIMESTAMP(validityPeriod)*1000) >" + timestamp + " order by id desc";
-                console.log(sql)
-            } else {
-                var sql = "select * from wrj_message where region = '" + req.query.city + "' and (UNIX_TIMESTAMP(validityPeriod)*1000) >" + timestamp + " order by id desc";
-            }
-
-            // console.log(sql)
-        } else {
-            var sql = "select * from wrj_message where (UNIX_TIMESTAMP(validityPeriod)*1000) >" + timestamp + ' order by id desc';
-        }
+        var sql = "select * from wrj_message where (UNIX_TIMESTAMP(validityPeriod)*1000) >" + timestamp + ' order by id desc';
     }
-    // console.log(req.query)
-
 
 
     //查
-    connection.query(COUNT, function (err, total) {
+    connection.query(sql, function (err, userData) {
         if (err) {
             res.json({
                 code: 0,
@@ -904,37 +888,53 @@ app.get('/select/news', function (req, res, next) {
             console.log('[select ERROR] - ', err.message);
             return;
         }
-        connection.query(sql, function (err, userData) {
-            if (err) {
-                res.json({
-                    code: 0,
-                    msg: "无法查询新闻列表"
-                })
-                console.log('[select ERROR] - ', err.message);
-                return;
-            }
-            if (userData.length === 0) {
-                res.json({
-                    code: 0,
-                    data: userData,
-                    msg: "无数据"
-                })
-                return;
-            }
-            total = Math.ceil(total[0].total / req.query.size);
+        if (userData.length === 0) {
+            res.json({
+                code: 0,
+                data: userData,
+                msg: "无数据"
+            })
+            return;
+        }
+        //总数
+        var length = userData.length;
+        //可分页数
+        var total = Math.ceil(userData.length / 10);
 
+        var backData = [];
+        //10==每页条数
+        var num = (req.query.index - 1) * 10;
+        for (var i = 0; i < 10; i++) {
+            if (userData[num + i]) {
+                backData.push(userData[num + i])
+            } else {
+                break;
+            }
+        }
+        // if(req.query.index){
+        //     var index=2*parseInt(req.query.index);
+        //     var  sql = "select * from wrj_news limit "+parseInt(index-2)+",2";
+        // }
+        if (req.query.index) {
+
+            res.json({
+                code: 1,
+                data: backData,
+                total: total,
+                msg: "查询成功"
+            })
+        } else {
             res.json({
                 code: 1,
                 data: userData,
                 total: total,
-                msg: "成功"
+                msg: "查询成功"
             })
+        }
 
 
 
-        })
     })
-
 
 })
 
@@ -1016,38 +1016,26 @@ app.get('/range/label/img', function (req, res, next) {
 })
 // 范围内标签查询
 app.get('/label/select', function (req, res, next) {
-    req.query.size = req.query.size || 10;
-    req.query.index = req.query.index || 1;
     if (req.query.userId) {
-        var COUNT = `SELECT COUNT(*) as total FROM wrj_label  where sqrt( ( 
-        ((${req.query.lng}-lng)*PI()*12656*cos(((${req.query.lat}+lat)/2)*PI()/180)/180) * 
-        ((${req.query.lng}-lng)*PI()*12656*cos (((${req.query.lat}+lat)/2)*PI()/180)/180) ) + 
-        (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} AND (visible != 1 or (userId=${req.query.userId} AND visible =1 )) order by id desc`;
-
         var sql = `select T.* ,
         (SELECT name FROM wrj_user WHERE id = T.userId) as userName
         from wrj_label T 
         where sqrt( ( 
         ((${req.query.lng}-lng)*PI()*12656*cos(((${req.query.lat}+lat)/2)*PI()/180)/180) * 
         ((${req.query.lng}-lng)*PI()*12656*cos (((${req.query.lat}+lat)/2)*PI()/180)/180) ) + 
-        (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} AND (visible != 1 or (userId=${req.query.userId} AND visible =1 )) order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
+        (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} AND (visible != 1 or (userId=${req.query.userId} AND visible =1 )) order by id desc`;
     } else {
-        var COUNT = `SELECT COUNT(*) as total FROM wrj_label where visible != 1 and sqrt( ( 
-        ((${req.query.lng}-lng)*PI()*12656*cos(((${req.query.lat}+lat)/2)*PI()/180)/180) * 
-        ((${req.query.lng}-lng)*PI()*12656*cos (((${req.query.lat}+lat)/2)*PI()/180)/180) ) + 
-        (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} order by id desc`;
-
         var sql = `select T.* ,
         (SELECT name FROM wrj_user WHERE id = T.userId) as userName
         from wrj_label T 
         where visible != 1 and sqrt( ( 
         ((${req.query.lng}-lng)*PI()*12656*cos(((${req.query.lat}+lat)/2)*PI()/180)/180) * 
         ((${req.query.lng}-lng)*PI()*12656*cos (((${req.query.lat}+lat)/2)*PI()/180)/180) ) + 
-        (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
+        (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} order by id desc`;
 
     }
     console.log(sql)
-    connection.query(COUNT, function (err, total) {
+    connection.query(sql, function (err, userData) {
         if (err) {
             res.json({
                 code: 0,
@@ -1056,47 +1044,47 @@ app.get('/label/select', function (req, res, next) {
             console.log('[select ERROR] - ', err.message);
             return;
         }
-        connection.query(sql, function (err, userData) {
-            if (err) {
-                res.json({
-                    code: 0,
-                    msg: "无法查询标签列表"
-                })
-                console.log('[select ERROR] - ', err.message);
-                return;
-            }
+        var backData = [];
+        if (req.query.index) {
+            //总数
+            var length = userData.length;
+            //可分页数
+            var total = Math.ceil(userData.length / 10);
 
-            for (var i = 0; i < userData.length; i++) {
-                if (userData.length > 0 && userData[i].image) {
-                    userData[i].image = JSON.parse(userData[i].image);
-                    // userData[i].image = userData[i].image.filter(function (e) { return e });
+
+            //10==每页条数
+            var num = (req.query.index - 1) * 10;
+            for (var i = 0; i < 10; i++) {
+                if (userData[num + i]) {
+                    backData.push(userData[num + i])
                 } else {
-                    userData[i].image = [];
+                    break;
                 }
             }
-            total = Math.ceil(total[0].total / req.query.size);
+            userData = backData;
+        } else {
+            var total = 1;
+        }
+        for (var i = 0; i < userData.length; i++) {
+            if (userData.length > 0 && userData[i].image) {
+                userData[i].image = JSON.parse(userData[i].image);
+                // userData[i].image = userData[i].image.filter(function (e) { return e });
+            } else {
+                userData[i].image = [];
+            }
+        }
+        res.json({
+            code: 1,
+            data: userData,
+            total: total,
+            msg: "成功"
+        })
 
-            res.json({
-                code: 1,
-                data: userData,
-                total: total,
-                msg: "成功"
-            })
-
-        });
-
-    })
-
+    });
 })
 // 查询指定标签
 app.get('/designation/label', function (req, res, next) {
-    req.query.size = req.query.size || 10;
-    req.query.index = req.query.index || 1;
     if (req.query.id) {
-        var COUNT = `select COUNT(*) as total
-        from wrj_label 
-        where id = ${req.query.id}`
-
         var sql = `select T.* ,
         (SELECT name FROM wrj_user WHERE id = T.userId) as userName
         from wrj_label T 
@@ -1104,18 +1092,14 @@ app.get('/designation/label', function (req, res, next) {
         order by id desc
         `;
     } else if (req.query.userId) {
-        var COUNT = `SELECT COUNT(*) as total from wrj_label 
-        where userId = ${req.query.userId}`
-
         var sql = `select T.* ,
         (SELECT name FROM wrj_user WHERE id = T.userId) as userName
         from wrj_label T 
         where userId = ${req.query.userId}
-        order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}
+        order by id desc
         `;
     } else {
-        var COUNT = `select COUNT(*) as total from wrj_label where visible != 1  order by id desc `
-        var sql = `select * from wrj_label where visible != 1  order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
+        var sql = `select * from wrj_label where visible != 1  order by id desc`;
     }
     // console.log(sql)
     connection.query(sql, function (err, userData) {
@@ -1155,33 +1139,43 @@ app.get('/designation/label', function (req, res, next) {
                     res.json({
                         code: 1,
                         data: userData,
-                        total: 1,
                         msg: "成功"
                     })
                 }
             })
         } else {
-            connection.query(COUNT, function (err, total) {
-                if (err) {
-                    res.json({
-                        code: 0,
-                        msg: "无法查询标签"
-                    })
-                    console.log('[select ERROR] - ', err.message);
-                    return;
-                }
-                total = Math.ceil(total[0].total / req.query.size);
+            var backData = [];
+            if (req.query.index) {
+                //总数
+                var length = userData.length;
+                //可分页数
+                var total = Math.ceil(userData.length / 10);
 
-                res.json({
-                    code: 1,
-                    data: userData,
-                    total: total,
-                    msg: "成功"
-                })
+
+                //10==每页条数
+                var num = (req.query.index - 1) * 10;
+                for (var i = 0; i < 10; i++) {
+                    if (userData[num + i]) {
+                        backData.push(userData[num + i])
+                    } else {
+                        break;
+                    }
+                }
+                userData = backData;
+            } else {
+                var total = 1;
+            }
+            res.json({
+                code: 1,
+                data: userData,
+                total: total,
+                msg: "成功"
             })
         }
 
-    })
+
+    });
+
 })
 
 // 删除标签
@@ -1254,35 +1248,15 @@ app.post('/fly/path', function (req, res, next) {
 })
 // 范围内飞行路径查询
 app.get('/flyPath/select', function (req, res, next) {
-    // req.query.index = req.query.index || 1;
     var utc_timestamp = Date.parse(new Date())
-    if (req.query.index) {
-        req.query.size = req.query.size || 10;
-        var sql = `select T.* ,
+    var sql = `select T.* ,
         (SELECT name FROM wrj_user WHERE id = T.userId) as userName
         from wuj_flyPath T 
         where endTime > ${utc_timestamp} and sqrt( ( 
-        ((${req.query.lng}-lng)*PI()*12656*cos(((${req.query.lat}+lat)/2)*PI()/180)/180) * 
-        ((${req.query.lng}-lng)*PI()*12656*cos (((${req.query.lat}+lat)/2)*PI()/180)/180) ) + 
-        (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
-    } else {
-        req.query.size = req.query.size || 10;
-        var sql = `select T.* ,
-        (SELECT name FROM wrj_user WHERE id = T.userId) as userName
-        from wuj_flyPath T 
-        where endTime > ${utc_timestamp} and sqrt( ( 
-        ((${req.query.lng}-lng)*PI()*12656*cos(((${req.query.lat}+lat)/2)*PI()/180)/180) * 
-        ((${req.query.lng}-lng)*PI()*12656*cos (((${req.query.lat}+lat)/2)*PI()/180)/180) ) + 
-        (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} order by id desc`
-    }
-
-    var COUNT = `SELECT COUNT(*) as total from wuj_flyPath where endTime > ${utc_timestamp} and sqrt( ( 
         ((${req.query.lng}-lng)*PI()*12656*cos(((${req.query.lat}+lat)/2)*PI()/180)/180) * 
         ((${req.query.lng}-lng)*PI()*12656*cos (((${req.query.lat}+lat)/2)*PI()/180)/180) ) + 
         (((${req.query.lat}-lat)*PI()*12656/180) * ((${req.query.lat}-lat)*PI()*12656/180) ) )<${req.query.distance / 1000} order by id desc`;
-
-
-    // console.log(sql)
+    console.log(sql)
     connection.query(sql, function (err, userData) {
         if (err) {
             res.json({
@@ -1292,24 +1266,35 @@ app.get('/flyPath/select', function (req, res, next) {
             console.log('[select ERROR] - ', err.message);
             return;
         }
-        connection.query(COUNT, function (err, total) {
-            if (err) {
-                res.json({
-                    code: 0,
-                    msg: "无法查询飞行路径列表"
-                })
-                console.log('[select ERROR] - ', err.message);
-                return;
-            }
-            total = req.query.index ? Math.ceil(total[0].total / req.query.size) : 1;
+        var backData = [];
+        if (req.query.index) {
+            //总数
+            var length = userData.length;
+            //可分页数
+            var total = Math.ceil(userData.length / 10);
 
-            res.json({
-                code: 1,
-                data: userData,
-                total: total,
-                msg: "成功"
-            })
+
+            //10==每页条数
+            var num = (req.query.index - 1) * 10;
+            for (var i = 0; i < 10; i++) {
+                if (userData[num + i]) {
+                    backData.push(userData[num + i])
+                } else {
+                    break;
+                }
+            }
+            userData = backData;
+        } else {
+            var total = 1;
+        }
+
+        res.json({
+            code: 1,
+            data: userData,
+            total: total,
+            msg: "成功"
         })
+
     });
 
 })
@@ -1337,16 +1322,11 @@ app.post('/del/flyPath', function (req, res, next) {
 })
 // 查询我上传的飞行路径
 app.get('/my/flyPath', function (req, res, next) {
-    req.query.size = req.query.size || 10;
-    req.query.index = req.query.index || 1;
     var utc_timestamp = Date.parse(new Date())
-    var COUNT = `SELECT COUNT(*) as total from wuj_flyPath
-        where userId = ${req.query.id} order by id desc`;
-
     var sql = `select T.* ,
         (SELECT name FROM wrj_user WHERE id = T.userId) as userName
         from wuj_flyPath T 
-        where userId = ${req.query.id} order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
+        where userId = ${req.query.id} order by id desc`;
     connection.query(sql, function (err, userData) {
         if (err) {
             res.json({
@@ -1356,24 +1336,33 @@ app.get('/my/flyPath', function (req, res, next) {
             console.log('[select ERROR] - ', err.message);
             return;
         }
-        connection.query(COUNT, function (err, total) {
-            if (err) {
-                res.json({
-                    code: 0,
-                    msg: "无法查询飞行路径列表"
-                })
-                console.log('[select ERROR] - ', err.message);
-                return;
+        var backData = [];
+        if (req.query.index) {
+            //总数
+            var length = userData.length;
+            //可分页数
+            var total = Math.ceil(userData.length / 10);
+            //10==每页条数
+            var num = (req.query.index - 1) * 10;
+            for (var i = 0; i < 10; i++) {
+                if (userData[num + i]) {
+                    backData.push(userData[num + i])
+                } else {
+                    break;
+                }
             }
-            total = Math.ceil(total[0].total / req.query.size);
+            userData = backData;
+        } else {
+            var total = 1;
+        }
 
-            res.json({
-                code: 1,
-                data: userData,
-                total: total,
-                msg: "成功"
-            })
+        res.json({
+            code: 1,
+            data: userData,
+            total: total,
+            msg: "成功"
         })
+
     });
 
 })
@@ -1606,12 +1595,6 @@ app.post('/favorite/label', function (req, res, next) {
 // 查询我的收藏标签
 app.get('/select/favorite/label', function (req, res, next) {
     var index = parseInt(req.query.id);
-    req.query.size = req.query.size || 10;
-    req.query.index = req.query.index || 1;
-
-    var COUNT = `SELECT COUNT(*) as total from wrj_favoriteLabel
-        where userId = ${req.query.id} order by id desc`;
-
     // var sql = 'select * from wrj_favoriteLabel where userId = ' + index;
 
     var sql = "SELECT a.*,b.address_content,b.address_name,b.lng,b.lat,b.createTime,b.image,b.text,c.userName FROM `wrj_favoriteLabel` as a ";
@@ -1621,9 +1604,9 @@ app.get('/select/favorite/label', function (req, res, next) {
         LEFT JOIN (SELECT name as userName,id FROM wrj_user) as c
         on b.userId2=c.id
         where userId = ${index}
-        ORDER BY a.id DESC limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
+        ORDER BY a.id DESC`;
     //查
-    // console.log(sql)
+    console.log(sql)
     connection.query(sql, function (err, userData) {
         if (err) {
             res.json({
@@ -1633,33 +1616,41 @@ app.get('/select/favorite/label', function (req, res, next) {
             console.log(err.message);
             return;
         }
-        connection.query(COUNT, function (err, total) {
-            if (err) {
-                res.json({
-                    code: 0,
-                    msg: "无法查询飞行路径列表"
-                })
-                console.log('[select ERROR] - ', err.message);
-                return;
-            }
-            total = Math.ceil(total[0].total / req.query.size);
+        var backData = [];
+        if (req.query.index) {
+            //总数
+            var length = userData.length;
+            //可分页数
+            var total = Math.ceil(userData.length / 10);
 
-            for (var i = 0; i < userData.length; i++) {
-                if (userData.length > 0 && userData[i].image) {
-                    userData[i].image = JSON.parse(userData[i].image);
-                    userData[i].image = userData[i].image.filter(function (e) { return e });
+
+            //10==每页条数
+            var num = (req.query.index - 1) * 10;
+            for (var i = 0; i < 10; i++) {
+                if (userData[num + i]) {
+                    backData.push(userData[num + i])
                 } else {
-                    userData[i].image = [];
+                    break;
                 }
             }
-            res.json({
-                code: 1,
-                data: userData,
-                total: total,
-                msg: "查询成功"
-            })
+            userData = backData;
+        } else {
+            var total = 1;
+        }
+        for (var i = 0; i < userData.length; i++) {
+            if (userData.length > 0 && userData[i].image) {
+                userData[i].image = JSON.parse(userData[i].image);
+                userData[i].image = userData[i].image.filter(function (e) { return e });
+            } else {
+                userData[i].image = [];
+            }
+        }
+        res.json({
+            code: 1,
+            data: userData,
+            total: total,
+            msg: "查询成功"
         })
-
     })
 })
 // 取消指定的收藏标签
@@ -1725,14 +1716,11 @@ app.post('/favorite/location', function (req, res, next) {
 })
 // 查询我的收藏地点
 app.get('/select/favorite/location', function (req, res, next) {
-    req.query.size = req.query.size || 10;
-    req.query.index = req.query.index || 1;
     var index = parseInt(req.query.id);
-    var COUNT = 'select COUNT(*) as total from wrj_favoriteLocation where userId = ' + index;
     if (req.query.lat && req.query.lng) {
         var sql = `select * from wrj_favoriteLocation where userId =  ${index} and lat = ${req.query.lat} and lng = ${req.query.lng}`;
     } else {
-        var sql = 'select * from wrj_favoriteLocation where userId = ' + index + ` limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
+        var sql = 'select * from wrj_favoriteLocation where userId = ' + index;
     }
 
     //查
@@ -1764,22 +1752,32 @@ app.get('/select/favorite/location', function (req, res, next) {
             }
 
         } else {
-            connection.query(COUNT, function (err, total) {
-                if (err) {
-                    res.json({
-                        code: 0,
-                        msg: "无法查询飞行路径列表"
-                    })
-                    console.log('[select ERROR] - ', err.message);
-                    return;
+            var backData = [];
+            if (req.query.index) {
+                //总数
+                var length = userData.length;
+                //可分页数
+                var total = Math.ceil(userData.length / 10);
+
+
+                //10==每页条数
+                var num = (req.query.index - 1) * 10;
+                for (var i = 0; i < 10; i++) {
+                    if (userData[num + i]) {
+                        backData.push(userData[num + i])
+                    } else {
+                        break;
+                    }
                 }
-                total = Math.ceil(total[0].total / req.query.size);
-                res.json({
-                    code: 1,
-                    data: userData,
-                    total: total,
-                    msg: "查询成功"
-                })
+                userData = backData;
+            } else {
+                var total = 1;
+            }
+            res.json({
+                code: 1,
+                data: userData,
+                total: total,
+                msg: "查询成功"
             })
         }
     })
@@ -2318,10 +2316,7 @@ app.post('/payBack', (req, res) => {
 })
 // 查询资金记录
 app.get('/payinout', (req, res) => {
-    req.query.size = req.query.size || 10;
-    req.query.index = req.query.index || 1;
-    var COUNT = `select COUNT(*) as total from wrj_payInOut where userId = ${req.query.id} or toUserId = ${req.query.id} order by id desc`;
-    var sql = `select * from wrj_payInOut where userId = ${req.query.id} or toUserId = ${req.query.id} order by id desc limit ${(req.query.index - 1) * req.query.size},${req.query.size}`;
+    var sql = `select * from wrj_payInOut where userId = ${req.query.id} or toUserId = ${req.query.id} order by id desc`;
     connection.query(sql, function (err, userData) {
         if (err) {
             res.json({
@@ -2331,22 +2326,33 @@ app.get('/payinout', (req, res) => {
             console.log(err.message);
             return;
         }
-        connection.query(COUNT, function (err, total) {
-            if (err) {
-                res.json({
-                    code: 0,
-                    msg: "无法查询飞行路径列表"
-                })
-                console.log('[select ERROR] - ', err.message);
-                return;
+        if (req.query.index) {
+            //总数
+            var length = userData.length;
+            //可分页数
+            var total = Math.ceil(userData.length / 10);
+
+            var backData = [];
+
+
+            //10==每页条数
+            var num = (req.query.index - 1) * 10;
+            for (var i = 0; i < 10; i++) {
+                if (userData[num + i]) {
+                    backData.push(userData[num + i])
+                } else {
+                    break;
+                }
             }
-            total = Math.ceil(total[0].total / req.query.size);
-            res.json({
-                code: 1,
-                data: userData,
-                total: total,
-                msg: "查询成功"
-            })
+            userData = backData;
+        } else {
+            var total = 1;
+        }
+        res.json({
+            code: 1,
+            total: total,
+            data: userData,
+            msg: "成功"
         })
     })
 
@@ -2857,6 +2863,3 @@ var j = schedule.scheduleJob(rule, function () {
 
 })
 // https://segmentfault.com/a/1190000014399153
-console.log = function () {
-
-}

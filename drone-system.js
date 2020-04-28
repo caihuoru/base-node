@@ -46,17 +46,31 @@ module.exports = function (app, connection, fs, path, jwt) {
         req.query.index = req.query.start / 10 || 1;
         var value = req.query.search.value;
         let COUNT = `SELECT COUNT(*) as total FROM wrj_user`;
+
+        var sql_add = "";
+        var sql_num = 0;
+        for (var i = 0; i < req.query.columns.length; i++) {
+            if (req.query.columns[i].search.value) {
+                if (sql_num == 0) {
+                    sql_add += "where ";
+                }
+                sql_add += ` ${req.query.columns[i].data} like  '%${req.query.columns[i].search.value}%' and `
+                sql_num++;
+            }
+        }
+        sql_add = sql_add.substr(0, sql_add.length - 4);
+
         if (value) {
             var sql = `select * from wrj_user WHERE CONCAT(IFNULL(id,''),IFNULL(Identification,''),IFNULL(name,''),IFNULL(icon,''),IFNULL(money,''),IFNULL(expiretime,''),IFNULL(sex,'')) like '%${value}%' limit ${req.query.start},${req.query.size}`;
         } else {
-            var sql = `select * from wrj_user limit ${req.query.start},${req.query.size}`;
+            var sql = `select * from wrj_user ${sql_add} limit ${req.query.start},${req.query.size}`;
         }
         connection.query(sql, function (err, userData) {
             if (err) {
                 res.json({
                     code: 0,
                     data: [],
-                    sql: sql,
+                    // value: sql_add,
                     msg: "查询失败"
                 })
                 return false;
@@ -79,7 +93,7 @@ module.exports = function (app, connection, fs, path, jwt) {
                         recordsTotal: num[0].total,
                         recordsFiltered: total,
                         draw: req.query.draw,
-                        value: sql,
+                        // value: sql_add,
                         msg: "成功"
                     })
                 })

@@ -2,7 +2,7 @@ module.exports = function (app, connection, fs, path, jwt) {
 
     app.get('/situation/data', (req, res) => {
         var sql = `select * from link_url `;
-    
+
         //查
         connection.query(sql, function (err, result) {
             if (err) {
@@ -17,7 +17,7 @@ module.exports = function (app, connection, fs, path, jwt) {
                 data: result,
             })
         })
-    
+
     })
     app.post('/edit/situation', (req, res) => {
         var modSql = 'UPDATE link_url SET newLink = ?,status=? WHERE id= 1';
@@ -38,24 +38,50 @@ module.exports = function (app, connection, fs, path, jwt) {
                 msg: "成功"
             })
         })
-    
+
     })
     // 后台用户查询
     app.get('/system/user', function (req, res, next) {
-        var sql = "select * from wrj_user";
+        req.query.size = req.query.length || 10;
+        req.query.index = req.query.start / 10 || 1;
+        var value = req.query.search.value;
+        let COUNT = `SELECT COUNT(*) as total FROM wrj_user`;
+        if (value) {
+            var sql = `select * from wrj_user WHERE CONCAT(IFNULL(id,''),IFNULL(Identification,''),IFNULL(name,''),IFNULL(icon,''),IFNULL(money,''),IFNULL(expiretime,''),IFNULL(sex,'')) like '%${value}%' limit ${req.query.start},${req.query.size}`;
+        } else {
+            var sql = `select * from wrj_user limit ${req.query.start},${req.query.size}`;
+        }
         connection.query(sql, function (err, userData) {
             if (err) {
                 res.json({
                     code: 0,
                     data: [],
+                    sql: sql,
                     msg: "查询失败"
                 })
                 return false;
             } else {
-                res.json({
-                    code: 1,
-                    data: userData,
-                    msg: "查询成功"
+                connection.query(COUNT, function (err, num) {
+                    if (err) {
+                        console.log(err)
+                        res.json({
+                            code: 0,
+                            msg: "未知错误"
+                        })
+                        return;
+                    }
+                    // console.log(num)
+                    let total = Math.ceil(num[0].total / req.query.size);
+
+                    res.json({
+                        code: 1,
+                        data: userData,
+                        recordsTotal: num[0].total,
+                        recordsFiltered: total,
+                        draw: req.query.draw,
+                        value: sql,
+                        msg: "成功"
+                    })
                 })
             }
         })

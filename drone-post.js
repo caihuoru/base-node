@@ -1,5 +1,5 @@
 module.exports = function (app, connection, fs, path, jwt) {
-    // 点赞或取消
+    // 点赞或取消点赞
     app.post('/wrj_post/like', (req, res) => {
 
         var sql = `select * from wrj_likePost where userId =${parseInt(req.body.userId)} and postId = ${req.body.postId}`
@@ -221,43 +221,3 @@ function timestampToTime(timestampm, all) {
 
 
 
-
-        // 点赞旧写法
-
-        // var sql = `select * from wrj_post where id =${parseInt(req.body.postId)}`
-        // connection.query(sql, function (err, Data) {
-        //     if (err) {
-        //         res.json({
-        //             code: 0,
-        //             msg: "数据错误"
-        //         })
-        //         // console.log(err)
-        //         return false;
-        //     } else {
-        //         var linkNum = Data[0].like_;
-        //         if (parseInt(Data[0].like_) == NaN) {
-        //             linkNum = 0;
-        //         } else {
-        //             linkNum = Data[0].like_ + 1;;
-        //         }
-        //         // var addSql = 'UPDATE blessings SET content = ? , author=?  WHERE id = ?';
-        //         var addSql = `UPDATE wrj_post SET like_ = ?  WHERE id = ?`;
-        //         var addSqlParams = [linkNum, parseInt(req.body.postId)];
-        //         //增
-        //         connection.query(addSql, addSqlParams, function (err, result2) {
-        //             if (err) {
-        //                 res.json({
-        //                     code: 0,
-        //                     msg: "失败"
-        //                 })
-        //                 console.log(err)
-        //                 return;
-        //             } else {
-        //                 res.json({
-        //                     code: 1,
-        //                     msg: "成功"
-        //                 })
-        //             }
-        //         })
-        //     }
-        // })

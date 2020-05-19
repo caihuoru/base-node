@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>后台登录</title>
+    <style>
+        button {
+            border: none;
+            background-color: transparent;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input {
+            border: none;
+            outline: none;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            background: url("./img/child_login_bg.png") no-repeat;
+        }
+
+        .wrap {
+            position: absolute;
+            width: 588px;
+            height: 450px;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            background: #fff;
+            /*background: url(../Content/images/login-title.png) left top / 100% auto no-repeat;*/
+            border-radius: 12px;
+        }
+
+        .header {
+            width: 100%;
+            margin: 0;
+            height: 90px;
+            line-height: 90px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            color: #191616;
+            font-weight: 500;
+        }
+
+        .header h1 span {
+            display: inline-block;
+            border-bottom: 2px solid #028BFF;
+            height: 45px;
+            line-height: 45px;
+        }
+
+        .main {
+            width: 100%;
+            /*height: 427px;*/
+        }
+
+        .main-list {
+            position: relative;
+            text-align: center;
+        }
+
+
+        .main-list div label {
+            float: left;
+            width: 90px;
+            margin-right: 10px;
+            text-align: right;
+        }
+
+
+        .main-list p {
+            margin-left: 100px;
+            color: #676767;
+        }
+
+        .main-list a {
+            margin-left: 10px;
+        }
+
+        .main-list .login-btn {
+            width: 325px;
+            height: 60px;
+            border-radius: 4px;
+            background: #4378e0;
+            color: #ffffff;
+            font-size: 26px;
+            margin: 0 auto;
+            border: none;
+            margin-top: 50px;
+        }
+
+        .login-btn:hover {
+            background-position: 0 -59px;
+        }
+
+        .footer {
+            width: 1200px;
+            height: 156px;
+            background: url("./img/login_main.png") no-repeat;
+            background-size: 100% 100%;
+            margin: 0 auto;
+        }
+
+        #txtLoginName, #txtLoginPass, #txtLoginCode {
+            margin-top: 22px;
+            width: 340px;
+            padding-left: 55px;
+            height: 40px;
+            line-height: 40px;
+            border: none;
+            border-radius: 0;
+            border-bottom: 1px solid #d3d3d3;
+        }
+
+        #txtLoginName {
+            background: url(./img/_user.png) #fff 4px center no-repeat;
+            background-size: 24px 24px;
+        }
+
+        #txtLoginPass {
+            background: url(./img/__pass.png) 4px center no-repeat;
+            background-size: 24px 24px;
+        }
+
+        .login {
+            width: 313px;
+            height: 47px;
+            border-radius: 34px;
+            background-image: linear-gradient(to right, #4218BA, #035FE6);
+            margin-top: 49px;
+            color: #fff;
+            font-size: 20px;
+            letter-spacing: 6px;
+        }
+
+        .login:active {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="header">
+        <h1><span>您好!</span>&nbsp;欢迎登录管理后台</h1>
+    </div>
+    <div class="main">
+        <div class="main-list">
+            <div>
+                <input type="text" name="" id="txtLoginName" placeholder="请输入账号"/>
+            </div>
+            <div>
+                <input type="password" name="" id="txtLoginPass" placeholder="请输入密码"/>
+            </div>
+            <button class="login" id="btnLogin">登录</button>
+        </div>
+    </div>
+</div>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/comm.js"></script>
+<script type="text/javascript">
+    // //横屏操作提示start
+    function orient() {
+        if ($(window).height() < 550) {
+            var scale = $(window).height() / 550;
+            $('.wrap').css({
+                'transform': 'scale(' + scale + ')'
+            })
+        }
+        if (window.orientation == 0 || window.orientation == 180) {
+            alert("竖屏效果不好，建议横屏操作！");
+        }
+    }
+
+    $(function () {
+        // if(getStorage('login_obj')){
+        //     var obj = JSON.parse(getStorage('login_obj'));
+        //     $('#txtLoginName').val(obj.acc);
+        //     $('#txtLoginPass').val(obj.psd);
+        //     $('#txtgugeKey').val(obj.code);
+        // }
+        orient();
+        //用户变化屏幕方向时调用
+        $(window).bind('orientationchange', function (e) {
+            orient();
+        });
+
+        $("#txtLoginName").focus();
+        //回车事件
+        document.onkeydown = function (e) {
+            var theEvent = window.event || e;
+            var code = theEvent.keyCode || theEvent.which;
+            if (code == 13) {
+                $("#btnLogin").click();
+            }
+        }
+        document.getElementById("btnLogin").onclick = function () {
+        }
+        $("#btnLogin").on("click", function () {
+            var accounts = $("#txtLoginName").val();
+            var pass = $("#txtLoginPass").val();
+            var iscan = true;
+            var msg = "";
+            if (accounts == "") {
+                msg = "请输入帐号";
+                $("#txtLoginName").focus();
+                iscan = false;
+            }
+            if (pass == "") {
+                msg = "请填写登录密码";
+                $("#txtLoginPass").focus();
+                iscan = false;
+            }
+            if (pass.length >= 100) {
+                msg = "登录密码不能超过100个字符";
+                $("#txtLoginPass").focus();
+                iscan = false;
+            }
+            if (iscan) {
+                $.ajax({
+                    type: 'POST',
+                    url: qp_url + "admin/login/index",
+                    dataType: "json",
+                    data: {username: accounts, password: pass},
+                    success: function (rsp) {
+                        if (rsp.code == 10000) {
+                            setStorage('token', rsp.data.auth);
+                            //登录成功，is_index字段表示是否有查看首页的权力
+                            // setStorage('customerInfo', JSON.stringify(rsp.data))//如果接口返回数据里面少了is_index字段，会导致首页空白
+                            // setStorage('admin_id', rsp.data.admin_id)
+                            // delStorage('login_obj')
+                            // if (getStorage('loginUrl')) {
+                            //     var url = getStorage('loginUrl');
+                            //     delStorage('loginUrl')
+                            //     window.location.href = url;
+                            // } else {
+                            //     window.location.href = "index.html";
+                            // }
+                            window.location.href = "home.html";
+                        } else {
+                            alert(rsp.msg);
+                        }
+                    }
+                });
+            } else {
+                alert(msg);
+            }
+        })
+    })
+</script>
+</body>
+</html>

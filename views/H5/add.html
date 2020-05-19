@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <link rel="stylesheet" href="./src/layui-v2.5.4/layui/css/layui.css">
+    <style type="text/css">
+        .layui-nav-active {
+            border-left: 4px solid #009688;
+            background: #4E5465;
+        }
+
+        .layui-nav-active a {
+            color: #ffffff !important;
+        }
+
+        .marg10 {
+            margin: 0 10px;
+        }
+
+        .layui-input-inline {
+            min-width: 400px;
+        }
+
+        .item {
+            margin: 15px 0;
+        }
+
+        .mtp20px {
+            margin-top: 20px;
+        }
+
+        .lab {
+            font-size: 20px;
+            display: inline-block;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        .mrg20px{
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">管理后台</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <!--        <ul class="layui-nav layui-layout-left">-->
+        <!--            <li class="layui-nav-item"><a href="">控制台</a></li>-->
+        <!--            <li class="layui-nav-item"><a href="">商品管理</a></li>-->
+        <!--            <li class="layui-nav-item"><a href="">用户</a></li>-->
+        <!--            <li class="layui-nav-item">-->
+        <!--                <a href="javascript:;">其它系统</a>-->
+        <!--                <dl class="layui-nav-child">-->
+        <!--                    <dd><a href="">邮件管理</a></dd>-->
+        <!--                    <dd><a href="">消息管理</a></dd>-->
+        <!--                    <dd><a href="">授权管理</a></dd>-->
+        <!--                </dl>-->
+        <!--            </li>-->
+        <!--        </ul>-->
+        <!--        <ul class="layui-nav layui-layout-right">-->
+        <!--            <li class="layui-nav-item">-->
+        <!--                <a href="javascript:;">-->
+        <!--                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">-->
+        <!--                    贤心-->
+        <!--                </a>-->
+        <!--                <dl class="layui-nav-child">-->
+        <!--                    <dd><a href="">基本资料</a></dd>-->
+        <!--                    <dd><a href="">安全设置</a></dd>-->
+        <!--                </dl>-->
+        <!--            </li>-->
+        <!--            <li class="layui-nav-item"><a href="">退了</a></li>-->
+        <!--        </ul>-->
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <!--                <li class="layui-nav-item layui-nav-itemed">-->
+                <!--                    <a class="" href="javascript:;">链接管理</a>-->
+                <!--                    <dl class="layui-nav-child">-->
+                <!--                        <dd><a href="javascript:;">添加</a></dd>-->
+                <!--                        <dd><a href="javascript:;">列表二</a></dd>-->
+                <!--                        <dd><a href="javascript:;">列表三</a></dd>-->
+                <!--                        <dd><a href="">超链接</a></dd>-->
+                <!--                    </dl>-->
+                <!--                </li>-->
+                <!--                <li class="layui-nav-item">-->
+                <!--                    <a href="javascript:;">解决方案</a>-->
+                <!--                    <dl class="layui-nav-child">-->
+                <!--                        <dd><a href="javascript:;">列表一</a></dd>-->
+                <!--                        <dd><a href="javascript:;">列表二</a></dd>-->
+                <!--                        <dd><a href="">超链接</a></dd>-->
+                <!--                    </dl>-->
+                <!--                </li>-->
+                <!--                <li class="layui-nav-item"><a href="">云市场</a></li>-->
+                <li class="layui-nav-item layui-nav-active"><a href="add.html">链接管理</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="padding: 15px;">
+        <!-- 内容主体区域 -->
+        <div id="app" v-cloak>
+            <div class="item" v-for="(item,index) in list">
+                <label>链接</label>
+                <div class="layui-input-inline marg10">
+                    <input placeholder="请入链接" class="layui-input" v-model="item.url">
+                </div>
+                <button class="layui-btn layui-btn-normal" @click="copyClick">复制</button>
+                <button class="layui-btn mrg20px" @click="addLable">添加微信号</button>
+                <div class="lab" v-for="(item,index) in item.lable">
+                    <span>{{item}}</span>
+                    <i class="layui-icon layui-icon-close-fill" style="font-size: 18px; color: #FF5722;cursor: pointer;"
+                       title="删除" @click="delLable()"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="./src/layui-v2.5.4/layui/layui.js"></script>
+<script src="./js/vue.min.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use(['element', 'layer'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            list: [{
+                url: 'https://lvshou.dwlv.net/promotionPage2_17/te_1212.html',
+                lable: ['4569874512', '12356842553', '123456789']
+            }],
+        },
+        methods: {
+            copyClick: function () {
+                this.list.push({
+                    url: 'https://lvshou.dwlv.net/promotionPage2_17/te_1212.html',
+                    lable: []
+                })
+            },
+            addLable: function () {
+                layer.open({
+                    title: '添加',
+                    type: 1,
+                    area: ['500px', '220px'], //宽高
+                    btn: ['取消', '确定'],
+                    content: `<div style="margin: 20px 30px;">
+<p>新增公众号：（多个请用英文 , 隔开）</p>
+<input class="layui-input mtp20px">
+</div>`,
+                    btn1: function () {
+                        // app.list = [];
+                        layer.closeAll()
+                    },
+                    btn2: function () {
+                        // console.log(selectRows);
+                        // app.list = selectRows
+                    }
+                })
+            },
+            delLable:function () {
+                layer.confirm('确定要删除该微信号？', {
+                    title:'提示',
+                    btn: ['确定','取消'], //按钮
+                    icon:2
+                }, function(){
+                    layer.msg('已删除', {icon: 1});
+                }, function(){
+                    // layer.msg('也可以这样', {
+                    //     time: 20000, //20s后自动关闭
+                    //     btn: ['明白了', '知道了']
+                    // });
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>

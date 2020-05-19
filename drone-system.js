@@ -45,7 +45,7 @@ module.exports = function (app, connection, fs, path, jwt) {
         req.query.size = req.query.length || 10;
         req.query.index = req.query.start / 10 || 1;
         var value = req.query.search.value;
-        let COUNT = `SELECT COUNT(*) as total FROM wrj_user`;
+
 
         var sql_add = "";
         var sql_num = 0;
@@ -61,9 +61,9 @@ module.exports = function (app, connection, fs, path, jwt) {
         sql_add = sql_add.substr(0, sql_add.length - 4);
 
         if (value) {
-            var sql = `select * from wrj_user WHERE CONCAT(IFNULL(id,''),IFNULL(Identification,''),IFNULL(name,''),IFNULL(icon,''),IFNULL(money,''),IFNULL(expiretime,''),IFNULL(sex,'')) like '%${value}%' limit ${req.query.start},${req.query.size}`;
+            var sql = `select * from wrj_user WHERE CONCAT(IFNULL(id,''),IFNULL(Identification,''),IFNULL(name,''),IFNULL(icon,''),IFNULL(money,''),IFNULL(expiretime,''),IFNULL(sex,'')) like '%${value}%' order by ${req.query.columns[req.query.order[0].column].data} ${req.query.order[0].dir}  limit ${req.query.start},${req.query.size}`;
         } else {
-            var sql = `select * from wrj_user ${sql_add} limit ${req.query.start},${req.query.size}`;
+            var sql = `select * from wrj_user ${sql_add} order by ${req.query.columns[req.query.order[0].column].data} ${req.query.order[0].dir} limit ${req.query.start},${req.query.size}`;
         }
         connection.query(sql, function (err, userData) {
             if (err) {
@@ -75,6 +75,7 @@ module.exports = function (app, connection, fs, path, jwt) {
                 })
                 return false;
             } else {
+                var COUNT = `SELECT COUNT(*) as total FROM wrj_user ${sql_add}`;
                 connection.query(COUNT, function (err, num) {
                     if (err) {
                         console.log(err)
@@ -91,9 +92,9 @@ module.exports = function (app, connection, fs, path, jwt) {
                         code: 1,
                         data: userData,
                         recordsTotal: num[0].total,
-                        recordsFiltered: total,
+                        recordsFiltered: num[0].total,
                         draw: req.query.draw,
-                        // value: sql_add,
+                        value: req.query,
                         msg: "成功"
                     })
                 })

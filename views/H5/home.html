@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <link rel="stylesheet" href="./src/layui-v2.5.4/layui/css/layui.css">
+    <style type="text/css">
+        .layui-nav-active {
+            border-left: 4px solid #009688;
+            background: #4E5465;
+        }
+
+        .layui-nav-active a {
+            color: #ffffff !important;
+        }
+
+        .marg10 {
+            margin: 0 10px;
+        }
+
+        .layui-input-inline {
+            min-width: 400px;
+        }
+
+        .item {
+            margin: 15px 0;
+        }
+
+        .mtp20px {
+            margin-top: 20px;
+        }
+
+        .lab {
+            font-size: 20px;
+            display: inline-block;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .mrg20px {
+            margin-right: 20px;
+        }
+
+        .inline {
+            display: inline-block;
+        }
+
+        .width220 {
+            width: 220px;
+        }
+
+        .marg10px {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">管理后台</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <!--        <ul class="layui-nav layui-layout-left">-->
+            <!--            <li class="layui-nav-item"><a href="">控制台</a></li>-->
+            <!--            <li class="layui-nav-item"><a href="">商品管理</a></li>-->
+            <!--            <li class="layui-nav-item"><a href="">用户</a></li>-->
+            <!--            <li class="layui-nav-item">-->
+            <!--                <a href="javascript:;">其它系统</a>-->
+            <!--                <dl class="layui-nav-child">-->
+            <!--                    <dd><a href="">邮件管理</a></dd>-->
+            <!--                    <dd><a href="">消息管理</a></dd>-->
+            <!--                    <dd><a href="">授权管理</a></dd>-->
+            <!--                </dl>-->
+            <!--            </li>-->
+            <!--        </ul>-->
+            <!--        <ul class="layui-nav layui-layout-right">-->
+            <!--            <li class="layui-nav-item">-->
+            <!--                <a href="javascript:;">-->
+            <!--                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">-->
+            <!--                    贤心-->
+            <!--                </a>-->
+            <!--                <dl class="layui-nav-child">-->
+            <!--                    <dd><a href="">基本资料</a></dd>-->
+            <!--                    <dd><a href="">安全设置</a></dd>-->
+            <!--                </dl>-->
+            <!--            </li>-->
+            <!--            <li class="layui-nav-item"><a href="">退了</a></li>-->
+            <!--        </ul>-->
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-active"><a href="javascript:;">文章列表</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body" style="padding: 15px;">
+            <!-- 内容主体区域 -->
+            <button class="layui-btn" onclick="addNewArtical()">新增链接</button>
+            <div id="app">
+                <table id="layTable" lay-filter="test"></table>
+            </div>
+        </div>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            © layui.com - 底部固定区域
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="./src/layui-v2.5.4/layui/layui.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/comm.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script>
+        var page_url = window.location.origin;
+
+        //JavaScript代码区域
+        layui.use(['element', 'layer'], function () {
+            var element = layui.element;
+            var layer = layui.layer;
+        });
+
+        if (!getStorage('token')) {
+            window.location.href = 'login.html'
+        }
+
+        var table;
+        layui.use('table', function () {
+            table = layui.table;
+            table.render({
+                elem: '#layTable'
+                , id: 'layTable'
+                , url: qp_url + 'admin/index/getArticleList' //数据接口
+                , headers: {
+                    Authorization: getStorage('token')
+                }
+                , where: {
+                    StartTime: '',
+                    EndTime: '',
+                }
+                , request: {
+                    pageName: 'pageIndex' //页码的参数名称，默认：page
+                    , limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                }
+                , response: { //res 即为原始返回的数据
+                    statusName: 'code',
+                    statusCode: "10000",
+                },
+                parseData: function (res) {
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.data.total, //解析数据长度 ,需要数据库返回
+                        "data": res.data.list //解析数据列表
+                    };
+                }
+                , page: {
+                    'prev': '上一页'
+                    , 'next': '下一页'
+                    , 'layout': ['prev', 'page', 'next']
+                } //开启分页
+                , cellMinWidth: 100
+                // , skin: 'row'
+                // ,even:true
+                , cols: [[ //表头
+                    { field: 'id', title: 'ID', width: 120, align: 'center' }
+                    , { field: 'kehu_name', title: '客户名称', width: 120, align: 'center' }
+                    , {
+                        field: 'template', title: '文章模板', width: 120, align: 'center', templet: function (d) {
+                            return '模板' + d.template
+                        }
+                    }
+                    , { field: 'wx_num', title: '微信号', align: 'center' }
+                    , { field: 'click_num', title: '点击量', align: 'center' }
+                    , {
+                        field: 'url', title: 'URL', templet: function (d) {
+                            if (d.template == 1) {
+                                return page_url + '/H5/h5.html?id=' + d.id
+                            } else {
+                                return page_url + '/H5/ldy.html?id=' + d.id
+                            }
+                        }
+                    }
+                    , { field: 'jump_url', title: '跳转链接', align: 'center' }
+                    , { field: 'createdate', title: '创建时间', align: 'center' }
+                    , {
+                        field: 'is_shenhe', title: '显示状态', align: 'center', templet: function (d) {
+                            if (d.is_shenhe == 0) {
+                                return `<button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="status" data-val="1">切换到审核后</button>`
+                            } else {
+                                return `<button class="layui-btn layui-btn-xs" lay-event="status" data-val="0">切换到审核前</button>`
+                            }
+                        }
+                    }
+                    , {
+                        field: null, title: '操作', align: 'center', templet: function (d) {
+                            if (d.template == 1) {
+                                return `  <button class="layui-btn layui-btn-normal layui-btn-sm copyBtn"
+            data-clipboard-text="${page_url}/H5/h5.html?id=${d.id}"  lay-event="copyLink">复制链接
+    </button>
+    <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="edit">编辑</button>`
+                            } else {
+                                return `  <button class="layui-btn layui-btn-normal layui-btn-sm copyBtn"
+            data-clipboard-text= "${page_url}/H5/ldy.html?id=${d.id}" lay-event="copyLink">复制链接
+    </button>
+    <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="edit">编辑</button>`
+                            }
+                        }
+                    }
+                ]]
+                , done: function (res, curr, count) {
+                    $('th').css({ 'text-align': 'center' });
+                    var copyBtn = document.querySelectorAll('.copyBtn');
+                    var copyAccount = new ClipboardJS(copyBtn);
+                    copyAccount.on("success", function (element) {//复制成功的回调
+                        layer.msg("复制成功", { time: 500 });
+                    });
+                    copyAccount.on("error", function (element) {//复制失败的回调
+                        layer.msg("操作失败", { time: 500 });
+                    });
+                }
+            });
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;//传递的参数
+                var val = $(this).context.dataset.val;
+                console.log(val);
+                switch (obj.event) {
+                    // 编辑
+                    case 'edit':
+                        layer.open({
+                            title: '编辑微信号',
+                            type: 1,
+                            area: ['500px', '320px'], //宽高
+                            btn: ['取消', '确定'],
+                            content: `<div style="margin: 20px 30px;">
+<p class="marg10px">客户名称：
+<input class="layui-input inline width220" id="khname" value="${data.kehu_name}"></p>
+<p class="inline">
+公司名称：<input class="layui-input inline width220" value="${data.share_title}" id="shareTitle">
+</p>
+<p class="marg10px">微信号：（多个微信号用英文 , 隔开）</p>
+<input class="layui-input mtp20px" id="edit1" value="${data.wx_num}">
+<p class="marg10px">跳转链接：（链接前面加上http://或https://）</p>
+<input class="layui-input mtp20px" id="jump_url" value="${data.jump_url || ""}">
+</div>`,
+                            btn1: function () {
+                                layer.closeAll()
+                            },
+                            btn2: function () {
+                                if ($('#shareTitle').val() == '') {
+                                    layer.alert('请输入公司名称')
+                                    return false;
+                                }
+                                postAjax({
+                                    wx_num: $('#edit1').val(),
+                                    id: data.id,
+                                    template: data.template,
+                                    kehu_name: $('#khname').val(),
+                                    share_title: $('#shareTitle').val(),
+                                    jump_url: $("#jump_url").val()
+                                })
+                            }
+                        });
+                        break;
+                    case 'status':
+                        handleStatus(data.id, val)
+                        break;
+                }
+            });
+        });
+
+
+        function handleStatus(id, status) {
+            $.ajax({
+                type: 'POST',
+                url: qp_url + 'admin/index/shenhe',
+                dataType: 'json',
+                headers: {
+                    Authorization: getStorage('token')
+                },
+                data: {
+                    id: id,
+                    status: status
+                },
+                success: function (res) {
+                    layer.msg(res.msg);
+                    if (res.code == "10000") {
+                        table.reload('layTable')
+                    }
+                }
+            });
+        }
+        function postAjax(data) {
+            $.ajax({
+                type: 'POST',
+                url: qp_url + 'admin/index/editArticle',
+                dataType: 'json',
+                headers: {
+                    Authorization: getStorage('token')
+                },
+                data: data,
+                success: function (res) {
+                    layer.msg(res.msg);
+                    if (res.code == "10000") {
+                        table.reload('layTable')
+                    }
+                }
+            })
+        }
+
+        function addNewArtical() {
+            layer.open({
+                title: '新增链接',
+                type: 1,
+                area: ['500px', '450px'], //宽高
+                btn: ['取消', '确定'],
+                content: `<div style="margin: 20px 30px;">
+<div style="margin:0 0 10px;">
+<div  class="inline">文章模板：</div>
+ <div class="inline">
+                        <input name="txtTemplate" type="radio" value="1" id="bt1" checked/>
+                        <label for="bt1">模板一</label>
+                        <a href="#" onclick="window.open(page_url+'/H5/h5.html?status=1','_blank')" style="color:#1E9FFF">预览</a>
+                        <input name="txtTemplate" type="radio" value="2" id="bt2" style="margin-left: 20px;"/>
+                        <label for="bt2">模板二</label>
+                         <a href="#" onclick="window.open(page_url+'/H5/ldy.html?status=1','_blank')" style="color:#1E9FFF">预览</a>
+                    </div>
+</div>
+<p class="marg10px">客户名称：
+<input class="layui-input inline width220" id="khname"></p>
+<p class="inline">
+公司名称：<input class="layui-input inline width220" id="shareTitle">
+</p>
+<p class="marg10px">添加微信号：（多个微信号用英文 , 隔开）</p>
+<input class="layui-input mtp20px" id="addNew" value="">
+
+<p class="marg10px">跳转链接：（链接前面加上http://或https://）</p>
+<input class="layui-input mtp20px" id="jump_url" value="">
+</div>`,
+                btn1: function () {
+                    layer.closeAll()
+                },
+                btn2: function () {
+                    if ($('#addNew').val() == "") {
+                        layer.alert('请输入微信号')
+                        return false;
+                    }
+                    if ($('#khname').val() == '') {
+                        layer.alert('请输入客户名称')
+                        return false;
+                    }
+                    if ($('#shareTitle').val() == '') {
+                        layer.alert('请输入公司名称')
+                        return false;
+                    }
+                    postAjax({
+                        wx_num: $('#addNew').val(),
+                        template: $('input[name="txtTemplate"]:checked').val(),
+                        kehu_name: $('#khname').val(),
+                        share_title: $('#shareTitle').val(),
+                        jump_url: $("#jump_url").val()
+                    })
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

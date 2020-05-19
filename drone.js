@@ -1,5 +1,6 @@
-var express = require('express');
+﻿var express = require('express');
 var querystring = require("querystring");
+var formidable = require('formidable');
 var app = express();
 var request = require('request');//解析,用req.body获取post参数
 var agent_port = 8092;
@@ -2722,6 +2723,63 @@ function getIPAdress() {
         }
     }
 }
+
+function getHttps() {
+
+    return "https://foundjoy.ltd:";
+
+}
+
+
+
+app.post('/uploadImg', function (req, res, next) {
+    var form = new formidable.IncomingForm({ keepExtensions: true });
+
+
+    form.uploadDir = path.join(__dirname + '/views/upload/');
+    form.maxFieldsSize = 10000 * 1024 * 1024
+    // form.uploadDir = __dirname + '/views/upload/';
+    form.parse(req, function (err, fields, files) {
+        if (err) {
+            throw err;
+        }
+        //fields存放的为json数据
+        //files存放的是文件信息
+        //更改文件目录,并且显示上传之前的名字
+        // console.log(files.file)
+        fs.rename(files.file.path, __dirname + '/views/upload/' + files.file.name, function (a, b) {
+
+        });
+        //form.parse(request, [callback]) 该方法会转换请求中所包含的表单数据，callback会包含所有字段域和文件信息
+
+
+
+        // console.log(files)
+        var image = files.file;
+        // var image = files.imgFile;  //这是整个files流文件对象,是转换成有利于传输的数据格式
+        var path_ = image.path;      //从本地上传的资源目录加文件名:如E:\\web\\blog\\upload\\upload_0a14.jpg
+        /*下面这里是通过分割字符串来得到文件名*/
+        var arr = path_.split('\\');//注split可以用字符或字符串分割
+        var name = arr[arr.length - 1];
+        /*上面这里是通过分割字符串来得到文件名*/
+        var url = getHttps() + `${port}/public/upload/` + files.file.name;
+        console.log(url);
+        var info = {
+            "error": 0,
+            "url": url
+        };
+
+        // 改名字
+        // fs.rename(url, newpath, function (err) {
+        //     if (err) {
+        //         throw Error("改名失败");
+        //     }
+        //info是用来返回页面的图片地址
+        res.send(info);
+        // });
+
+    })
+})
 //启动http-https和代理
 
 // 创建https服务器实例
